@@ -10,10 +10,14 @@ creators who already run an agent and want the whole loop as one install.
 | **Claude Code** | [`claude-code/`](claude-code/) | `/plugin marketplace add titanism/faraday-edu` → `/plugin install faraday@faraday` |
 | **Codex** | [`codex/`](codex/) | `codex plugin marketplace add titanism/faraday-edu` (or copy `.agents/skills/` + `AGENTS.md`) |
 
-Both ship the same **`faraday` skill** (the authoring brain + `blocks` / `tutor` /
-`worlds` references). The Claude Code plugin adds `/faraday-*` slash commands and a
-`faraday-author` subagent; the Codex plugin adds an `AGENTS.md` contract for the
-zero-dependency path. See each folder's README for details and prerequisites.
+Both ship the same **`faraday` skill** — a courseware **design partner**, not just a
+scaffolder. A lean `SKILL.md` front door walks Discover → Design → Build → Verify →
+Ship, pulling in progressive-disclosure references per phase: `discovery` (intake a
+creator's PDF/PPT/MD + questions), `curriculum` (subject → roadmap), `learning-design`
+(levels/gates/mastery), `interactive-design` (concept → interaction), `design`
+(visual/UX), and the build APIs `blocks` / `worlds` / `tutor`. The Claude Code plugin
+adds `/faraday-*` slash commands and a `faraday-author` subagent; the Codex plugin adds
+an `AGENTS.md` contract for the zero-dependency path. See each folder's README.
 
 Marketplace catalogs live at the repo root: `.claude-plugin/marketplace.json`
 (Claude Code) and `.agents/plugins/marketplace.json` (Codex).

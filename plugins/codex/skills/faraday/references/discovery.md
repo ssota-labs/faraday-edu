@@ -1,0 +1,54 @@
+# Discover — start from the creator's material, not a blank page
+
+The best courseware starts from what the creator already teaches. Before designing
+anything, take in their material and pin down the few facts that shape every later
+decision. Keep it short — this is a 1–5 minute step, not an interrogation.
+
+## 1. Get their material (or ask for it)
+
+Creators arrive with a topic *and usually with artefacts*: slides, lecture notes, a
+syllabus, a textbook chapter, a problem set, a diagram. **Starting from these
+preserves their pedagogy, examples, and voice — and saves enormous time.**
+
+- **If they attached files**, read them:
+  - `.md` / `.txt` / code → read directly.
+  - `.pdf` → extract text (use a PDF skill/tool if available; OCR scanned pages).
+  - `.pptx` / slides → extract text + slide structure (a PPTX skill/tool).
+  - `.docx` / `.xlsx` → extract with the matching tool.
+  - images/screenshots → read them visually.
+  From each, pull: the **topics** and the **order** they teach them, worked
+  **examples**, **exercises/assessments**, the **level**, and their **voice/tone**.
+- **If they didn't**, ask once: *"Do you have slides, notes, a syllabus, or a
+  chapter I can start from? Even rough material lets me match how you already
+  teach."* Proceed from a topic alone only if they have nothing.
+
+Treat their material as the source of truth for *what* to teach and *in what order*;
+your job is to make it interactive, not to rewrite their curriculum unasked.
+
+## 2. Ask the few questions that shape everything
+
+Ask only what you can't infer from their material, and keep it to a handful:
+
+- **Audience & level** — who is this for, and what do they already know? (a 9th-grader
+  vs. a grad student changes everything)
+- **Goal** — what should the learner be able to *do* after? (an outcome, not "know about X")
+- **Scope** — one concept, a unit, or a whole course? (sets lesson vs. course vs. world)
+- **Assessment** — self-check only, or graded/mastery-gated progression?
+- **Constraints** — must-cover items, examples of theirs to keep, time budget, any
+  brand/voice.
+
+For a quick one-off lesson, a single question often suffices: *"Who's it for, and
+what should they be able to do after?"* Match the depth to the request.
+
+## 3. Reflect back a brief, get a nod, then design
+
+Before building, restate what you heard as a short brief and confirm it:
+
+> **Audience:** … · **Goal:** … · **Scope:** … (→ lesson / course / world) ·
+> **Source:** … · **Proposed shape:** …
+
+One or two lines. A 10-second confirmation here prevents building the wrong thing.
+Then move to the **Curriculum** phase (if multi-lesson) or straight to
+**Interactive** design (single lesson). This intake feeds:
+[curriculum.md](curriculum.md), [learning-design.md](learning-design.md),
+[interactive-design.md](interactive-design.md).

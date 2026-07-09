@@ -25,10 +25,18 @@ validate .` from the repo root before publishing).
 
 ## What you get
 
-- **Skill `faraday`** — the authoring brain. Auto-activates when you talk about
-  interactive lessons/textbooks/tutors. Encodes the two-zone contract, the block
-  API (`references/blocks.md`), the tutor (`references/tutor.md`), and
-  courses/worlds/3D/LMS (`references/worlds.md`).
+- **Skill `faraday`** — a courseware **design partner**, not just a scaffolder.
+  Auto-activates when you talk about interactive lessons/textbooks/courses/tutors —
+  including "turn my slides/notes into a lesson." A lean `SKILL.md` front door walks
+  the whole arc (Discover → Design → Build → Verify → Ship) and pulls in
+  progressive-disclosure references only for the phase you're in:
+  - **Design** — `discovery.md` (intake a creator's PDF/PPT/MD + the questions to
+    ask), `curriculum.md` (decompose a subject → sequenced roadmap),
+    `learning-design.md` (levels, unlock gates, mastery, continuity),
+    `interactive-design.md` (design the interaction that reveals a concept),
+    `design.md` (visual/UX within the theme system).
+  - **Build API** — `blocks.md` (block API + lesson shapes), `worlds.md`
+    (`<Course>`/`<CurriculumHost>`/packs/3D/LMS), `tutor.md` (the grounded tutor).
 - **Slash commands**
   - `/faraday-new <topic> [--3d|--physics] [--tutor]` — scaffold + author a lesson.
   - `/faraday-tutor` — add / embed and verify the grounded AI tutor.
