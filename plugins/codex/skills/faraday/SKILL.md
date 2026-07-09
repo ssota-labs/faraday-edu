@@ -35,6 +35,11 @@ You don't always run every phase — a one-off lesson may skip Curriculum. But a
 do **Discover** (even a 30-second version) so you build the right thing, and always
 **Verify**. Match the depth to the request.
 
+**Methodology:** if the creator has their own teaching method, it leads. If not,
+apply the evidence-based default — backward design, mastery-gated prerequisite
+graph, generative interactions, spaced retrieval, feed-forward feedback — in
+[references/pedagogy.md](references/pedagogy.md).
+
 ## The one rule that governs everything: two zones
 
 | Zone | Path | Rule |
@@ -128,6 +133,7 @@ visual/UX design (hierarchy, layout, mood, polish), see [references/design.md](r
 
 Design phase:
 - [references/discovery.md](references/discovery.md) — intake creator material (PDF/PPT/MD) + the questions to ask.
+- [references/pedagogy.md](references/pedagogy.md) — the evidence-based default methodology (creator's own overrides).
 - [references/curriculum.md](references/curriculum.md) — decompose a subject → sequenced roadmap.
 - [references/learning-design.md](references/learning-design.md) — levels, unlock gates, mastery, continuity.
 - [references/interactive-design.md](references/interactive-design.md) — design the interaction that reveals a concept.

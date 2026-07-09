@@ -4,10 +4,21 @@ When the creator wants more than one lesson — a unit, a course, a learning roa
 design the structure *before* building any lesson. Reshaping an outline is cheap;
 rebuilding lessons is not. Produce a roadmap the creator signs off on, then build.
 
+If the creator brought their own method or sequence, it leads. Otherwise this method
+implements the default's "design backward" and "prerequisite graph" moves — see
+[pedagogy.md](pedagogy.md) for the evidence.
+
 ## Method
 
+0. **Fix the outcomes first (backward design).** Before structuring content, write
+   what the learner should be able to *do* after, and what would prove it. Each
+   outcome will become a node (or tier) plus its check — designed **before** the
+   lesson bodies. Cut anything that maps to no outcome.
 1. **Inventory the concepts.** From their material (see [discovery.md](discovery.md)),
    list the atomic ideas — one "aha" each. Err toward too many; you'll merge later.
+   For complex integrated skills (projects, diagnosis, troubleshooting), consider
+   structuring around whole tasks ordered simple→complex instead of a topic list
+   (see pedagogy.md on 4C/ID).
 2. **Map dependencies.** For each idea, ask "what must the learner understand first?"
    These prerequisite edges are the backbone of the roadmap. This is the highest-value
    step — it's what a flat table of contents lacks.

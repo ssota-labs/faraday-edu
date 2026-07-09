@@ -3,6 +3,10 @@
 A roadmap says *what order*. A learning path says *how the learner advances and why
 they keep coming back*. Design the progression, don't just list lessons.
 
+The defaults here (mastery gates, retrieval-based checks, spaced re-quizzing) are
+the evidence-backed moves from [pedagogy.md](pedagogy.md) — the creator's own
+assessment style overrides them.
+
 ## The levers Faraday gives you
 
 - **Unlock gates (`requires`)** — the prerequisite graph *is* your pacing. Gating the

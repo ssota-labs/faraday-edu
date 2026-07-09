@@ -34,6 +34,10 @@ Ask only what you can't infer from their material, and keep it to a handful:
 - **Goal** — what should the learner be able to *do* after? (an outcome, not "know about X")
 - **Scope** — one concept, a unit, or a whole course? (sets lesson vs. course vs. world)
 - **Assessment** — self-check only, or graded/mastery-gated progression?
+- **Their methodology** — do they already teach this with a method (their sequence,
+  their assessment style, a framework their school uses)? **If yes, their method
+  leads** — capture it. If no, you'll apply the evidence-based default in
+  [pedagogy.md](pedagogy.md).
 - **Constraints** — must-cover items, examples of theirs to keep, time budget, any
   brand/voice.
 
