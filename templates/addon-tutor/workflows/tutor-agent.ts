@@ -13,11 +13,29 @@ import { convertToModelMessages, type UIMessage } from "ai";
 import { getWritable } from "workflow";
 
 // AI Gateway model id — a *serializable string* (WorkflowAgent step bundles reject
-// live model instances). Cost-appropriate default for tutoring; bump to
-// "anthropic/claude-sonnet-5" for harder subjects. Verified live at scaffold time
-// against https://ai-gateway.vercel.sh/v1/models — refetch before changing, don't
-// trust memory (models are retired frequently).
-const MODEL_ID = "anthropic/claude-haiku-4.5";
+// live model instances). DeepSeek V4 Pro: a reasoning model that is cheap and
+// supports IMPLICIT prompt caching (tags: reasoning, tool-use, implicit-caching).
+// Verified live against https://ai-gateway.vercel.sh/v1/models — refetch before
+// changing, don't trust memory (models are retired frequently). Swap for e.g.
+// "anthropic/claude-sonnet-5" for harder subjects (but see the caching note below).
+const MODEL_ID = "deepseek/deepseek-v4-pro";
+
+// Thinking (extended reasoning). DeepSeek V4 Pro is a reasoning model; this unified
+// AI SDK param turns it on and the provider translates it to native thinking. The
+// reasoning stream renders in the chat as a collapsible "Thinking" block. Reasoning
+// tokens bill as output, so 'medium' balances depth vs cost — bump to 'high'/'xhigh'
+// for harder tutoring. Values: provider-default | none | minimal | low | medium | high | xhigh.
+const REASONING: "provider-default" | "none" | "minimal" | "low" | "medium" | "high" | "xhigh" =
+  "medium";
+
+// Caching. DeepSeek caches automatically ("implicit-caching"): any request whose
+// prompt PREFIX matches a recent one reads the cached tokens (billed at
+// `input_cache_read`, ~120× cheaper). We don't set explicit breakpoints the way an
+// Anthropic model would — we just keep the prefix stable: `buildInstructions` is
+// deterministic (no timestamps/random), so the system prompt + grounding is byte-stable
+// across a conversation, and each new turn cache-reads the growing prior prefix.
+// (If you switch to an Anthropic model, caching needs explicit `cache_control`
+// breakpoints via `prepareStep` — see mirror-dimension's dimension-agent.)
 
 export interface RunTutorAgentInput {
   /** Raw chat history from the client's useChat (converted below). */
@@ -52,6 +70,7 @@ export async function runTutorAgent(input: RunTutorAgentInput) {
 
   const agent = new WorkflowAgent({
     model: MODEL_ID,
+    reasoning: REASONING, // extended thinking (see REASONING above)
     instructions: buildInstructions(input),
   });
 
