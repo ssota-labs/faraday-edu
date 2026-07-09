@@ -32,6 +32,7 @@ LMS/tutor hooks. The *shape* of the world is a swappable **pack**
 
 ```tsx
 import { CurriculumHost, map2dPack, type Curriculum } from "@/faraday/world";
+// Module scope — REQUIRED. Recreating this object inside the component resets progress.
 const curriculum: Curriculum = { title: "…", nodes: [
   { id: "a", title: "A", meta: { x: 15, y: 50 }, lesson: <LessonA /> },
   { id: "b", title: "B", requires: ["a"], meta: { x: 55, y: 50 }, lesson: <LessonB /> },
@@ -46,13 +47,22 @@ clip labels); omit for auto layout. A lesson self-completes via
 (answer correctly → node done → dependents unlock). The learner can also press
 Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with `--3d`).
 
+> **Progress footgun:** keep `curriculum` at **module scope**. Defining it inside
+> the component creates a new object every render and wipes unlock state.
+> `CurriculumHost` warns in dev when identity flips with the same title.
+
 ## 3D lessons (`--3d`) — Three.js / R3F
 
 Import from `@/faraday/three`. `three` is only installed/bundled with `--3d`.
 
+**Colour split:** DOM/SVG/Tailwind → semantic tokens (never raw `#hex`). three.js
+material `color` props → **hex required** (three can't parse `oklch`). `<Label3D>`
+is the exception (DOM overlay → theme text).
+
 - `<Scene3D mood height? camera? controls? autoRotate?>` — preconfigured R3F
   canvas (perspective camera, OrbitControls). Drop into a `<Workbench>` center;
-  bind panel controls to scene state via React.
+  bind panel controls to scene state via React. **`mood` is required for domain
+  scenes** — omitting it defaults to `"neutral"` and logs a **dev warning**.
 - Procedural helpers (compose for astronomy, physics, chemistry, math surfaces, a
   stylized cell — **all code-generated, no assets**):
   - `<Body position? radius? color? emissive? emissiveIntensity?>` — a stationary
@@ -70,15 +80,12 @@ Import from `@/faraday/three`. `three` is only installed/bundled with `--3d`.
   component (not inside the Canvas) and passing it as props to components rendered
   under `<Scene3D>`; a `useFrame` reads the latest prop each frame.
 
-> **Helpers are decorations, not simulators.** These procedural helpers (and blocks
-> generally) animate for *looks* — e.g. `<Planet>` moves at a constant rate, not by
-> any physical law. That's fine when the visual is context. But **when the lesson's
-> teaching point IS the quantitative behaviour** — real dynamics, rates, conserved
-> quantities, a specific distribution — a decorative approximation will teach the
-> wrong thing. Model the real relationship yourself (`useFrame`/`useMemo`) and
-> **verify it against the concept** (see the verification method in SKILL.md). The
-> rule generalises: a block's docs state its *intent*; its source is the *contract* —
-> when correctness matters, confirm the actual behaviour, don't assume it.
+> **Helpers are decorations, not simulators.** `<Planet>` moves at a constant
+> parametric rate — fine for atmosphere, wrong for teaching Kepler. When the
+> teaching point **is** equal areas / real dynamics, integrate yourself
+> (`useFrame` + `M = E − e·sinE`). Live reference:
+> `examples/voyage-log/src/lesson/nodes/kepler.tsx`. Always verify quantitative
+> claims against the concept (see SKILL.md).
 
 ### MANDATORY: domain scenes must carry a `mood`
 

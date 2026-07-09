@@ -213,6 +213,8 @@ faraday-edu/
 ├─ plugins/
 │  ├─ claude-code/          # Claude Code plugin + marketplace (install & drive Faraday)
 │  └─ codex/                # Codex AGENTS.md + custom prompts
+├─ examples/                # Live demos (Vercel root = examples/<name>)
+│  └─ voyage-log/           # C-B 항해 일지 curriculum (--3d)
 ├─ specs/                   # tutor-ai.md, world-seed.md (design)
 ├─ VISION.md · GTM.md       # architecture & customer strategy
 └─ README.md

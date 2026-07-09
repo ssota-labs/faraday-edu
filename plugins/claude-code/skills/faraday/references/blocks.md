@@ -75,7 +75,8 @@ of `<Workbench>`.
 | `<Stage caption?>` | Card-framed host for a single visualization (SVG/canvas/DOM). |
 | `<Workbench title? panelTitle? onReset? controls>` | Live canvas (`children`) + floating, sticky control panel (`controls`). The interactive centerpiece. |
 | `<ControlGroup label defaultOpen? onReset?>` | Collapsible labeled section for the panel's `controls`. Group controls semantically. |
-| `<Chart type data x series yAxis?>` | shadcn/Recharts chart. `type`: line \| bar \| area. `series: {key,label?,color?}[]` (defaults to `--chart-1..5`). Needs **non-zero container width to paint** (element `ResizeObserver`; a `window` resize may not rescue it) — see the Rendering gotcha in worlds.md. |
+| `<Chart type data x series yAxis?>` | shadcn/Recharts chart. `type`: line \| bar \| area. `series: {key,label?,color?}[]` (defaults to `--chart-1..5`). `data` values may be `null` (Recharts gap — use for a single "you are here" marker). Needs **non-zero container width to paint** (element `ResizeObserver`; a `window` resize may not rescue it) — see the Rendering gotcha in worlds.md. Prefer `height ≥ 260` for area charts. |
+| `<Segmented label? value onChange options>` | Single-select. Generic over `T extends string` — `value`/`onChange`/`options[].value` share `T` (no cast). |
 | `<ParamSlider label value min max step? onChange format?>` | Numeric control. |
 | `<ParamSwitch label checked onChange>` | On/off control. |
 | `<Segmented label? value onChange options>` | Single-select segmented control. |
