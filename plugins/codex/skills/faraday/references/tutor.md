@@ -76,8 +76,24 @@ curl -sS -N --max-time 90 -X POST "http://localhost:$PORT/api/chat" \
   --data '{"messages":[{"id":"1","role":"user","parts":[{"type":"text","text":"<a question>"}]}],"context":"<lesson text>","title":"<title>"}'
 ```
 
-Expect `text-delta` tokens streaming a grounded, Socratic answer, and
-`reasoning-*` events if thinking is on. Use the browser only for the visual
-"Thinking" block. Known gotcha: the tutor needs `nodeLinker: hoisted` in
-`pnpm-workspace.yaml` (the scaffold adds it) — without it, dev throws an ajv
-"Dynamic require … is not supported" 500 and the model step never responds.
+Read the result by tier, so you know what a pass looks like in each case:
+
+- **With a key** — expect `text-delta` tokens streaming a grounded, Socratic answer
+  (and `reasoning-*` events if thinking is on). This is the full pass; also spot-check
+  that the answer is actually grounded in your `context` and doesn't leak quiz answers.
+- **Without a key** (common in a scaffold you haven't keyed) — the stream still
+  returns **HTTP 200** and completes an *empty* envelope: `start → start-step →
+  finish-step → finish → [DONE]` with **no `text-delta`**. The Gateway auth error
+  surfaces **only in the dev server log**, never as an SSE event. So "200 + empty
+  stream + a `GatewayAuthenticationError` in `dev.log`" is the expected keyless
+  result — it confirms the whole durable pipeline works up to the model call. Don't
+  read the empty stream as a failure.
+
+Use the browser only for the visual "Thinking" block. Two gotchas:
+
+- **ajv 500:** the tutor needs `nodeLinker: hoisted` in `pnpm-workspace.yaml` (the
+  scaffold adds it) — without it, dev throws an ajv "Dynamic require … is not
+  supported" 500 and the model step never responds.
+- **Cold-start `ECONNRESET`:** the *first* `POST /api/chat` right after `pnpm dev`
+  can return a Vite error page (`read ECONNRESET`) while the Nitro/Workflow layer
+  warms up; every request after streams fine. Retry once before diagnosing.

@@ -24,7 +24,7 @@ export default function MyLesson() {
       <Workbench
         title="Canvas"
         panelTitle="Controls"
-        onReset={() => setParam(4)}
+        onReset={() => { setParam(4); step.reset(); }}  // reset all state, incl. the stepper
         controls={
           <>
             <ControlGroup label="Playback">
@@ -67,7 +67,7 @@ Precompute an ordered array of immutable frames and walk it with `useStepper` +
 **Continuous** — the reader turns knobs and the picture responds live (a function
 plot, a physics parameter). No `useStepper` needed: hold params in `useState`,
 `useMemo` the visualization, drive with `<ParamSlider>` / `<ParamSwitch>` /
-`<Segmented>`.
+`<Segmented>`. See `docs/examples/continuous.tsx` (compound interest + a live chart).
 
 ## Visualizations & theme colors
 
@@ -115,9 +115,11 @@ block + a solar-system demo. **Without `--3d`, three is never installed or bundl
   code-generated, no assets.** The orbit ellipse puts its **focus at the origin**,
   so a `<Body>` at `[0,0,0]` sits at the focus. For custom geometry, drop
   `<mesh>`/`<sphereGeometry>` etc. (R3F intrinsics) directly inside `<Scene3D>`.
-  - ⚠️ `<Planet>` moves at **constant parametric speed** — decorative, not
-    physically accurate. It does not sweep equal areas, so it's **wrong for Kepler's
-    second law**; integrate motion in your own `useFrame` for true orbital dynamics.
+  - ⚠️ These helpers are **decorations, not simulators** — e.g. `<Planet>` moves at
+    a constant rate, not by any physical law. When a lesson's teaching point is the
+    quantitative behaviour itself (real dynamics, rates, a specific distribution),
+    don't rely on a helper's built-in motion: model the relationship yourself
+    (`useFrame`/`useMemo`) and verify it against the concept.
 
 Note: three uses fixed hex colors, not theme CSS vars (three can't parse `oklch`) —
 pass hex to 3D objects. Exception: `<Label3D>` is a drei `<Html>` overlay, so it

@@ -60,11 +60,8 @@ Import from `@/faraday/three`. `three` is only installed/bundled with `--3d`.
   - `<OrbitPath a e? color? opacity?>` — the elliptical orbit line. The ellipse is
     offset so its **focus sits at the origin** — put a `<Body>` at `[0,0,0]` and it
     lands at the focus (exactly what a Kepler/orbit scene wants).
-  - `<Planet a e? size? speed? color? phase?>` — a sphere orbiting the origin.
-    ⚠️ It moves at **constant parametric speed** (decorative), so it does *not*
-    sweep equal areas or speed up at perihelion — fine for a generic orbit, **wrong
-    for Kepler's second law**. For true orbital dynamics, integrate motion yourself
-    in a `useFrame` (uniform mean anomaly → Newton-solve `M = E − e·sin E`).
+  - `<Planet a e? size? speed? color? phase?>` — a sphere orbiting the origin at a
+    constant parametric rate.
   - `<Label3D position>{…}</Label3D>` — an HTML label. Being a drei `<Html>`
     overlay it **does** use theme text color — the one exception to "3D = hex only".
 
@@ -72,6 +69,16 @@ Import from `@/faraday/three`. `three` is only installed/bundled with `--3d`.
   inside `<Scene3D>`. Bind panel controls by holding state in the **lesson**
   component (not inside the Canvas) and passing it as props to components rendered
   under `<Scene3D>`; a `useFrame` reads the latest prop each frame.
+
+> **Helpers are decorations, not simulators.** These procedural helpers (and blocks
+> generally) animate for *looks* — e.g. `<Planet>` moves at a constant rate, not by
+> any physical law. That's fine when the visual is context. But **when the lesson's
+> teaching point IS the quantitative behaviour** — real dynamics, rates, conserved
+> quantities, a specific distribution — a decorative approximation will teach the
+> wrong thing. Model the real relationship yourself (`useFrame`/`useMemo`) and
+> **verify it against the concept** (see the verification method in SKILL.md). The
+> rule generalises: a block's docs state its *intent*; its source is the *contract* —
+> when correctness matters, confirm the actual behaviour, don't assume it.
 
 ### MANDATORY: domain scenes must carry a `mood`
 
@@ -123,6 +130,24 @@ import { Physics, RigidBody } from "@react-three/rapier";
 Use physics only for genuine dynamics (collisions, joints, stacking). For scripted
 motion (orbits, pendulums-as-math), integrate in the render loop — it's lighter.
 
+**Your scaffolded `src/lesson/lesson.tsx` is already a working Rapier demo** — the
+fastest physics starter is to adapt it, not a `docs/examples/` file. Two things
+every non-trivial physics lesson needs that Rapier provides (not Faraday-specific,
+but you'll reach for them immediately):
+
+- **Constrain the process to the dimensions it lives in.** A planar process (a
+  Galton board, Plinko, 2D collisions) will drift and scatter in the third axis
+  unless you lock it — pass `enabledTranslations={[true, true, false]}` (and/or
+  lock rotations) on the moving bodies. Decide the real degrees of freedom before
+  spawning many bodies.
+- **Read simulation state back out to teach with it.** A sim is only a *demo* until
+  you measure it. To drive a `<Chart>`, a `<Stat>`, a `<Quiz>`, or `complete()`
+  from what actually happened, keep a `ref` to each `RigidBody` and sample
+  `ref.current.translation()` in a `useFrame` (throttled), then feed those numbers
+  into a block. This is the bridge from "genuine dynamics" to an assessable lesson —
+  and the thing to **verify**: confirm the measured result matches the concept (a
+  Galton board should approach a binomial/normal shape, not an arbitrary pile).
+
 ## LMS — progress tracking
 
 The vendored `@/faraday/lms` exposes a progress recorder + dashboard components
@@ -144,6 +169,11 @@ Like everything under `src/faraday/`, it's locked — compose it, don't edit it.
 ## Rendering gotcha (3D & charts)
 
 A `<Scene3D>` or `<Chart>` only paints once its container has non-zero width (both
-defer via ResizeObserver so they never mount at 0px). On a normal page load this
-is instant; in a headless/collapsed harness it can look blank until first layout —
-dispatching a window `resize` forces it. Expected, not a bug.
+watch an **element** `ResizeObserver` so they never mount at 0px). On a normal page
+load this is instant. In a headless/collapsed harness it can stay blank until first
+layout — and note a **window** `resize` event may not rescue it (the observer is on
+the element, not `window`). The reliable fix is to give the container a real width
+**before mount**: verify at a non-zero viewport, and if you loaded collapsed,
+(re)navigate/relayout so the element gets measured. Expected, not a bug — but see
+the verification note: a chart/scene that never gets width reads as "broken" when
+it's only unmeasured.

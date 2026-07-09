@@ -57,6 +57,35 @@ next steps). Exit codes: `0` ok · `1` check failed · `2` usage · `4` environm
 Never claim a lesson works from `pnpm check` alone — `check` only proves the
 locked tree is intact, not that your lesson renders. Drive it in `dev`.
 
+## Verify it teaches the right thing
+
+Faraday lessons are teaching tools, so "it compiles" and "it renders" are necessary
+but **not sufficient** — a lesson that runs while showing wrong behaviour is worse
+than none. Always attempt verification, and layer the checks from cheap to
+meaningful:
+
+1. **Gates** — `pnpm check` (locked tree intact) + `pnpm typecheck` / `pnpm build`
+   (the whole graph compiles). These catch structure and type errors, not meaning.
+2. **Drive the behaviour** — `pnpm dev`, then exercise every control and confirm the
+   thing the reader manipulates changes what it should. If the harness can't drive
+   an out-of-tree `/tmp` scaffold (preview tools may bind to the session root, reuse
+   a neighbouring server, or need a non-zero viewport to paint), fall back to: HTTP
+   200 on the served modules + a clean dev log + a static trace of the logic — and
+   for a tutor, `curl` the `/api/chat` SSE. Say which level you reached; don't imply
+   you drove it when you didn't.
+3. **Check the content is correct** — spot-check a value or invariant you can derive
+   independently: a shortest path you can trace by hand, a doubling time, a conserved
+   quantity, the shape a distribution must approach. This is the check that separates
+   a teaching tool from a demo, and the one most worth doing.
+4. **Trust behaviour over labels** — a block or helper's docs state its *intent*; its
+   source is the *contract*. When correctness matters, confirm the real prop shape
+   and real behaviour (reading the sealed source for reference is fine — editing it
+   is not) instead of assuming. Helpers are approximations, not simulators: if a
+   lesson's point is the dynamics, model it yourself and verify via step 3.
+
+Report the highest level you actually reached — "gates pass" is not "teaches the
+right thing."
+
 ## Decision guide — what to scaffold
 
 - **2D (default)** — diagrams, charts, algorithm walk-throughs, parameter

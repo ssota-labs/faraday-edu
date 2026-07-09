@@ -22,7 +22,7 @@ export default function MyLesson() {
 
       <Workbench
         title="Canvas" panelTitle="Controls"
-        onReset={() => setParam(4)}
+        onReset={() => { setParam(4); step.reset(); }}   // reset ALL lesson state, incl. the stepper
         controls={
           <>
             <ControlGroup label="Playback">
@@ -59,10 +59,12 @@ of `<Workbench>`.
 ## Two shapes of lesson
 
 - **Stepped** — an algorithm/proof unfolds over discrete moments. Precompute an
-  ordered array of immutable frames; walk it with `useStepper` + `<Scrubber>`.
+  ordered array of immutable frames; walk it with `useStepper` + `<Scrubber>`. The
+  scaffolded `src/lesson/lesson.tsx` (bubble sort) is a stepped starter.
 - **Continuous** — the reader turns knobs and the picture responds live. Hold
   params in `useState`, `useMemo` the visualization, drive with `<ParamSlider>` /
-  `<ParamSwitch>` / `<Segmented>`. No `useStepper` needed.
+  `<ParamSwitch>` / `<Segmented>`. No `useStepper` needed. Copy
+  `docs/examples/continuous.tsx` (live-knobs + `<Chart>`) as a starter.
 
 ## Block catalog
 
@@ -73,7 +75,7 @@ of `<Workbench>`.
 | `<Stage caption?>` | Card-framed host for a single visualization (SVG/canvas/DOM). |
 | `<Workbench title? panelTitle? onReset? controls>` | Live canvas (`children`) + floating, sticky control panel (`controls`). The interactive centerpiece. |
 | `<ControlGroup label defaultOpen? onReset?>` | Collapsible labeled section for the panel's `controls`. Group controls semantically. |
-| `<Chart type data x series yAxis?>` | shadcn/Recharts chart. `type`: line \| bar \| area. `series: {key,label?,color?}[]` (defaults to `--chart-1..5`). |
+| `<Chart type data x series yAxis?>` | shadcn/Recharts chart. `type`: line \| bar \| area. `series: {key,label?,color?}[]` (defaults to `--chart-1..5`). Needs **non-zero container width to paint** (element `ResizeObserver`; a `window` resize may not rescue it) — see the Rendering gotcha in worlds.md. |
 | `<ParamSlider label value min max step? onChange format?>` | Numeric control. |
 | `<ParamSwitch label checked onChange>` | On/off control. |
 | `<Segmented label? value onChange options>` | Single-select segmented control. |
@@ -82,7 +84,7 @@ of `<Workbench>`.
 | `<Callout title? variant?>` | Highlighted note. `variant`: `"default"` \| `"destructive"`. |
 | `<Reveal label?>` | Collapsible hint/spoiler. |
 | `<Compare items defaultValue?>` | Tabbed side-by-side cases. `items: {value, label, content}[]` — `value` keys each tab (**required**); `defaultValue` picks the open tab (defaults to the first item's `value`). |
-| `<Stat label value delta?>` | Compact metric read-out. |
+| `<Stat label value delta?>` | Compact metric read-out. `delta` is an object `{text, tone?}` (not a bare string). |
 | `useStepper(total, { fps? })` | Cursor + autoplay over ordered frames. From `@/faraday/runtime`. |
 
 Light/dark toggle and the reading column come from the runtime — don't add them.
