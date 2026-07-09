@@ -110,7 +110,10 @@ async function runNew(argv, context) {
   let installed = false;
   if (!skip) {
     try {
-      await context.runCommand("pnpm", ["install"], { cwd: targetDir });
+      // Under --json, stdout must stay pure JSON — keep pnpm's install chatter off
+      // it (route child stdout to /dev/null; errors still surface on stderr).
+      const installStdio = opts.json ? ["ignore", "ignore", "inherit"] : "inherit";
+      await context.runCommand("pnpm", ["install"], { cwd: targetDir, stdio: installStdio });
       installed = true;
     } catch (error) {
       const e = new Error(`pnpm install failed: ${error.message}`);
@@ -125,8 +128,8 @@ async function runNew(argv, context) {
   if (opts.json) {
     context.stdout(JSON.stringify({
       ok: true, command: "new", title: result.title, packageName: result.packageName,
-      dir: rel, protectedFiles: result.protectedFiles, installed, tutor: opts.tutor,
-      nextSteps: [`cd ${rel}`, ...(installed ? [] : ["pnpm install"]), ...tutorSteps, "pnpm dev"],
+      dir: targetDir, protectedFiles: result.protectedFiles, installed, tutor: opts.tutor,
+      nextSteps: [`cd ${targetDir}`, ...(installed ? [] : ["pnpm install"]), ...tutorSteps, "pnpm dev"],
     }, null, 2) + "\n");
   } else {
     const tutorLine = opts.tutor
