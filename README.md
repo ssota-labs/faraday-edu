@@ -111,6 +111,37 @@ multi-tenancy, payments), they don't add features. (See [VISION.md](VISION.md) �
 
 ---
 
+## Example lessons — the feel
+
+A quick tour of what "one command → an interactive lesson" actually produces.
+Each is a real combination of the blocks and flags above; your agent generates
+them on demand from a topic — you don't wire any of it by hand.
+
+- **Watch Dijkstra find the shortest path.** Step through a graph as the frontier
+  expands, scrubbing back and forth — then ask the built-in tutor *why* it never
+  revisits a settled node. *(stepped frames + `<Scrubber>` + `--tutor`)*
+- **Feel compound interest compound.** Drag principal, rate, and compounding
+  frequency; the balance curve and the final number update live. The "Rule of 72"
+  stops being a formula you memorize. *(live knobs + `<Chart>` + `<Stat>`)*
+- **See Kepler's second law sweep equal areas.** A planet on a real elliptical
+  orbit in 3D speeds up near the sun; drag the eccentricity and the equal-area
+  sweeps stay equal. *(3D, `space` mood — `--3d`)*
+- **Drop 500 balls through a Galton board.** Real physics — each ball bounces off
+  the pegs and piles up into a bell curve you never programmed. *(Rapier —
+  `--physics`)*
+- **Take a 3-part course on waves.** Transverse vs. longitudinal, then
+  interference you mix with sliders, then standing-wave harmonics — with chapter
+  nav, prev/next, and deep links. *(`<Course>`)*
+- **Play a number-systems quest.** Binary → hexadecimal → two's-complement laid
+  out as a map; clear each node's quiz to unlock the next, with progress tracked.
+  *(unlock world + LMS)*
+
+Swap the subject and the world follows its mood: a glowing **animal cell**
+(`cell`), a **molecule** in a clean lab (`lab`), an **abstract geometry** surface
+(`abstract`). The through-line: the reader *does* the idea instead of reading it.
+
+---
+
 ## The AI tutor (`--tutor`)
 
 `faraday new <name> --tutor` turns the app into a Vite + Nitro + Workflow hybrid
