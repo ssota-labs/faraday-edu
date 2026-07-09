@@ -14,6 +14,16 @@ completion. See `README.md` for the command reference; notes below cover non-obv
 - There is no committed lockfile at the repo root, and running `npm install` here creates a
   stray `package-lock.json` — avoid committing it.
 
+### Secrets → `.env.local` on startup
+- `scripts/setup-env-local.mjs` runs from the startup update script. It reads the KEY names in
+  `.env.example` and writes any matching values found in the environment (where Cursor injects
+  saved Secrets) into `.env.local`, preserving keys already present. It logs key **names only**,
+  never values, and `.env.local` is git-ignored.
+- To materialize a secret, save it as a Cursor Secret whose name **exactly matches** a key in
+  `.env.example` (e.g. add `AI_GATEWAY_API_KEY` to `.env.example` + Secrets). With no matching
+  Secrets it is a no-op and writes nothing. Re-run manually with `node scripts/setup-env-local.mjs`
+  (add `--dir <path>` to target a generated lesson's own `.env.example`, e.g. a `--tutor` lesson).
+
 ### Running / testing the CLI (from repo root)
 - Tests: `node --test src/*.test.mjs` (Node's built-in runner; no ports, no services).
 - Scaffold a lesson: `node bin/faraday.mjs new <name>` — this shells out to `pnpm install`
