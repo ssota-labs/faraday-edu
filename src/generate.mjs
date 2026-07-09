@@ -19,6 +19,7 @@ function sourcePaths(root = PACKAGE_ROOT) {
     starter: path.join(root, "templates", "starter"),
     faraday: path.join(root, "templates", "faraday"),
     addon3d: path.join(root, "templates", "addon-3d"),
+    addonTutor: path.join(root, "templates", "addon-tutor"),
   };
 }
 
@@ -34,6 +35,24 @@ const THREE_DEPS = {
 
 // Physics engine — only for `--physics` lessons (implies 3D).
 const RAPIER_DEP = { "@react-three/rapier": "^2.1.0" };
+
+// Deps added only for `--tutor` lessons — the durable AI tutor turns the static
+// Vite app into a Vite + Nitro + Workflow hybrid (server-backed). Versions pinned
+// to the mirror-dimension reference install (ai@7 / @ai-sdk/workflow@1 / workflow@4.5).
+const TUTOR_DEPS = {
+  dependencies: {
+    "@ai-sdk/react": "^4.0.12",
+    "@ai-sdk/workflow": "^1.0.11",
+    ai: "^7.0.11",
+    // Nitro serves the api/ routes + provides `nitro/vite`. The stable 3.0.0 is
+    // deprecated AND predates the `serverDir` config the Workflow SDK's Vite guide
+    // requires, so we pin the current beta (what `latest` resolves to and what the
+    // workflow docs target). Bump when a stable 3.0.x ships with serverDir.
+    nitro: "3.0.260610-beta",
+    workflow: "^4.5.0",
+    zod: "^4.0.0",
+  },
+};
 
 async function replaceInFile(file, from, to) {
   const text = await fs.readFile(file, "utf8");
@@ -51,7 +70,7 @@ async function replaceInFile(file, from, to) {
  * @param {() => string} [opts.uuid]   injectable id generator (tests)
  */
 export async function generateLesson(opts) {
-  const { targetDir, name, force = false, threeD = false, physics = false } = opts;
+  const { targetDir, name, force = false, threeD = false, physics = false, tutor = false } = opts;
   const use3d = threeD || physics; // physics implies 3D
   const src = sourcePaths(opts.templateRoot);
   const uuid = opts.uuid ?? (() => crypto.randomUUID());
@@ -59,6 +78,7 @@ export async function generateLesson(opts) {
   await assertDirectory(src.starter, "starter template");
   await assertDirectory(src.faraday, "faraday template");
   if (use3d) await assertDirectory(src.addon3d, "3d addon template");
+  if (tutor) await assertDirectory(src.addonTutor, "tutor addon template");
 
   if (!force && !(await isEffectivelyEmpty(targetDir))) {
     const err = new Error(`Target directory is not empty: ${targetDir} (use --overwrite)`);
@@ -103,6 +123,21 @@ export async function generateLesson(opts) {
     }
   }
 
+  // 3c. opt-in tutor: this is the one addon that makes the app server-backed. It
+  //     vendors the chat UI into the locked tree, drops the durable workflow +
+  //     Nitro api routes at the project root (author-editable), swaps in the
+  //     Vite+Nitro+Workflow config, and ships an env template + example lesson.
+  if (tutor) {
+    await copyDirectory(path.join(src.addonTutor, "faraday", "tutor"), path.join(protectedDir, "tutor"));
+    await copyDirectory(path.join(src.addonTutor, "api"), path.join(targetDir, "api"));
+    await copyDirectory(path.join(src.addonTutor, "workflows"), path.join(targetDir, "workflows"));
+    await copyDirectory(path.join(src.addonTutor, "examples"), path.join(targetDir, "docs", "examples"));
+    await fs.copyFile(path.join(src.addonTutor, "vite.config.ts"), path.join(targetDir, "vite.config.ts"));
+    await fs.copyFile(path.join(src.addonTutor, "env.example"), path.join(targetDir, "env.example"));
+    // widen the node tsconfig so `tsc -b` also typechecks the api/ + workflows/ server files
+    await fs.copyFile(path.join(src.addonTutor, "tsconfig.node.json"), path.join(targetDir, "tsconfig.node.json"));
+  }
+
   // 4. inject package name (+ three deps for 3D lessons)
   const pkgPath = path.join(targetDir, "package.json");
   const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
@@ -112,6 +147,11 @@ export async function generateLesson(opts) {
     pkg.dependencies = { ...pkg.dependencies, ...THREE_DEPS.dependencies };
     pkg.devDependencies = { ...pkg.devDependencies, ...THREE_DEPS.devDependencies };
     if (physics) pkg.dependencies = { ...pkg.dependencies, ...RAPIER_DEP };
+  }
+  if (tutor) {
+    pkg.dependencies = { ...pkg.dependencies, ...TUTOR_DEPS.dependencies };
+  }
+  if (use3d || tutor) {
     // keep dependency keys sorted (matches the rest of the template)
     for (const group of ["dependencies", "devDependencies"]) {
       pkg[group] = Object.fromEntries(Object.entries(pkg[group]).sort(([a], [b]) => a.localeCompare(b)));

@@ -12,13 +12,16 @@ import { MANIFEST_NAME, verifyManifest } from "./manifest.mjs";
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
 Usage:
-  faraday new <name> [--3d | --physics] [--at <dir>] [--overwrite] [--skip-install] [--json]
+  faraday new <name> [--3d | --physics] [--tutor] [--at <dir>] [--overwrite] [--skip-install] [--json]
   faraday check [--dir <lesson>]        verify the protected src/faraday/** tree
   faraday help
 
   --3d        include the Three.js (React Three Fiber) 3D block + a solar-system demo.
               Omit it for 2D lessons — three is never installed or bundled without it.
   --physics   like --3d, plus the Rapier physics engine + a gravity/collision demo.
+  --tutor     add a durable, grounded AI chat tutor (<Tutor>). Turns the app into a
+              Vite + Nitro + Workflow hybrid with api/ routes. Needs AI_GATEWAY_API_KEY
+              in .env.local locally; deploys to Vercel. Static lessons stay server-free.
 
 Exit codes: 0 ok · 1 lesson check failed · 2 usage error · 4 environment error`;
 
@@ -67,7 +70,7 @@ export async function runFaradayCli(argv, rawContext = {}) {
 }
 
 function parseNewArgs(argv) {
-  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, threeD: false, physics: false };
+  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, threeD: false, physics: false, tutor: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--at") opts.at = argv[++i];
@@ -76,6 +79,7 @@ function parseNewArgs(argv) {
     else if (arg === "--json") opts.json = true;
     else if (arg === "--3d") opts.threeD = true;
     else if (arg === "--physics") opts.physics = true;
+    else if (arg === "--tutor") opts.tutor = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
     else if (opts.name === undefined) opts.name = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
@@ -98,6 +102,7 @@ async function runNew(argv, context) {
     force: opts.overwrite,
     threeD: opts.threeD,
     physics: opts.physics,
+    tutor: opts.tutor,
     uuid: context.uuid,
   });
 
@@ -115,17 +120,23 @@ async function runNew(argv, context) {
   }
 
   const rel = path.relative(context.cwd, targetDir) || ".";
+  // The tutor needs an AI Gateway key locally — surface that before `pnpm dev`.
+  const tutorSteps = opts.tutor ? ["cp env.example .env.local  # then paste your AI_GATEWAY_API_KEY"] : [];
   if (opts.json) {
     context.stdout(JSON.stringify({
       ok: true, command: "new", title: result.title, packageName: result.packageName,
-      dir: rel, protectedFiles: result.protectedFiles, installed,
-      nextSteps: [`cd ${rel}`, ...(installed ? [] : ["pnpm install"]), "pnpm dev"],
+      dir: rel, protectedFiles: result.protectedFiles, installed, tutor: opts.tutor,
+      nextSteps: [`cd ${rel}`, ...(installed ? [] : ["pnpm install"]), ...tutorSteps, "pnpm dev"],
     }, null, 2) + "\n");
   } else {
+    const tutorLine = opts.tutor
+      ? `    cp env.example .env.local   # paste your AI_GATEWAY_API_KEY (see env.example)\n`
+      : "";
     context.stdout(
       `\n  Created ${result.title} in ${rel}/  (${result.protectedFiles} protected files)\n\n` +
-      `  Next:\n    cd ${rel}\n${installed ? "" : "    pnpm install\n"}    pnpm dev\n\n` +
-      `  Author your lesson in src/lesson/lesson.tsx — the shadcn layer under src/faraday/ is locked.\n`,
+      `  Next:\n    cd ${rel}\n${installed ? "" : "    pnpm install\n"}${tutorLine}    pnpm dev\n\n` +
+      `  Author your lesson in src/lesson/lesson.tsx — the shadcn layer under src/faraday/ is locked.\n` +
+      (opts.tutor ? `  Tutor: embed <Tutor context={…} /> from "@/faraday/tutor"; api/ + workflows/ hold the durable server.\n` : ""),
     );
   }
 }

@@ -58,6 +58,43 @@ test("generateLesson produces the expected tree + injections", async () => {
   await fs.rm(base, { recursive: true, force: true });
 });
 
+test("generateLesson --tutor adds the durable server layer + locks the chat UI", async () => {
+  const base = await tmp();
+  const target = path.join(base, "out");
+  const result = await generateLesson({ targetDir: target, name: "tutored", tutor: true });
+
+  // server-backed files land at the project root (author-editable)...
+  for (const rel of [
+    "api/chat.post.ts",
+    "api/chat/[runId]/stream.get.ts",
+    "workflows/tutor-agent.ts",
+    "env.example",
+    "tsconfig.node.json",
+    "docs/examples/tutor.tsx",
+  ]) {
+    assert.ok(await exists(path.join(target, rel)), `missing ${rel}`);
+  }
+
+  // ...and the chat UI is vendored INTO the locked tree (in the manifest)
+  assert.ok(await exists(path.join(target, "src/faraday/tutor/tutor.tsx")));
+  const manifest = JSON.parse(await read(target, ".faraday-manifest.json"));
+  assert.ok(
+    Object.keys(manifest.files).some((f) => f.startsWith("tutor/")),
+    "tutor UI should be under the integrity manifest",
+  );
+
+  // the tutor deps + the Vite+Nitro+Workflow config were injected
+  const pkg = JSON.parse(await read(target, "package.json"));
+  for (const dep of ["ai", "@ai-sdk/react", "@ai-sdk/workflow", "workflow", "nitro"]) {
+    assert.ok(pkg.dependencies[dep], `missing dep ${dep}`);
+  }
+  const vite = await read(target, "vite.config.ts");
+  assert.match(vite, /workflow\/vite/);
+  assert.match(vite, /nitro\/vite/);
+
+  await fs.rm(base, { recursive: true, force: true });
+});
+
 test("integrity manifest matches freshly-generated protected tree", async () => {
   const base = await tmp();
   const target = path.join(base, "out");
