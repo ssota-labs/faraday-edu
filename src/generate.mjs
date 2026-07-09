@@ -96,6 +96,11 @@ export async function generateLesson(opts) {
     );
     await copyDirectory(path.join(src.addon3d, "examples"), path.join(targetDir, "docs", "examples"));
     await copyDirectory(path.join(src.addon3d, "assets"), path.join(targetDir, "public", "models"));
+    // physics-only extras (need @react-three/rapier): the walkable RPG world pack.
+    if (physics) {
+      await copyDirectory(path.join(src.addon3d, "physics-extra", "three"), path.join(protectedDir, "three"));
+      await copyDirectory(path.join(src.addon3d, "physics-extra", "examples"), path.join(targetDir, "docs", "examples"));
+    }
   }
 
   // 4. inject package name (+ three deps for 3D lessons)

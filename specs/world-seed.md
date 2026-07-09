@@ -126,9 +126,28 @@
 
 ---
 
-## 10. 미결정 / 다음
+## 10. v2 계약 확장 — 게임형 팩용 seam (동결)
+
+`pack-world3d-rpg`(WASD 아바타·물리·근접 진입) 프로토타입에서 **정말 게임같은 팩**이 필요로 한
+seam이 드러나 `WorldPackProps`에 추가·동결했다. 원칙: **제네릭하게** — 코어는 "플레이어·인벤토리"가
+뭔지 끝까지 모른다.
+
+- **`onComplete(nodeId)`** — 레슨 없이 **게임플레이로** 노드 완료(스킬체크·보스·체크포인트).
+- **`onReward(xp)`** — 애드혹 XP(수집물·보너스).
+- **`packState` / `setPackState(state)`** — 코어가 저장하지만 **해석하지 않는 opaque 블롭**
+  (아바타 위치·인벤토리·퀘스트 플래그·타이머). 이게 있어야 게임 팩이 월드↔레슨 토글을 넘어
+  실제 상태를 유지할 수 있고, 코어는 여전히 agnostic. (localStorage에 `progress`와 함께 영속.)
+
+> 검증: `world3dRpgPack`이 `packState`에 아바타 위치를 저장/복원하며 같은 코어/포트 위에서
+> 걸어다니는 3D 월드로 렌더됨(빌드·타입체크 통과). 실시간 이동은 foreground 브라우저 필요(프리뷰
+> 탭은 hidden → rAF 스로틀).
+
+아직 안 넓힌 seam(스펙만): **`renderLesson(nodeId)` 슬롯** — 레슨을 화면 전체 전환이 아니라
+월드 안 오버레이/대화창으로 띄우기(NPC 대화식). v3 후보.
+
+## 11. 미결정 / 다음
 
 1. `curriculum.ts` 선언 API 확정(노드/엣지/언락 DSL) — mirror-dimension `defineBlueprint` 참고.
-2. `WorldPack` 포트 시그니처 동결 → 첫 게임 팩(map2d 권장: 진입장벽 낮고 검증 빠름) 프로토타입.
-3. 세이브/진행 상태 저장소 추상화(Stage1 파일 ↔ 플랫폼 DB) 포트화.
-4. 팩을 스킬로 패키징하는 규격(메타-스킬) — VISION §3a와 연결.
+2. 세이브/진행 상태 저장소 추상화(Stage1 파일 ↔ 플랫폼 DB) 포트화 — 이미 `useCurriculumState`가 seam.
+3. `renderLesson` 슬롯(v3) — 인월드 레슨.
+4. 팩을 스킬로 패키징하는 규격(메타-스킬) — VISION §3a와 연결. (마켓 seam)

@@ -79,6 +79,17 @@ export interface WorldPackProps {
   onFocus: (nodeId: string) => void;
   /** enter a node's lesson (only meaningful when status is available/active/complete) */
   onEnter: (nodeId: string) => void;
+  /** complete a node via GAMEPLAY without opening a lesson — a skill-check, a boss
+   *  beaten, a checkpoint reached. (v2 seam for game-like packs.) */
+  onComplete: (nodeId: string) => void;
+  /** award ad-hoc XP (collectibles, bonuses). (v2 seam.) */
+  onReward: (xp: number) => void;
+  /** OPAQUE, pack-defined durable state the core persists but never interprets —
+   *  avatar position, inventory, quest flags, timers. `null` until the pack sets it.
+   *  This is what lets an advanced (game) pack keep real state across the
+   *  world↔lesson toggle without the core knowing what a "player" is. (v2 seam.) */
+  packState: unknown;
+  setPackState: (state: unknown) => void;
 }
 
 export type WorldPack = (props: WorldPackProps) => ReactNode;

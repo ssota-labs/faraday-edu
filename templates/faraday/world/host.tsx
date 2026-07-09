@@ -9,7 +9,7 @@ import { Button } from "@/faraday/ui/button";
 import { Badge } from "@/faraday/ui/badge";
 import type { Curriculum, CurriculumEvent, NodeContextValue, WorldPack } from "./types";
 import { buildWorldView, isFinished } from "./progression";
-import { useProgress } from "./store";
+import { useCurriculumState } from "./store";
 import { NodeContext } from "./node-context";
 
 export function CurriculumHost(props: {
@@ -20,7 +20,10 @@ export function CurriculumHost(props: {
 }) {
   const { curriculum, pack } = props;
   const storageKey = props.storageKey ?? `faraday:progress:${curriculum.title}`;
-  const { progress, focus, complete, reset } = useProgress(curriculum, storageKey);
+  const { progress, packState, focus, complete, addXp, setPackState, reset } = useCurriculumState(
+    curriculum,
+    storageKey,
+  );
   const [entered, setEntered] = useState<string | null>(null);
 
   const world = useMemo(() => buildWorldView(curriculum, progress), [curriculum, progress]);
@@ -100,7 +103,15 @@ export function CurriculumHost(props: {
           {progress.xp > 0 ? <Badge variant="secondary">{progress.xp} XP</Badge> : null}
         </div>
       </header>
-      <Pack world={world} onFocus={doFocus} onEnter={doEnter} />
+      <Pack
+        world={world}
+        onFocus={doFocus}
+        onEnter={doEnter}
+        onComplete={finishNode}
+        onReward={addXp}
+        packState={packState}
+        setPackState={setPackState}
+      />
     </div>
   );
 }
