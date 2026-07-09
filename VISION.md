@@ -130,11 +130,17 @@ Faraday 자신과 같은 구조: 우리가 킷 배포 → 제작자가 스캐폴
 
 ## 6. 페이즈 로드맵
 
+> 재정의: **기능은 GTM Stage 1에서 수평으로 다 닫는다**(BYOK/자체배포). 이후는 *기능 추가*가
+> 아니라 *마찰 제거·수익화*. (근거: [GTM.md](GTM.md) §3)
+
 - **Phase 0 — 완료**: 레슨 CLI 킷 (외부 Studio Seed)
-- **Phase 1**: 커리큘럼/월드 씨앗 + LMS 컴포넌트 라이브러리 (여전히 CLI/자체호스팅, BYOK)
-- **Phase 2**: 튜터 AI 런타임 + 메타-스킬(도메인 자료 → 튜터 스킬) + 그라운딩 게이트
-- **Phase 3**: 웹 플랫폼 — Vercel Platforms 멀티테넌트, 관리형 AI(Gateway), 결제(Connect),
-  학생 인증. = **"교육판 mirror-dimension"**
+- **Phase 1 = GTM Stage 1 (수평 feature-complete, CLI/MCP + BYOK)**:
+  - 커리큘럼/월드 씨앗 (헥사고날 스킬팩 — [specs/world-seed.md](specs/world-seed.md))
+  - LMS 학생관리 (공통 컴포넌트 + 게이트)
+  - 튜터 AI 런타임 + 메타-스킬(도메인 자료 → 튜터 스킬) + 그라운딩 게이트
+  - `faraday deploy` 자동배포
+- **Phase 2+ = GTM Stage 2~4 (마찰 제거·수익화)**: 웹 플랫폼 — Vercel Platforms 멀티테넌트,
+  관리형 AI(Gateway), 결제(Connect), 학생 인증, 팩·강의 마켓. = **"교육판 mirror-dimension"**
 
 ---
 
