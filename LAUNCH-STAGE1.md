@@ -125,14 +125,19 @@
 
 콘텐츠와 퍼널의 **시각적 앵커**. “말”이 아니라 “만져보는 URL”.
 
-### B1. 데모 세트 (최소 3 + 보너스 1)
+### B1. 데모 세트 (단편 4 + 커리큘럼 1)
+
+상세 아이디에이션·노드맵·카피 훅: [DEMO-IDEATION.md](DEMO-IDEATION.md).
 
 | ID | 주제 | 플래그 | 보여주는 것 | 호스트 |
 |---|---|---|---|---|
-| D1 | Compound interest | 2D | 슬라이더→차트 즉각 반응 | static (Vercel/Cloudflare) |
-| D2 | Kepler 2nd law | `--3d` | 공간·mood·조작 | static |
-| D3 | Binary search + tutor | `--tutor` | 그라운딩 챗 | Vercel (OIDC) |
-| D4 (보너스) | Number systems quest | CurriculumHost + LMS | 언락·진행 | static |
+| S1 | 복리의 폭주 | 2D | 슬라이더→차트 즉각 반응 | static |
+| S2 | 케플러 쓸기 | `--3d` | 공간·mood·조작 | static |
+| S3 | 갈톤 보드 500알 | `--physics` | 떨어뜨리면 정규분포 | static |
+| S4 | 이진 탐색 + 튜터 | `--tutor` | 그라운딩 챗 (답 비누출) | Vercel (OIDC) |
+| C★ | **수능 물리** 또는 **항해 일지**(영화 모티프) | CurriculumHost | 맵 언락 + 코스 샷 | static (+ tutor 노드만 Vercel) |
+
+커리큘럼 메인 미결정 시 폴백: 3노드 미니맵(C-A′ 등가속→포물선→에너지 / C-B′ 케플러→시간지연→동기화).
 
 ### B2. 데모 운영 규칙
 - 각 데모 페이지 하단에 고정 CTA:  
