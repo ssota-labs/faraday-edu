@@ -51,6 +51,9 @@ test("generateLesson produces the expected tree + injections", async () => {
   // dotless template gitignore did not survive
   assert.equal(await exists(path.join(target, "gitignore")), false);
 
+  // the runtime package's workspace manifest must NOT be vendored into the tree
+  assert.equal(await exists(path.join(target, "src/faraday/package.json")), false);
+
   // provenance carries the injected id
   const prov = JSON.parse(await read(target, ".faraday/provenance.json"));
   assert.equal(prov.lessonId, "fixed-id");

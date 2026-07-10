@@ -111,6 +111,10 @@ export async function generateLesson(opts) {
   const protectedDir = path.join(targetDir, "src", "faraday");
   await fs.rm(protectedDir, { recursive: true, force: true });
   await copyDirectory(src.faraday, protectedDir);
+  // The runtime package's own manifest (@faraday/runtime) is a workspace artifact
+  // — deps declared only so the monorepo can typecheck/preview it. It must never
+  // ship inside the vendored src/faraday/ tree.
+  await fs.rm(path.join(protectedDir, "package.json"), { force: true });
 
   // 3b. opt-in 3D: vendor the three block + swap in the demo lesson (physics or
   //     space), drop the example lessons in docs/, and copy assets to public/.
