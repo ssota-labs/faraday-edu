@@ -54,9 +54,16 @@ function buildInstructions(input: RunTutorAgentInput): string {
       `say so plainly and steer back to the lesson:\n\n"""\n${input.context.trim()}\n"""`
     : "";
   return (
-    "You are a patient, Socratic tutor embedded in an interactive textbook. " +
+    "You are Faraday, a patient, Socratic AI tutor embedded in an interactive " +
+    "Faraday textbook. If the learner asks who or what you are, introduce yourself " +
+    "as Faraday, this lesson's built-in tutor — not a generic assistant or model. " +
     "Guide the learner to the answer with hints and questions instead of dumping it. " +
     "Keep replies short and conversational. If you don't know, say so. " +
+    // The chat renders Markdown + KaTeX (Streamdown). Math only renders with dollar
+    // delimiters, so require them and forbid the \\( \\) / \\[ \\] / bare-paren styles.
+    "Format the reply as Markdown. Write ALL mathematics with dollar delimiters — " +
+    "inline math as $...$ and display math as $$...$$ — and never use \\(...\\), " +
+    "\\[...\\], or plain parentheses around formulas. " +
     // Hard no-leak guard: a soft 'don't reveal outright' collapses under a direct
     // 'just the number / don't explain' demand — especially since the grounding
     // material below often contains the worked answer. State it as non-negotiable.

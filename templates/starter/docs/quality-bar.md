@@ -181,9 +181,16 @@ MUST:
   handing over the final answer, and it **never reveals the solution to the lesson's
   graded checks** (quiz / exercise answers) even on a direct "just tell me the
   answer" — it deflects and redirects to reasoning.
-- **On the same page as the lesson.** The tutor is embedded in the lesson surface —
-  a panel co-existing with the content it is grounded in, on the same page — not a
-  separate chat route or a full-page chatbot detached from the material.
+- **Docked beside the lesson, on the same page.** The tutor is mounted via
+  `<TutorDock>` wrapping the lesson — a resizable, collapsible right-side panel
+  (right-edge tab to open; a drawer on mobile), co-existing with the content it is
+  grounded in on the same page. NOT an inline `<Tutor>` block dumped in the content
+  flow, a separate chat route, or a full-page chatbot detached from the material.
+- **Replies render as Markdown + math.** Assistant turns render through Streamdown
+  (Markdown + KaTeX), not raw text — so lists, code, and `$…$`/`$$…$$` formulas
+  display formatted. Raw LaTeX or literal `$` delimiters showing in the bubble fail.
+  Reasoning ("thinking") is at most a non-expandable indicator; raw chain-of-thought
+  is never shown.
 - **The durable pipeline is real.** `POST /api/chat` returns **200 + an
   `x-workflow-run-id`**, and the run is resumable: `GET
   /api/chat/{runId}/stream?startIndex=` replays the *same* run, so a refresh, a
@@ -199,18 +206,21 @@ MUST:
 
 SHOULD:
 
-- Reasoning models stream their thinking into a collapsible "Thinking" block.
 - The persona / tone matches the audience methodology (a Socratic tutor for children
   reads differently from one for professionals — see audience.md).
+- The tutor knows its name: asked who it is, it says it's Faraday, the lesson's
+  built-in tutor — not a generic model/assistant.
 - The grounding prefix is byte-stable (deterministic `buildInstructions`) so implicit
   prompt caching works across a conversation.
 - The greeting orients the learner to what they can usefully ask.
 
 Anti-patterns (automatic fail): a tutor on a lesson with no open-ended goal
-(decoration); an ungrounded `<Tutor>` (empty/generic context) that answers from
-world knowledge and drifts off-topic; leaking a quiz/exercise answer on direct
-request; a detached full-page chatbot with no tie to the page content; any edit
-under `src/faraday/tutor/**` (`faraday check` fails).
+(decoration); an inline `<Tutor>` block sitting in the content flow instead of the
+`<TutorDock>` side panel; an ungrounded tutor (empty/generic context) that answers
+from world knowledge and drifts off-topic; leaking a quiz/exercise answer on direct
+request; raw LaTeX/`$` delimiters visible in a reply; an expandable chain-of-thought
+"thinking" block; a detached full-page chatbot with no tie to the page content; any
+edit under `src/faraday/tutor/**` (`faraday check` fails).
 
 ## How to grade (for the verify pass)
 
@@ -238,5 +248,7 @@ screenshot:
    envelope + `GatewayAuthenticationError` in the dev log (pipeline pass tier).
 8. Durability: capture `x-workflow-run-id` from the POST, then
    `GET /api/chat/{runId}/stream?startIndex=0` → confirm the same run replays.
-9. Browser only for the visual "Thinking" block. Confirm `faraday check` passes and
-   `src/faraday/tutor/**` is unmodified.
+9. In the browser (desktop width): confirm the tutor is the `<TutorDock>` right-side
+   panel (right-edge tab opens it, resizable, collapsible) — not an inline block —
+   and that a reply with math renders formatted (KaTeX, no raw `$`/LaTeX). Confirm
+   `faraday check` passes and `src/faraday/tutor/**` is unmodified.

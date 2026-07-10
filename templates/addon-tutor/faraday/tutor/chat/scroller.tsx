@@ -1,21 +1,28 @@
-// A lean auto-scrolling viewport. mirror-dimension's MessageScroller rides on a
-// shadcn primitive we don't vendor; for the tutor v0 a scroll container that
-// sticks to the bottom on new content is enough and keeps the dependency surface
-// small. (Swap in the full primitive later if we need scroll-to-bottom buttons.)
-import { useEffect, useRef, type ReactNode } from "react";
+// ChatScroller — the tutor's message viewport, now on the canonical
+// @shadcn/react MessageScroller primitive (via message-scroller.tsx): auto-sticks
+// to the bottom as tokens stream, and reveals a scroll-to-end button when the
+// learner scrolls up to read earlier turns. Each message is wrapped in a
+// <MessageScrollerItem> in tutor.tsx so the primitive can anchor on the last turn.
+import type { ReactNode } from "react";
+import {
+  MessageScroller,
+  MessageScrollerButton,
+  MessageScrollerContent,
+  MessageScrollerProvider,
+  MessageScrollerViewport,
+} from "./message-scroller";
 
 export function ChatScroller({ children }: { children: ReactNode }) {
-  const endRef = useRef<HTMLDivElement>(null);
-  // Runs after every render (incl. streaming token updates) — keep the tail in view.
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end" });
-  });
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
-      <div className="flex flex-col gap-3">
-        {children}
-        <div ref={endRef} />
-      </div>
-    </div>
+    <MessageScrollerProvider autoScroll scrollPreviousItemPeek={64}>
+      <MessageScroller className="min-h-0 flex-1">
+        <MessageScrollerViewport>
+          <MessageScrollerContent className="px-3 py-3">{children}</MessageScrollerContent>
+        </MessageScrollerViewport>
+        <MessageScrollerButton />
+      </MessageScroller>
+    </MessageScrollerProvider>
   );
 }
+
+export { MessageScrollerItem } from "./message-scroller";

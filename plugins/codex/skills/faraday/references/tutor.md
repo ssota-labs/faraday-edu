@@ -22,21 +22,33 @@ error — expected until you add the key.
 
 ## Embed it
 
-Import `<Tutor>` from `@/faraday/tutor` and ground it in the surrounding content:
+Wrap the **whole lesson** in `<TutorDock>` — it hoists the tutor to a resizable,
+collapsible **right-side panel** (the mirror-dimension dock model), the same across
+every lesson layout. A right-edge tab opens it; on narrow screens it's a drawer.
+Do **not** drop `<Tutor>` inline in the content flow — the dock is the placement.
 
 ```tsx
-import { Tutor } from "@/faraday/tutor";
+import { Lesson, Prose, Quiz } from "@/faraday/blocks";
+import { TutorDock } from "@/faraday/tutor";
 
-<Tutor
+<TutorDock
   title="Binary-search tutor"
   context={LESSON_TEXT}   // the tutor answers from this and won't leak quiz answers
   greeting="Hi! Ask me anything about binary search."
-/>
+>
+  <Lesson title="Binary search — with a tutor" topic="Algorithms" lead="…">
+    <Prose>…</Prose>
+    <Quiz … />
+  </Lesson>
+</TutorDock>
 ```
 
-Props (all optional): `context` (grounding text), `title`, `greeting`,
-`className`. A full example is in `docs/examples/tutor.tsx` — copy it into
-`src/lesson/lesson.tsx` to try it.
+Props (all optional besides `children`): `context` (grounding text), `title`,
+`greeting`, `defaultOpen` (desktop starts closed by default). A full example is in
+`docs/examples/tutor.tsx` — copy it into `src/lesson/lesson.tsx` to try it.
+`<Tutor>` (the bare chat card) is still exported for custom placements, but the
+dock is the default. **Replies render as Markdown + KaTeX** — the scaffolded prompt
+tells the tutor to write math with `$…$` / `$$…$$` delimiters.
 
 **Grounding is the point.** Pass the lesson text (or the relevant slice) as
 `context`. The scaffolded system prompt instructs the tutor to answer *from* that

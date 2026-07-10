@@ -44,6 +44,14 @@ const TUTOR_DEPS = {
     "@ai-sdk/react": "^4.0.12",
     "@ai-sdk/workflow": "^1.0.11",
     ai: "^7.0.11",
+    // Chat UI: the tutor docks beside the lesson (react-resizable-panels), uses the
+    // canonical shadcn MessageScroller (@shadcn/react), and renders the assistant's
+    // Markdown + KaTeX math via Streamdown (@streamdown/math for the math plugin).
+    // @base-ui/react + katex are already core deps (shadcn base UI + the TeX block).
+    "@shadcn/react": "^0.2.1",
+    "@streamdown/math": "^1.0.2",
+    "react-resizable-panels": "^4.12.1",
+    streamdown: "^2.5.0",
     // Nitro serves the api/ routes + provides `nitro/vite`. The stable 3.0.0 is
     // deprecated AND predates the `serverDir` config the Workflow SDK's Vite guide
     // requires, so we pin the current beta (what `latest` resolves to and what the

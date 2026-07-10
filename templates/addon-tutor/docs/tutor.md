@@ -23,22 +23,31 @@ with a Gateway auth error — that's expected until you add the key.
 
 ## Embed it
 
-Import `<Tutor>` from `@/faraday/tutor` and ground it in the surrounding content:
+Wrap the **whole lesson** in `<TutorDock>` from `@/faraday/tutor`. It hoists the
+tutor to a resizable, collapsible **right-side panel** (opened by a right-edge tab;
+a drawer on mobile) — the same dock across every lesson layout. Don't drop `<Tutor>`
+inline in the content flow.
 
 ```tsx
-import { Tutor } from "@/faraday/tutor";
+import { Lesson, Prose, Quiz } from "@/faraday/blocks";
+import { TutorDock } from "@/faraday/tutor";
 
-<Tutor
+<TutorDock
   title="Binary-search tutor"
   context={LESSON_TEXT}          // the tutor answers from this, and won't leak quiz answers
   greeting="Hi! Ask me anything about binary search."
-/>
+>
+  <Lesson title="…" topic="…" lead="…">
+    {/* your prose, interactives, quiz — the normal lesson */}
+  </Lesson>
+</TutorDock>
 ```
 
-Props (all optional except none are required): `context` (grounding text),
-`title`, `greeting`, `className`. A full example is in
-[`docs/examples/tutor.tsx`](examples/tutor.tsx) — copy it into
-`src/lesson/lesson.tsx` to try it.
+Props (only `children` is required): `context` (grounding text), `title`,
+`greeting`, `defaultOpen` (desktop starts closed). Replies render as **Markdown +
+KaTeX math**. A full example is in [`docs/examples/tutor.tsx`](examples/tutor.tsx) —
+copy it into `src/lesson/lesson.tsx` to try it. (`<Tutor>`, the bare chat card, is
+still exported for custom placements.)
 
 ## How it's wired (you rarely touch this)
 

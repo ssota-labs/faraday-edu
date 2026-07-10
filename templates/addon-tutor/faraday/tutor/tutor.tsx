@@ -11,9 +11,11 @@
 import { useChat } from "@ai-sdk/react";
 import { WorkflowChatTransport } from "@ai-sdk/workflow";
 import { useMemo } from "react";
+import { XIcon } from "@phosphor-icons/react";
 import { cn } from "@/faraday/lib/utils";
+import { Button } from "@/faraday/ui/button";
 import { ChatMessage } from "./chat/chat-message";
-import { ChatScroller } from "./chat/scroller";
+import { ChatScroller, MessageScrollerItem } from "./chat/scroller";
 import { ChatInput } from "./chat/chat-input";
 
 export interface TutorProps {
@@ -23,10 +25,12 @@ export interface TutorProps {
   title?: string;
   /** Optional opening line shown before the learner's first message. */
   greeting?: string;
+  /** When set, the header shows a close button (used by the dock/drawer). */
+  onClose?: () => void;
   className?: string;
 }
 
-export function Tutor({ context, title = "Tutor", greeting, className }: TutorProps) {
+export function Tutor({ context, title = "Tutor", greeting, onClose, className }: TutorProps) {
   const transport = useMemo(
     () =>
       new WorkflowChatTransport({
@@ -49,25 +53,36 @@ export function Tutor({ context, title = "Tutor", greeting, className }: TutorPr
         className,
       )}
     >
-      <div className="flex items-center gap-2 border-b px-3 py-2 text-sm font-medium">
-        <span
-          className={cn(
-            "size-2 rounded-full",
-            busy ? "animate-pulse bg-[var(--chart-4)]" : "bg-[var(--chart-3)]",
-          )}
-          aria-hidden
-        />
-        {title}
+      <div className="flex items-center justify-between gap-2 border-b px-3 py-2 text-sm font-medium">
+        <span className="flex min-w-0 items-center gap-2">
+          <span
+            className={cn(
+              "size-2 shrink-0 rounded-full",
+              busy ? "animate-pulse bg-[var(--chart-4)]" : "bg-[var(--chart-3)]",
+            )}
+            aria-hidden
+          />
+          <span className="truncate">{title}</span>
+        </span>
+        {onClose ? (
+          <Button variant="ghost" size="icon-sm" aria-label="Close tutor" onClick={onClose}>
+            <XIcon />
+          </Button>
+        ) : null}
       </div>
 
       <ChatScroller>
         {greeting && messages.length === 0 ? (
-          <ChatMessage
-            message={{ id: "greeting", role: "assistant", parts: [{ type: "text", text: greeting }] }}
-          />
+          <MessageScrollerItem messageId="greeting">
+            <ChatMessage
+              message={{ id: "greeting", role: "assistant", parts: [{ type: "text", text: greeting }] }}
+            />
+          </MessageScrollerItem>
         ) : null}
         {messages.map((m) => (
-          <ChatMessage key={m.id} message={m} />
+          <MessageScrollerItem key={m.id} messageId={m.id}>
+            <ChatMessage message={m} />
+          </MessageScrollerItem>
         ))}
       </ChatScroller>
 

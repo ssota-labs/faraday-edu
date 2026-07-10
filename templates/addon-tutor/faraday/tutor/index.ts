@@ -5,3 +5,4 @@
 // (workflows/tutor-agent.ts) or the api routes, so server code never leaks into
 // the browser bundle. The server side is wired via api/** + workflows/**.
 export { Tutor, type TutorProps } from "./tutor";
+export { TutorDock, type TutorDockProps } from "./dock";
