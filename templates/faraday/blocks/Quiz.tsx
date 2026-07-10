@@ -2,10 +2,11 @@
 // after the learner picks an option and presses Check. Optional callbacks let a
 // lesson react to a pass — e.g. inside a <CurriculumHost>, wire `onCorrect` to
 // `useNode().complete()` so answering correctly unlocks the next node.
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/faraday/ui/radio-group";
 import { Button } from "@/faraday/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
+import { celebrate } from "./celebrate";
 
 export interface QuizOption {
   label: string;
@@ -27,6 +28,7 @@ export function Quiz(props: {
   // Base UI log an uncontrolled→controlled error on every first selection.
   const [selected, setSelected] = useState("");
   const [checked, setChecked] = useState(false);
+  const rootRef = useRef<HTMLElement>(null);
   const chosen = selected !== "" ? props.options[Number(selected)] : null;
 
   const pick = (i: number) => {
@@ -39,11 +41,14 @@ export function Quiz(props: {
     if (!chosen) return;
     const correct = Boolean(chosen.correct);
     props.onChecked?.(correct);
-    if (correct) props.onCorrect?.();
+    if (correct) {
+      celebrate(rootRef.current);
+      props.onCorrect?.();
+    }
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border bg-card p-5">
+    <section ref={rootRef} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
       <p className="font-medium">{props.question}</p>
       <RadioGroup value={selected} onValueChange={(v) => pick(Number(v))}>
         <div className="flex flex-col gap-2">

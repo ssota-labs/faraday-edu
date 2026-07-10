@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { FlagCheckeredIcon, LightbulbIcon } from "@phosphor-icons/react";
 import { cn } from "@/faraday/lib/utils";
+import { celebrate } from "./celebrate";
 
 export function Challenge(props: {
   /** The win condition, stated as a goal the learner can act on. */
@@ -36,11 +37,13 @@ export function Challenge(props: {
   const [cleared, setCleared] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const fired = useRef(false);
+  const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (props.done && !fired.current) {
       fired.current = true;
       setCleared(true);
+      celebrate(rootRef.current);
       props.onDone?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,6 +51,7 @@ export function Challenge(props: {
 
   return (
     <section
+      ref={rootRef}
       className={cn(
         "flex flex-col gap-4 rounded-xl border p-5 transition-colors",
         cleared ? "border-[var(--chart-3)]/60 bg-[var(--chart-3)]/5" : "border-primary/40 bg-card",

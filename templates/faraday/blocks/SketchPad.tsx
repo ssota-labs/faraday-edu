@@ -16,6 +16,7 @@ import type { ReactNode } from "react";
 import { ArrowCounterClockwiseIcon, ArrowUUpLeftIcon, EyeIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/faraday/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
+import { celebrate } from "./celebrate";
 
 interface Stroke {
   width: number;
@@ -133,7 +134,7 @@ export function SketchPad(props: {
         ) : assessed == null ? (
           <>
             <span className="text-sm text-muted-foreground">Compare your sketch with the answer —</span>
-            <Button size="sm" onClick={() => { setAssessed(true); props.onSelfAssess?.(true); }}>
+            <Button size="sm" onClick={(e) => { setAssessed(true); celebrate(e.currentTarget.closest("section")); props.onSelfAssess?.(true); }}>
               <CheckIcon /> I had it right
             </Button>
             <Button

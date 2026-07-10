@@ -23,5 +23,6 @@ export { Derivation } from "./Derivation";
 export type { DerivationStep } from "./Derivation";
 export { SketchPad } from "./SketchPad";
 export { Challenge } from "./Challenge";
+export { celebrate } from "./celebrate";
 export { CodeCell } from "./CodeCell";
 export { Readout } from "./Readout";

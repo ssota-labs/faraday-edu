@@ -61,7 +61,11 @@ export function Derivation(props: {
                 last && done && "border-[var(--chart-3)] bg-[var(--chart-3)]/5",
               )}
             >
-              <TeX block className="my-0 text-left [&_.katex-display]:my-0 [&_.katex-display]:text-left">
+              <TeX
+                block
+                stream={newest}
+                className="my-0 text-left [&_.katex-display]:my-0 [&_.katex-display]:text-left"
+              >
                 {s.tex}
               </TeX>
               {s.note ? (

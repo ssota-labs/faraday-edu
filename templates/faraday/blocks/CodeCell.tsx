@@ -4,11 +4,15 @@
 // output panel. Use it when the audience codes or the concept is algorithmic —
 // seeing the numbers come out of your own edit is the interaction.
 //
+// The editor is syntax-highlighted (dep-free tokenizer) via a transparent
+// textarea over a colored layer; the code area shares the card background and
+// the console output sits on a contrasting inset panel.
+//
 //   <CodeCell
 //     label="Verify Kepler's third law"
 //     code={`const T = (a) => Math.sqrt(a ** 3);\nfor (const a of [1, 2, 4]) console.log(a, T(a).toFixed(2));`}
 //   />
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PlayIcon, ArrowCounterClockwiseIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { Card, CardContent } from "@/faraday/ui/card";
 import { Button } from "@/faraday/ui/button";
@@ -20,6 +24,41 @@ interface OutLine {
 }
 
 const RUN_TIMEOUT_MS = 4000;
+
+// ── dep-free JS syntax highlighting (comment / string / number / keyword) ────
+const KEYWORDS =
+  "const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|extends|import|from|export|default|try|catch|finally|throw|await|async|typeof|instanceof|in|of|this|null|undefined|true|false|yield|static|get|set";
+const TOKEN_RE = new RegExp(
+  "(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)" + // 1 comment
+    "|(`(?:\\\\.|[^`\\\\])*`|\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])*')" + // 2 string/template
+    "|\\b(0[xob][\\da-fA-F_]+|\\d[\\d_]*(?:\\.[\\d_]+)?(?:[eE][+-]?\\d+)?)\\b" + // 3 number
+    `|\\b(${KEYWORDS})\\b`, // 4 keyword
+  "g",
+);
+const TOKEN_STYLE: Record<number, string> = {
+  1: "color:var(--muted-foreground);font-style:italic",
+  2: "color:var(--chart-3)",
+  3: "color:var(--chart-4)",
+  4: "color:var(--chart-1);font-weight:500",
+};
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function highlightJs(code: string): string {
+  let out = "";
+  let last = 0;
+  TOKEN_RE.lastIndex = 0;
+  for (let m = TOKEN_RE.exec(code); m; m = TOKEN_RE.exec(code)) {
+    out += escapeHtml(code.slice(last, m.index));
+    const group = m[1] ? 1 : m[2] ? 2 : m[3] ? 3 : 4;
+    out += `<span style="${TOKEN_STYLE[group]}">${escapeHtml(m[0])}</span>`;
+    last = m.index + m[0].length;
+  }
+  out += escapeHtml(code.slice(last));
+  return out;
+}
 
 // The sandbox harness: runs posted code as an async body, captures console.
 const HARNESS = `<!doctype html><script>
@@ -56,8 +95,11 @@ export function CodeCell(props: {
   const [running, setRunning] = useState(false);
   const [frameKey, setFrameKey] = useState(0); // bump to kill a runaway sandbox
   const frame = useRef<HTMLIFrameElement>(null);
+  const highlightRef = useRef<HTMLPreElement>(null);
   const runId = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const highlighted = useMemo(() => highlightJs(code) + "\n", [code]);
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
@@ -89,7 +131,16 @@ export function CodeCell(props: {
     }, RUN_TIMEOUT_MS);
   }, [code]);
 
+  const syncScroll = (el: HTMLTextAreaElement) => {
+    const pre = highlightRef.current;
+    if (pre) {
+      pre.scrollTop = el.scrollTop;
+      pre.scrollLeft = el.scrollLeft;
+    }
+  };
+
   const rows = Math.min(24, Math.max(4, code.split("\n").length + 1));
+  const editorText = "font-mono text-[13px] leading-relaxed";
 
   return (
     <Card data-flush className="overflow-hidden">
@@ -115,38 +166,62 @@ export function CodeCell(props: {
         </div>
       </div>
       <CardContent className="p-0">
-        <textarea
-          value={code}
-          rows={rows}
-          spellCheck={false}
-          aria-label={props.label ?? "Code editor"}
-          onChange={(e) => setCode(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Tab") {
-              e.preventDefault();
-              const el = e.currentTarget;
-              const { selectionStart: s, selectionEnd: end } = el;
-              setCode(code.slice(0, s) + "  " + code.slice(end));
-              requestAnimationFrame(() => el.setSelectionRange(s + 2, s + 2));
-            }
-          }}
-          className="w-full resize-y bg-muted/40 px-4 py-3 font-mono text-[13px] leading-relaxed outline-none"
-        />
+        {/* editor: transparent-text textarea over the highlight layer; the code
+            area shares the card background so the cell reads as one surface */}
+        <div className="relative">
+          <pre
+            ref={highlightRef}
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute inset-0 overflow-hidden px-4 py-3 break-words whitespace-pre-wrap",
+              editorText,
+            )}
+          >
+            <code dangerouslySetInnerHTML={{ __html: highlighted }} />
+          </pre>
+          <textarea
+            value={code}
+            rows={rows}
+            spellCheck={false}
+            aria-label={props.label ?? "Code editor"}
+            onChange={(e) => setCode(e.target.value)}
+            onScroll={(e) => syncScroll(e.currentTarget)}
+            onKeyDown={(e) => {
+              if (e.key === "Tab") {
+                e.preventDefault();
+                const el = e.currentTarget;
+                const { selectionStart: s, selectionEnd: end } = el;
+                setCode(code.slice(0, s) + "  " + code.slice(end));
+                requestAnimationFrame(() => el.setSelectionRange(s + 2, s + 2));
+              }
+            }}
+            className={cn(
+              "relative w-full resize-y bg-transparent px-4 py-3 break-words whitespace-pre-wrap text-transparent outline-none selection:bg-primary/25",
+              editorText,
+            )}
+            style={{ caretColor: "var(--foreground)" }}
+          />
+        </div>
         {out ? (
-          <div className="border-t bg-background px-4 py-3 font-mono text-[13px] leading-relaxed">
-            {out.map((l, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "whitespace-pre-wrap",
-                  l.level === "error" && "text-destructive",
-                  l.level === "warn" && "text-[var(--chart-4)]",
-                  l.level === "result" && "text-primary",
-                )}
-              >
-                {l.text}
-              </div>
-            ))}
+          <div className="border-t bg-muted/50">
+            <div className="px-4 pt-2 text-[10px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
+              Console
+            </div>
+            <div className={cn("px-4 pt-1 pb-3", editorText)}>
+              {out.map((l, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "whitespace-pre-wrap",
+                    l.level === "error" && "text-destructive",
+                    l.level === "warn" && "text-[var(--chart-4)]",
+                    l.level === "result" && "text-primary",
+                  )}
+                >
+                  {l.text}
+                </div>
+              ))}
+            </div>
           </div>
         ) : null}
         {props.caption ? (

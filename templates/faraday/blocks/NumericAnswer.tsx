@@ -9,10 +9,11 @@
 //     hint="Read the range formula — or aim the launcher at 30° and fire."
 //     onCorrect={complete}
 //   />
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/faraday/ui/button";
 import { Input } from "@/faraday/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
+import { celebrate } from "./celebrate";
 
 export function NumericAnswer(props: {
   question: string;
@@ -32,6 +33,7 @@ export function NumericAnswer(props: {
 }) {
   const [raw, setRaw] = useState("");
   const [state, setState] = useState<"idle" | "correct" | "wrong" | "invalid">("idle");
+  const rootRef = useRef<HTMLElement>(null);
   const tolerance = props.tolerance ?? Math.max(Math.abs(props.answer) * 0.02, 1e-9);
 
   const check = () => {
@@ -43,11 +45,14 @@ export function NumericAnswer(props: {
     const correct = Math.abs(value - props.answer) <= tolerance;
     setState(correct ? "correct" : "wrong");
     props.onChecked?.(correct, value);
-    if (correct) props.onCorrect?.();
+    if (correct) {
+      celebrate(rootRef.current);
+      props.onCorrect?.();
+    }
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border bg-card p-5">
+    <section ref={rootRef} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
       <p className="font-medium">{props.question}</p>
       <div className="flex items-center gap-2">
         <Input
