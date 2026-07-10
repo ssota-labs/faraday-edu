@@ -28,7 +28,9 @@ import {
   TeX,
   Workbench,
 } from "@/faraday/blocks";
-import { useStepper } from "@/faraday/runtime";
+import { Course, useStepper } from "@/faraday/runtime";
+import { CurriculumHost, linearPack, type Curriculum } from "@/faraday/world";
+import { ProgressDashboard, summarize, useLmsRecorder, type Learner } from "@/faraday/lms";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/faraday/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
 import { Badge } from "@/faraday/ui/badge";
@@ -325,6 +327,99 @@ function AccordionDemo() {
       </AccordionItem>
     </Accordion>
   );
+}
+
+// ── runtime / world / lms demos ───────────────────────────────────────────────
+
+function CourseChapterA() {
+  const [n, setN] = useState(6);
+  return (
+    <Lesson topic="Numbers · Chapter 1" title="Counting in groups" lead="Slide to change the count.">
+      <Prose>
+        <p>A number is just a count of things.</p>
+      </Prose>
+      <Stage caption={`${n} dots`}>
+        <svg viewBox="0 0 640 120" className="w-full">
+          {Array.from({ length: n }).map((_, i) => (
+            <circle key={i} cx={40 + (i * 560) / Math.max(1, n - 1)} cy={60} r={16} style={{ fill: "var(--primary)" }} />
+          ))}
+        </svg>
+      </Stage>
+      <ParamSlider label="How many" value={n} min={1} max={12} onChange={setN} />
+    </Lesson>
+  );
+}
+
+function CourseChapterB() {
+  const [steps, setSteps] = useState(8);
+  const data = Array.from({ length: steps }, (_, i) => ({ step: `${i}`, doubling: 2 ** i, linear: i * 8 }));
+  return (
+    <Lesson topic="Numbers · Chapter 2" title="Doubling gets big, fast" lead="Compare doubling with steady growth.">
+      <Prose>
+        <p>Double each step and you rocket upward — exponential growth.</p>
+      </Prose>
+      <Chart
+        type="line"
+        data={data}
+        x="step"
+        yAxis
+        legend
+        series={[
+          { key: "doubling", label: "Doubling" },
+          { key: "linear", label: "Add 8 each step" },
+        ]}
+      />
+      <ParamSlider label="Steps" value={steps} min={3} max={12} onChange={setSteps} />
+    </Lesson>
+  );
+}
+
+function CourseDemo() {
+  return (
+    <Course
+      title="A tiny numbers course"
+      chapters={[
+        { slug: "counting", title: "Counting", element: <CourseChapterA /> },
+        { slug: "doubling", title: "Doubling", element: <CourseChapterB /> },
+      ]}
+    />
+  );
+}
+
+function CurriculumStop({ title, body }: { title: string; body: string }) {
+  return (
+    <Lesson topic="Map course" title={title} lead={body}>
+      <Prose>
+        <p>{body}</p>
+      </Prose>
+    </Lesson>
+  );
+}
+
+// Module-level (stable identity — required by the progress store).
+const DEMO_CURRICULUM: Curriculum = {
+  title: "A tiny map course",
+  nodes: [
+    { id: "intro", title: "Start", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Start" body="The first stop." /> },
+    { id: "a", title: "Path A", summary: "One of two branches", requires: ["intro"], meta: { x: 45, y: 30 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Path A" body="One of two branches." /> },
+    { id: "b", title: "Path B", summary: "The other branch", requires: ["intro"], meta: { x: 45, y: 70 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Path B" body="The other branch." /> },
+    { id: "final", title: "Summit", summary: "The finale", requires: ["a", "b"], meta: { x: 82, y: 50 }, reward: { xp: 20 }, lesson: <CurriculumStop title="Summit" body="Clear this to finish the course." /> },
+  ],
+};
+
+function CurriculumDemo() {
+  return <CurriculumHost curriculum={DEMO_CURRICULUM} pack={linearPack} onEvent={() => {}} />;
+}
+
+function DashboardDemo() {
+  const rec = useLmsRecorder("labs-demo");
+  const now = Date.now();
+  const you: Learner = { id: "you", name: "You", summary: summarize(rec.events) };
+  const roster: Learner[] = [
+    { id: "m1", name: "Ada", summary: { events: 6, xp: 40, done: 3, startedAt: now - 9e5, lastActiveAt: now - 3e5, activeMs: 5.2e5, perNode: {} } },
+    { id: "m2", name: "Grace", summary: { events: 3, xp: 20, done: 1, startedAt: now - 6e5, lastActiveAt: now - 12e4, activeMs: 1.8e5, perNode: {} } },
+  ];
+  return <ProgressDashboard courseId="labs-demo" curriculum={DEMO_CURRICULUM} events={rec.events} learners={[you, ...roster]} />;
 }
 
 export const DEMOS: Record<string, Demo> = {
@@ -697,5 +792,21 @@ export const DEMOS: Record<string, Demo> = {
     blurb: "A single show/hide region. `open` + `onOpenChange`.",
     render: () => <CollapsibleDemo />,
     source: `<Collapsible open={open} onOpenChange={setOpen}><CollapsibleTrigger>…</CollapsibleTrigger><CollapsibleContent>…</CollapsibleContent></Collapsible>`,
+  },
+
+  // ── runtime / world / lms ─────────────────────────────────────────────────
+  Course: {
+    render: () => <CourseDemo />,
+    source: `<Course title="…" chapters={[{ slug, title, element: <Chapter/> }, …]} />`,
+  },
+  host: {
+    blurb: "CurriculumHost — a graph of lessons with unlock progression + a swappable pack. Shown with linearPack; map2dPack / world3dPack render as an immersive full-screen game map.",
+    render: () => <CurriculumDemo />,
+    source: `<CurriculumHost curriculum={curriculum} pack={linearPack} onEvent={rec.onEvent} />`,
+  },
+  ProgressDashboard: {
+    render: () => <DashboardDemo />,
+    source: `const rec = useLmsRecorder("id");
+<ProgressDashboard courseId="id" curriculum={c} events={rec.events} learners={[you, ...roster]} />`,
   },
 };
