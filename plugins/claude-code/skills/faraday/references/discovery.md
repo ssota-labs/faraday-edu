@@ -29,8 +29,12 @@ your job is to make it interactive, not to rewrite their curriculum unasked.
 
 Ask only what you can't infer from their material, and keep it to a handful:
 
-- **Audience & level** — who is this for, and what do they already know? (a 9th-grader
-  vs. a grad student changes everything)
+- **Audience & level** — who is this for, and what do they already know? **This one
+  is a gate, not optional**: a 9-year-old, a high-schooler, an undergrad, a curious
+  adult, and a working professional get the same concept through *different moves*
+  (one default methodology per audience in [audience.md](audience.md)). If the
+  creator can't say, state the assumption you're making in the brief and let them
+  veto it — never design with the audience silently unpinned.
 - **Goal** — what should the learner be able to *do* after? (an outcome, not "know about X")
 - **Scope** — one concept, a unit, or a whole course? (sets lesson vs. course vs. world)
 - **Assessment** — self-check only, or graded/mastery-gated progression?
@@ -54,5 +58,6 @@ Before building, restate what you heard as a short brief and confirm it:
 One or two lines. A 10-second confirmation here prevents building the wrong thing.
 Then move to the **Curriculum** phase (if multi-lesson) or straight to
 **Interactive** design (single lesson). This intake feeds:
+[audience.md](audience.md) (how to hand *this* learner a concept),
 [curriculum.md](curriculum.md), [learning-design.md](learning-design.md),
 [interactive-design.md](interactive-design.md).

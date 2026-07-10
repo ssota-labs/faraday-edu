@@ -2,10 +2,10 @@
 // that plugs into the same curriculum core as pack-linear/pack-map2d: it renders
 // the graph as nodes-in-space (click to enter, hover to focus) and emits intents;
 // it owns no progression. Reuses <Scene3D> (canvas, OrbitControls, mood).
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Html, Line } from "@react-three/drei";
-import type { Mesh } from "three";
+import type { Mesh, PerspectiveCamera } from "three";
 import type { WorldNode, WorldPack } from "@/faraday/world";
 import { Scene3D } from "@/faraday/three";
 import type { Mood } from "@/faraday/three";
@@ -13,11 +13,43 @@ import type { Mood } from "@/faraday/three";
 type Vec3 = [number, number, number];
 const SPAN = 16;
 
+/** Frame the whole node field to the current viewport aspect. The world is a
+ *  full-viewport (immersive) layer, so a hardcoded camera clips the outer nodes
+ *  at narrow/portrait aspects — this fits the camera to the node bounds on mount
+ *  and on resize, keeping the current objective on screen. The user can still
+ *  orbit/zoom from the framed start. */
+function FitCamera({ positions }: { positions: Record<string, Vec3> }) {
+  const { camera, size } = useThree();
+  useEffect(() => {
+    const pts = Object.values(positions);
+    if (!pts.length) return;
+    const xs = pts.map((p) => p[0]);
+    const zs = pts.map((p) => p[2]);
+    // half-extent to frame, in world units, with margin for labels + HUD plates
+    const halfX = Math.max(Math.abs(Math.min(...xs)), Math.abs(Math.max(...xs))) + 2.5;
+    const halfZ = Math.max(Math.abs(Math.min(...zs)), Math.abs(Math.max(...zs))) + 2.5;
+    const cam = camera as PerspectiveCamera;
+    const aspect = size.width / Math.max(1, size.height);
+    const vHalf = (cam.fov * Math.PI) / 360; // vertical half-FOV in radians
+    // distance needed so both extents fit (horizontal FOV = vertical × aspect)
+    const distForZ = halfZ / Math.tan(vHalf);
+    const distForX = halfX / (Math.tan(vHalf) * aspect);
+    const dist = Math.max(distForZ, distForX) * 1.02;
+    // keep the original pleasant downward tilt (y/z ≈ 8/14)
+    cam.position.set(0, dist * 0.5, dist * 0.88);
+    cam.lookAt(0, 0, 0);
+    cam.updateProjectionMatrix();
+  }, [camera, size.width, size.height, positions]);
+  return null;
+}
+
+// Every status keeps some emissive glow — on dark moods (space) a purely lit
+// sphere reads as a black blob; locked must stay *visible*, just dormant.
 const STATUS: Record<WorldNode["status"], { color: string; emissive: string; intensity: number }> = {
   complete: { color: "#5eead4", emissive: "#0f766e", intensity: 0.35 },
   active: { color: "#8b9cf6", emissive: "#3b5bdb", intensity: 0.9 },
-  available: { color: "#c9cfdb", emissive: "#000000", intensity: 0 },
-  locked: { color: "#3a3f4b", emissive: "#000000", intensity: 0 },
+  available: { color: "#c9cfdb", emissive: "#64748b", intensity: 0.3 },
+  locked: { color: "#4b5266", emissive: "#2a3040", intensity: 0.3 },
 };
 
 /** Node positions on the ground plane (y=0): author meta.{x,y} (0..100) or a
@@ -110,13 +142,13 @@ function NodeMesh({
   );
 }
 
-export function createWorld3dPack(options: { mood?: Mood; height?: number } = {}): WorldPack {
+export function createWorld3dPack(options: { mood?: Mood } = {}): WorldPack {
   const mood = options.mood ?? "space";
-  const height = options.height ?? 460;
   const World3dPack: WorldPack = ({ world, onEnter, onFocus }) => {
     const pos = positions(world.nodes);
     return (
-      <Scene3D mood={mood} height={height} camera={[0, 8, 14]}>
+      <Scene3D mood={mood} fill camera={[0, 8, 14]}>
+        <FitCamera positions={pos} />
         {world.edges.map((e, i) => {
           const a = pos[e.from];
           const b = pos[e.to];
@@ -131,6 +163,8 @@ export function createWorld3dPack(options: { mood?: Mood; height?: number } = {}
       </Scene3D>
     );
   };
+  World3dPack.immersive = true;
+  World3dPack.hint = "Drag to orbit · click an unlocked node to enter · hover for its briefing";
   return World3dPack;
 }
 

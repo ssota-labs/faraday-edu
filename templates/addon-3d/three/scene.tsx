@@ -16,12 +16,15 @@ export function Scene3D(props: {
    *  domain scenes; "neutral" is transparent and for UI demos only. */
   mood?: Mood;
   height?: number;
+  /** Fill the parent instead of a fixed height — for full-viewport (immersive)
+   *  hosts. The parent must have a real height (e.g. absolute inset-0). */
+  fill?: boolean;
   camera?: [number, number, number];
   fov?: number;
   controls?: boolean;
   autoRotate?: boolean;
 }) {
-  const { mood = "neutral", height = 420, camera = [0, 6, 11], fov = 45, controls = true } = props;
+  const { mood = "neutral", height = 420, fill = false, camera = [0, 6, 11], fov = 45, controls = true } = props;
 
   // Domain scenes that forget `mood` silently render as a flat transparent
   // canvas — catch that in dev so authors don't chase a "why is space white?" bug.
@@ -50,7 +53,11 @@ export function Scene3D(props: {
   }, []);
 
   return (
-    <div ref={ref} className="w-full overflow-hidden rounded-lg" style={{ height }}>
+    <div
+      ref={ref}
+      className={fill ? "h-full w-full overflow-hidden" : "w-full overflow-hidden rounded-lg"}
+      style={fill ? undefined : { height }}
+    >
       {sized ? (
         <Canvas camera={{ position: camera, fov }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
           <MoodStage mood={mood} />

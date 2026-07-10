@@ -33,15 +33,19 @@ export interface ChartSeries {
 
 export function Chart(props: {
   type?: "line" | "bar" | "area";
-  /** Row values. `null` is allowed (Recharts treats it as a gap — useful for a
-   *  single "you are here" marker without a 0→y spike). */
+  /** Row values. `null` is allowed (Recharts treats it as a gap). A point whose
+   *  neighbours are both null/absent renders as a visible DOT marker — use a
+   *  mostly-null series for a single "you are here" marker on a model curve. */
   data: Record<string, string | number | null>[];
   x: string;
   series: ChartSeries[];
   height?: number;
   yAxis?: boolean;
+  /** "number" plots x at its true numeric position (function graphs, uneven
+   *  samples). Default "category" spaces rows evenly. line/area only. */
+  xType?: "category" | "number";
 }) {
-  const { type = "line", data, x, series, height = 240, yAxis = false } = props;
+  const { type = "line", data, x, series, height = 240, yAxis = false, xType = "category" } = props;
 
   const ref = useRef<HTMLDivElement>(null);
   const [sized, setSized] = useState(false);
@@ -66,11 +70,33 @@ export function Chart(props: {
   const axes = (
     <>
       <CartesianGrid vertical={false} />
-      <XAxis dataKey={x} tickLine={false} axisLine={false} tickMargin={8} />
+      <XAxis
+        dataKey={x}
+        type={xType}
+        domain={xType === "number" ? ["dataMin", "dataMax"] : undefined}
+        tickLine={false}
+        axisLine={false}
+        tickMargin={8}
+      />
       {yAxis ? <YAxis tickLine={false} axisLine={false} width={32} /> : null}
       <ChartTooltip content={<ChartTooltipContent />} />
     </>
   );
+
+  // A gap-isolated point (null/absent on both sides) would be INVISIBLE with
+  // dot={false} — render just those as explicit markers so "you are here"
+  // single-point series work as documented.
+  const isolatedDot =
+    (key: string) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (dotProps: any) => {
+      const { index, cx, cy } = dotProps;
+      const prev = index > 0 ? data[index - 1]?.[key] : null;
+      const next = index < data.length - 1 ? data[index + 1]?.[key] : null;
+      const isolated = prev == null && next == null;
+      if (!isolated || cx == null || cy == null) return <g key={`d-${index}`} />;
+      return <circle key={`d-${index}`} cx={cx} cy={cy} r={4.5} fill={`var(--color-${key})`} stroke="var(--background)" strokeWidth={1.5} />;
+    };
 
   const margin = { left: 4, right: 8, top: 8, bottom: 0 };
 
@@ -113,7 +139,7 @@ export function Chart(props: {
               key={s.key}
               dataKey={s.key}
               stroke={`var(--color-${s.key})`}
-              dot={false}
+              dot={isolatedDot(s.key)}
               strokeWidth={2}
             />
           ))}

@@ -24,12 +24,14 @@ when the task matches the description above.
 
 | Phase | Do | Reference |
 |---|---|---|
-| **Discover** | Take in the creator's material (PDF/PPT/MD/notes) or **ask for it**; ask the few questions that shape everything (audience, level, goal, scope). | [references/discovery.md](references/discovery.md) |
+| **Discover** | Take in the creator's material (PDF/PPT/MD/notes) or **ask for it**; ask the few questions that shape everything (audience, level, goal, scope). **Audience is a gate** — pin who the learner is (or state the assumption), then teach *their* way. | [references/discovery.md](references/discovery.md) · [references/audience.md](references/audience.md) |
 | **Curriculum** | Decompose the subject into units, sequence by dependency, split/merge, and propose a **roadmap** for sign-off before building. | [references/curriculum.md](references/curriculum.md) |
 | **Learning path** | Turn the roadmap into a progression — levels, unlock gates, mastery checks, continuity — so learners keep going. | [references/learning-design.md](references/learning-design.md) |
 | **Interactive** | For each concept, design the *interaction* that reveals it (what the learner manipulates, what must visibly change) before touching the API. | [references/interactive-design.md](references/interactive-design.md) |
+| **Assess** | Pick each check's FORM by the outcome verb (recognize→MCQ, compute→numeric input, predict→sketch, do→mission) and place them in the concept→sim→check flow. | [references/assessment.md](references/assessment.md) |
 | **Visual** | Make it clear and polished within the theme system — hierarchy, restraint, mood. | [references/design.md](references/design.md) |
 | **Build** | Author it against the block/world/tutor APIs. | [blocks.md](references/blocks.md) · [worlds.md](references/worlds.md) · [tutor.md](references/tutor.md) |
+| **Verify** | Grade the shipped thing against the acceptance rubric before reporting done. | [references/quality-bar.md](references/quality-bar.md) |
 
 You don't always run every phase — a one-off lesson may skip Curriculum. But always
 do **Discover** (even a 30-second version) so you build the right thing, and always
@@ -38,7 +40,11 @@ do **Discover** (even a 30-second version) so you build the right thing, and alw
 **Methodology:** if the creator has their own teaching method, it leads. If not,
 apply the evidence-based default — backward design, mastery-gated prerequisite
 graph, generative interactions, spaced retrieval, feed-forward feedback — in
-[references/pedagogy.md](references/pedagogy.md).
+[references/pedagogy.md](references/pedagogy.md), and layer the **audience
+default** on top: one methodology per learner population (CRA for children, 5E
+for secondary, Peer Instruction for undergrads, Mayer's principles for the
+general public, Merrill's First Principles for professionals) in
+[references/audience.md](references/audience.md).
 
 ## The one rule that governs everything: two zones
 
@@ -88,12 +94,21 @@ meaningful:
 1. **Gates** — `pnpm check` (locked tree intact) + `pnpm typecheck` / `pnpm build`
    (the whole graph compiles). These catch structure and type errors, not meaning.
 2. **Drive the behaviour** — `pnpm dev`, then exercise every control and confirm the
-   thing the reader manipulates changes what it should. If the harness can't drive
-   an out-of-tree `/tmp` scaffold (preview tools may bind to the session root, reuse
-   a neighbouring server, or need a non-zero viewport to paint), fall back to: HTTP
-   200 on the served modules + a clean dev log + a static trace of the logic — and
-   for a tutor, `curl` the `/api/chat` SSE. Say which level you reached; don't imply
-   you drove it when you didn't.
+   thing the reader manipulates changes what it should. **The world/roadmap screen
+   and any 3D scene are visual-only — an HTTP-200 check cannot grade them; the
+   quality-bar MUSTs (full-bleed, HUD, node framing, mood, legibility) are only
+   verifiable by screenshotting a real, non-zero viewport (test a narrow width too —
+   an immersive world must frame every node, incl. the current objective, at
+   laptop/portrait aspects).** If the harness can't drive an out-of-tree `/tmp`
+   scaffold (preview tools may bind to the session root, reuse a neighbouring server,
+   or need a non-zero viewport to paint), either scaffold where the harness can serve
+   it or have the orchestrator drive it — and if you truly can't, fall back to: HTTP
+   (Also: a hidden/background preview tab freezes `requestAnimationFrame`, so
+   rAF-driven motion won't advance — verify animation by pumping mocked rAF frames
+   deterministically, or on a visible tab; a frozen ball is not proof of a bug.)
+   200 on the served modules + a clean dev log + a static trace of the logic (and for
+   a tutor, `curl` the `/api/chat` SSE), but say plainly that the visual MUSTs went
+   **ungraded**. Don't imply you drove it when you didn't.
 3. **Check the content is correct** — spot-check a value or invariant you can derive
    independently: a shortest path you can trace by hand, a doubling time, a conserved
    quantity, the shape a distribution must approach. This is the check that separates
@@ -106,6 +121,13 @@ meaningful:
 
 Report the highest level you actually reached — "gates pass" is not "teaches the
 right thing."
+
+Then hold the **quality bar** — [references/quality-bar.md](references/quality-bar.md)
+is the acceptance rubric. The two chronic failure modes it exists to kill: a
+curriculum world rendered as a document (header + widget + whitespace instead of
+a full-bleed game screen with a HUD), and a lesson that's a single gadget with
+three sentences (instead of a solid multi-interaction textbook chapter with all
+math in `<TeX>`). Grade each MUST pass/fail before reporting done.
 
 ## Decision guide — what to scaffold
 
@@ -133,6 +155,8 @@ visual/UX design (hierarchy, layout, mood, polish), see [references/design.md](r
 
 Design phase:
 - [references/discovery.md](references/discovery.md) — intake creator material (PDF/PPT/MD) + the questions to ask.
+- [references/audience.md](references/audience.md) — who the learner is → the default delivery methodology per audience (creator's own overrides).
+- [references/assessment.md](references/assessment.md) — the five check forms (MCQ / numeric / sketch / mission / tutor-graded), matched to outcome verbs + audience.
 - [references/pedagogy.md](references/pedagogy.md) — the evidence-based default methodology (creator's own overrides).
 - [references/curriculum.md](references/curriculum.md) — decompose a subject → sequenced roadmap.
 - [references/learning-design.md](references/learning-design.md) — levels, unlock gates, mastery, continuity.
@@ -143,3 +167,6 @@ Build API:
 - [references/blocks.md](references/blocks.md) — the full block API + canonical lesson shapes.
 - [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, packs, 3D moods, LMS.
 - [references/tutor.md](references/tutor.md) — embed + ground the `--tutor` AI, edit its persona/model.
+
+Verify:
+- [references/quality-bar.md](references/quality-bar.md) — the acceptance rubric (game-screen worlds, textbook-chapter lessons).

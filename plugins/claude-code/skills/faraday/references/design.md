@@ -23,11 +23,25 @@ To restyle, adjust token *values* / pick a mood — don't fight the reset or add
 CSS. Deep bespoke visual work can borrow general frontend-design judgement, but stay
 inside this token contract or `pnpm check` / theming will fight you.
 
+## Two design registers
+
+Faraday output lives in two registers — don't blend them:
+
+- **World / roadmap screens are game screens.** Full-bleed viewport, game HUD
+  plates (the host provides them), node glow states, mood-matched scene. No
+  document headings, no reading column, no card borders around the world. If a
+  roadmap looks like a webpage section with a diagram in it, it's wrong.
+- **Lesson pages are textbook chapters.** Reading column, prose-led sections,
+  instruments (Workbench/Chart/CodeCell) embedded in the flow, math as `<TeX>`.
+
 ## Principles
 
-- **One focal interactive per screen.** Lead with the thing the learner manipulates
-  (the `<Workbench>` canvas); prose and controls are subordinate. Don't bury the
-  interaction below three paragraphs.
+- **One focal interactive per section.** Within each section, lead with the thing
+  the learner manipulates (the `<Workbench>` canvas); prose sets it up and
+  interprets it. A chapter strings several such sections — depth comes from more
+  sections, not more knobs on one figure.
+- **Readouts on the instrument.** Live numbers overlay the canvas (Workbench
+  `hud` + `<Readout>`) like an instrument panel — not a strip of cards below.
 - **Restraint.** Fewer, well-labelled controls beat many. Group them with
   `<ControlGroup>`. Every block on the page should teach — cut the rest.
 - **Consistent color meaning.** Decide what each token *means* in your visuals and

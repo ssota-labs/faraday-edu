@@ -36,13 +36,15 @@ const curriculum: Curriculum = {
   nodes: [
     { id: "intro", title: "Start", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 },
       lesson: <Stop title="Start" body="Every journey starts somewhere. This is the first stop." /> },
-    { id: "a", title: "Path A", requires: ["intro"], meta: { x: 38, y: 26 }, reward: { xp: 10 },
+    // Every node carries a summary + reward — the immersive HUD's briefing
+    // panel shows them when the node is focused (a bare title reads empty).
+    { id: "a", title: "Path A", summary: "One of two branches — any order.", requires: ["intro"], meta: { x: 38, y: 26 }, reward: { xp: 10 },
       lesson: <Stop title="Path A" body="One of two branches. Do this and Path B in any order." /> },
-    { id: "b", title: "Path B", requires: ["intro"], meta: { x: 38, y: 74 }, reward: { xp: 10 },
+    { id: "b", title: "Path B", summary: "The other branch — the join needs both.", requires: ["intro"], meta: { x: 38, y: 74 }, reward: { xp: 10 },
       lesson: <Stop title="Path B" body="The other branch. The next stop needs both A and B." /> },
-    { id: "mid", title: "Crossroads", requires: ["a", "b"], meta: { x: 64, y: 50 }, reward: { xp: 20 },
+    { id: "mid", title: "Crossroads", summary: "A join node — unlocks after A and B.", requires: ["a", "b"], meta: { x: 64, y: 50 }, reward: { xp: 20 },
       lesson: <Stop title="Crossroads" body="Unlocked only after both paths — this is a join node." /> },
-    { id: "final", title: "Summit", requires: ["mid"], meta: { x: 88, y: 50 }, reward: { xp: 30 },
+    { id: "final", title: "Summit", summary: "The finale — clear it to finish.", requires: ["mid"], meta: { x: 88, y: 50 }, reward: { xp: 30 },
       lesson: <Stop title="Summit" body="The finale. Pass this to complete the whole course." /> },
   ],
 };
