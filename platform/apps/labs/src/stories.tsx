@@ -800,9 +800,20 @@ export const DEMOS: Record<string, Demo> = {
     source: `<Course title="…" chapters={[{ slug, title, element: <Chapter/> }, …]} />`,
   },
   host: {
-    blurb: "CurriculumHost — a graph of lessons with unlock progression + a swappable pack. Shown with linearPack; map2dPack / world3dPack render as an immersive full-screen game map.",
+    blurb: "CurriculumHost — a graph of lessons with unlock progression + a swappable pack. Shown with linearPack; map2dPack / world3dPack render as an immersive full-screen game map (see hud).",
     render: () => <CurriculumDemo />,
     source: `<CurriculumHost curriculum={curriculum} pack={linearPack} onEvent={rec.onEvent} />`,
+  },
+  hud: {
+    render: () => (
+      <iframe
+        title="Immersive world (map2dPack) + HUD"
+        src="/?frame=world"
+        className="h-[480px] w-full rounded-lg border border-border bg-background"
+      />
+    ),
+    source: `<CurriculumHost curriculum={curriculum} pack={map2dPack} />
+// map2dPack renders the immersive game screen; the host draws the HUD on top`,
   },
   ProgressDashboard: {
     render: () => <DashboardDemo />,
