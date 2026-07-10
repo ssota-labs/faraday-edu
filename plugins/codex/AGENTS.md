@@ -11,7 +11,7 @@ A CLI scaffolder for AI-authored interactive textbooks. `faraday new <name>`
 produces a self-contained Vite + React app for **one interactive lesson**; flags
 add a grounded AI tutor (`--tutor`), 3D (`--3d`), and physics (`--physics`).
 Invoke the CLI as `npx @faraday-kit/cli@latest <args>` (pre-publish local dev:
-`node /path/to/faraday-edu/bin/faraday.mjs <args>`).
+`node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs <args>`).
 
 ## The two-zone rule (governs everything)
 

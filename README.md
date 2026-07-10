@@ -3,7 +3,7 @@
 > **Turn a lesson you already teach into a high-quality interactive textbook — with a grounded AI tutor — in one shot.**
 >
 > Status: CLI phase (Phase 0 complete, building toward GTM Stage 1). See
-> [VISION.md](VISION.md) for the architecture and [GTM.md](GTM.md) for the
+> [VISION.md](docs/VISION.md) for the architecture and [GTM.md](docs/GTM.md) for the
 > customer strategy. Working codename; modeled on toolcraft-style self-contained
 > vendoring, headed toward a mirror-dimension-style web platform later.
 
@@ -62,7 +62,7 @@ pnpm build                                 # static bundle in dist/ (deployable)
 ```
 
 > During local development of this repo, `npx @faraday-kit/cli` is equivalent to
-> `node bin/faraday.mjs` run from the repo root.
+> `node platform/packages/cli/bin/faraday.mjs` run from the repo root.
 
 ---
 
@@ -88,7 +88,7 @@ The scaffolded project ships its own authoring guide in `AGENTS.md` and
 
 Faraday closes the feature set **horizontally** at Stage 1 — every layer works
 today under BYOK / self-deploy. Later stages remove friction (managed AI,
-multi-tenancy, payments), they don't add features. (See [VISION.md](VISION.md) §2.)
+multi-tenancy, payments), they don't add features. (See [VISION.md](docs/VISION.md) §2.)
 
 - **Lesson** — one interactive idea. ~15 shadcn-based blocks: `<Lesson>`,
   `<Prose>`, `<Stage>`, `<Workbench>` (live canvas + floating control panel),
@@ -202,23 +202,29 @@ error. `--json` makes `new` emit a structured result an agent can parse.
 ## Repo layout
 
 ```
-faraday-edu/
-├─ bin/faraday.mjs          # CLI entry (thin; logic in src/)
-├─ src/                     # cli, generate, copy, manifest, pkg (+ node --test)
-├─ templates/
-│  ├─ starter/              # app shell → project root (+ demo lesson, AGENTS.md, docs)
-│  ├─ faraday/              # → src/faraday/  (locked: ui, blocks, runtime, styles, world, lms)
-│  ├─ addon-3d/             # → three/ block + examples (with --3d/--physics)
-│  └─ addon-tutor/          # → api/ + workflows/ + src/faraday/tutor (with --tutor)
+faraday-edu/                    # repo root = meta (docs, specs, plugins, agents)
+├─ platform/                    # product workspace (pnpm: apps/* + packages/*)
+│  ├─ apps/
+│  │  └─ labs/                  # @faraday/labs — internal Next.js catalog of components + skills/packs
+│  ├─ packages/
+│  │  ├─ cli/                   # @faraday-kit/cli — bin + src (cli, generate, copy, manifest, pkg)
+│  │  │  └─ templates/          #   starter (app shell) + addon-3d + addon-tutor (scaffolding assets)
+│  │  └─ runtime/               # @faraday/runtime — vendored into src/faraday/**
+│  │                            #   (locked: ui, blocks, runtime, styles, world, lms, lib)
+│  └─ examples/                 # Standalone demos (own lockfile; Vercel root = platform/examples/<name>)
+│     └─ voyage-log/            #   C-B 항해 일지 curriculum (--3d)
 ├─ plugins/
-│  ├─ claude-code/          # Claude Code plugin + marketplace (install & drive Faraday)
-│  └─ codex/                # Codex AGENTS.md + custom prompts
-├─ examples/                # Live demos (Vercel root = examples/<name>)
-│  └─ voyage-log/           # C-B 항해 일지 curriculum (--3d)
-├─ specs/                   # tutor-ai.md, world-seed.md (design)
-├─ VISION.md · GTM.md       # architecture & customer strategy
+│  ├─ claude-code/              # Claude Code plugin + marketplace (install & drive Faraday)
+│  └─ codex/                    # Codex AGENTS.md + custom prompts
+├─ specs/                       # tutor-ai.md, world-seed.md (design)
+├─ docs/                        # VISION · GTM · LAUNCH-STAGE1 · DEMO-IDEATION (strategy)
+├─ AGENTS.md
 └─ README.md
 ```
+
+> The runtime is a first-class workspace package (`@faraday/runtime`) but is still
+> **vendored** — copied verbatim into each generated lesson and SHA-locked — not
+> installed as a dependency. `platform/packages/cli` copies from it at scaffold time.
 
 ## What the scaffolder does
 
@@ -230,8 +236,8 @@ Copy starter → target · restore `.gitignore` · vendor the locked runtime int
 ## Develop Faraday itself
 
 ```bash
-node --test src/*.test.mjs     # CLI unit tests
-node bin/faraday.mjs help      # run the CLI from the repo
+node --test platform/packages/cli/src/*.test.mjs     # CLI unit tests
+node platform/packages/cli/bin/faraday.mjs help      # run the CLI from the repo
 ```
 
 ---
@@ -242,5 +248,5 @@ Faraday is the **build-time** half of a two-AI system: a *creation AI* authors
 courseware now (what the plugins drive); a *tutor AI* teaches students at runtime
 (what `--tutor` embeds). The platform phase adds managed AI (Vercel AI Gateway),
 multi-tenancy (Vercel Platforms), and creator↔student payments — turning the
-open-core CLI into a three-sided marketplace. Read [VISION.md](VISION.md) and
-[GTM.md](GTM.md) for the full arc.
+open-core CLI into a three-sided marketplace. Read [VISION.md](docs/VISION.md) and
+[GTM.md](docs/GTM.md) for the full arc.

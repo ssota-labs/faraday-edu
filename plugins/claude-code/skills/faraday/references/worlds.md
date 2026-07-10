@@ -93,7 +93,7 @@ is the exception (DOM overlay → theme text).
 > **Helpers are decorations, not simulators.** `<Planet>` moves at a constant
 > parametric rate — fine for atmosphere, wrong for teaching Kepler. When the
 > teaching point **is** equal areas / real dynamics, integrate yourself
-> (`useFrame` + `M = E − e·sinE`); `examples/voyage-log/src/lesson/nodes/kepler.tsx`
+> (`useFrame` + `M = E − e·sinE`); `platform/examples/voyage-log/src/lesson/nodes/kepler.tsx`
 > shows the integration *technique* (Newton-solve Kepler's equation, wedge
 > areas) — copy the math, **not** the page structure: that file predates the
 > quality bar (ASCII math in `<code>`, a `<Stat>` strip under the figure, a

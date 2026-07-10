@@ -135,7 +135,7 @@ Faraday 자신과 같은 구조: 우리가 킷 배포 → 제작자가 스캐폴
 
 - **Phase 0 — 완료**: 레슨 CLI 킷 (외부 Studio Seed)
 - **Phase 1 = GTM Stage 1 (수평 feature-complete, CLI/MCP + BYOK)**:
-  - 커리큘럼/월드 씨앗 (헥사고날 스킬팩 — [specs/world-seed.md](specs/world-seed.md))
+  - 커리큘럼/월드 씨앗 (헥사고날 스킬팩 — [specs/world-seed.md](../specs/world-seed.md))
   - LMS 학생관리 (공통 컴포넌트 + 게이트)
   - 튜터 AI 런타임 + 메타-스킬(도메인 자료 → 튜터 스킬) + 그라운딩 게이트
   - `faraday deploy` 자동배포

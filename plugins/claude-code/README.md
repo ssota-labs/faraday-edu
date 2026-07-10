@@ -49,7 +49,7 @@ validate .` from the repo root before publishing).
 
 - **The Faraday CLI.** Commands call `npx @faraday-kit/cli@latest`. During
   pre-publish local development, that's equivalent to
-  `node /path/to/faraday-edu/bin/faraday.mjs` — the skill knows both.
+  `node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs` — the skill knows both.
 - **pnpm** (the scaffold installs with it).
 - **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded
   lesson's `.env.local` (never committed). Deploys use OIDC instead.

@@ -25,11 +25,11 @@ completion. See `README.md` for the command reference; notes below cover non-obv
   (add `--dir <path>` to target a generated lesson's own `.env.example`, e.g. a `--tutor` lesson).
 
 ### Running / testing the CLI (from repo root)
-- Tests: `node --test src/*.test.mjs` (Node's built-in runner; no ports, no services).
-- Scaffold a lesson: `node bin/faraday.mjs new <name>` — this shells out to `pnpm install`
+- Tests: `node --test platform/packages/cli/src/*.test.mjs` (Node's built-in runner; no ports, no services).
+- Scaffold a lesson: `node platform/packages/cli/bin/faraday.mjs new <name>` — this shells out to `pnpm install`
   inside the generated lesson (needs npm-registry access). Skip installing with
   `--skip-install` or `FARADAY_SKIP_INSTALL=1` (handy in CI / offline).
-- Verify a lesson's locked tree: `node bin/faraday.mjs check --dir <lesson>`.
+- Verify a lesson's locked tree: `node platform/packages/cli/bin/faraday.mjs check --dir <lesson>`.
 - Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
 
 ### Working inside a generated lesson (2D / `--3d` / `--physics`)

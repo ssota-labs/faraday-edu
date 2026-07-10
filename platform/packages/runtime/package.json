@@ -1,0 +1,28 @@
+{
+  "name": "@faraday/runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib). Vendored verbatim into generated lessons under src/faraday/** by @faraday-kit/cli and locked with a SHA-256 manifest — the source of truth for the copied-in code, not an installed dependency. Deps below exist only so the workspace (e.g. @faraday/labs) can typecheck + preview it; a real lesson satisfies them from its own package.json. react/react-dom are peers so a consumer dedupes to one copy.",
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.5.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "katex": "^0.16.11",
+    "recharts": "^3.8.0",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "license": "UNLICENSED"
+}

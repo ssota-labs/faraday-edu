@@ -1,0 +1,6 @@
+/* The runtime's real stylesheet — Tailwind v4 + the faraday component/theme/
+   design-token layers. faraday.css already `@source`s packages/** (the runtime),
+   so blocks pick up their utility classes. Add the labs app itself so our chrome
+   + demo stories are scanned too. */
+@import "@/faraday/faraday.css";
+@source "./";
