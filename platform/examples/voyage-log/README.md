@@ -66,6 +66,6 @@ CDP. See `AUTHORING-GAPS.md` §5.
 
 ## Related
 
-- Root spec: [`DEMO-IDEATION.md`](../../DEMO-IDEATION.md) §4 (C-B)
+- Root spec: [`DEMO-IDEATION.md`](../../../docs/DEMO-IDEATION.md) §4 (C-B)
 - Authoring reference: [`docs/authoring.md`](docs/authoring.md)
 - Friction log from building this demo: [`AUTHORING-GAPS.md`](AUTHORING-GAPS.md)

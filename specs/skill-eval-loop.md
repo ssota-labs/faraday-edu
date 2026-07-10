@@ -16,7 +16,7 @@ faraday 스킬/템플릿의 품질을 올릴 때 쓰는 검증 방법론. 2026-0
    한다(제네릭 HUD·블록·버그픽스). 검증 주제(케플러 등)에 특화된 코드가
    템플릿/스킬에 들어가면 실패. 일반화 확인이 필요하면 다른 주제로 한 번 더.
 4. **서브에이전트는 완전 블랭크.** 사전 컨텍스트 없음. 스킬(SKILL.md)이 유일한
-   방법론 소스, CLI(bin/faraday.mjs)가 유일한 도구. **품질 기준을 프롬프트에
+   방법론 소스, CLI(platform/packages/cli/bin/faraday.mjs)가 유일한 도구. **품질 기준을 프롬프트에
    누설하지 않는다** — 스킬을 통해 스스로 발견하는지가 검증 대상이다.
 5. **에이전트 자기평가는 신뢰하지 않는다.** 오케스트레이터가 빌드된 앱을 직접
    구동해 실제 픽셀로 채점한다. 에이전트가 "구조상 PASS"라고 한 시각적 MUST는
@@ -66,11 +66,11 @@ Ground rules:
   each phase. Follow it faithfully, including its quality rubric, its
   interaction-craft guidance, and its assessment guidance.
 - The CLI npm package is NOT published; whenever the skill says
-  `npx @faraday-kit/cli@latest`, use `node {{repo}}/bin/faraday.mjs` instead.
+  `npx @faraday-kit/cli@latest`, use `node {{repo}}/platform/packages/cli/bin/faraday.mjs` instead.
 - Create the project inside {{스크래치_디렉토리}} (create the parent dir if needed).
-- Do NOT read or copy from any examples/voyage-log/src/lesson/** file except
+- Do NOT read or copy from any platform/examples/voyage-log/src/lesson/** file except
   where a skill reference explicitly points you to a specific file there.
-- Do NOT edit anything under the repo itself (templates/, plugins/, src/).
+- Do NOT edit anything under the repo itself (platform/, plugins/).
 - Run the verification gates the skill requires (pnpm check / typecheck /
   build). Visual driving of the built app is the orchestrator's job — do not
   leave servers running when you finish.
@@ -141,7 +141,7 @@ Final report (returned to an orchestrator — be precise, under 550 words):
       references는 `cp`로 동일하게, SKILL.md만 개별 편집(의도적 diff 3곳 유지).
       `diff -rq plugins/claude-code/skills/faraday/references
       plugins/codex/skills/faraday/references`로 SYNC 확인.
-- [ ] **scaffold 문서 동기화**: `templates/starter/AGENTS.md`,
+- [ ] **scaffold 문서 동기화**: `platform/packages/cli/templates/starter/AGENTS.md`,
       `docs/authoring.md`, `docs/quality-bar.md`(skill quality-bar의 사본) —
       블랭크 에이전트가 프로젝트 안에서 읽는 건 이쪽이다.
 - [ ] 템플릿 코드 수정 후 `node --test src/generate.test.mjs` (5개).
