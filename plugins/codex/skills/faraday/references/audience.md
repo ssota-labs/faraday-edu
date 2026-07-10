@@ -163,7 +163,10 @@ distributed across screens.
   variants ([pedagogy.md](pedagogy.md) anti-patterns).
 - **Mixed/unknown audience** → default to the adolescent/5E row (its arc is the
   most forgiving) and say so in the brief; a stated assumption the creator can
-  veto beats a silent guess.
+  veto beats a silent guess. When the creator names a span across TWO rows
+  (e.g. "high-school to college freshman"), take the *younger* row's arc as
+  the spine and layer the older row's rigor on top (its assessment forms,
+  full derivations, real data/units) — state the blend in the brief.
 - **Assessment forms follow the audience too** — children clear missions,
   undergrads type numbers and face ConcepTests, professionals get the job task
   as the gate. The per-audience defaults live in
