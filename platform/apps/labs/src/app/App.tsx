@@ -13,8 +13,9 @@ import {
 import { DEMOS } from "@/stories";
 import { PreviewView } from "./PreviewView";
 import { SkillsView } from "./SkillsView";
+import { LayoutsView } from "./LayoutsView";
 
-type Tab = "components" | "skills";
+type Tab = "components" | "layouts" | "skills";
 
 function ThemeToggle() {
   const { resolved, setTheme } = useTheme();
@@ -64,6 +65,9 @@ export function App() {
             <TabButton active={tab === "components"} onClick={() => setTab("components")}>
               Components
             </TabButton>
+            <TabButton active={tab === "layouts"} onClick={() => setTab("layouts")}>
+              Layouts
+            </TabButton>
             <TabButton active={tab === "skills"} onClick={() => setTab("skills")}>
               Skills &amp; Packs
             </TabButton>
@@ -78,6 +82,8 @@ export function App() {
       <div className="mx-auto max-w-[1400px] px-5 py-6">
         {tab === "components" ? (
           <PreviewView groups={groups} />
+        ) : tab === "layouts" ? (
+          <LayoutsView />
         ) : (
           <SkillsView
             skill={skill}
