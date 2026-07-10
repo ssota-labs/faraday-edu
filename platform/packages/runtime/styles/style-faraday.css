@@ -8,7 +8,7 @@
   }
 
   .cn-accordion-item {
-    @apply data-open:bg-muted/50 not-last:border-b;
+    @apply not-last:border-b;
   }
 
   .cn-accordion-trigger {
