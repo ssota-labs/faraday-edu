@@ -151,12 +151,64 @@ function ChallengeDemo() {
 // ── static data ──────────────────────────────────────────────────────────────
 
 const CHART_DATA = [
-  { year: "2019", growth: 4.1 },
-  { year: "2020", growth: -2.3 },
-  { year: "2021", growth: 6.0 },
-  { year: "2022", growth: 3.2 },
-  { year: "2023", growth: 2.7 },
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Feb", desktop: 305, mobile: 200 },
+  { month: "Mar", desktop: 237, mobile: 120 },
+  { month: "Apr", desktop: 273, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "Jun", desktop: 264, mobile: 140 },
 ];
+const CHART_SERIES = [
+  { key: "desktop", label: "Desktop", color: "var(--chart-1)" },
+  { key: "mobile", label: "Mobile", color: "var(--chart-2)" },
+];
+const SLICE_DATA = [
+  { browser: "Chrome", visitors: 275 },
+  { browser: "Safari", visitors: 200 },
+  { browser: "Firefox", visitors: 187 },
+  { browser: "Edge", visitors: 173 },
+  { browser: "Other", visitors: 90 },
+];
+const SLICE_SERIES = [{ key: "visitors", label: "Visitors" }];
+
+function ChartExample({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <div className="mb-1.5 text-xs font-medium text-muted-foreground">{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function ChartGallery() {
+  return (
+    <div className="flex flex-col gap-7">
+      <ChartExample label="Bar · multi-series · legend + tooltip + y-axis">
+        <Chart type="bar" data={CHART_DATA} x="month" series={CHART_SERIES} legend yAxis height={240} />
+      </ChartExample>
+      <ChartExample label="Line · multi-series · legend">
+        <Chart type="line" data={CHART_DATA} x="month" series={CHART_SERIES} legend height={220} />
+      </ChartExample>
+      <ChartExample label="Area · single series">
+        <Chart type="area" data={CHART_DATA} x="month" series={[CHART_SERIES[0]]} height={200} />
+      </ChartExample>
+      <ChartExample label="Radar · multi-series · legend">
+        <Chart type="radar" data={CHART_DATA} x="month" series={CHART_SERIES} legend height={280} />
+      </ChartExample>
+      <div className="grid gap-7 sm:grid-cols-2">
+        <ChartExample label="Pie · legend">
+          <Chart type="pie" data={SLICE_DATA} x="browser" series={SLICE_SERIES} legend height={260} />
+        </ChartExample>
+        <ChartExample label="Donut">
+          <Chart type="donut" data={SLICE_DATA} x="browser" series={SLICE_SERIES} height={260} />
+        </ChartExample>
+      </div>
+      <ChartExample label="Radial">
+        <Chart type="radial" data={SLICE_DATA} x="browser" series={SLICE_SERIES} legend height={260} />
+      </ChartExample>
+    </div>
+  );
+}
 
 // ── registry ─────────────────────────────────────────────────────────────────
 
@@ -205,17 +257,16 @@ export const DEMOS: Record<string, Demo> = {
 </ControlGroup>`,
   },
   Chart: {
-    render: () => (
-      <Chart
-        type="bar"
-        data={CHART_DATA}
-        x="year"
-        series={[{ key: "growth", label: "GDP growth %", color: "var(--chart-1)" }]}
-        height={240}
-      />
-    ),
-    source: `<Chart type="bar" data={data} x="year"
-  series={[{ key: "growth", label: "GDP growth %", color: "var(--chart-1)" }]} />`,
+    render: () => <ChartGallery />,
+    source: `<Chart type="bar" data={data} x="month" legend yAxis
+  series={[
+    { key: "desktop", label: "Desktop", color: "var(--chart-1)" },
+    { key: "mobile",  label: "Mobile",  color: "var(--chart-2)" },
+  ]}
+/>
+// cartesian/radar: type "line"|"bar"|"area"|"radar", x + series
+// slices: type "pie"|"donut"|"radial", x = slice name, series[0] = value
+// tooltip on by default · legend opt-in`,
   },
   ParamSlider: {
     render: () => <ParamSliderDemo />,
