@@ -4,6 +4,12 @@ You are building **one interactive lesson**: a single-page, self-contained Vite 
 React app that teaches one idea by letting the reader *do* something. The UI is
 **shadcn-based** (Base UI primitives + an externalized CSS style layer).
 
+**Hold the quality bar** — [docs/quality-bar.md](docs/quality-bar.md) is the
+acceptance rubric (world screens must read as game screens; lessons must read as
+solid textbook chapters: multiple different interactions, real prose between
+them, all math in `<TeX>`, quantitative claims plotted). Grade your output
+against it before calling anything done.
+
 ## Two zones
 
 | Zone | Path | Rule |
@@ -32,28 +38,67 @@ Import from `@/faraday/blocks`; raw shadcn primitives are in `@/faraday/ui/*`.
 - `<Lesson title lead topic?>` — page frame. Put everything inside it.
 - `<Prose heading?>` — a text section.
 - `<Stage caption?>` — a Card-framed host for a single visualization (SVG/canvas/DOM).
-- `<Workbench title? panelTitle? onReset? controls>` — the **live canvas + floating
-  control panel** layout (mirror-dimension style). Put the visualization in `children`,
-  the controls in `controls`. The panel floats (elevated), sticks while scrolling, and
-  stacks on mobile. `onReset` adds a reset button to the panel title bar. Embed it
-  anywhere in the lesson flow.
+- `<Workbench title? panelTitle? onReset? hud? controls?>` — the **live canvas**
+  layout. Visualization in `children`; `hud` overlays top-right and is interactive —
+  live `<Readout>` chips AND on-canvas actions (Play/Pause, presets as
+  `<Button size="sm">`). `controls` (the floating side panel) is **optional**:
+  omit it when all interaction lives on the canvas (drag handles, overlay
+  buttons) and the canvas takes full width; use it for secondary or numerous
+  parameters. `onReset` adds a reset button.
+- **Motion hooks** (from `@/faraday/runtime`) — use these instead of hand-rolled
+  rAF so nothing snaps: `useAnimatedValue(target)` (render from it → discrete
+  changes ease, never teleport), `useRafLoop(cb, playing)` (keep dynamic systems
+  moving, Play/Pause in `hud`), `useSvgDrag(onDrag)` (drag objects in viewBox
+  coords — prefer dragging the thing over a detached slider).
 - `<ControlGroup label defaultOpen? onReset?>` — a collapsible, labeled section for the
   panel's `controls`. Group controls semantically (e.g. "Playback", "Appearance",
   "Physics"); each group collapses independently and can have its own reset.
-- `<Chart type data x series yAxis?>` — a shadcn/Recharts chart (`type`: line | bar | area).
+- `<Chart type data x series yAxis? xType?>` — a shadcn/Recharts chart (`type`: line | bar | area).
   `series: {key, label?, color?}[]`; colours default to `--chart-1..5` theme tokens.
+  For function graphs / uneven samples set `xType="number"` (true x positions).
+  A data point with `null` neighbours renders as a dot — use a mostly-null
+  series as a "you are here" marker on a model curve.
 - `<ParamSlider label value min max step? onChange format?>` — numeric control.
 - `<ParamSwitch label checked onChange>` — on/off control.
 - `<Segmented label? value onChange options>` — single-select segmented control.
 - `<Scrubber ...>` — transport controls for a stepped visualization (wire to `useStepper`).
-- `<Quiz question options onCorrect? onChecked?>` — self-check MCQ (`options: {label,
-  correct?, hint?}[]`). `onCorrect` fires on a passed answer — wire it to
-  `useNode().complete()` in a curriculum to unlock the next node.
+- **Checks — pick the FORM by the outcome verb** (see docs/quality-bar.md; an
+  MCQ closing a compute/do/predict outcome under-tests it):
+  - `<Quiz question options onCorrect?>` — recognition MCQ; distractors are
+    documented misconceptions, hints are feed-forward. `onCorrect` →
+    `useNode().complete()` gates a curriculum node.
+  - `<NumericAnswer question answer tolerance? unit? hint? onCorrect?>` — the
+    learner computes and types the number (default tolerance 2%).
+  - `<SketchPad prompt background? overlay onSelfAssess?>` — draw the
+    prediction (pen/Pencil/touch), reveal the true overlay, self-assess.
+  - `<Challenge goal done hint? onDone>` — mission wrapping an interactive:
+    clear it by DOING (win condition computed from your sim state; put a
+    visible target in the scene).
 - `<Callout title? variant?>` — highlighted note. `variant`: `"default"` | `"destructive"`.
 - `<Reveal label?>` — collapsible hint/spoiler.
 - `<Compare items defaultValue?>` — tabbed side-by-side cases. `items: {value,
   label, content}[]` — `value` keys each tab (required); `defaultValue` opens one.
-- `<Stat label value delta?>` — compact metric read-out.
+- `<Stat label value delta?>` — compact metric read-out (use sparingly — one
+  deliberate summary row, never a reflex strip under every figure).
+- `<TeX block?>` — KaTeX math. **Every symbolic expression** goes through this
+  (inline in prose or `block` for display equations): `<TeX>{String.raw`\frac{dA}{dt}`}</TeX>`.
+  Never typeset math as `<code>` or ASCII.
+- `<Derivation steps={[{tex, note?}]} title?>` — derive formulas LIVE: lines
+  reveal one at a time (learner presses Next step), each with the move that
+  justifies it. **A lesson's central formula must land as the last line of a
+  derivation, not appear from nowhere**; secondary results can defer to
+  `<Reveal>`.
+- `<CodeCell code label? caption?>` — an editable, runnable JavaScript cell
+  (sandboxed, console captured). Use when the audience codes or the concept is
+  algorithmic — the learner edits and re-runs to test the idea.
+- `<Readout label value tone?>` — a compact label:value chip for live numbers.
+  Put readouts in the Workbench `hud` slot (overlaid on the canvas), not as a
+  row of `<Stat>` cards after the figure.
+- `<Paged pages height? onLastPage?>` — tablet-style screen-at-a-time layout:
+  each page (`{id, title?, content}`) fills the viewport height; prev/next, dot
+  rail, arrow keys. Only the active page stays mounted. Use when the audience
+  wants one idea per screen (young learners, kiosk/tablet); the default lesson
+  layout remains the book-like vertical scroll.
 - `useStepper(total, { fps? })` — cursor + autoplay over an ordered list of frames.
 - `<Course title chapters>` (from `@/faraday/runtime`) — bundle several lessons into a
   navigable textbook (chapter nav, prev/next, #hash routing). Use it as the default export.
@@ -63,11 +108,15 @@ Light/dark toggle and the reading column come from the runtime — you don't add
 ## Workflow
 
 1. Decide what the reader manipulates and what they should *see change*.
-2. Write it in `src/lesson/` using the blocks above.
+2. Write it in `src/lesson/` using the blocks above. A lesson is a **chapter,
+   not a gadget**: teach in prose, then let each idea be *done* — typically 2–4
+   different interactives (a manipulable model, a plotted relationship, a
+   stepped walkthrough, a code cell) with explanation before and interpretation
+   after each. All math in `<TeX>`. See [docs/quality-bar.md](docs/quality-bar.md).
 3. `pnpm check` — structure + integrity gates must pass (exit 0).
 4. `pnpm dev` — Vite prints a local URL on a free port (read it from the output; run
    several lessons side by side). Open it, drive the controls, fix any console errors.
-5. End with a `<Quiz>` so the reader can test their understanding.
+5. End with a `<Quiz>` that can only be answered by having used the interactives.
 
 ## MANDATORY: 3D scenes must carry the domain's mood
 

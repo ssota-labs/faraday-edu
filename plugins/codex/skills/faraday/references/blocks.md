@@ -4,7 +4,14 @@ Import blocks from `@/faraday/blocks`, runtime helpers from `@/faraday/runtime`,
 raw shadcn primitives from `@/faraday/ui/*`. The scaffolded project's
 `docs/authoring.md` is the source of truth; this is the working summary.
 
-## Canonical lesson shape
+**A lesson is a chapter, not a gadget.** A substantial concept gets several
+*different* interactive figures — a manipulable model, a `<Chart>` of the real
+relationship, a stepped walkthrough or `<Compare>`, a `<CodeCell>` where the
+audience codes — each set up and interpreted by real prose, all math in
+`<TeX>`. The canonical shape below is one *section's* arc; a chapter strings
+several together. Rubric: [quality-bar.md](quality-bar.md).
+
+## Canonical section shape
 
 ```tsx
 import { useMemo, useState } from "react";
@@ -65,6 +72,11 @@ of `<Workbench>`.
   params in `useState`, `useMemo` the visualization, drive with `<ParamSlider>` /
   `<ParamSwitch>` / `<Segmented>`. No `useStepper` needed. Copy
   `docs/examples/continuous.tsx` (live-knobs + `<Chart>`) as a starter.
+- **Aim-then-run (hybrid)** — common third shape: continuous setup + a discrete
+  timed run. The learner aims by direct manipulation (`useSvgDrag` on the object,
+  a live dashed preview), then an on-canvas button (in the Workbench `hud`) fires
+  a `useRafLoop` simulation that flies/settles with a visible trail. Projectiles,
+  reaction runs, races, launches — anything with a "set it up, let it go" beat.
 
 ## Block catalog
 
@@ -73,19 +85,30 @@ of `<Workbench>`.
 | `<Lesson title lead topic?>` | Page frame. Everything goes inside it. |
 | `<Prose heading?>` | A text section. |
 | `<Stage caption?>` | Card-framed host for a single visualization (SVG/canvas/DOM). |
-| `<Workbench title? panelTitle? onReset? controls>` | Live canvas (`children`) + floating, sticky control panel (`controls`). The interactive centerpiece. |
+| `<Workbench title? panelTitle? onReset? hud? controls?>` | Live canvas (`children`) + optional floating control panel (`controls`). **The panel is not mandatory** — omit `controls` and the canvas takes full width (right when all interaction lives on the canvas: drag handles, overlay buttons). `hud` overlays top-right and is interactive: live `<Readout>` chips AND on-canvas actions (Play/Pause, presets as `<Button size="sm">`). Measured numbers belong there, **not** in a card strip under the figure. |
 | `<ControlGroup label defaultOpen? onReset?>` | Collapsible labeled section for the panel's `controls`. Group controls semantically. |
-| `<Chart type data x series yAxis?>` | shadcn/Recharts chart. `type`: line \| bar \| area. `series: {key,label?,color?}[]` (defaults to `--chart-1..5`). `data` values may be `null` (Recharts gap — use for a single "you are here" marker). Needs **non-zero container width to paint** (element `ResizeObserver`; a `window` resize may not rescue it) — see the Rendering gotcha in worlds.md. Prefer `height ≥ 260` for area charts. |
+| `<Chart type data x series yAxis? xType?>` | shadcn/Recharts chart. `type`: line \| bar \| area. `series: {key,label?,color?}[]` (defaults to `--chart-1..5`). For **function graphs / uneven samples** set `xType="number"` so x plots at its true position (default `"category"` spaces rows evenly). `data` values may be `null` (gap); a point with nulls on both sides renders as a visible dot — use a mostly-null series for a "you are here" marker on a model curve. Needs **non-zero container width to paint** (element `ResizeObserver`; a `window` resize may not rescue it) — see the Rendering gotcha in worlds.md. Prefer `height ≥ 260` for area charts. |
+| `<Segmented label? value onChange options>` | Single-select segmented control. Generic over `T extends string` — `value`/`onChange`/`options[].value` share `T` (no cast). |
 | `<ParamSlider label value min max step? onChange format?>` | Numeric control. |
 | `<ParamSwitch label checked onChange>` | On/off control. |
-| `<Segmented label? value onChange options>` | Single-select segmented control. |
 | `<Scrubber index total playing atStart atEnd onPrev onNext onTogglePlay onSeek>` | Transport controls; wire to `useStepper`. |
-| `<Quiz question options onCorrect? onChecked?>` | Self-check MCQ. `options: {label, correct?, hint?}[]`. `onCorrect()` fires on a passed answer — wire to `useNode().complete()` for curriculum unlock; `onChecked(correct)` fires on every check. |
+| `<Quiz question options onCorrect? onChecked?>` | Recognition MCQ — distractors should be documented misconceptions. `options: {label, correct?, hint?}[]`. `onCorrect()` fires on a passed answer — wire to `useNode().complete()` for curriculum unlock. One of FIVE check forms — pick by outcome verb ([assessment.md](assessment.md)). |
+| `<NumericAnswer question answer tolerance? unit? hint? onCorrect?>` | Free numeric response — the learner computes and TYPES the answer (Enter or Check grades; default tolerance 2%). For compute/derive/estimate outcomes. |
+| `<SketchPad prompt background? overlay onSelfAssess? viewBox?>` | Pen/touch sketch-predict (Apple Pencil pressure honored): draw the prediction, reveal the true `overlay`, self-assess against it. For predict/visualize/construct outcomes. |
+| `<Challenge goal done hint? onDone title?>` | Mission-style performance check wrapping an interactive: author computes the win condition (`done`) from sim state; latches on first success, `onDone` fires once. Put a visible target INTO the scene. For do/tune/achieve outcomes. |
 | `<Callout title? variant?>` | Highlighted note. `variant`: `"default"` \| `"destructive"`. |
 | `<Reveal label?>` | Collapsible hint/spoiler. |
 | `<Compare items defaultValue?>` | Tabbed side-by-side cases. `items: {value, label, content}[]` — `value` keys each tab (**required**); `defaultValue` picks the open tab (defaults to the first item's `value`). |
-| `<Stat label value delta?>` | Compact metric read-out. `delta` is an object `{text, tone?}` (not a bare string). |
+| `<Stat label value delta?>` | Compact metric card. `delta` is an object `{text, tone?}` (not a bare string). Use for one deliberate summary row at most — live values go in the Workbench `hud`. |
+| `<TeX block?>` | KaTeX math. **All symbolic expressions** render through this — inline in prose, or `block` for display equations. Child is the TeX source string: `<TeX>{String.raw`\frac{dA}{dt}`}</TeX>`. Never `<code>`/ASCII math. |
+| `<Derivation steps title? defaultOpen?>` | A formula derived LIVE, one justified line at a time (Next step / Show all / Restart; newest line animates in). `steps: {tex, note?}[]` — the note names the move ("substitute T", "2 sinθcosθ = sin 2θ"). **Central results must arrive as the last line of one of these**, not as a bare boxed formula (quality-bar). Secondary results → `<Reveal>`. |
+| `<CodeCell code label? caption?>` | Editable, runnable JavaScript cell (sandboxed iframe, console captured, Run/Reset). Use when the audience codes or the concept is algorithmic; the learner edits + re-runs to test the idea. |
+| `<Readout label value tone?>` | Compact label:value chip for live numbers — designed for the Workbench `hud` slot. |
+| `<Paged pages height? onLastPage?>` | Tablet-style screen-at-a-time layout: each page fills the viewport height, one shows at a time (prev/next, dot rail, arrow keys). `pages: {id, title?, content}[]`. Only the active page is mounted (per-page state resets on return). Use for "one idea per screen" audiences/contexts (see audience.md "Layout"); default remains the book-like vertical scroll. Inside a page, landscape-split with `grid h-full lg:grid-cols-[3fr_2fr]`. |
 | `useStepper(total, { fps? })` | Cursor + autoplay over ordered frames. From `@/faraday/runtime`. |
+| `useAnimatedValue(target, {stiffness?})` | Returns a value that spring-chases `target` — render from it and discrete changes (selection, step, reset) EASE instead of teleporting. From `@/faraday/runtime`. |
+| `useRafLoop(cb, playing?)` | Simulation loop: `cb(dt, t)` each frame while playing. Keeps dynamic concepts moving on screen (orbit orbits, wave travels) with Play/Pause in the `hud`. From `@/faraday/runtime`. |
+| `useSvgDrag(onDrag)` | Direct manipulation: spread on any SVG element → drag positions in viewBox coords (`onDrag(x, y, phase)`), pointer-captured. Drag the object itself instead of a detached slider. From `@/faraday/runtime`. |
 
 Light/dark toggle and the reading column come from the runtime — don't add them.
 
@@ -104,6 +127,15 @@ Light/dark toggle and the reading column come from the runtime — don't add the
 
 In SVG: `style={{ fill: "var(--primary)" }}`. In HTML: semantic Tailwind classes.
 Never hardcode `#hex` or `text-blue-500`.
+
+## Styling gotcha: utilities lose to the component layer
+
+`.style-faraday .cn-*` component styles outrank single Tailwind utilities, so
+`className="py-0"` on a `<Card>` (etc.) silently does nothing. To build a card
+with your own header bar (like Workbench/CodeCell), set **`data-flush`** on the
+`<Card>` — it zeroes the card's built-in padding+gap so your bar and sections
+space themselves. For other density changes, adjust the token values, don't
+fight the layer with utilities.
 
 ## Adding a shadcn primitive
 

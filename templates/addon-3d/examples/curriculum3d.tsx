@@ -33,13 +33,15 @@ const curriculum: Curriculum = {
   nodes: [
     { id: "intro", title: "Landing", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 },
       lesson: <Stop title="Landing" body="You arrive at the first place in the world." /> },
-    { id: "a", title: "North Vale", requires: ["intro"], meta: { x: 40, y: 22 }, reward: { xp: 10 },
+    // Every node carries a summary + reward — the immersive HUD's briefing
+    // panel shows them when the node is focused (a bare title reads empty).
+    { id: "a", title: "North Vale", summary: "One of two regions — explore in any order.", requires: ["intro"], meta: { x: 40, y: 22 }, reward: { xp: 10 },
       lesson: <Stop title="North Vale" body="One of two regions. Explore this and South Reef in any order." /> },
-    { id: "b", title: "South Reef", requires: ["intro"], meta: { x: 40, y: 78 }, reward: { xp: 10 },
+    { id: "b", title: "South Reef", summary: "The other region — the crossing needs both.", requires: ["intro"], meta: { x: 40, y: 78 }, reward: { xp: 10 },
       lesson: <Stop title="South Reef" body="The other region. The crossing needs both regions cleared." /> },
-    { id: "mid", title: "The Crossing", requires: ["a", "b"], meta: { x: 66, y: 50 }, reward: { xp: 20 },
+    { id: "mid", title: "The Crossing", summary: "A join node — unlocks after both regions.", requires: ["a", "b"], meta: { x: 66, y: 50 }, reward: { xp: 20 },
       lesson: <Stop title="The Crossing" body="Unlocks only after both regions — a join node." /> },
-    { id: "final", title: "Summit", requires: ["mid"], meta: { x: 90, y: 50 }, reward: { xp: 30 },
+    { id: "final", title: "Summit", summary: "The finale — complete it to clear the world.", requires: ["mid"], meta: { x: 90, y: 50 }, reward: { xp: 30 },
       lesson: <Stop title="Summit" body="The finale. Finish to complete the whole world." /> },
   ],
 };

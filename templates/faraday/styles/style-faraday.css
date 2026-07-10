@@ -253,6 +253,15 @@
     @apply ring-foreground/8 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden rounded-lg py-(--card-spacing) text-xs/relaxed ring-1 [--card-spacing:--spacing(3.5)] has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(2.5)] *:[img:first-child]:rounded-t-lg *:[img:last-child]:rounded-b-lg;
   }
 
+  /* Flush card — for blocks that bring their OWN header bar / internal
+     sections (Workbench, CodeCell, …). The card's built-in padding+gap would
+     stack on top of the bar's padding and double the spacing, so data-flush
+     zeroes them and lets the sections space themselves. (Utilities like py-0
+     can't do this: .style-faraday .cn-card outranks any single utility.) */
+  .cn-card[data-flush] {
+    @apply gap-0 p-0;
+  }
+
   .cn-card-header {
     @apply gap-1 rounded-t-lg px-(--card-spacing) [.border-b]:pb-(--card-spacing);
   }

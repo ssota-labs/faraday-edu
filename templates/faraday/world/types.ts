@@ -92,7 +92,16 @@ export interface WorldPackProps {
   setPackState: (state: unknown) => void;
 }
 
-export type WorldPack = (props: WorldPackProps) => ReactNode;
+export type WorldPack = ((props: WorldPackProps) => ReactNode) & {
+  /** Game-like packs set this (map2d/world3d/rpg do). The host then mounts the
+   *  world as a full-viewport immersive layer with a game HUD overlay instead
+   *  of a document header, and the pack's render fills that layer (additive to
+   *  the port contract — packs that omit it render inline, doc-style). */
+  immersive?: boolean;
+  /** Default idle control hint for the immersive HUD ("WASD to move…"). The
+   *  author can override per-host via <CurriculumHost hint>. */
+  hint?: string;
+};
 
 // ── Integration hook: events out to LMS / Tutor AI ──────────────────────────
 //

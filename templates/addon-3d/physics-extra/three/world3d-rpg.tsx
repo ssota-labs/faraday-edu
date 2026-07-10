@@ -150,14 +150,13 @@ function Avatar({
   );
 }
 
-export function createWorld3dRpgPack(options: { mood?: Mood; height?: number } = {}): WorldPack {
+export function createWorld3dRpgPack(options: { mood?: Mood } = {}): WorldPack {
   const mood = options.mood ?? "abstract";
-  const height = options.height ?? 460;
   const Pack: WorldPack = ({ world, onEnter, packState, setPackState }) => {
     const pos = positions(world.nodes);
     return (
-      <div className="relative">
-        <Scene3D mood={mood} height={height} camera={[0, 9, 12]} controls={false}>
+      <div className="relative h-full w-full">
+        <Scene3D mood={mood} fill camera={[0, 9, 12]} controls={false}>
           <Physics gravity={[0, -12, 0]}>
             {/* floor */}
             <RigidBody type="fixed" position={[0, -0.5, 0]}>
@@ -195,12 +194,11 @@ export function createWorld3dRpgPack(options: { mood?: Mood; height?: number } =
             <Avatar nodes={world.nodes} pos={pos} onEnter={onEnter} packState={packState} setPackState={setPackState} />
           </Physics>
         </Scene3D>
-        <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-background/70 px-3 py-1 text-xs text-muted-foreground backdrop-blur-sm">
-          WASD / arrows to move · walk into a place to enter it
-        </div>
       </div>
     );
   };
+  Pack.immersive = true;
+  Pack.hint = "WASD / arrows to move · walk into a place to enter it";
   return Pack;
 }
 

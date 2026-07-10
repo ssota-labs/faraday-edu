@@ -22,9 +22,12 @@ export function Quiz(props: {
   /** Fires on every Check with the result — for analytics or custom UI. */
   onChecked?: (correct: boolean) => void;
 }) {
-  const [selected, setSelected] = useState<string | null>(null);
+  // "" = nothing picked yet. Keep the RadioGroup CONTROLLED from first render —
+  // passing undefined first (uncontrolled) then a string (controlled) makes
+  // Base UI log an uncontrolled→controlled error on every first selection.
+  const [selected, setSelected] = useState("");
   const [checked, setChecked] = useState(false);
-  const chosen = selected !== null ? props.options[Number(selected)] : null;
+  const chosen = selected !== "" ? props.options[Number(selected)] : null;
 
   const pick = (i: number) => {
     setSelected(String(i));
@@ -42,7 +45,7 @@ export function Quiz(props: {
   return (
     <section className="flex flex-col gap-4 rounded-xl border bg-card p-5">
       <p className="font-medium">{props.question}</p>
-      <RadioGroup value={selected ?? undefined} onValueChange={(v) => pick(Number(v))}>
+      <RadioGroup value={selected} onValueChange={(v) => pick(Number(v))}>
         <div className="flex flex-col gap-2">
           {props.options.map((o, i) => (
             <label
@@ -57,7 +60,7 @@ export function Quiz(props: {
         </div>
       </RadioGroup>
       <div>
-        <Button size="sm" disabled={selected === null} onClick={check}>
+        <Button size="sm" disabled={selected === ""} onClick={check}>
           Check answer
         </Button>
       </div>

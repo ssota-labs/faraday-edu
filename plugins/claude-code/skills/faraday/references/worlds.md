@@ -26,9 +26,19 @@ owns progress, the world↔lesson toggle, the HUD, and an event stream for
 LMS/tutor hooks. The *shape* of the world is a swappable **pack**
 (ports-and-adapters) — change one prop, keep the content:
 
-- `linearPack` — status list (baseline, no deps). `@/faraday/world`
-- `map2dPack` — 2D SVG node map (game-like). `@/faraday/world`
-- `world3dPack` — 3D open-world constellation (needs `--3d`). `@/faraday/three`
+- `linearPack` — status list (doc-style, renders inline). `@/faraday/world`
+- `map2dPack` — 2D tactical node map (**game screen**). `@/faraday/world`
+- `world3dPack` — 3D open-world constellation (**game screen**, needs `--3d`). `@/faraday/three`
+
+**Game packs are immersive.** The host mounts the world as a full-viewport game
+screen — no page header, no reading column — and overlays a game HUD: a status
+plate (curriculum title, per-node progress ticks, XP), a briefing panel for the
+focused node, and a control hint. The briefing panel is fed by node data, so
+**give every node a `summary` and a `reward.xp`** — a bare title reads as an
+empty intel window. Entering a node switches to the doc-style lesson view (the
+textbook); leaving returns to the world. `immersive={false}` forces a game pack
+inline (small map embedded in a page); `hint="…"` overrides the HUD hint. Do
+**not** wrap an immersive world in `<Lesson>`/prose — the world IS the screen.
 
 ```tsx
 import { CurriculumHost, map2dPack, type Curriculum } from "@/faraday/world";
@@ -83,8 +93,11 @@ is the exception (DOM overlay → theme text).
 > **Helpers are decorations, not simulators.** `<Planet>` moves at a constant
 > parametric rate — fine for atmosphere, wrong for teaching Kepler. When the
 > teaching point **is** equal areas / real dynamics, integrate yourself
-> (`useFrame` + `M = E − e·sinE`). Live reference:
-> `examples/voyage-log/src/lesson/nodes/kepler.tsx`. Always verify quantitative
+> (`useFrame` + `M = E − e·sinE`); `examples/voyage-log/src/lesson/nodes/kepler.tsx`
+> shows the integration *technique* (Newton-solve Kepler's equation, wedge
+> areas) — copy the math, **not** the page structure: that file predates the
+> quality bar (ASCII math in `<code>`, a `<Stat>` strip under the figure, a
+> single interactive) and fails it as a lesson. Always verify quantitative
 > claims against the concept (see SKILL.md).
 
 ### MANDATORY: domain scenes must carry a `mood`

@@ -7,6 +7,11 @@ don't bring one: a compact methodology assembled from findings that survive
 meta-analytic scrutiny, mapped to Faraday's levers. Don't recite it to the creator;
 apply it, and cite it only if they ask why.
 
+These five moves are audience-independent. *How the concept is handed to the
+learner* — the register, the symbol density, which interaction leads — is the
+audience layer: one default methodology per learner population in
+[audience.md](audience.md), applied on top of this document.
+
 ## The default in five moves
 
 ### 1. Design backward, and keep it aligned
