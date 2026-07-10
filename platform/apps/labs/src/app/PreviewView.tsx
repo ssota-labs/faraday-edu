@@ -85,7 +85,9 @@ function Detail({ component }: { component: Component }) {
             </span>
           )}
         </div>
-        {component.summary && <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{component.summary}</p>}
+        {(component.summary || demo?.blurb) && (
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{component.summary || demo?.blurb}</p>
+        )}
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
           {component.exports.map((e) => (
             <span key={e} className="rounded-full border border-border bg-muted px-2 py-0.5 font-mono text-[11px] text-muted-foreground">
