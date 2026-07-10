@@ -32,7 +32,15 @@ function ThemeToggle() {
 
 export function App() {
   const [tab, setTab] = useState<Tab>("components");
-  const groups = useMemo(loadComponentGroups, []);
+  // Only show components that actually have a live preview. This drops the UI
+  // primitives group and the non-visual hooks/logic/types entirely.
+  const groups = useMemo(
+    () =>
+      loadComponentGroups()
+        .map((g) => ({ ...g, components: g.components.filter((c) => DEMOS[c.name]) }))
+        .filter((g) => g.components.length > 0),
+    [],
+  );
   const skill = useMemo(loadSkill, []);
   const commands = useMemo(loadCommands, []);
   const agents = useMemo(loadAgents, []);
@@ -40,7 +48,7 @@ export function App() {
   const featurePacks = useMemo(loadFeaturePacks, []);
   const plugins = useMemo(loadPlugins, []);
 
-  const previewable = groups.reduce((n, g) => n + g.components.filter((c) => DEMOS[c.name]).length, 0);
+  const previewable = groups.reduce((n, g) => n + g.components.length, 0);
 
   return (
     <div>
