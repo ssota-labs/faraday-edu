@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "@/index.css";
 import { ThemeProvider } from "@/faraday/runtime";
 import { App } from "@/app/App";
-import { WorldFrame } from "@/world-frame";
+import { LessonHostFrame, WorldFrame } from "@/world-frame";
 
 const root = document.getElementById("app");
 if (!root) throw new Error("#app root element missing from index.html");
@@ -18,7 +18,7 @@ createRoot(root).render(
   <StrictMode>
     <ThemeProvider>
       <div className="style-faraday min-h-screen bg-background text-foreground">
-        {frame === "world" ? <WorldFrame /> : <App />}
+        {frame === "world" ? <WorldFrame /> : frame === "lessonhost" ? <LessonHostFrame /> : <App />}
       </div>
     </ThemeProvider>
   </StrictMode>,

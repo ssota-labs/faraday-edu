@@ -820,4 +820,15 @@ export const DEMOS: Record<string, Demo> = {
     source: `const rec = useLmsRecorder("id");
 <ProgressDashboard courseId="id" curriculum={c} events={rec.events} learners={[you, ...roster]} />`,
   },
+  "lesson-host": {
+    blurb: "LessonHost — the shell every lesson mounts inside: the .style-faraday layer, a centered reading column, the light/dark toggle, and an error boundary. Shown in an isolated frame (it fills the viewport).",
+    render: () => (
+      <iframe
+        title="LessonHost frame"
+        src="/?frame=lessonhost"
+        className="h-[520px] w-full rounded-lg border border-border bg-background"
+      />
+    ),
+    source: `createRoot(root).render(<LessonHost><Lesson>…</Lesson></LessonHost>)`,
+  },
 };

@@ -2,8 +2,9 @@
    map with the HUD overlaid — it would escape a normal preview canvas. So it is
    mounted on its own via `?frame=world` (see main.tsx) and embedded in the labs
    preview through an <iframe>, which contains the fixed positioning. */
+import { LessonHost } from "@/faraday/runtime";
 import { CurriculumHost, map2dPack, useNode, type Curriculum } from "@/faraday/world";
-import { Lesson, Prose, Quiz } from "@/faraday/blocks";
+import { Callout, Lesson, Prose, Quiz, Stat } from "@/faraday/blocks";
 
 function Stop({ title, body }: { title: string; body: string }) {
   const { complete } = useNode();
@@ -41,4 +42,31 @@ const CURRICULUM: Curriculum = {
 
 export function WorldFrame() {
   return <CurriculumHost curriculum={CURRICULUM} pack={map2dPack} onEvent={() => {}} />;
+}
+
+// LessonHost fills the viewport (min-h-screen) and owns its own theme toggle, so
+// like the world it previews best in an isolated `?frame=lessonhost` iframe.
+export function LessonHostFrame() {
+  return (
+    <LessonHost>
+      <Lesson
+        title="Inside the lesson frame"
+        topic="Runtime"
+        lead="LessonHost is the shell every generated lesson mounts inside."
+      >
+        <Prose>
+          <p>
+            It provides the <code>.style-faraday</code> style layer, a centered reading column, the light/dark toggle
+            (top-right), and an error boundary — so an author throw renders a message instead of a blank page. Your{" "}
+            <code>src/lesson/lesson.tsx</code> default export renders right here.
+          </p>
+        </Prose>
+        <div className="flex flex-wrap gap-3">
+          <Stat label="Reading width" value="max-w-4xl" />
+          <Stat label="Theme" value="light / dark toggle" />
+        </div>
+        <Callout title="Fixed entry">You normally don't edit this — it lives in the app shell.</Callout>
+      </Lesson>
+    </LessonHost>
+  );
 }
