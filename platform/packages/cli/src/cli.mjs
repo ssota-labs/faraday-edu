@@ -6,12 +6,18 @@ import fs from "node:fs/promises";
 import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
+import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
 Usage:
   faraday new <name> [--at <dir>] [--overwrite] [--skip-install] [--json]
   faraday check [--dir <lesson>]        verify the lesson layout + runtime pin
+  faraday doctor [--dir <lesson>]       deep check (layout + pin + installed lockfile)
+  faraday upgrade [--to <ver>] [--dir <lesson>]
+                                        move the @faraday-academy/* pins (the only
+                                        supported way): pin-bump → install →
+                                        doctor, and roll back if doctor fails
   faraday help
 
 The generated lesson depends on the versioned @faraday-academy/runtime package
@@ -20,7 +26,7 @@ The generated lesson depends on the versioned @faraday-academy/runtime package
   --3d / --physics / --tutor are being repackaged as @faraday-academy/* addon
   packages and are temporarily unavailable; scaffold a 2D lesson for now.
 
-Exit codes: 0 ok · 1 check failed · 2 usage error · 4 environment error`;
+Exit codes: 0 ok · 1 check failed · 2 usage error · 3 doctor/structure failed · 4 environment error`;
 
 function makeContext(context = {}) {
   return {
@@ -55,6 +61,8 @@ export async function runFaradayCli(argv, rawContext = {}) {
     }
     if (command === "new") return await runNew(rest, context);
     if (command === "check") return await runCheck(rest, context);
+    if (command === "doctor") return await runDoctor(rest, context);
+    if (command === "upgrade") return await runUpgrade(rest, context);
     const err = new Error(`Unknown command: ${command}`);
     err.exitCode = 2;
     throw err;
@@ -134,44 +142,7 @@ async function runNew(argv, context) {
   }
 }
 
-async function exists(p) { try { await fs.stat(p); return true; } catch { return false; } }
-
-/** A lesson root is the nearest ancestor whose package.json depends on the runtime. */
-async function findLessonRoot(start) {
-  let dir = start;
-  for (;;) {
-    const pkgPath = path.join(dir, "package.json");
-    if (await exists(pkgPath)) {
-      try {
-        const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
-        if (pkg.dependencies?.["@faraday-academy/runtime"]) return dir;
-      } catch {
-        /* unreadable package.json — keep walking up */
-      }
-    }
-    const parent = path.dirname(dir);
-    if (parent === dir) return null;
-    dir = parent;
-  }
-}
-
-const REQUIRED_FILES = [
-  "index.html",
-  "vite.config.ts",
-  "tsconfig.json",
-  "components.json",
-  "src/main.tsx",
-  "src/app.css",
-  "src/lesson/lesson.tsx",
-  "package.json",
-];
-
-async function runCheck(argv, context) {
-  let dir;
-  for (let i = 0; i < argv.length; i++) {
-    if (argv[i] === "--dir") dir = argv[++i];
-    else { const e = new Error(`Unknown argument: ${argv[i]}`); e.exitCode = 2; throw e; }
-  }
+async function resolveLessonRoot(dir, context) {
   const start = dir ? path.resolve(context.cwd, dir) : context.cwd;
   const root = await findLessonRoot(start);
   if (!root) {
@@ -179,20 +150,22 @@ async function runCheck(argv, context) {
     e.exitCode = 2;
     throw e;
   }
+  return root;
+}
 
-  const problems = [];
-  for (const rel of REQUIRED_FILES) {
-    if (!(await exists(path.join(root, rel)))) problems.push(`missing required file: ${rel}`);
+function parseDirOnly(argv) {
+  const opts = { dir: undefined };
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === "--dir") opts.dir = argv[++i];
+    else { const e = new Error(`Unknown argument: ${argv[i]}`); e.exitCode = 2; throw e; }
   }
-  try {
-    const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
-    const pin = pkg.dependencies?.["@faraday-academy/runtime"];
-    if (!pin) problems.push("@faraday-academy/runtime is not a dependency");
-    else if (!/^\d+\.\d+\.\d+/.test(pin)) problems.push(`@faraday-academy/runtime must be pinned exactly, found "${pin}"`);
-  } catch {
-    problems.push("package.json is missing or unreadable");
-  }
+  return opts;
+}
 
+async function runCheck(argv, context) {
+  const { dir } = parseDirOnly(argv);
+  const root = await resolveLessonRoot(dir, context);
+  const problems = await collectFindings(root, { deep: false });
   if (problems.length === 0) {
     context.stdout("faraday check: lesson layout intact, runtime pinned\n");
     return;
@@ -201,4 +174,75 @@ async function runCheck(argv, context) {
   const e = new Error(`${problems.length} check finding(s)`);
   e.exitCode = 1;
   throw e;
+}
+
+async function runDoctor(argv, context) {
+  const { dir } = parseDirOnly(argv);
+  const root = await resolveLessonRoot(dir, context);
+  const problems = await collectFindings(root, { deep: true });
+  if (problems.length === 0) {
+    context.stdout("faraday doctor: healthy — layout intact, runtime pinned, lockfile present\n");
+    return;
+  }
+  for (const p of problems) context.stderr(`  ${p}\n`);
+  const e = new Error(`${problems.length} doctor finding(s)`);
+  e.exitCode = 3;
+  throw e;
+}
+
+async function runUpgrade(argv, context) {
+  const opts = { dir: undefined, to: "latest" };
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === "--dir") opts.dir = argv[++i];
+    else if (argv[i] === "--to") opts.to = argv[++i];
+    else { const e = new Error(`Unknown argument: ${argv[i]}`); e.exitCode = 2; throw e; }
+  }
+  if (!opts.to) { const e = new Error("--to requires a value"); e.exitCode = 2; throw e; }
+
+  const root = await resolveLessonRoot(opts.dir, context);
+  const pkgPath = path.join(root, "package.json");
+  const original = await fs.readFile(pkgPath, "utf8");
+  const pkg = JSON.parse(original);
+
+  const managed = managedDeps(pkg);
+  if (managed.length === 0) {
+    const e = new Error("no @faraday-academy/* dependencies to upgrade");
+    e.exitCode = 2;
+    throw e;
+  }
+  const prod = managed.filter((d) => d.group === "dependencies").map((d) => d.name);
+  const dev = managed.filter((d) => d.group === "devDependencies").map((d) => d.name);
+
+  const revert = () => fs.writeFile(pkgPath, original);
+
+  // 1. bump pins exactly, then install. pnpm rewrites package.json in place.
+  try {
+    if (prod.length > 0) {
+      await context.runCommand("pnpm", ["add", "--save-exact", ...prod.map((n) => `${n}@${opts.to}`)], { cwd: root, stdio: "inherit" });
+    }
+    if (dev.length > 0) {
+      await context.runCommand("pnpm", ["add", "--save-exact", "--save-dev", ...dev.map((n) => `${n}@${opts.to}`)], { cwd: root, stdio: "inherit" });
+    }
+    await context.runCommand("pnpm", ["install"], { cwd: root, stdio: "inherit" });
+  } catch (error) {
+    await revert();
+    const e = new Error(`pnpm failed during upgrade: ${error.message} — reverted package.json`);
+    e.exitCode = 4;
+    throw e;
+  }
+
+  // 2. doctor chain — if the upgraded lesson is unhealthy, roll back the pins.
+  const problems = await collectFindings(root, { deep: true });
+  if (problems.length > 0) {
+    await revert();
+    for (const p of problems) context.stderr(`  ${p}\n`);
+    const e = new Error(`doctor failed after upgrade — reverted package.json (${problems.length} finding(s))`);
+    e.exitCode = 3;
+    throw e;
+  }
+
+  const after = JSON.parse(await fs.readFile(pkgPath, "utf8"));
+  const pins = managedDeps(after).map((d) => `${d.name}@${d.spec}`);
+  context.stdout(`faraday upgrade: pinned ${pins.join(", ")}\n`);
+  context.stdout("  run `pnpm dev` (or your verify flow) to confirm the lesson still builds.\n");
 }
