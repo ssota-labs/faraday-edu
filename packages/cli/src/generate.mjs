@@ -1,8 +1,8 @@
 // The scaffold pipeline (centralized-kit model). The generated lesson does NOT
-// vendor the Faraday layer — it depends on the versioned `@faraday-kit/*`
+// vendor the Faraday layer — it depends on the versioned `@faraday-academy/*`
 // packages and pins them exactly, so the kit updates centrally via
 // `faraday upgrade` instead of being copied + hash-locked into every lesson.
-// The starter template already imports the kit as `@faraday-kit/kit/*`; the only
+// The starter template already imports the kit as `@faraday-academy/kit/*`; the only
 // generation-time work is injecting the package name/title and writing
 // provenance. No file copying into a protected tree, no integrity manifest.
 import fs from "node:fs/promises";
@@ -43,11 +43,11 @@ export async function generateLesson(opts) {
   const { targetDir, name, force = false, threeD = false, physics = false, tutor = false } = opts;
 
   // Addons vendored their block into the (now-removed) protected tree, so they
-  // need repackaging as `@faraday-kit/three` / `@faraday-kit/tutor` before they
+  // need repackaging as `@faraday-academy/three` / `@faraday-academy/tutor` before they
   // work in the centralized model. Fail loudly rather than emit a broken lesson.
   if (threeD || physics || tutor) {
     const err = new Error(
-      "--3d/--physics/--tutor are being repackaged as @faraday-kit/* addon packages and are temporarily unavailable in the centralized kit. Scaffold a 2D lesson for now.",
+      "--3d/--physics/--tutor are being repackaged as @faraday-academy/* addon packages and are temporarily unavailable in the centralized kit. Scaffold a 2D lesson for now.",
     );
     err.exitCode = 2;
     throw err;
@@ -67,7 +67,7 @@ export async function generateLesson(opts) {
   const packageName = sanitizePackageName(name);
   const title = normalizeTitle(name);
 
-  // 1. app shell -> project root (this already consumes @faraday-kit/kit)
+  // 1. app shell -> project root (this already consumes @faraday-academy/kit)
   await copyDirectory(src.starter, targetDir);
 
   // 2. npm strips .gitignore from published packages, so the template ships it
@@ -94,7 +94,7 @@ export async function generateLesson(opts) {
   await fs.writeFile(
     path.join(targetDir, ".faraday", "provenance.json"),
     JSON.stringify(
-      { lessonId: uuid(), createdWith: "faraday@0.1.0", template: "starter@0.1.0", kit: "@faraday-kit/kit@0.1.0", name: packageName },
+      { lessonId: uuid(), createdWith: "faraday@0.1.0", template: "starter@0.1.0", kit: "@faraday-academy/kit@0.1.0", name: packageName },
       null,
       2,
     ) + "\n",

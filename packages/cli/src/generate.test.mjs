@@ -44,13 +44,13 @@ test("generateLesson produces the expected tree + injections", async () => {
   const pkg = JSON.parse(await read(target, "package.json"));
   assert.equal(pkg.name, "my-cool-lesson");
   assert.equal(pkg.private, true);
-  const pin = pkg.dependencies["@faraday-kit/kit"];
+  const pin = pkg.dependencies["@faraday-academy/kit"];
   assert.ok(pin && !/^[\^~*]/.test(pin), `kit must be pinned exactly, got ${pin}`);
   assert.match(await read(target, "index.html"), /<title>My Cool Lesson<\/title>/);
 
   // app.css wires the kit stylesheet + scans the lesson
   const css = await read(target, "src/app.css");
-  assert.match(css, /@import "@faraday-kit\/kit\/styles\.css"/);
+  assert.match(css, /@import "@faraday-academy\/kit\/styles\.css"/);
   assert.match(css, /@source "\.\/lesson/);
 
   // dotless template gitignore did not survive
@@ -59,7 +59,7 @@ test("generateLesson produces the expected tree + injections", async () => {
   // provenance carries the injected id + the kit line
   const prov = JSON.parse(await read(target, ".faraday/provenance.json"));
   assert.equal(prov.lessonId, "fixed-id");
-  assert.match(prov.kit, /@faraday-kit\/kit@/);
+  assert.match(prov.kit, /@faraday-academy\/kit@/);
 
   await fs.rm(base, { recursive: true, force: true });
 });
@@ -118,7 +118,7 @@ test("faraday check fails when the kit pin is a range, not exact (exit 1)", asyn
   // tamper: loosen the exact pin to a caret range
   const pkgPath = path.join(dir, "package.json");
   const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
-  pkg.dependencies["@faraday-kit/kit"] = "^0.1.0";
+  pkg.dependencies["@faraday-academy/kit"] = "^0.1.0";
   await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2));
   let code = 0;
   await runFaradayCli(

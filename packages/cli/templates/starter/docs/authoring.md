@@ -19,8 +19,8 @@ these arcs together):
 
 ```tsx
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Scrubber, Quiz, Callout } from "@faraday-kit/kit/blocks";
-import { useStepper } from "@faraday-kit/kit/runtime";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Scrubber, Quiz, Callout } from "@faraday-academy/kit/blocks";
+import { useStepper } from "@faraday-academy/kit/runtime";
 
 export default function MyLesson() {
   const [param, setParam] = useState(4);
@@ -184,7 +184,7 @@ bar applies to the lesson as a whole regardless of layout.
 ## Interaction craft — direct, alive, never snapping
 
 The feel of an interactive is graded ([docs/quality-bar.md](quality-bar.md),
-Surface 3). Three motion hooks from `@faraday-kit/kit/runtime` do the heavy lifting:
+Surface 3). Three motion hooks from `@faraday-academy/kit/runtime` do the heavy lifting:
 
 - **Drag the object, not a detached slider** — when the variable lives on an
   object (a position, angle, vector, boundary), make the object grabbable:
@@ -250,23 +250,23 @@ In SVG: `style={{ fill: "var(--primary)" }}`. In HTML: semantic Tailwind classes
 
 ## Adding a shadcn component you need
 
-The raw primitives ship in the kit at `@faraday-kit/kit/ui/*` (button, card, slider,
+The raw primitives ship in the kit at `@faraday-academy/kit/ui/*` (button, card, slider,
 tabs, accordion, alert, badge, radio-group, toggle-group, switch, progress,
 separator, label, tooltip). Compose those. Do **not** run `shadcn add` — the UI
-lives in the pinned `@faraday-kit/kit` dependency, not in your lesson, so a local
+lives in the pinned `@faraday-academy/kit` dependency, not in your lesson, so a local
 add wouldn't be part of the kit. If you truly need a missing primitive, note it in
 your summary (it belongs in the kit, added centrally).
 
 ## 3D lessons (Three.js) — opt-in
 
 > **Temporarily unavailable.** `--3d`, `--physics`, and `--tutor` are being
-> repackaged as standalone `@faraday-kit/*` addon packages for the centralized
+> repackaged as standalone `@faraday-academy/*` addon packages for the centralized
 > kit. `faraday new` currently scaffolds 2D lessons only; the sections below
 > describe the addon API as it will return. Import paths shown may change.
 
 Scaffold with `faraday new <name> --3d` to include a Three.js (React Three Fiber)
 block + a solar-system demo. **Without `--3d`, three is never installed or bundled**
-— 2D lessons stay light. Import the 3D block from `@faraday-kit/kit/three`:
+— 2D lessons stay light. Import the 3D block from `@faraday-academy/kit/three`:
 
 - `<Scene3D mood height? camera? controls? autoRotate?>` — a preconfigured R3F
   canvas (perspective camera, OrbitControls). Drop it into a `<Workbench>` center;
@@ -311,7 +311,7 @@ For photoreal/organic shapes (anatomy, animals, machinery) that aren't practical
 code-generate, use the `<Model>` block — it wraps `useGLTF` + animation playback:
 
 ```tsx
-import { Scene3D, Model } from "@faraday-kit/kit/three";
+import { Scene3D, Model } from "@faraday-academy/kit/three";
 <Scene3D mood="lab"><Model url="/models/fox.glb" scale={0.05} animation="Walk" /></Scene3D>
 ```
 
@@ -338,11 +338,11 @@ motion (orbits, pendulums-as-math), integrate in the render loop instead — it'
 
 ## Courses — bundle lessons into a textbook
 
-`<Course>` (from `@faraday-kit/kit/runtime`) turns several lessons into a navigable textbook
+`<Course>` (from `@faraday-academy/kit/runtime`) turns several lessons into a navigable textbook
 with chapter nav, prev/next, and `#hash` deep links. Make it your default export:
 
 ```tsx
-import { Course } from "@faraday-kit/kit/runtime";
+import { Course } from "@faraday-academy/kit/runtime";
 export default function MyCourse() {
   return <Course title="…" chapters={[
     { slug: "intro", title: "Intro", element: <IntroChapter /> },   // each chapter is a normal <Lesson>
@@ -356,14 +356,14 @@ Keep chapter components in `src/lesson/chapters/`. See `docs/examples/course.tsx
 ### Curricula & worlds (unlock progression, swappable packs)
 
 For a graph of lessons with **unlock progression** (not just linear chapters), use
-`<CurriculumHost>` from `@faraday-kit/kit/world`. You declare a `Curriculum` (nodes with
+`<CurriculumHost>` from `@faraday-academy/kit/world`. You declare a `Curriculum` (nodes with
 `requires` + per-node `lesson`); the host owns progress, the world↔lesson toggle,
 the HUD, and an event stream for LMS/tutor hooks. The *shape* of the world is a
 swappable **pack** (ports-and-adapters) — change one prop, keep the content:
 
-- `linearPack` — a status list (doc-style, renders inline). `@faraday-kit/kit/world`
-- `map2dPack` — a 2D tactical node map (game screen). `@faraday-kit/kit/world`
-- `world3dPack` — a 3D open-world constellation (game screen, needs `--3d`). `@faraday-kit/kit/three`
+- `linearPack` — a status list (doc-style, renders inline). `@faraday-academy/kit/world`
+- `map2dPack` — a 2D tactical node map (game screen). `@faraday-academy/kit/world`
+- `world3dPack` — a 3D open-world constellation (game screen, needs `--3d`). `@faraday-academy/kit/three`
 
 Game packs are **immersive**: the host mounts the world as a full-viewport game
 screen (no page header, no reading column) and overlays a game HUD — a status
@@ -375,7 +375,7 @@ lesson view (the textbook); leaving returns to the world. Pass
 course page), or `hint="…"` to override the HUD hint.
 
 ```tsx
-import { CurriculumHost, map2dPack, type Curriculum } from "@faraday-kit/kit/world";
+import { CurriculumHost, map2dPack, type Curriculum } from "@faraday-academy/kit/world";
 const curriculum: Curriculum = { title: "…", nodes: [
   { id: "a", title: "A", meta: { x: 15, y: 50 }, lesson: <LessonA /> },
   { id: "b", title: "B", requires: ["a"], meta: { x: 55, y: 50 }, lesson: <LessonB /> },

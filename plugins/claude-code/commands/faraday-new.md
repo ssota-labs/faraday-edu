@@ -17,7 +17,7 @@ Follow the `faraday` skill. Steps:
 
 2. **Scaffold** (installs deps):
    ```bash
-   npx @faraday-kit/cli@latest new <name> [flags] --json
+   npx @faraday-academy/cli@latest new <name> [flags] --json
    ```
    (Pre-publish local dev: `node <faraday-edu>/bin/faraday.mjs new <name> [flags] --json`.)
    Parse the `--json` result for the created dir and next steps, then `cd` in.

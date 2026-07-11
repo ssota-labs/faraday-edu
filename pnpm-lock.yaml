@@ -8,6 +8,8 @@ importers:
 
   .: {}
 
+  packages/cli: {}
+
   packages/kit:
     dependencies:
       '@base-ui/react':

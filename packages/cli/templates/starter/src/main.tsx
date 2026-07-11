@@ -3,7 +3,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./app.css";
-import { LessonHost } from "@faraday-kit/kit/runtime";
+import { LessonHost } from "@faraday-academy/kit/runtime";
 import Lesson from "@/lesson/lesson";
 
 const root = document.getElementById("app");

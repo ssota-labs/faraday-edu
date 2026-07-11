@@ -66,7 +66,7 @@ Ground rules:
   each phase. Follow it faithfully, including its quality rubric, its
   interaction-craft guidance, and its assessment guidance.
 - The CLI npm package is NOT published; whenever the skill says
-  `npx @faraday-kit/cli@latest`, use `node {{repo}}/bin/faraday.mjs` instead.
+  `npx @faraday-academy/cli@latest`, use `node {{repo}}/bin/faraday.mjs` instead.
 - Create the project inside {{스크래치_디렉토리}} (create the parent dir if needed).
 - Do NOT read or copy from any examples/voyage-log/src/lesson/** file except
   where a skill reference explicitly points you to a specific file there.

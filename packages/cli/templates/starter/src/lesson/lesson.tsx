@@ -14,9 +14,9 @@ import {
   Quiz,
   Reveal,
   Stat,
-} from "@faraday-kit/kit/blocks";
-import { Button } from "@faraday-kit/kit/ui/button";
-import { useStepper } from "@faraday-kit/kit/runtime";
+} from "@faraday-academy/kit/blocks";
+import { Button } from "@faraday-academy/kit/ui/button";
+import { useStepper } from "@faraday-academy/kit/runtime";
 
 interface Frame {
   array: number[];

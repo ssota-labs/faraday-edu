@@ -1,12 +1,12 @@
 // Lesson health checks, shared by `faraday check` (shallow) and `faraday doctor`
 // (deep). In the centralized model there is no vendored tree to hash — a healthy
-// lesson is one whose layout is intact and whose @faraday-kit/* deps are pinned
+// lesson is one whose layout is intact and whose @faraday-academy/* deps are pinned
 // exactly. `doctor` additionally requires an installed, lockfile-backed state so
 // it can gate `faraday upgrade`.
 import path from "node:path";
 import fs from "node:fs/promises";
 
-export const KIT_SCOPE = "@faraday-kit/";
+export const KIT_SCOPE = "@faraday-academy/";
 
 export const REQUIRED_FILES = [
   "index.html",
@@ -47,7 +47,7 @@ export async function findLessonRoot(start) {
   }
 }
 
-/** All @faraday-kit/* deps with their group + specifier. */
+/** All @faraday-academy/* deps with their group + specifier. */
 export function managedDeps(pkg) {
   const out = [];
   for (const group of ["dependencies", "devDependencies"]) {
@@ -84,9 +84,9 @@ export async function collectFindings(root, { deep = false } = {}) {
   }
 
   const managed = managedDeps(pkg);
-  const kit = managed.find((d) => d.name === "@faraday-kit/kit");
+  const kit = managed.find((d) => d.name === "@faraday-academy/kit");
   if (!kit) {
-    problems.push("@faraday-kit/kit is not a dependency");
+    problems.push("@faraday-academy/kit is not a dependency");
   }
   for (const d of managed) {
     if (!isExactPin(d.spec)) {

@@ -22,7 +22,7 @@ async function scaffold(base, name) {
   return path.join(base, name);
 }
 
-/** A fake `pnpm` that rewrites @faraday-kit/* pins on `add` and (optionally)
+/** A fake `pnpm` that rewrites @faraday-academy/* pins on `add` and (optionally)
  *  writes a lockfile on `install`. */
 function fakePnpm(root, { lockOnInstall = true, failOnAdd = false } = {}) {
   return async (command, args) => {
@@ -30,7 +30,7 @@ function fakePnpm(root, { lockOnInstall = true, failOnAdd = false } = {}) {
     if (args[0] === "add") {
       if (failOnAdd) throw new Error("pnpm add exited with code 1");
       const group = args.includes("--save-dev") ? "devDependencies" : "dependencies";
-      const specs = args.filter((a) => a.startsWith("@faraday-kit/"));
+      const specs = args.filter((a) => a.startsWith("@faraday-academy/"));
       const pkgPath = path.join(root, "package.json");
       const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
       for (const s of specs) {
@@ -77,15 +77,15 @@ test("doctor fails (exit 3) when a required file is missing", async () => {
 test("upgrade moves the kit pin exactly, then passes doctor", async () => {
   const base = await tmp();
   const dir = await scaffold(base, "bumpable");
-  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-kit/kit"], "0.1.0");
+  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-academy/kit"], "0.1.0");
 
   let out = "";
   await runFaradayCli(
     ["upgrade", "--to", "0.2.0", "--dir", dir],
     { cwd: base, stdout: (s) => (out += s), stderr: () => {}, runCommand: fakePnpm(dir), throwOnError: true },
   );
-  assert.match(out, /@faraday-kit\/kit@0\.2\.0/);
-  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-kit/kit"], "0.2.0");
+  assert.match(out, /@faraday-academy\/kit@0\.2\.0/);
+  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-academy/kit"], "0.2.0");
   assert.ok(await exists(path.join(dir, "pnpm-lock.yaml")), "install should have produced a lockfile");
   await fs.rm(base, { recursive: true, force: true });
 });

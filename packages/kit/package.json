@@ -1,5 +1,5 @@
 {
-  "name": "@faraday-kit/kit",
+  "name": "@faraday-academy/kit",
   "version": "0.1.0",
   "description": "Faraday kit — vendored-no-more: the shadcn UI, lesson blocks, runtime, world, and LMS layer, shipped as a versioned package that generated lessons pin (mirror-dimension centralization model).",
   "type": "module",

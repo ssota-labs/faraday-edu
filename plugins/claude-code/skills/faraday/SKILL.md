@@ -58,7 +58,7 @@ If a primitive seems missing, **note it — do not work around the lock** by edi
 The CLI is `faraday`. Prefer the published package; fall back to the local repo:
 
 ```bash
-npx @faraday-kit/cli@latest <args>        # canonical (Stage 1)
+npx @faraday-academy/cli@latest <args>        # canonical (Stage 1)
 # during pre-publish local dev, equivalently:
 node /path/to/faraday-edu/bin/faraday.mjs <args>
 ```
@@ -69,7 +69,7 @@ dir, next steps). Exit codes: `0` ok · `1` check failed · `2` usage · `4` env
 ## The build loop
 
 1. **Scaffold.** Pick flags from the decision guide below:
-   `npx @faraday-kit/cli@latest new <name> [--3d|--physics] [--tutor] [--json]`
+   `npx @faraday-academy/cli@latest new <name> [--3d|--physics] [--tutor] [--json]`
    (installs deps unless `--skip-install`). `cd` into the new dir.
 2. **Read the in-project guide** — the scaffold ships `AGENTS.md` and
    `docs/authoring.md`; the block API also lives in [references/blocks.md](references/blocks.md).

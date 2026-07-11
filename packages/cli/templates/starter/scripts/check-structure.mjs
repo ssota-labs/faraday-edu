@@ -2,7 +2,7 @@
 // Verify the lesson still has the layout + the pinned kit the runtime expects.
 // In the centralized model there is no vendored src/faraday tree to hash — the
 // kit is a versioned dependency, so "integrity" becomes: required files exist
-// and @faraday-kit/kit is pinned to an exact version. Exit 3 on drift.
+// and @faraday-academy/kit is pinned to an exact version. Exit 3 on drift.
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -33,11 +33,11 @@ for (const rel of required) {
 // builds reproducibly and `faraday upgrade` is the only way to move the pin.
 try {
   const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
-  const pin = pkg.dependencies?.["@faraday-kit/kit"];
+  const pin = pkg.dependencies?.["@faraday-academy/kit"];
   if (!pin) {
-    problems.push("@faraday-kit/kit is not a dependency in package.json");
+    problems.push("@faraday-academy/kit is not a dependency in package.json");
   } else if (/^[\^~]/.test(pin) || pin === "*") {
-    problems.push(`@faraday-kit/kit must be pinned to an exact version, found "${pin}"`);
+    problems.push(`@faraday-academy/kit must be pinned to an exact version, found "${pin}"`);
   }
 } catch {
   problems.push("package.json is missing or unreadable");

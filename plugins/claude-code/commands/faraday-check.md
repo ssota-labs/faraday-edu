@@ -10,7 +10,7 @@ Run the Faraday gates and repair any failures. Target: **$ARGUMENTS** (default: 
    ```bash
    pnpm check      # = node scripts/check-structure.mjs && node scripts/check-integrity.mjs
    ```
-   Or from outside the project: `npx @faraday-kit/cli@latest check --dir <lesson>`.
+   Or from outside the project: `npx @faraday-academy/cli@latest check --dir <lesson>`.
 
 2. **If integrity fails**, the cause is almost always an edit under the locked
    `src/faraday/**` tree. Identify the drifted file from the finding, then **revert

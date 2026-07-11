@@ -1,0 +1,19 @@
+{
+  "name": "@faraday-academy/cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Faraday Academy — a toolcraft-style, shadcn-based scaffolder for AI-authored interactive lessons. Generated lessons pin the @faraday-academy/kit dependency instead of vendoring it.",
+  "type": "module",
+  "bin": {
+    "faraday": "./bin/faraday.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates"
+  ],
+  "scripts": {
+    "test": "node --test src/*.test.mjs"
+  },
+  "license": "UNLICENSED"
+}

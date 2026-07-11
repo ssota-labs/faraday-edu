@@ -47,7 +47,7 @@ Prefer the raw CLI? It's four verbs — keep reading.
 In a clean agent session (or by hand):
 
 ```bash
-npx @faraday-kit/cli new my-lesson         # scaffold a 2D lesson + pnpm install
+npx @faraday-academy/cli new my-lesson         # scaffold a 2D lesson + pnpm install
 #   add --tutor        durable grounded AI tutor (adds a tiny server layer)
 #   add --3d           Three.js / React Three Fiber block + demo
 #   add --physics      Rapier physics (implies --3d)
@@ -61,7 +61,7 @@ pnpm dev                                   # Vite serves on a free port; drive i
 pnpm build                                 # static bundle in dist/ (deployable)
 ```
 
-> During local development of this repo, `npx @faraday-kit/cli` is equivalent to
+> During local development of this repo, `npx @faraday-academy/cli` is equivalent to
 > `node bin/faraday.mjs` run from the repo root.
 
 ---

@@ -15,15 +15,15 @@ Usage:
   faraday check [--dir <lesson>]        verify the lesson layout + kit pin
   faraday doctor [--dir <lesson>]       deep check (layout + pin + installed lockfile)
   faraday upgrade [--to <ver>] [--dir <lesson>]
-                                        move the @faraday-kit/* pins (the only
+                                        move the @faraday-academy/* pins (the only
                                         supported way): pin-bump → install →
                                         doctor, and roll back if doctor fails
   faraday help
 
-The generated lesson depends on the versioned @faraday-kit/kit package (pinned
+The generated lesson depends on the versioned @faraday-academy/kit package (pinned
 exactly) instead of vendoring the kit. Author your lesson in src/lesson/.
 
-  --3d / --physics / --tutor are being repackaged as @faraday-kit/* addon
+  --3d / --physics / --tutor are being repackaged as @faraday-academy/* addon
   packages and are temporarily unavailable; scaffold a 2D lesson for now.
 
 Exit codes: 0 ok · 1 check failed · 2 usage error · 3 doctor/structure failed · 4 environment error`;
@@ -139,7 +139,7 @@ async function runNew(argv, context) {
       `\n  Created ${result.title} in ${rel}/\n\n` +
       `  Next:\n    cd ${rel}\n${installed ? "" : "    pnpm install\n"}    pnpm dev\n\n` +
       `  Author your lesson in src/lesson/lesson.tsx — the UI, blocks, and runtime come\n` +
-      `  from the pinned @faraday-kit/kit dependency.\n`,
+      `  from the pinned @faraday-academy/kit dependency.\n`,
     );
   }
 }
@@ -149,7 +149,7 @@ async function resolveLessonRoot(dir, context) {
   const start = dir ? path.resolve(context.cwd, dir) : context.cwd;
   const root = await findLessonRoot(start);
   if (!root) {
-    const e = new Error("no @faraday-kit/kit lesson found here — run inside a generated lesson");
+    const e = new Error("no @faraday-academy/kit lesson found here — run inside a generated lesson");
     e.exitCode = 2;
     throw e;
   }
@@ -209,7 +209,7 @@ async function runUpgrade(argv, context) {
 
   const managed = managedDeps(pkg);
   if (managed.length === 0) {
-    const e = new Error("no @faraday-kit/* dependencies to upgrade");
+    const e = new Error("no @faraday-academy/* dependencies to upgrade");
     e.exitCode = 2;
     throw e;
   }

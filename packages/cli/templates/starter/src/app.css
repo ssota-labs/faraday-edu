@@ -3,5 +3,5 @@
    pull the kit's compiled stylesheet in and add the ONE content source the kit
    can't know about: your lesson code. Author utility classes freely in
    src/lesson/** — they are scanned from here. */
-@import "@faraday-kit/kit/styles.css";
+@import "@faraday-academy/kit/styles.css";
 @source "./lesson/**/*.{ts,tsx}";
