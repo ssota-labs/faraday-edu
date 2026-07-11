@@ -1,0 +1,47 @@
+{
+  "name": "@faraday-kit/kit",
+  "version": "0.1.0",
+  "description": "Faraday kit — vendored-no-more: the shadcn UI, lesson blocks, runtime, world, and LMS layer, shipped as a versioned package that generated lessons pin (mirror-dimension centralization model).",
+  "type": "module",
+  "license": "UNLICENSED",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./blocks": "./blocks/index.ts",
+    "./runtime": "./runtime/index.ts",
+    "./world": "./world/index.ts",
+    "./lms": "./lms/index.ts",
+    "./lib/utils": "./lib/utils.ts",
+    "./ui/*": "./ui/*.tsx",
+    "./styles.css": "./faraday.css",
+    "./styles/*": "./styles/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.5.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "katex": "^0.16.11",
+    "recharts": "^3.8.0",
+    "shadcn": "^4.13.0",
+    "tailwind-merge": "^3.6.0",
+    "tw-animate-css": "^1.4.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}

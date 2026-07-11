@@ -1,0 +1,4 @@
+# Faraday monorepo: the CLI (root) + the centralized kit packages consumed by
+# generated lessons as versioned npm deps (mirror-dimension model).
+packages:
+  - "packages/*"
