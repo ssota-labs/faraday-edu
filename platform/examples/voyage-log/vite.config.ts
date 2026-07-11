@@ -3,8 +3,8 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// "@" -> ./src, so lesson code imports the vendored, locked runtime + shadcn
-// blocks as "@/faraday/*". Tailwind v4 runs through its Vite plugin.
+// "@" -> ./src for local lesson imports ("@/lesson/…"); the runtime + 3D block
+// come from the pinned @faraday-academy/* deps. Tailwind v4 runs via its Vite plugin.
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {

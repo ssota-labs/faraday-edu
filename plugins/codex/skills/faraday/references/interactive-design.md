@@ -68,7 +68,7 @@ feel (graded by quality-bar.md Surface 3). Rules of thumb:
 
 1. **Put the control ON the thing.** If the variable has a natural home in the
    scene — a position, an angle, a vector, a boundary — the learner drags THAT
-   (`useSvgDrag` from `@/faraday/runtime` gives viewBox-coordinate dragging in
+   (`useSvgDrag` from `@faraday-academy/runtime/runtime` gives viewBox-coordinate dragging in
    one line; add `cursor="grab"`, a visible handle, and a hover response).
    Placement hierarchy: object > canvas-overlay (Workbench `hud` takes buttons —
    Play/Pause, presets, mode toggles) > side panel (secondary/numerous

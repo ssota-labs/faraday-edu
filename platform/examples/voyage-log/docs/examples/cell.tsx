@@ -2,8 +2,8 @@
 // Copy this into src/lesson/lesson.tsx of a `faraday new --3d` project to use it.
 // Shows the "cell" mood + composing raw R3F meshes inside <Scene3D>.
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, ParamSwitch, Callout, Quiz } from "@/faraday/blocks";
-import { Scene3D, Label3D } from "@/faraday/three";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, ParamSwitch, Callout, Quiz } from "@faraday-academy/runtime/blocks";
+import { Scene3D, Label3D } from "@faraday-academy/three";
 
 const R = 5; // cell radius
 

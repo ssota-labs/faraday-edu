@@ -15,7 +15,7 @@ against it before calling anything done.
 | Zone | Path | Rule |
 |---|---|---|
 | **Author area** | `src/lesson/**` | Write your lesson here. `src/lesson/lesson.tsx` is the fixed entry and must `export default` a React component. Add sibling files freely. |
-| **Protected area** | `src/faraday/**` | The vendored shadcn UI, lesson blocks, runtime, and styles. **Do not edit.** Locked by a SHA-256 manifest; `pnpm check` fails if it drifts. |
+| **Runtime (dependency)** | `@faraday-academy/*` | The shadcn UI, lesson blocks, runtime, and styles — **pinned npm packages**, not vendored. You consume them via `@faraday-academy/runtime/*`; you don't edit them. `pnpm check` verifies the pin. |
 
 `src/main.tsx`, `index.html`, and the config files are the app shell — you rarely touch them.
 
@@ -24,9 +24,10 @@ against it before calling anything done.
 This uses the shadcn **CSS-style** convention, not inline utility soup:
 
 - Components carry semantic `.cn-*` class names; all their styling lives in
-  `src/faraday/styles/style-faraday.css` (the component style layer).
-- **Theme tokens** (semantic colors, light/dark) → `src/faraday/styles/theme.css`.
-- **Design tokens** (Tailwind namespace mapping + radius/density) → `src/faraday/styles/design-tokens.css`.
+  `-academy/runtime/styles/style-faraday.css` (shipped in the runtime package).
+- **Theme tokens** (semantic colors, light/dark) → `-academy/runtime/styles/theme.css`.
+- **Design tokens** (Tailwind namespace mapping + radius/density) → `-academy/runtime/styles/design-tokens.css`.
+  You reference these tokens; the runtime owns them.
 - In your lesson, use **semantic Tailwind classes** (`text-muted-foreground`,
   `bg-card`, `text-primary`) and the blocks below. Never hardcode colors like
   `text-blue-500`. In SVG, pull theme colors with `style={{ fill: "var(--primary)" }}`.
@@ -140,5 +141,5 @@ domain 3D scene that ships with `neutral` mood is a defect.
 
 - One lesson / one idea. No routing, no backend, no network calls.
 - Don't add dependencies unless the lesson genuinely needs them.
-- Don't edit anything under `src/faraday/`. If a primitive seems missing, note it
-  in your summary instead of working around the lock.
+- Don't try to fork the runtime. `@faraday-academy/runtime` is a pinned dependency —
+  if a primitive seems missing, note it in your summary instead of working around it.

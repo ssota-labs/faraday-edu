@@ -198,10 +198,10 @@ MUST:
   stream. Without a key: 200 + an empty envelope + a `GatewayAuthenticationError`
   only in the dev log — that is the keyless *pass* tier for the pipeline, not a
   failure.)
-- **Server only when needed; locked tree intact.** Only `--tutor` adds the `api/` +
+- **Server only when needed; pins intact.** Only `--tutor` adds the `api/` +
   `workflows/` layer — non-tutor lessons in the same build stay static and
   server-free. The author touched only `workflows/tutor-agent.ts` (persona, model,
-  rules) and the embed site; `src/faraday/tutor/**` (vendored chat UI + client) is
+  rules) and the embed site; `@faraday-academy/tutor` (the pinned chat UI + client) is
   unedited and `faraday check` passes.
 
 SHOULD:
@@ -220,7 +220,7 @@ Anti-patterns (automatic fail): a tutor on a lesson with no open-ended goal
 from world knowledge and drifts off-topic; leaking a quiz/exercise answer on direct
 request; raw LaTeX/`$` delimiters visible in a reply; an expandable chain-of-thought
 "thinking" block; a detached full-page chatbot with no tie to the page content; any
-edit under `src/faraday/tutor/**` (`faraday check` fails).
+change the `@faraday-academy/tutor` pin to a range (`faraday check` fails).
 
 ## How to grade (for the verify pass)
 
@@ -251,4 +251,4 @@ screenshot:
 9. In the browser (desktop width): confirm the tutor is the `<TutorDock>` right-side
    panel (right-edge tab opens it, resizable, collapsible) — not an inline block —
    and that a reply with math renders formatted (KaTeX, no raw `$`/LaTeX). Confirm
-   `faraday check` passes and `src/faraday/tutor/**` is unmodified.
+   `faraday check` passes and the `@faraday-academy/tutor` pin is intact.

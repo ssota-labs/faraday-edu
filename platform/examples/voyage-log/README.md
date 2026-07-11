@@ -47,7 +47,7 @@ src/lesson/
 
 The `Curriculum` object lives at module scope in `lesson.tsx` (stable identity,
 so `CurriculumHost` can key progress on it). Only `src/lesson/**` is editable;
-`src/faraday/**` is SHA-256 locked and will fail `pnpm check` if touched.
+the runtime is a pinned `@faraday-academy/*` dependency (move it with `faraday upgrade`).
 
 ## Working with it
 

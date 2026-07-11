@@ -2,8 +2,8 @@
 // authored lesson. You normally don't edit this — write src/lesson/lesson.tsx.
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@/faraday/faraday.css";
-import { LessonHost } from "@/faraday/runtime";
+import "./app.css";
+import { LessonHost } from "@faraday-academy/runtime/runtime";
 import Lesson from "@/lesson/lesson";
 
 const root = document.getElementById("app");

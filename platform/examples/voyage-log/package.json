@@ -8,31 +8,25 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "typecheck": "tsc -b",
-    "check": "node scripts/check-structure.mjs && node scripts/check-integrity.mjs"
+    "check": "node scripts/check-structure.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
-    "@phosphor-icons/react": "^2.1.10",
+    "@faraday-academy/runtime": "0.1.0",
+    "@faraday-academy/three": "0.1.0",
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",
-    "@tailwindcss/vite": "^4",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "recharts": "^3.8.0",
-    "shadcn": "^4.13.0",
-    "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4",
-    "three": "^0.171.0",
-    "tw-animate-css": "^1.4.0"
+    "three": "^0.171.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.171.0",
     "@vitejs/plugin-react": "^6",
+    "tailwindcss": "^4",
     "typescript": "~6",
     "vite": "^8"
   }

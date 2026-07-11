@@ -61,6 +61,6 @@ scaffold → read the in-project guide → author src/lesson/lesson.tsx
         → pnpm check (gates) → pnpm dev (drive it) → deploy
 ```
 
-Faraday's rule: `src/faraday/**` is vendored and sealed (SHA-256 manifest) — author
-only in `src/lesson/**`, never edit the lock. Full API in
+Faraday's rule: the runtime is a pinned `@faraday-academy/*` dependency, not vendored — author
+only in `src/lesson/**`, never fork the runtime. Full API in
 `skills/faraday/references/`.

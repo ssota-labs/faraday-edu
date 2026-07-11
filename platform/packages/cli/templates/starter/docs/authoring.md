@@ -250,10 +250,10 @@ In SVG: `style={{ fill: "var(--primary)" }}`. In HTML: semantic Tailwind classes
 
 ## Adding a shadcn component you need
 
-The raw primitives already vendored are in `src/faraday/ui/` (button, card, slider,
+The runtime ships these shadcn primitives at `@faraday-academy/runtime/ui/*` (button, card, slider,
 tabs, accordion, alert, badge, radio-group, toggle-group, switch, progress,
 separator, label, tooltip). Compose those. Do **not** run `shadcn add` — it writes
-into the locked `src/faraday/` tree and will fail `pnpm check`. If you truly need a
+— the UI lives in the pinned `@faraday-academy/runtime` package, not your lesson. If you truly need a
 missing primitive, note it in your summary.
 
 ## 3D lessons (Three.js) — opt-in

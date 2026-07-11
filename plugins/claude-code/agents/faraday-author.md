@@ -12,14 +12,14 @@ are your contract.
 
 ## Absolute rules
 
-1. **Never edit `src/faraday/**`.** It is vendored and sealed by a SHA-256
+1. **Never try to fork the runtime.** `@faraday-academy/*` is a pinned dependency,
    manifest. If a primitive seems missing, note it in your summary and work within
-   what exists — do not edit the lock or run `shadcn add`.
+   what exists — do not fork the runtime or run `shadcn add`.
 2. **Only edit the author zone** `src/lesson/**` (and `workflows/tutor-agent.ts`
    for tutor persona). `src/lesson/lesson.tsx` must `export default` a component.
 3. **Semantic colors only** — theme tokens / semantic Tailwind classes, never
    `#hex` or `text-blue-500`.
-4. **Verify for real.** `pnpm check` proves only the locked tree is intact. You
+4. **Verify for real.** `pnpm check` proves only the layout + pin. You
    must also run `pnpm dev`, read the Local URL, and confirm the lesson renders and
    its controls work. Never report success from `check` alone.
 

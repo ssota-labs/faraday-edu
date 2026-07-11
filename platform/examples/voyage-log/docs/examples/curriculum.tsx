@@ -2,8 +2,8 @@
 // map with unlock progression. Copy into src/lesson/lesson.tsx to try it.
 // Swap `pack={map2dPack}` for `pack={linearPack}` to change the whole world's
 // shape without touching the content — that's the ports-and-adapters seam.
-import { CurriculumHost, map2dPack, useNode, type Curriculum } from "@/faraday/world";
-import { Lesson, Prose, Quiz } from "@/faraday/blocks";
+import { CurriculumHost, map2dPack, useNode, type Curriculum } from "@faraday-academy/runtime/world";
+import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
 
 // A lesson rendered inside <CurriculumHost> can self-complete: pull `complete`
 // from useNode() and fire it when the reader passes the quiz — that marks this

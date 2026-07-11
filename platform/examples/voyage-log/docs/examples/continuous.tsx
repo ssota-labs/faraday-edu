@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import {
   Lesson, Prose, Workbench, ControlGroup,
   ParamSlider, Segmented, Chart, Stat, Callout, Quiz,
-} from "@/faraday/blocks";
+} from "@faraday-academy/runtime/blocks";
 
 const PERIODS: Record<string, number> = { annual: 1, monthly: 12, daily: 365 };
 

@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "src/faraday/faraday.css",
+    "css": "src/app.css",
     "baseColor": "zinc",
     "cssVariables": true,
     "prefix": ""
@@ -13,11 +13,11 @@
   "iconLibrary": "phosphor",
   "rtl": false,
   "aliases": {
-    "components": "@/faraday",
-    "utils": "@/faraday/lib/utils",
-    "ui": "@/faraday/ui",
-    "lib": "@/faraday/lib",
-    "hooks": "@/faraday/hooks"
+    "components": "@faraday-academy/runtime",
+    "utils": "@faraday-academy/runtime/lib/utils",
+    "ui": "@faraday-academy/runtime/ui",
+    "lib": "@faraday-academy/runtime/lib",
+    "hooks": "@faraday-academy/runtime/hooks"
   },
   "registries": {}
 }
