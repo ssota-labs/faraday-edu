@@ -1,9 +1,9 @@
 {
-  "name": "@faraday/runtime",
+  "name": "@faraday-academy/runtime",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib) — a versioned package that generated lessons pin and consume via @faraday/runtime/* (no longer vendored). @faraday/labs previews the same source via the @/faraday alias. react/react-dom are peers so a consumer dedupes to one copy.",
+  "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib) — a versioned package that generated lessons pin and consume via @faraday-academy/runtime/* (no longer vendored). @faraday-academy/labs previews the same source via the @/faraday alias. react/react-dom are peers so a consumer dedupes to one copy.",
   "sideEffects": [
     "*.css"
   ],

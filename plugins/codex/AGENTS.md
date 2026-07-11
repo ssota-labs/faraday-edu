@@ -10,7 +10,7 @@ with `blocks.md` / `tutor.md` / `worlds.md`.
 A CLI scaffolder for AI-authored interactive textbooks. `faraday new <name>`
 produces a self-contained Vite + React app for **one interactive lesson**; flags
 add a grounded AI tutor (`--tutor`), 3D (`--3d`), and physics (`--physics`).
-Invoke the CLI as `npx @faraday-kit/cli@latest <args>` (pre-publish local dev:
+Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local dev:
 `node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs <args>`).
 
 ## The two-zone rule (governs everything)
@@ -24,7 +24,7 @@ Invoke the CLI as `npx @faraday-kit/cli@latest <args>` (pre-publish local dev:
 
 ## The loop
 
-1. `npx @faraday-kit/cli@latest new <name> [flags] --json` → parse JSON, `cd` in.
+1. `npx @faraday-academy/cli@latest new <name> [flags] --json` → parse JSON, `cd` in.
 2. Read the scaffold's `AGENTS.md` + `docs/authoring.md`; start from a
    `docs/examples/*.tsx` when one fits.
 3. Author `src/lesson/lesson.tsx` from `@/faraday/blocks` + `@/faraday/runtime`:

@@ -15,7 +15,7 @@ const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const TITLE_PLACEHOLDER = "Faraday Lesson";
 
 // The Faraday runtime layer lives in a sibling workspace package
-// (@faraday/runtime) and is still vendored (copied + SHA-locked) into generated
+// (@faraday-academy/runtime) and is still vendored (copied + SHA-locked) into generated
 // apps — it is a first-class package, not an installed dependency. The starter +
 // addon scaffolding assets stay CLI-owned under this package's templates/.
 const RUNTIME_ROOT = path.resolve(PACKAGE_ROOT, "..", "runtime");
@@ -119,7 +119,7 @@ export async function generateLesson(opts) {
   const protectedDir = path.join(targetDir, "src", "faraday");
   await fs.rm(protectedDir, { recursive: true, force: true });
   await copyDirectory(src.faraday, protectedDir);
-  // The runtime package's own manifest (@faraday/runtime) is a workspace artifact
+  // The runtime package's own manifest (@faraday-academy/runtime) is a workspace artifact
   // — deps declared only so the monorepo can typecheck/preview it. It must never
   // ship inside the vendored src/faraday/ tree.
   await fs.rm(path.join(protectedDir, "package.json"), { force: true });

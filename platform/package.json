@@ -3,8 +3,8 @@
   "private": true,
   "description": "Faraday product workspace — the CLI scaffolder, the vendored runtime layer, and live example lessons.",
   "scripts": {
-    "test": "pnpm --filter @faraday-kit/cli test",
-    "test:cli": "pnpm --filter @faraday-kit/cli test"
+    "test": "pnpm --filter @faraday-academy/cli test",
+    "test:cli": "pnpm --filter @faraday-academy/cli test"
   },
   "packageManager": "pnpm@11.5.2"
 }

@@ -47,7 +47,7 @@ Prefer the raw CLI? It's four verbs — keep reading.
 In a clean agent session (or by hand):
 
 ```bash
-npx @faraday-kit/cli new my-lesson         # scaffold a 2D lesson + pnpm install
+npx @faraday-academy/cli new my-lesson         # scaffold a 2D lesson + pnpm install
 #   add --tutor        durable grounded AI tutor (adds a tiny server layer)
 #   add --3d           Three.js / React Three Fiber block + demo
 #   add --physics      Rapier physics (implies --3d)
@@ -61,7 +61,7 @@ pnpm dev                                   # Vite serves on a free port; drive i
 pnpm build                                 # static bundle in dist/ (deployable)
 ```
 
-> During local development of this repo, `npx @faraday-kit/cli` is equivalent to
+> During local development of this repo, `npx @faraday-academy/cli` is equivalent to
 > `node platform/packages/cli/bin/faraday.mjs` run from the repo root.
 
 ---
@@ -205,11 +205,11 @@ error. `--json` makes `new` emit a structured result an agent can parse.
 faraday-edu/                    # repo root = meta (docs, specs, plugins, agents)
 ├─ platform/                    # product workspace (pnpm: apps/* + packages/*)
 │  ├─ apps/
-│  │  └─ labs/                  # @faraday/labs — internal Next.js catalog of components + skills/packs
+│  │  └─ labs/                  # @faraday-academy/labs — internal Next.js catalog of components + skills/packs
 │  ├─ packages/
-│  │  ├─ cli/                   # @faraday-kit/cli — bin + src (cli, generate, copy, manifest, pkg)
+│  │  ├─ cli/                   # @faraday-academy/cli — bin + src (cli, generate, copy, manifest, pkg)
 │  │  │  └─ templates/          #   starter (app shell) + addon-3d + addon-tutor (scaffolding assets)
-│  │  └─ runtime/               # @faraday/runtime — vendored into src/faraday/**
+│  │  └─ runtime/               # @faraday-academy/runtime — vendored into src/faraday/**
 │  │                            #   (locked: ui, blocks, runtime, styles, world, lms, lib)
 │  └─ examples/                 # Standalone demos (own lockfile; Vercel root = platform/examples/<name>)
 │     └─ voyage-log/            #   C-B 항해 일지 curriculum (--3d)
@@ -222,7 +222,7 @@ faraday-edu/                    # repo root = meta (docs, specs, plugins, agents
 └─ README.md
 ```
 
-> The runtime is a first-class workspace package (`@faraday/runtime`) but is still
+> The runtime is a first-class workspace package (`@faraday-academy/runtime`) but is still
 > **vendored** — copied verbatim into each generated lesson and SHA-locked — not
 > installed as a dependency. `platform/packages/cli` copies from it at scaffold time.
 

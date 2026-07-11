@@ -47,7 +47,7 @@ validate .` from the repo root before publishing).
 
 ## Prerequisites
 
-- **The Faraday CLI.** Commands call `npx @faraday-kit/cli@latest`. During
+- **The Faraday CLI.** Commands call `npx @faraday-academy/cli@latest`. During
   pre-publish local development, that's equivalent to
   `node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs` — the skill knows both.
 - **pnpm** (the scaffold installs with it).

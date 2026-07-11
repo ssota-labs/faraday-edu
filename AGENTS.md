@@ -2,7 +2,7 @@
 
 ## Cursor Cloud specific instructions
 
-This repo is the **Faraday** CLI (`@faraday-kit/cli`, codename "Primer" in `README.md`): a
+This repo is the **Faraday** CLI (`@faraday-academy/cli`, codename "Primer" in `README.md`): a
 zero-dependency Node.js ESM scaffolder that stamps out self-contained Vite + React
 interactive lessons. There is no long-running service for the repo itself — the CLI runs to
 completion. See `README.md` for the command reference; notes below cover non-obvious caveats.

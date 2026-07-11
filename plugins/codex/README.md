@@ -48,7 +48,7 @@ Invoke the skill with `$faraday`, or let Codex pick it up implicitly.
 
 ## Prerequisites
 
-- **The Faraday CLI.** The skill calls `npx @faraday-kit/cli@latest`; pre-publish,
+- **The Faraday CLI.** The skill calls `npx @faraday-academy/cli@latest`; pre-publish,
   that's `node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs`.
 - **pnpm** (the scaffold installs with it).
 - **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded

@@ -2,7 +2,7 @@
 
 An **internal** Vite lab for the dev team that does two things:
 
-- **Components** — renders the `@faraday/runtime` blocks **live** from demo stories, grouped
+- **Components** — renders the `@faraday-academy/runtime` blocks **live** from demo stories, grouped
   (Blocks, UI, Runtime, World, LMS), with each block's header doc, exported symbols, source path,
   and a usage snippet. Click a block in the sidebar to preview it.
 - **Skills & Packs** — catalogs what the agent plugins expose: the `faraday` skill + its phase
@@ -21,7 +21,7 @@ renders in a real lesson.
 
 ```bash
 pnpm install                       # from platform/ (workspace)
-pnpm --filter @faraday/labs dev    # → http://localhost:4200
+pnpm --filter @faraday-academy/labs dev    # → http://localhost:4200
 ```
 
 ## How it works
