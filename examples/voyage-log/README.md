@@ -46,13 +46,14 @@ src/lesson/
 ```
 
 The `Curriculum` object lives at module scope in `lesson.tsx` (stable identity,
-so `CurriculumHost` can key progress on it). Only `src/lesson/**` is editable;
-`src/faraday/**` is SHA-256 locked and will fail `pnpm check` if touched.
+so `CurriculumHost` can key progress on it). You author `src/lesson/**`; the UI,
+blocks, runtime, and 3D block come from the pinned `@faraday-academy/kit` and
+`@faraday-academy/three` dependencies (move them with `faraday upgrade`).
 
 ## Working with it
 
 ```bash
-pnpm check          # structure + integrity gates
+pnpm check          # structure + kit-pin gate
 pnpm typecheck      # tsc -b
 pnpm dev            # picks a free port; use --port 5188 --host to pin
 pnpm build          # → dist/ for Vercel (root directory: examples/voyage-log)

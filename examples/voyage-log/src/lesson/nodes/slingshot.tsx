@@ -9,8 +9,8 @@
 // This is an intuition model, not a hyperbolic-trajectory integrator: we don't
 // derive δ from an impact parameter, we let the learner set it directly.
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@/faraday/blocks";
-import { useNode } from "@/faraday/world";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/kit/blocks";
+import { useNode } from "@faraday-academy/kit/world";
 
 const U = 20; // planet's heliocentric speed (km/s-ish, toy scale). Fixed for clarity.
 

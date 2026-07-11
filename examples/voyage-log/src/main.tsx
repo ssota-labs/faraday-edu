@@ -1,9 +1,9 @@
-// Fixed entry point. Loads the Faraday stylesheet + runtime and mounts the
+// Fixed entry point. Loads the app stylesheet + the kit runtime and mounts the
 // authored lesson. You normally don't edit this — write src/lesson/lesson.tsx.
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@/faraday/faraday.css";
-import { LessonHost } from "@/faraday/runtime";
+import "./app.css";
+import { LessonHost } from "@faraday-academy/kit/runtime";
 import Lesson from "@/lesson/lesson";
 
 const root = document.getElementById("app");

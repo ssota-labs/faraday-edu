@@ -61,5 +61,5 @@ scaffold → read the in-project guide → author src/lesson/lesson.tsx
         → pnpm check (gates) → pnpm dev (drive it) → deploy
 ```
 
-Faraday's rule: `src/faraday/**` is vendored and sealed (SHA-256 manifest) — the
-plugin authors only in `src/lesson/**` and never edits the lock.
+Faraday's rule: the kit is a pinned `@faraday-academy/*` dependency, not vendored — the
+plugin authors only in `src/lesson/**` and never tries to fork the kit.

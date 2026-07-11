@@ -4,8 +4,8 @@
 // procedural demos: use assets only when the shape is too detailed/organic to
 // code-generate. Drop your own .glb in public/models/ and change the url.
 import { useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, Segmented, ParamSlider, ParamSwitch, Callout, Quiz } from "@/faraday/blocks";
-import { Scene3D, Model } from "@/faraday/three";
+import { Lesson, Prose, Workbench, ControlGroup, Segmented, ParamSlider, ParamSwitch, Callout, Quiz } from "@faraday-academy/kit/blocks";
+import { Scene3D, Model } from "@faraday-academy/three";
 
 export default function ModelLesson() {
   const [clip, setClip] = useState("Survey");

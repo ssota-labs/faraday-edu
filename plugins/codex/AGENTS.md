@@ -17,17 +17,17 @@ Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local de
 
 - **Author zone** `src/lesson/**` — write here. `src/lesson/lesson.tsx` is the
   fixed entry and must `export default` a React component.
-- **Protected zone** `src/faraday/**` — vendored UI/blocks/runtime/styles, sealed
-  by a SHA-256 manifest. **Never edit it.** `faraday check` (`pnpm check`) fails on
-  any drift. Never run `shadcn add` (writes into the lock). Missing primitive →
-  note it, don't work around the lock.
+- **Kit dependency** `@faraday-academy/*` — pinned UI/blocks/runtime/styles/world,
+  installed from npm. **You consume it, can't edit it.** `faraday check` (`pnpm check`) fails on
+  any drift. Never run `shadcn add` (the UI is in the kit, not your lesson). Missing primitive →
+  note it, don't fork the kit.
 
 ## The loop
 
 1. `npx @faraday-academy/cli@latest new <name> [flags] --json` → parse JSON, `cd` in.
 2. Read the scaffold's `AGENTS.md` + `docs/authoring.md`; start from a
    `docs/examples/*.tsx` when one fits.
-3. Author `src/lesson/lesson.tsx` from `@/faraday/blocks` + `@/faraday/runtime`:
+3. Author `src/lesson/lesson.tsx` from `@faraday-academy/kit/blocks` + `@faraday-academy/kit/runtime`:
    a `<Lesson>` frame, a `<Workbench>` (or `<Stage>`) interactive centerpiece, a
    `<Callout>` key idea, a closing `<Quiz>`.
 4. `pnpm check` must exit 0 (fix drift by reverting locked-tree edits).
@@ -43,5 +43,5 @@ Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local de
 - `--tutor` needs `AI_GATEWAY_API_KEY` in the lesson's `.env.local` (never commit
   it); on Vercel it uses OIDC. Ground the tutor by passing lesson text as
   `context`. Verify `/api/chat` streams with `curl` (preview tools mishandle SSE).
-- One lesson / one idea. No routing/backend/network calls (except the vendored
+- One lesson / one idea. No routing/backend/network calls (except the author-editable
   `--tutor` server layer). Don't add dependencies unless truly needed.

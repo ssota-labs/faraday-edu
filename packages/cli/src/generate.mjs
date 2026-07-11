@@ -15,10 +15,19 @@ import { sanitizePackageName, normalizeTitle } from "./pkg.mjs";
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TITLE_PLACEHOLDER = "Faraday Lesson";
 
-// Exact pins for @faraday-academy/* addon packages (checked by `faraday doctor`).
+// Exact pin for the @faraday-academy/three addon (checked by `faraday doctor`).
 const THREE_PIN = "0.1.0";
-// @react-three/rapier is an ordinary external dep (not @faraday-academy/*), so a
-// caret range is fine — `faraday upgrade` only moves the @faraday-academy pins.
+// R3F is a PEER of @faraday-academy/three: the lesson provides it directly so
+// authored lesson code can `import { useFrame } from "@react-three/fiber"` etc.
+// (ordinary external deps — caret ranges; `faraday upgrade` only moves the
+// @faraday-academy pins).
+const R3F_DEPS = {
+  "@react-three/drei": "^10.0.0",
+  "@react-three/fiber": "^9.0.0",
+  three: "^0.171.0",
+};
+const R3F_DEV_DEPS = { "@types/three": "^0.171.0" };
+// @react-three/rapier — only for --physics.
 const RAPIER_RANGE = "^2.1.0";
 
 function sourcePaths(root = PACKAGE_ROOT) {
@@ -117,12 +126,18 @@ export async function generateLesson(opts) {
   const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
   pkg.name = packageName;
   pkg.private = true;
-  if (use3d) pkg.dependencies["@faraday-academy/three"] = THREE_PIN;
+  if (use3d) {
+    pkg.dependencies["@faraday-academy/three"] = THREE_PIN;
+    Object.assign(pkg.dependencies, R3F_DEPS);
+    pkg.devDependencies = { ...pkg.devDependencies, ...R3F_DEV_DEPS };
+  }
   if (physics) pkg.dependencies["@react-three/rapier"] = RAPIER_RANGE;
   if (use3d) {
-    pkg.dependencies = Object.fromEntries(
-      Object.entries(pkg.dependencies).sort(([a], [b]) => a.localeCompare(b)),
-    );
+    for (const group of ["dependencies", "devDependencies"]) {
+      pkg[group] = Object.fromEntries(
+        Object.entries(pkg[group]).sort(([a], [b]) => a.localeCompare(b)),
+      );
+    }
   }
   await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 

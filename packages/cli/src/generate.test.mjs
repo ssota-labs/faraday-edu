@@ -83,6 +83,11 @@ test("--3d scaffolds a 3D lesson: pins @faraday-academy/three, swaps the demo, a
 
   const pkg = JSON.parse(await read(dir, "package.json"));
   assert.equal(pkg.dependencies["@faraday-academy/three"], "0.1.0");
+  // R3F is a peer of the three package — the lesson provides it directly so
+  // authored 3D code can import @react-three/fiber etc.
+  assert.ok(pkg.dependencies["@react-three/fiber"], "fiber must be a direct dep");
+  assert.ok(pkg.dependencies["three"], "three must be a direct dep");
+  assert.ok(pkg.devDependencies["@types/three"], "three types must be a dev dep");
   assert.ok(!("@react-three/rapier" in pkg.dependencies), "no rapier without --physics");
   assert.match(await read(dir, "src/lesson/lesson.tsx"), /@faraday-academy\/three/);
   assert.ok(await exists(path.join(dir, "public/models/fox.glb")), "model asset copied");

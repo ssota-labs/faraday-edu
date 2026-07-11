@@ -1,7 +1,7 @@
 # Faraday blocks — API reference
 
-Import blocks from `@/faraday/blocks`, runtime helpers from `@/faraday/runtime`,
-raw shadcn primitives from `@/faraday/ui/*`. The scaffolded project's
+Import blocks from `@faraday-academy/kit/blocks`, runtime helpers from `@faraday-academy/kit/runtime`,
+raw shadcn primitives from `@faraday-academy/kit/ui/*`. The scaffolded project's
 `docs/authoring.md` is the source of truth; this is the working summary.
 
 **A lesson is a chapter, not a gadget.** A substantial concept gets several
@@ -15,8 +15,8 @@ several together. Rubric: [quality-bar.md](quality-bar.md).
 
 ```tsx
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Scrubber, Quiz, Callout } from "@/faraday/blocks";
-import { useStepper } from "@/faraday/runtime";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Scrubber, Quiz, Callout } from "@faraday-academy/kit/blocks";
+import { useStepper } from "@faraday-academy/kit/runtime";
 
 export default function MyLesson() {
   const [param, setParam] = useState(4);
@@ -105,10 +105,10 @@ of `<Workbench>`.
 | `<CodeCell code label? caption?>` | Editable, runnable JavaScript cell — syntax-highlighted editor (dep-free), sandboxed iframe execution, console output on a contrasting inset panel, Run/Reset. Use when the audience codes or the concept is algorithmic; the learner edits + re-runs to test the idea. |
 | `<Readout label value tone?>` | Compact label:value chip for live numbers — designed for the Workbench `hud` slot. |
 | `<Paged pages height? onLastPage?>` | Tablet-style screen-at-a-time layout: each page fills the viewport height, one shows at a time (prev/next, dot rail, arrow keys). `pages: {id, title?, content}[]`. Only the active page is mounted (per-page state resets on return). Use for "one idea per screen" audiences/contexts (see audience.md "Layout"); default remains the book-like vertical scroll. Inside a page, landscape-split with `grid h-full lg:grid-cols-[3fr_2fr]`. |
-| `useStepper(total, { fps? })` | Cursor + autoplay over ordered frames. From `@/faraday/runtime`. |
-| `useAnimatedValue(target, {stiffness?})` | Returns a value that spring-chases `target` — render from it and discrete changes (selection, step, reset) EASE instead of teleporting. From `@/faraday/runtime`. |
-| `useRafLoop(cb, playing?)` | Simulation loop: `cb(dt, t)` each frame while playing. Keeps dynamic concepts moving on screen (orbit orbits, wave travels) with Play/Pause in the `hud`. From `@/faraday/runtime`. |
-| `useSvgDrag(onDrag)` | Direct manipulation: spread on any SVG element → drag positions in viewBox coords (`onDrag(x, y, phase)`), pointer-captured. Drag the object itself instead of a detached slider. From `@/faraday/runtime`. |
+| `useStepper(total, { fps? })` | Cursor + autoplay over ordered frames. From `@faraday-academy/kit/runtime`. |
+| `useAnimatedValue(target, {stiffness?})` | Returns a value that spring-chases `target` — render from it and discrete changes (selection, step, reset) EASE instead of teleporting. From `@faraday-academy/kit/runtime`. |
+| `useRafLoop(cb, playing?)` | Simulation loop: `cb(dt, t)` each frame while playing. Keeps dynamic concepts moving on screen (orbit orbits, wave travels) with Play/Pause in the `hud`. From `@faraday-academy/kit/runtime`. |
+| `useSvgDrag(onDrag)` | Direct manipulation: spread on any SVG element → drag positions in viewBox coords (`onDrag(x, y, phase)`), pointer-captured. Drag the object itself instead of a detached slider. From `@faraday-academy/kit/runtime`. |
 
 Light/dark toggle and the reading column come from the runtime — don't add them.
 
@@ -139,15 +139,15 @@ fight the layer with utilities.
 
 ## Adding a shadcn primitive
 
-Already vendored under `src/faraday/ui/`: button, card, slider, tabs, accordion,
+The kit ships these shadcn primitives at `@faraday-academy/kit/ui/*`: button, card, slider, tabs, accordion,
 alert, badge, radio-group, toggle-group, switch, progress, separator, label,
 tooltip, collapsible, chart. Compose those. Do **not** run `shadcn add` (writes
-into the locked tree → `check` fails). Truly missing primitive → note it in your
+— the UI is in the pinned kit, not your lesson). Truly missing primitive → note it in your
 summary.
 
 ## Constraints
 
 - One lesson / one idea. No routing, no backend, no network calls (except the
-  `--tutor` server layer, which is vendored).
+  `--tutor` server layer, which is author-editable).
 - Don't add dependencies unless the lesson genuinely needs them.
-- Don't edit anything under `src/faraday/`.
+- Don't try to fork the kit — it's a pinned dependency.

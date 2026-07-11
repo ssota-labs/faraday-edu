@@ -22,10 +22,10 @@ error — expected until you add the key.
 
 ## Embed it
 
-Import `<Tutor>` from `@/faraday/tutor` and ground it in the surrounding content:
+Import `<Tutor>` from `@faraday-academy/kit/tutor` and ground it in the surrounding content:
 
 ```tsx
-import { Tutor } from "@/faraday/tutor";
+import { Tutor } from "@faraday-academy/kit/tutor";
 
 <Tutor
   title="Binary-search tutor"
@@ -47,10 +47,10 @@ and ask rather than dump answers, never leak quiz/exercise solutions.
 
 - `workflows/tutor-agent.ts` — the durable agent **and its system prompt**. Edit
   here to change persona, rules, or the model (`MODEL_ID`) and reasoning level.
-  This file is in the author zone, not the locked tree.
+  This file is in the author zone (your lesson), not a pinned dependency.
 - `api/chat.post.ts` + `api/chat/[runId]/stream.get.ts` — server routes (start a
   run; reconnect to it). Nitro serves these under `/api/`.
-- `src/faraday/tutor/**` — the chat UI + `<Tutor>` client. **Vendored + locked**
+- `@faraday-academy/tutor` — the chat UI + `<Tutor>` client. **A pinned dependency**
   (don't edit; `faraday check` verifies it).
 
 Static (non-tutor) lessons stay server-free; only `--tutor` adds the `api/` +

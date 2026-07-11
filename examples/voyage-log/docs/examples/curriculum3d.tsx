@@ -2,9 +2,9 @@
 // example, but rendered with world3dPack (needs --3d). Nodes are places in space;
 // click one to enter its lesson, hover to focus. Swap the pack (linear/map2d/
 // world3d) without touching content — that's the ports-and-adapters seam.
-import { CurriculumHost, type Curriculum } from "@/faraday/world";
-import { world3dPack } from "@/faraday/three";
-import { Lesson, Prose, Quiz } from "@/faraday/blocks";
+import { CurriculumHost, type Curriculum } from "@faraday-academy/kit/world";
+import { world3dPack } from "@faraday-academy/three";
+import { Lesson, Prose, Quiz } from "@faraday-academy/kit/blocks";
 
 function Stop({ title, body }: { title: string; body: string }) {
   return (
