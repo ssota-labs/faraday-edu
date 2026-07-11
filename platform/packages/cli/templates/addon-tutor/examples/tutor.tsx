@@ -10,8 +10,8 @@
 // resizable, collapsible right-side panel (a right-edge tab opens it; a drawer on
 // mobile), the same dockable model across every lesson layout. Do NOT drop <Tutor>
 // inline in the content flow.
-import { Lesson, Prose, Quiz } from "@/faraday/blocks";
-import { TutorDock } from "@/faraday/tutor";
+import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { TutorDock } from "@faraday-academy/tutor";
 
 const LESSON_TEXT = `
 Binary search finds a target in a *sorted* array by repeatedly halving the search

@@ -59,15 +59,23 @@ test("generateLesson produces the expected tree + injections", async () => {
   await fs.rm(base, { recursive: true, force: true });
 });
 
-test("--tutor is still a usage error while it is being repackaged (exit 2)", async () => {
+test("--tutor pins the widget + drops the author-editable server (addons=tutor)", async () => {
   const base = await tmp();
-  let code = 0;
-  await runFaradayCli(
-    ["new", "tutored", "--tutor", "--skip-install", "--at", path.join(base, "tutored")],
-    { cwd: base, stdout: () => {}, stderr: () => {}, setExitCode: (c) => (code = c) },
-  );
-  assert.equal(code, 2);
-  assert.equal(await exists(path.join(base, "tutored", "package.json")), false, "must not emit files");
+  const dir = path.join(base, "tutored");
+  await generateLesson({ targetDir: dir, name: "tutored", tutor: true });
+
+  const pkg = JSON.parse(await read(dir, "package.json"));
+  assert.equal(pkg.dependencies["@faraday-academy/tutor"], "0.1.0", "widget pinned");
+  for (const dep of ["ai", "@ai-sdk/workflow", "workflow", "nitro", "zod"]) {
+    assert.ok(pkg.dependencies[dep], `server dep ${dep} missing`);
+  }
+  assert.ok(await exists(path.join(dir, "api/chat.post.ts")), "nitro route copied");
+  assert.ok(await exists(path.join(dir, "workflows/tutor-agent.ts")), "workflow agent copied");
+  assert.ok(await exists(path.join(dir, "env.example")), "env template copied");
+  assert.match(await read(dir, "vite.config.ts"), /nitro|workflow/);
+  assert.match(await read(dir, "pnpm-workspace.yaml"), /nodeLinker:\s*hoisted/);
+  assert.match(await read(dir, "src/app.css"), /@faraday-academy\/tutor\/styles\.css/);
+  assert.deepEqual(JSON.parse(await read(dir, ".faraday/provenance.json")).addons, ["tutor"]);
   await fs.rm(base, { recursive: true, force: true });
 });
 

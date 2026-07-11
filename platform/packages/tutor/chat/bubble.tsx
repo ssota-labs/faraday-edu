@@ -1,5 +1,5 @@
 // Chat bubble primitives — ported from mirror-dimension's shadcn chat UI
-// (base-mira == our style-faraday lineage), path rewired to "@/faraday/lib/utils".
+// (base-mira == our style-faraday lineage), path rewired to "@faraday-academy/runtime/lib/utils".
 // The message-content surface is driven by data-slot + variant so bubbles theme
 // with the rest of the design tokens.
 import * as React from "react";
@@ -7,7 +7,7 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "@faraday-academy/runtime/lib/utils";
 
 function BubbleGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (

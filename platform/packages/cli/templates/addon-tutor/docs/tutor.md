@@ -23,14 +23,14 @@ with a Gateway auth error — that's expected until you add the key.
 
 ## Embed it
 
-Wrap the **whole lesson** in `<TutorDock>` from `@/faraday/tutor`. It hoists the
+Wrap the **whole lesson** in `<TutorDock>` from `@faraday-academy/tutor`. It hoists the
 tutor to a resizable, collapsible **right-side panel** (opened by a right-edge tab;
 a drawer on mobile) — the same dock across every lesson layout. Don't drop `<Tutor>`
 inline in the content flow.
 
 ```tsx
-import { Lesson, Prose, Quiz } from "@/faraday/blocks";
-import { TutorDock } from "@/faraday/tutor";
+import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { TutorDock } from "@faraday-academy/tutor";
 
 <TutorDock
   title="Binary-search tutor"

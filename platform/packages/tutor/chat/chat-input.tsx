@@ -5,7 +5,7 @@
 // upload / model selector in v0).
 import { useRef, useState } from "react";
 import { ArrowUpIcon, StopIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
+import { Button } from "@faraday-academy/runtime/ui/button";
 
 export function ChatInput({
   onSend,

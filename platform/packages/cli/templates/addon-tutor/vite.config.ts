@@ -17,8 +17,8 @@ export default defineConfig({
     serverDir: "./",
   },
   resolve: {
-    // "@" -> ./src, so lesson code imports the vendored, locked runtime + shadcn
-    // blocks as "@/faraday/*".
+    // "@" -> ./src for local lesson imports; the runtime/tutor come from the
+    // pinned @faraday-academy/* deps.
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },

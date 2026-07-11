@@ -3,7 +3,7 @@
 // let bubbles/headers react to alignment.
 import * as React from "react";
 
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "@faraday-academy/runtime/lib/utils";
 
 function Message({
   className,

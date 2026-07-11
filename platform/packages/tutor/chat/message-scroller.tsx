@@ -1,6 +1,6 @@
 // Canonical MessageScroller — ported from mirror-dimension's shadcn chat UI
 // (components/ui/message-scroller.tsx), which wraps the headless
-// `@shadcn/react/message-scroller` primitive. Path rewired to "@/faraday/*" and
+// `@shadcn/react/message-scroller` primitive. Path rewired to "@faraday-academy/runtime/*" and
 // the scrollbar-plugin-only utilities dropped for standard Tailwind. Gives real
 // auto-stick-to-bottom + a scroll-to-end button that appears when you scroll up.
 import * as React from "react";
@@ -12,8 +12,8 @@ import {
 } from "@shadcn/react/message-scroller";
 import { ArrowDownIcon } from "@phosphor-icons/react";
 
-import { cn } from "@/faraday/lib/utils";
-import { Button } from "@/faraday/ui/button";
+import { cn } from "@faraday-academy/runtime/lib/utils";
+import { Button } from "@faraday-academy/runtime/ui/button";
 
 function MessageScrollerProvider(
   props: React.ComponentProps<typeof MessageScrollerPrimitive.Provider>,

@@ -15,8 +15,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChatCircleIcon } from "@phosphor-icons/react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./resizable";
 import { usePanelRef } from "react-resizable-panels";
-import { Button } from "@/faraday/ui/button";
-import { cn } from "@/faraday/lib/utils";
+import { Button } from "@faraday-academy/runtime/ui/button";
+import { cn } from "@faraday-academy/runtime/lib/utils";
 import { Tutor, type TutorProps } from "./tutor";
 
 export interface TutorDockProps extends Omit<TutorProps, "className"> {
