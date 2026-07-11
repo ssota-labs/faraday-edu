@@ -30,10 +30,26 @@ const R3F_DEV_DEPS = { "@types/three": "^0.171.0" };
 // @react-three/rapier — only for --physics.
 const RAPIER_RANGE = "^2.1.0";
 
+// The tutor addon: the <Tutor> widget is a pinned package (@faraday-academy/tutor),
+// but the durable Nitro + Workflow SERVER is copied into the lesson as
+// author-editable files (api/ + workflows/) — the author tunes the persona +
+// grounding there. So the lesson also gets the server-side deps directly.
+const TUTOR_PIN = "0.1.0";
+const TUTOR_SERVER_DEPS = {
+  "@ai-sdk/workflow": "^1.0.11",
+  ai: "^7.0.11",
+  // stable nitro 3.0.0 is deprecated + predates the serverDir config the Workflow
+  // SDK's Vite guide needs, so pin the current beta (what `latest` resolves to).
+  nitro: "3.0.260610-beta",
+  workflow: "^4.5.0",
+  zod: "^4.0.0",
+};
+
 function sourcePaths(root = PACKAGE_ROOT) {
   return {
     starter: path.join(root, "templates", "starter"),
     addon3d: path.join(root, "templates", "addon-3d"),
+    addonTutor: path.join(root, "templates", "addon-tutor"),
   };
 }
 
@@ -51,7 +67,7 @@ async function replaceInFile(file, from, to) {
  * @param {boolean} [opts.force]   allow a non-empty target
  * @param {boolean} [opts.threeD]  add the @faraday-academy/three block + a 3D demo
  * @param {boolean} [opts.physics] like threeD, plus @react-three/rapier + a physics demo
- * @param {boolean} [opts.tutor]   (addon — deferred to a later phase)
+ * @param {boolean} [opts.tutor]   add the @faraday-academy/tutor widget + a durable AI server
  * @param {string} [opts.templateRoot] override package root (tests)
  * @param {() => string} [opts.uuid]   injectable id generator (tests)
  */
@@ -59,20 +75,12 @@ export async function generateLesson(opts) {
   const { targetDir, name, force = false, threeD = false, physics = false, tutor = false } = opts;
   const use3d = threeD || physics; // physics implies 3D
 
-  // The tutor addon (durable Nitro + Workflow server) is still being repackaged.
-  if (tutor) {
-    const err = new Error(
-      "--tutor is being repackaged as the @faraday-academy/tutor package and is temporarily unavailable. Scaffold without it for now.",
-    );
-    err.exitCode = 2;
-    throw err;
-  }
-
   const src = sourcePaths(opts.templateRoot);
   const uuid = opts.uuid ?? (() => crypto.randomUUID());
 
   await assertDirectory(src.starter, "starter template");
   if (use3d) await assertDirectory(src.addon3d, "3d addon template");
+  if (tutor) await assertDirectory(src.addonTutor, "tutor addon template");
 
   if (!force && !(await isEffectivelyEmpty(targetDir))) {
     const err = new Error(`Target directory is not empty: ${targetDir} (use --overwrite)`);
@@ -121,6 +129,45 @@ export async function generateLesson(opts) {
     );
   }
 
+  // 3b. opt-in tutor: the <Tutor> widget is the pinned @faraday-academy/tutor
+  //     package, but the durable server is AUTHOR-EDITABLE — copy api/ + workflows/
+  //     + the Vite+Nitro config into the lesson tree so the author can tune the
+  //     persona/grounding. This is the one addon that makes the lesson server-backed.
+  if (tutor) {
+    await copyDirectory(path.join(src.addonTutor, "api"), path.join(targetDir, "api"));
+    await copyDirectory(path.join(src.addonTutor, "workflows"), path.join(targetDir, "workflows"));
+    // swap in the Vite + Nitro + Workflow config, plus the server tsconfig + env.
+    await fs.copyFile(path.join(src.addonTutor, "vite.config.ts"), path.join(targetDir, "vite.config.ts"));
+    await fs.copyFile(path.join(src.addonTutor, "tsconfig.node.json"), path.join(targetDir, "tsconfig.node.json"));
+    await fs.copyFile(path.join(src.addonTutor, "env.example"), path.join(targetDir, "env.example"));
+    await fs.copyFile(path.join(src.addonTutor, "docs", "tutor.md"), path.join(targetDir, "docs", "tutor.md"));
+    await copyDirectory(path.join(src.addonTutor, "examples"), path.join(targetDir, "docs", "examples"));
+    // the chat widget uses Tailwind utilities — pull its stylesheet into the scan.
+    await replaceInFile(
+      path.join(targetDir, "src", "app.css"),
+      '@import "@faraday-academy/kit/styles.css";',
+      '@import "@faraday-academy/kit/styles.css";\n@import "@faraday-academy/tutor/styles.css";',
+    );
+    // The Workflow step bundler (esbuild) mis-resolves ajv's dynamic require through
+    // pnpm's nested .pnpm store, 500-ing the model step in dev. A flat node_modules
+    // fixes it. Tutor-only; non-tutor lessons keep pnpm's strict isolation.
+    await fs.appendFile(
+      path.join(targetDir, "pnpm-workspace.yaml"),
+      "\n# Tutor: flatten node_modules so the Workflow step bundler resolves ajv's\n" +
+        "# dynamic requires in dev (nested .pnpm paths otherwise 500 the model step).\n" +
+        "nodeLinker: hoisted\n",
+    );
+    // point the docs an author reads at the tutor guide
+    const tutorPointer =
+      '\n> **AI Tutor:** scaffolded with `--tutor`. Embed `<Tutor context={…} />` from ' +
+      '`@faraday-academy/tutor`; the durable server lives in author-editable `api/` + ' +
+      '`workflows/tutor-agent.ts`. Needs `AI_GATEWAY_API_KEY` (see `env.example`). ' +
+      'Guide: [docs/tutor.md](docs/tutor.md).\n';
+    for (const doc of ["docs/authoring.md", "AGENTS.md"]) {
+      await fs.appendFile(path.join(targetDir, doc), tutorPointer).catch(() => {});
+    }
+  }
+
   // 4. inject package name (+ addon deps)
   const pkgPath = path.join(targetDir, "package.json");
   const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
@@ -132,8 +179,13 @@ export async function generateLesson(opts) {
     pkg.devDependencies = { ...pkg.devDependencies, ...R3F_DEV_DEPS };
   }
   if (physics) pkg.dependencies["@react-three/rapier"] = RAPIER_RANGE;
-  if (use3d) {
+  if (tutor) {
+    pkg.dependencies["@faraday-academy/tutor"] = TUTOR_PIN;
+    Object.assign(pkg.dependencies, TUTOR_SERVER_DEPS);
+  }
+  if (use3d || tutor) {
     for (const group of ["dependencies", "devDependencies"]) {
+      if (!pkg[group]) continue;
       pkg[group] = Object.fromEntries(
         Object.entries(pkg[group]).sort(([a], [b]) => a.localeCompare(b)),
       );
@@ -145,7 +197,7 @@ export async function generateLesson(opts) {
   await replaceInFile(path.join(targetDir, "index.html"), TITLE_PLACEHOLDER, title);
 
   // 6. provenance (VCS-tracked identity; records the kit line + addons)
-  const addons = [use3d && (physics ? "physics" : "3d")].filter(Boolean);
+  const addons = [use3d && (physics ? "physics" : "3d"), tutor && "tutor"].filter(Boolean);
   await fs.mkdir(path.join(targetDir, ".faraday"), { recursive: true });
   await fs.writeFile(
     path.join(targetDir, ".faraday", "provenance.json"),

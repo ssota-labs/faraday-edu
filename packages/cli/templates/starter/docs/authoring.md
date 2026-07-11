@@ -261,8 +261,9 @@ your summary (it belongs in the kit, added centrally).
 
 > **Addon package.** The 3D block ships as its own pinned dependency,
 > `@faraday-academy/three` — `faraday new --3d` adds it (and `--physics` adds
-> `@react-three/rapier` too). (`--tutor` is still being repackaged as
-> `@faraday-academy/tutor` and is temporarily unavailable.)
+> `@react-three/rapier` too). The tutor is the same idea: `--tutor` pins the
+> `@faraday-academy/tutor` `<Tutor>` widget and drops its author-editable
+> Nitro + Workflow server into the lesson (`api/` + `workflows/`).
 
 Scaffold with `faraday new <name> --3d` to include a Three.js (React Three Fiber)
 block + a solar-system demo. **Without `--3d`, three is never installed or bundled**

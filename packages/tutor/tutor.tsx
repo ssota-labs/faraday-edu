@@ -11,7 +11,7 @@
 import { useChat } from "@ai-sdk/react";
 import { WorkflowChatTransport } from "@ai-sdk/workflow";
 import { useMemo } from "react";
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "@faraday-academy/kit/lib/utils";
 import { ChatMessage } from "./chat/chat-message";
 import { ChatScroller } from "./chat/scroller";
 import { ChatInput } from "./chat/chat-input";

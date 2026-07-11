@@ -11,7 +11,7 @@ import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
 Usage:
-  faraday new <name> [--3d | --physics] [--at <dir>] [--overwrite] [--skip-install] [--json]
+  faraday new <name> [--3d | --physics] [--tutor] [--at <dir>] [--overwrite] [--skip-install] [--json]
   faraday check [--dir <lesson>]        verify the lesson layout + kit pin
   faraday doctor [--dir <lesson>]       deep check (layout + pin + installed lockfile)
   faraday upgrade [--to <ver>] [--dir <lesson>]
@@ -26,7 +26,9 @@ exactly) instead of vendoring the kit. Author your lesson in src/lesson/.
   --3d        add the @faraday-academy/three block (R3F/three.js) + a 3D demo.
               Omit it for 2D lessons — three is never installed or bundled without it.
   --physics   like --3d, plus @react-three/rapier + a gravity/collision demo.
-  --tutor     being repackaged as @faraday-academy/tutor — temporarily unavailable.
+  --tutor     add the @faraday-academy/tutor <Tutor> widget + a durable AI server
+              (Vite + Nitro + Workflow). The server (api/ + workflows/) is
+              author-editable. Needs AI_GATEWAY_API_KEY in .env.local locally.
 
 Exit codes: 0 ok · 1 check failed · 2 usage error · 3 doctor/structure failed · 4 environment error`;
 

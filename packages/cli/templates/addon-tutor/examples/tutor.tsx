@@ -5,8 +5,8 @@
 // The tutor is Socratic and grounded: it answers from `context` and won't hand
 // over the quiz answer. Because the run is durable, refreshing mid-answer resumes
 // the same stream.
-import { Lesson, Prose, Quiz, Stage } from "@/faraday/blocks";
-import { Tutor } from "@/faraday/tutor";
+import { Lesson, Prose, Quiz, Stage } from "@faraday-academy/kit/blocks";
+import { Tutor } from "@faraday-academy/tutor";
 
 const LESSON_TEXT = `
 Binary search finds a target in a *sorted* array by repeatedly halving the search

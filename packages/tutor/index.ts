@@ -1,4 +1,4 @@
-// Tutor AI v0 — the durable chat widget. Import from "@/faraday/tutor" in lesson
+// Tutor AI v0 — the durable chat widget. Import from "@faraday-academy/tutor" in lesson
 // code: <Tutor context={lessonText} title="…" greeting="…" />.
 //
 // Client-only barrel on purpose — it must NOT re-export the workflow/agent

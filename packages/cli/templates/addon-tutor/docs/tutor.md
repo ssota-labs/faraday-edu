@@ -23,10 +23,10 @@ with a Gateway auth error — that's expected until you add the key.
 
 ## Embed it
 
-Import `<Tutor>` from `@/faraday/tutor` and ground it in the surrounding content:
+Import `<Tutor>` from `@faraday-academy/tutor` and ground it in the surrounding content:
 
 ```tsx
-import { Tutor } from "@/faraday/tutor";
+import { Tutor } from "@faraday-academy/tutor";
 
 <Tutor
   title="Binary-search tutor"
