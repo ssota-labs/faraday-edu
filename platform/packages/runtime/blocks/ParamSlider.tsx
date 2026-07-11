@@ -1,7 +1,7 @@
 // <ParamSlider> — a labeled slider with a live value read-out. Exposes a plain
 // number (the underlying Base UI slider is array-capable; we unwrap it).
-import { Label } from "@/faraday/ui/label";
-import { Slider } from "@/faraday/ui/slider";
+import { Label } from "../ui/label";
+import { Slider } from "../ui/slider";
 
 export function ParamSlider(props: {
   label: string;

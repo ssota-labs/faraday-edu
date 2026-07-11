@@ -1,6 +1,6 @@
 // <Compare> — tabbed panels for comparing cases side by side (built on Tabs).
 import type { ReactNode } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/faraday/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export function Compare(props: {
   items: { value: string; label: string; content: ReactNode }[];

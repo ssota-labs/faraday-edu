@@ -16,8 +16,8 @@
 //   />
 import { useState } from "react";
 import { CaretDownIcon, ArrowCounterClockwiseIcon, ListIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { cn } from "@/faraday/lib/utils";
+import { Button } from "../ui/button";
+import { cn } from "../lib/utils";
 import { TeX } from "./TeX";
 
 export interface DerivationStep {

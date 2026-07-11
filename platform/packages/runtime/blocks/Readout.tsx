@@ -2,7 +2,7 @@
 // Workbench `hud` overlay (or a control panel) instead of stacking <Stat>
 // cards under a figure — readouts belong ON the instrument, not after it.
 import type { ReactNode } from "react";
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "../lib/utils";
 
 export function Readout(props: {
   label: string;

@@ -14,8 +14,8 @@
 import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { ArrowCounterClockwiseIcon, ArrowUUpLeftIcon, EyeIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
+import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { celebrate } from "./celebrate";
 
 interface Stroke {

@@ -36,7 +36,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/faraday/ui/chart";
+} from "../ui/chart";
 
 export interface ChartSeries {
   key: string;

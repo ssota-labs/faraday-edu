@@ -3,9 +3,9 @@
 // lesson react to a pass — e.g. inside a <CurriculumHost>, wire `onCorrect` to
 // `useNode().complete()` so answering correctly unlocks the next node.
 import { useRef, useState } from "react";
-import { RadioGroup, RadioGroupItem } from "@/faraday/ui/radio-group";
-import { Button } from "@/faraday/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { celebrate } from "./celebrate";
 
 export interface QuizOption {

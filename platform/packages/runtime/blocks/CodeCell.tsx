@@ -14,9 +14,9 @@
 //   />
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PlayIcon, ArrowCounterClockwiseIcon, SpinnerIcon } from "@phosphor-icons/react";
-import { Card, CardContent } from "@/faraday/ui/card";
-import { Button } from "@/faraday/ui/button";
-import { cn } from "@/faraday/lib/utils";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { cn } from "../lib/utils";
 
 interface OutLine {
   level: "log" | "info" | "warn" | "error" | "result";

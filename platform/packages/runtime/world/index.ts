@@ -1,4 +1,4 @@
-// Curriculum / world seed — public entry. Import from "@/faraday/world".
+// Curriculum / world seed — public entry. Import from "./".
 // Core (locked): CurriculumHost + progression + state. Packs are swappable
 // adapters implementing the WorldPack port (see types.ts, the frozen contract).
 export { CurriculumHost } from "./host";

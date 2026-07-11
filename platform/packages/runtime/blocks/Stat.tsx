@@ -1,7 +1,7 @@
 // <Stat> — a compact metric read-out (built on Card + Badge).
 import type { ReactNode } from "react";
-import { Card, CardContent } from "@/faraday/ui/card";
-import { Badge } from "@/faraday/ui/badge";
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
 
 export function Stat(props: {
   label: string;

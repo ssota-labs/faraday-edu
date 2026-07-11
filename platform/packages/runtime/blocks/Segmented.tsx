@@ -1,6 +1,6 @@
 // <Segmented> — a single-select segmented control (built on Tabs).
-import { Label } from "@/faraday/ui/label";
-import { Tabs, TabsList, TabsTrigger } from "@/faraday/ui/tabs";
+import { Label } from "../ui/label";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
 export function Segmented<T extends string = string>(props: {
   label?: string;

@@ -14,7 +14,7 @@
 @import "./styles/design-tokens.css";
 
 /* Scan lesson + vendored source for utility classes used in className. */
-@source "../**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

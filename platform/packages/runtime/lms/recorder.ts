@@ -3,7 +3,7 @@
 // single-learner + local; a real roster is aggregated at the platform tier from
 // many learners' records. This hook is the seam the platform LMS plugs into.
 import { useCallback, useState } from "react";
-import type { CurriculumEvent } from "@/faraday/world";
+import type { CurriculumEvent } from "../world";
 
 export interface LmsEvent {
   type: CurriculumEvent["type"];

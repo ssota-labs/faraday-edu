@@ -2,7 +2,7 @@
 // ordered list with lock/progress state. A driven adapter: reads `world`, emits
 // onEnter. No progression logic of its own.
 import { CheckIcon, LockSimpleIcon } from "@phosphor-icons/react";
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "../../lib/utils";
 import type { WorldPack } from "../types";
 
 export const linearPack: WorldPack = ({ world, onEnter }) => (

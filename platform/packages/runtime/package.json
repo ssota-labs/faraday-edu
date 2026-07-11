@@ -3,7 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib). Vendored verbatim into generated lessons under src/faraday/** by @faraday-kit/cli and locked with a SHA-256 manifest — the source of truth for the copied-in code, not an installed dependency. Deps below exist only so the workspace (e.g. @faraday/labs) can typecheck + preview it; a real lesson satisfies them from its own package.json. react/react-dom are peers so a consumer dedupes to one copy.",
+  "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib) — a versioned package that generated lessons pin and consume via @faraday/runtime/* (no longer vendored). @faraday/labs previews the same source via the @/faraday alias. react/react-dom are peers so a consumer dedupes to one copy.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./blocks": "./blocks/index.ts",
+    "./runtime": "./runtime/index.ts",
+    "./world": "./world/index.ts",
+    "./lms": "./lms/index.ts",
+    "./lib/utils": "./lib/utils.ts",
+    "./ui/*": "./ui/*.tsx",
+    "./styles.css": "./faraday.css",
+    "./faraday.css": "./faraday.css",
+    "./styles/*": "./styles/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
   "peerDependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -22,7 +40,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "vite": "^7.0.0",
+    "typescript": "~5.9.0"
   },
   "license": "UNLICENSED"
 }

@@ -1,11 +1,11 @@
 // <ProgressDashboard> — the teacher/analytics view over recorded events. Shows an
 // optional roster (aggregated at the platform tier) plus the current learner's
 // completion, time-on-task, activity, and a JSON export. Composes shadcn blocks.
-import { Card, CardContent } from "@/faraday/ui/card";
-import { Badge } from "@/faraday/ui/badge";
-import { Button } from "@/faraday/ui/button";
-import { Stat } from "@/faraday/blocks";
-import type { Curriculum } from "@/faraday/world";
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Stat } from "../blocks";
+import type { Curriculum } from "../world";
 import { summarize, type LmsEvent, type LmsSummary } from "./recorder";
 
 export interface Learner {

@@ -5,9 +5,9 @@
    - an error boundary so an author throw renders a message, not a blank page. */
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
-import { ThemeProvider, useTheme } from "@/faraday/runtime/theme-provider";
+import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { ThemeProvider, useTheme } from "./theme-provider";
 
 class LessonErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };

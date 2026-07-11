@@ -10,9 +10,9 @@
 //     onCorrect={complete}
 //   />
 import { useRef, useState } from "react";
-import { Button } from "@/faraday/ui/button";
-import { Input } from "@/faraday/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "@/faraday/ui/alert";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { celebrate } from "./celebrate";
 
 export function NumericAnswer(props: {

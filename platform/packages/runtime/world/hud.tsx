@@ -4,8 +4,8 @@
 // All theme-token based so it holds in light and dark.
 import type { ReactNode } from "react";
 import { ArrowCounterClockwiseIcon, LockSimpleIcon, PlayIcon, CheckIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { cn } from "@/faraday/lib/utils";
+import { Button } from "../ui/button";
+import { cn } from "../lib/utils";
 import type { WorldNode, WorldView } from "./types";
 
 /** Base plate: translucent, blurred, one cut corner — the HMD panel look. */

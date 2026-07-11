@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/faraday/lib/utils"
+import { cn } from "../lib/utils"
 
 const alertVariants = cva("cn-alert group/alert relative w-full", {
   variants: {

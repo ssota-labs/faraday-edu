@@ -9,7 +9,7 @@
 import { useEffect, useMemo, useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "../lib/utils";
 
 export function TeX(props: {
   /** TeX source (preferred: a plain string child, e.g. String.raw`\alpha`). */

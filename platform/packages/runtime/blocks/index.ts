@@ -1,5 +1,5 @@
 // Public entry point for the Faraday lesson blocks (shadcn-composed).
-// Import from "@/faraday/blocks" in lesson code.
+// Import from "./" in lesson code.
 export { Lesson } from "./Lesson";
 export { Prose } from "./Prose";
 export { Stage } from "./Stage";

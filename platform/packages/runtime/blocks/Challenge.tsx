@@ -16,7 +16,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { FlagCheckeredIcon, LightbulbIcon } from "@phosphor-icons/react";
-import { cn } from "@/faraday/lib/utils";
+import { cn } from "../lib/utils";
 import { celebrate } from "./celebrate";
 
 export function Challenge(props: {

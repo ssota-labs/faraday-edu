@@ -1,6 +1,6 @@
 // <Stage> — a Card-framed host for a visualization (SVG, canvas, DOM) + caption.
 import type { ReactNode } from "react";
-import { Card, CardContent, CardFooter } from "@/faraday/ui/card";
+import { Card, CardContent, CardFooter } from "../ui/card";
 
 export function Stage(props: { children: ReactNode; caption?: ReactNode }) {
   return (

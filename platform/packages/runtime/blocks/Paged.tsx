@@ -17,8 +17,8 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { cn } from "@/faraday/lib/utils";
+import { Button } from "../ui/button";
+import { cn } from "../lib/utils";
 
 export interface PagedPage {
   id: string;

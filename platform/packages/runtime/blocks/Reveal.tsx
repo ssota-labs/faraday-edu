@@ -1,6 +1,6 @@
 // <Reveal> — a collapsible hint / spoiler (built on Accordion).
 import type { ReactNode } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/faraday/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 
 export function Reveal(props: { label?: string; children: ReactNode }) {
   return (

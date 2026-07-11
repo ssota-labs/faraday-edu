@@ -4,9 +4,9 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { ArrowCounterClockwiseIcon, CaretDownIcon } from "@phosphor-icons/react";
-import { Collapsible, CollapsibleContent } from "@/faraday/ui/collapsible";
-import { Button } from "@/faraday/ui/button";
-import { cn } from "@/faraday/lib/utils";
+import { Collapsible, CollapsibleContent } from "../ui/collapsible";
+import { Button } from "../ui/button";
+import { cn } from "../lib/utils";
 
 export function ControlGroup(props: {
   label: string;

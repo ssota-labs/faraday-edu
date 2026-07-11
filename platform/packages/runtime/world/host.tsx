@@ -12,8 +12,8 @@
 // Entering a node always returns to the textbook: lessons render doc-style.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowCounterClockwiseIcon, CaretLeftIcon, CheckIcon, MapTrifoldIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { Badge } from "@/faraday/ui/badge";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import type { Curriculum, CurriculumEvent, NodeContextValue, WorldPack } from "./types";
 import { buildWorldView, isFinished } from "./progression";
 import { useCurriculumState } from "./store";

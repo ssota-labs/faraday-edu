@@ -1,7 +1,7 @@
 // <Scrubber> — transport controls for a stepped visualization. Wire to useStepper.
 import { CaretLeftIcon, CaretRightIcon, PauseIcon, PlayIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
-import { Slider } from "@/faraday/ui/slider";
+import { Button } from "../ui/button";
+import { Slider } from "../ui/slider";
 
 export function Scrubber(props: {
   index: number;

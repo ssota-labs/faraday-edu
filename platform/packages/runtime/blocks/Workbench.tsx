@@ -6,8 +6,8 @@
 // into the middle of a lesson.
 import type { ReactNode } from "react";
 import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
-import { Card, CardContent } from "@/faraday/ui/card";
-import { Button } from "@/faraday/ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
 
 export function Workbench(props: {
   children: ReactNode;

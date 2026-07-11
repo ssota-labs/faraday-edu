@@ -1,6 +1,6 @@
 // <ParamSwitch> — a labeled on/off control.
-import { Label } from "@/faraday/ui/label";
-import { Switch } from "@/faraday/ui/switch";
+import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
 
 export function ParamSwitch(props: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
   return (

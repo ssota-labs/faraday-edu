@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
-import { Button } from "@/faraday/ui/button";
+import { Button } from "../ui/button";
 
 export interface Chapter {
   slug: string;

@@ -1,6 +1,6 @@
 // <Lesson> — titled header + vertical flow the sections sit in.
 import type { ReactNode } from "react";
-import { Badge } from "@/faraday/ui/badge";
+import { Badge } from "../ui/badge";
 
 export function Lesson(props: { title: string; lead?: ReactNode; topic?: string; children: ReactNode }) {
   return (
