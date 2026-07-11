@@ -20,7 +20,7 @@ renders in a real lesson.
 ## Run it
 
 ```bash
-pnpm install                       # from platform/ (workspace)
+pnpm install                       # from the repo root (workspace)
 pnpm --filter @faraday-academy/labs dev    # → http://localhost:4200
 ```
 

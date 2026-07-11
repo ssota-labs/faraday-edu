@@ -2,8 +2,8 @@
    import.meta.glob — no server/fs needed. Mirrors what a generated lesson would
    see: the runtime components (grouped), and the skills/packs the CLI + plugins
    ship. */
-import ccPlugin from "../../../../plugins/claude-code/.claude-plugin/plugin.json";
-import codexPlugin from "../../../../plugins/codex/.codex-plugin/plugin.json";
+import ccPlugin from "../../../plugins/claude-code/.claude-plugin/plugin.json";
+import codexPlugin from "../../../plugins/codex/.codex-plugin/plugin.json";
 
 export type Component = {
   name: string;
@@ -36,22 +36,22 @@ const runtimeSrc = import.meta.glob("../../../packages/runtime/**/*.{ts,tsx}", {
   eager: true,
 }) as Record<string, string>;
 
-const skillSrc = import.meta.glob("../../../../plugins/claude-code/skills/faraday/SKILL.md", {
+const skillSrc = import.meta.glob("../../../plugins/claude-code/skills/faraday/SKILL.md", {
   query: "?raw",
   import: "default",
   eager: true,
 }) as Record<string, string>;
-const refSrc = import.meta.glob("../../../../plugins/claude-code/skills/faraday/references/*.md", {
+const refSrc = import.meta.glob("../../../plugins/claude-code/skills/faraday/references/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
 }) as Record<string, string>;
-const commandSrc = import.meta.glob("../../../../plugins/claude-code/commands/*.md", {
+const commandSrc = import.meta.glob("../../../plugins/claude-code/commands/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
 }) as Record<string, string>;
-const agentSrc = import.meta.glob("../../../../plugins/claude-code/agents/*.md", {
+const agentSrc = import.meta.glob("../../../plugins/claude-code/agents/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
@@ -132,7 +132,7 @@ function firstH1(text: string): string {
 }
 
 const base = (p: string) => p.split("/").pop() ?? p;
-const runtimeRel = (p: string) => "platform/packages/runtime/" + p.split("/packages/runtime/")[1];
+const runtimeRel = (p: string) => "packages/runtime/" + p.split("/packages/runtime/")[1];
 const pluginRel = (p: string) => "plugins/" + p.split("/plugins/")[1];
 /** group segment after packages/runtime/, e.g. ".../runtime/blocks/Quiz.tsx" -> "blocks" */
 const groupOf = (p: string) => p.split("/packages/runtime/")[1]?.split("/")[0] ?? "";
@@ -165,9 +165,9 @@ export function loadComponentGroups(): ComponentGroup[] {
 // ── packs ────────────────────────────────────────────────────────────────────
 
 const FEATURE_PACKS: Pack[] = [
-  { id: "starter", title: "starter", tag: "base", relPath: "platform/packages/cli/templates/starter", summary: "The app shell every lesson starts from — Vite + React, the two-zone layout, a demo lesson, AGENTS.md, docs." },
-  { id: "addon-3d", title: "addon-3d", tag: "--3d / --physics", relPath: "platform/packages/cli/templates/addon-3d", summary: "Three.js / React Three Fiber scene block + demo lessons and model assets. With --physics, the Rapier walkable-world extras." },
-  { id: "addon-tutor", title: "addon-tutor", tag: "--tutor", relPath: "platform/packages/cli/templates/addon-tutor", summary: "The durable grounded AI tutor: chat UI vendored into the locked tree, Nitro api routes, a Workflow agent, and the Vite+Nitro config." },
+  { id: "starter", title: "starter", tag: "base", relPath: "packages/cli/templates/starter", summary: "The app shell every lesson starts from — Vite + React, the two-zone layout, a demo lesson, AGENTS.md, docs." },
+  { id: "addon-3d", title: "addon-3d", tag: "--3d / --physics", relPath: "packages/cli/templates/addon-3d", summary: "Three.js / React Three Fiber scene block + demo lessons and model assets. With --physics, the Rapier walkable-world extras." },
+  { id: "addon-tutor", title: "addon-tutor", tag: "--tutor", relPath: "packages/cli/templates/addon-tutor", summary: "The durable grounded AI tutor: chat UI vendored into the locked tree, Nitro api routes, a Workflow agent, and the Vite+Nitro config." },
 ];
 
 export function loadWorldPacks(): Pack[] {

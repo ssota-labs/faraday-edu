@@ -1,7 +1,7 @@
 {
-  "name": "faraday-platform",
+  "name": "faraday",
   "private": true,
-  "description": "Faraday product workspace — the CLI scaffolder, the vendored runtime layer, and live example lessons.",
+  "description": "Faraday monorepo — the @faraday-academy/cli scaffolder, the runtime + addon packages lessons pin, and live example lessons.",
   "scripts": {
     "test": "pnpm --filter @faraday-academy/cli test",
     "test:cli": "pnpm --filter @faraday-academy/cli test"

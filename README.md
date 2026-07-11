@@ -62,7 +62,7 @@ pnpm build                                 # static bundle in dist/ (deployable)
 ```
 
 > During local development of this repo, `npx @faraday-academy/cli` is equivalent to
-> `node platform/packages/cli/bin/faraday.mjs` run from the repo root.
+> `node packages/cli/bin/faraday.mjs` run from the repo root.
 
 ---
 
@@ -202,17 +202,17 @@ error. `--json` makes `new` emit a structured result an agent can parse.
 ## Repo layout
 
 ```
-faraday-edu/                    # repo root = meta (docs, specs, plugins, agents)
-├─ platform/                    # product workspace (pnpm: apps/* + packages/*)
-│  ├─ apps/
-│  │  └─ labs/                  # @faraday-academy/labs — internal Next.js catalog of components + skills/packs
-│  ├─ packages/
-│  │  ├─ cli/                   # @faraday-academy/cli — bin + src (cli, generate, copy, manifest, pkg)
-│  │  │  └─ templates/          #   starter (app shell) + addon-3d + addon-tutor (scaffolding assets)
-│  │  └─ runtime/               # @faraday-academy/runtime — vendored into src/faraday/**
-│  │                            #   (locked: ui, blocks, runtime, styles, world, lms, lib)
-│  └─ examples/                 # Standalone demos (own lockfile; Vercel root = platform/examples/<name>)
-│     └─ voyage-log/            #   C-B 항해 일지 curriculum (--3d)
+faraday-edu/                    # repo root = the pnpm workspace (apps/* + packages/*)
+├─ apps/
+│  └─ labs/                     # @faraday-academy/labs — internal Vite catalog of components + skills/packs
+├─ packages/
+│  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src + templates)
+│  │  └─ templates/             #   starter (app shell) + addon-3d + addon-tutor (scaffolding assets)
+│  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
+│  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (--3d / --physics)
+│  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (--tutor)
+├─ examples/                    # Standalone demos (own lockfile; Vercel root = examples/<name>)
+│  └─ voyage-log/               #   C-B 항해 일지 curriculum (--3d)
 ├─ plugins/
 │  ├─ claude-code/              # Claude Code plugin + marketplace (install & drive Faraday)
 │  └─ codex/                    # Codex AGENTS.md + custom prompts
@@ -222,22 +222,23 @@ faraday-edu/                    # repo root = meta (docs, specs, plugins, agents
 └─ README.md
 ```
 
-> The runtime is a first-class workspace package (`@faraday-academy/runtime`) but is still
-> **vendored** — copied verbatim into each generated lesson and SHA-locked — not
-> installed as a dependency. `platform/packages/cli` copies from it at scaffold time.
+> The runtime + addons are first-class workspace packages (`@faraday-academy/*`) that
+> generated lessons **pin and consume** as dependencies — no longer vendored/SHA-locked.
+> Move a lesson's pins with `faraday upgrade`. `@faraday-academy/labs` previews the same
+> runtime source via the `@/faraday` alias.
 
 ## What the scaffolder does
 
-Copy starter → target · restore `.gitignore` · vendor the locked runtime into
-`src/faraday/` · overlay `--3d`/`--tutor` addons · inject package name + HTML title
-· issue a `lessonId` provenance record · write the SHA-256 integrity manifest ·
-`pnpm install`.
+Copy starter → target · restore `.gitignore` · pin `@faraday-academy/runtime`
+(+ `three`/`tutor` for `--3d`/`--tutor`) · wire `app.css` to the runtime stylesheet
+· inject package name + HTML title · issue a `lessonId` provenance record ·
+`pnpm install`. `faraday check`/`doctor` then verify the layout + exact pins.
 
 ## Develop Faraday itself
 
 ```bash
-node --test platform/packages/cli/src/*.test.mjs     # CLI unit tests
-node platform/packages/cli/bin/faraday.mjs help      # run the CLI from the repo
+node --test packages/cli/src/*.test.mjs     # CLI unit tests
+node packages/cli/bin/faraday.mjs help      # run the CLI from the repo
 ```
 
 ---

@@ -135,9 +135,9 @@
 | S2 | 케플러 쓸기 | `--3d` | 공간·mood·조작 | static |
 | S3 | 갈톤 보드 500알 | `--physics` | 떨어뜨리면 정규분포 | static |
 | S4 | 이진 탐색 + 튜터 | `--tutor` | 그라운딩 챗 (답 비누출) | Vercel (OIDC) |
-| C★ | **항해 일지 (C-B)** ✅ | CurriculumHost + `world3dPack` | 맵 언락 + 코스 샷 | `platform/examples/voyage-log` → Vercel |
+| C★ | **항해 일지 (C-B)** ✅ | CurriculumHost + `world3dPack` | 맵 언락 + 코스 샷 | `examples/voyage-log` → Vercel |
 
-구현: [`platform/examples/voyage-log/`](../platform/examples/voyage-log/) · 아이디에이션: [DEMO-IDEATION.md](DEMO-IDEATION.md).
+구현: [`examples/voyage-log/`](../examples/voyage-log/) · 아이디에이션: [DEMO-IDEATION.md](DEMO-IDEATION.md).
 
 ### B2. 데모 운영 규칙
 - 각 데모 페이지 하단에 고정 CTA:  

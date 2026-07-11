@@ -7,4 +7,4 @@ allowBuilds:
 
 # examples/* are intentionally NOT workspace members — each example (e.g.
 # voyage-log) is a self-contained generated app with its own lockfile and is
-# deployed independently (Vercel root = platform/examples/<name>).
+# deployed independently (Vercel root = examples/<name>).
