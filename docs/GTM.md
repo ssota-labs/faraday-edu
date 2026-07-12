@@ -114,6 +114,8 @@ Faraday는 양면 시장이다: **공급측(제작자)** 먼저, **수요측(학
 
 ## 8. Stage 1 soft launch (실행 계획)
 
-스킬 배포 + 콘텐츠 퍼널 + 데모 링크까지의 **오늘 기준 갭·실행 순서**는
-[LAUNCH-STAGE1.md](LAUNCH-STAGE1.md)에 둔다. (npm CLI · marketplace URL · 데모 URL ·
-콘텐츠→Claude/Codex 테스팅 퍼널.)
+스킬 배포 + 콘텐츠 퍼널 + 데모 링크까지의 **갭·실행 순서**는
+[LAUNCH-STAGE1.md](LAUNCH-STAGE1.md)에 둔다. (2026-07-12 갱신: npm 스위트
+`@faraday-academy/{cli,runtime,three,tutor}` · marketplace URL · 데모 URL ·
+콘텐츠→Claude/Codex 테스팅 퍼널. Notion 미러:
+https://app.notion.com/p/398346dac45681ab9394f4fb3bf1cafa )

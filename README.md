@@ -2,10 +2,11 @@
 
 > **Turn a lesson you already teach into a high-quality interactive textbook — with a grounded AI tutor — in one shot.**
 >
-> Status: CLI phase (Phase 0 complete, building toward GTM Stage 1). See
-> [VISION.md](docs/VISION.md) for the architecture and [GTM.md](docs/GTM.md) for the
-> customer strategy. Working codename; modeled on toolcraft-style self-contained
-> vendoring, headed toward a mirror-dimension-style web platform later.
+> Status: CLI phase (Phase 0 complete, building toward GTM Stage 1 soft launch).
+> Launch plan: [LAUNCH-STAGE1.md](docs/LAUNCH-STAGE1.md). Architecture:
+> [VISION.md](docs/VISION.md) · customer strategy: [GTM.md](docs/GTM.md).
+> Working codename; modeled on toolcraft-style self-contained packaging, headed
+> toward a mirror-dimension-style web platform later.
 
 Faraday is a **scaffolder** for AI-authored interactive courseware. You (or your
 coding agent) run one command and get a self-contained Vite + React app for a
