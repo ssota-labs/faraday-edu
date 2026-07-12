@@ -160,10 +160,11 @@ rest (there are no flags). Run `faraday pack list` for the live catalog and see
 - **other packs** — memorization (`srs`), exams (`exam`), slideshows (`deck`), kids
   (`kids`), pen notes (`notes`), pedagogy (`lecture-design`). All pre-installed;
   `faraday pack remove <name>` what a lesson doesn't use.
-- **Single lesson vs. course vs. world** — one idea → one `<Lesson>`; a sequence →
+- **Single lesson vs. course vs. curriculum** — one idea → one `<Lesson>`; a sequence →
   `<Course>`; a graph with unlock progression / a roadmap map → `<CurriculumHost>` +
-  a **world pack** (`map2dPack`/`world3dPack` — a presentation shape, *not* a module
-  pack). Design this in the Curriculum phase, build it per [references/worlds.md](references/worlds.md).
+  a **presentation**: built-in `linearPack`, or install one — `faraday pack add map2d`
+  (2D map), or the `three` pack's `world3dPack` (3D). Design this in the Curriculum
+  phase, build it per [references/worlds.md](references/worlds.md).
 
 ## Styling (non-negotiable baseline)
 

@@ -8,10 +8,12 @@ capability is on hand from the start. `faraday pack add` installs one individual
 mechanism — the skill's job is to know packs exist, use the right ones, then
 **read each pack's own guide** at `.faraday/packs/<name>/`.
 
-> **"Module pack" ≠ "world pack".** Here, *module pack* = an installable capability
-> (`faraday pack add three`). In [worlds.md](worlds.md), *world pack* / *world shape*
-> = the swappable presentation of a `<CurriculumHost>` (`linearPack`/`map2dPack`/
-> `world3dPack`). Different things — don't conflate them.
+> **Packs come in kinds.** Most are **capability** packs (`three`, `tutor`, `exam`,
+> `srs`, `deck`, `kids`, `notes`) or **knowledge** packs (`audience`, `lecture-design`)
+> — all default-installed. A few are **presentation** packs — how a `<CurriculumHost>`
+> is drawn (`map2d`, `world3d`); these are **opt-in** (`faraday pack add map2d`), since
+> you pick one per curriculum. The built-in `linearPack` needs no pack. See
+> [worlds.md](worlds.md) for presentations.
 
 ## The loop
 

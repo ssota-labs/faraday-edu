@@ -94,13 +94,16 @@ per-agent overlay(codex `$faraday` 안내 / claude-code 슬래시 명령·deploy
 audience/lecture-design 지식 SSOT = `packages/official-packs/*/skill/`(codex의 인라인
 audience.md/pedagogy.md는 제거하고 팩으로 통일).
 
-## 7. 후속 (Phase 3 — runtime)
+## 7. Phase 3 상태
 
-- **프레젠테이션 = 팩으로 통일 (확정 방향).** `map2d`를 base 런타임에서 CLI 팩으로 분리한다
-  (`world3d`는 이미 `three` 팩에 묶여 있음 — 같은 패턴). 프레젠테이션을 팩 kind로 표시하고,
-  작가용 문서에서 `WorldPack`/port/어댑터 용어를 걷어낸다. 코어 `CurriculumHost` + port(=팩이
-  꽂히는 seam)는 런타임 유지 — 이건 배관이라 그대로. 비용은 어댑터↔port 버전 강결합인데
-  `world/types.ts`가 frozen contract라 묶여 있어 감당 가능.
-- **LMS/진행률 경계** — 앱↔렉쳐가 링크로만 연결될 때: (A) 월드가 유일 상태 소유자 + 완료 토큰,
-  (B) 공유 스토리지 키 스키마. runtime 단계에서 결정.
+- **프레젠테이션 = 팩 (완료).** `map2d`를 base 런타임에서 빼고 **copy-in opt-in 팩**
+  (`packages/official-packs/map2d/`)으로 분리했다. `faraday pack add map2d` →
+  `src/lesson/map2d/`로 복사, `import { map2dPack } from "./map2d"`. `linearPack`은
+  런타임 내장 fallback으로 유지, `world3dPack`은 `three` 팩. 코어 `CurriculumHost` + port는
+  런타임 유지(배관). map2d는 default:false — 프레젠테이션은 하나만 고르는 opt-in이라
+  batteries-included 9개 default에서 예외(테스트 `OPT_IN_PACKS`로 명문화). 작가용 문서
+  (worlds.md/packs.md/SKILL.md)에서 프레젠테이션을 "설치하는 팩"으로 표현. labs는 프리뷰용
+  로컬 복사본(`apps/labs/src/pack-map2d.tsx`) 유지.
+- **LMS/진행률 경계 (미결)** — 앱↔렉쳐가 링크로만 연결될 때: (A) 월드가 유일 상태 소유자 +
+  완료 토큰, (B) 공유 스토리지 키 스키마. 런타임 단계에서 결정.
 - **`new` 앱 위치** — 현재 `apps/<name>/` 기본값. 레포 루트 직속 옵션은 미도입.

@@ -1,7 +1,8 @@
 // Example — LMS v0: a curriculum wired to the progress recorder, with a teacher
 // dashboard (roster + this learner's analytics). The recorder subscribes to the
 // SAME core event stream (onEvent). Copy into src/lesson/lesson.tsx to try it.
-import { CurriculumHost, map2dPack, type Curriculum } from "@faraday-academy/runtime/world";
+import { CurriculumHost, type Curriculum } from "@faraday-academy/runtime/world";
+import { map2dPack } from "./map2d"; // first: faraday pack add map2d
 import { useLmsRecorder, ProgressDashboard, summarize, type Learner } from "@faraday-academy/runtime/lms";
 import { Compare, Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
 
