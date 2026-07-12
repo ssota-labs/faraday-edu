@@ -75,9 +75,14 @@ packs/<name>/
 ```
 faraday pack list [--json]                     # 공식 팩 나열 (라이브 카탈로그)
 faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
+faraday pack remove <name> [--dir <lesson>] [--json]
 faraday pack validate <name|source> [--json]   # pack.json 계약 검증
-faraday pack remove <name>                     # (로드맵)
 ```
+
+**`pack remove`** — un-register(스킬 디렉터리 + AGENTS 포인터 + provenance 엔트리)는
+항상 안전하게 제거하고, deps/css는 **다른 설치된 팩이 공유하지 않는 것만** 되돌린다.
+복사된 소스/append(예: `src/lesson/srs/`)는 저자가 편집했을 수 있어 **삭제하지 않고
+보고만** 한다.
 
 **소스(`<name|source>`)** — `resolvePack()`이 해석해 로컬 팩 디렉터리로 만든 뒤
 기존 `installPack()`에 넘긴다:
@@ -157,9 +162,10 @@ faraday pack remove <name>                     # (로드맵)
     외부=`{name, source}`.
   - `validateManifest()` — zero-dep 구조 검증 (ajv 없이).
 - `generate.mjs` — 애드온 로직 제거, `--3d`/`--physics`/`--tutor`는 `installPack` 위임.
+  - `removePack()` — un-register(항상) + 비공유 deps/css 되돌리기; 복사 파일은 보고만.
 - `cli.mjs` — `faraday pack list [--json]` / `add <name|source> [--physics] [--dir] [--json]`
-  / `validate <name|source> [--json]`.
-- `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부(로컬) 소스 (총 24개 테스트 통과).
+  / `remove <name> [--dir] [--json]` / `validate <name|source> [--json]`.
+- `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부(로컬) + 제거·공유deps (총 26개 통과).
 
 **설치 위치** (예: `pack add srs`):
 ```

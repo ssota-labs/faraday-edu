@@ -445,3 +445,134 @@ export async function resolvePack(source, opts = {}) {
   const manifest = await readManifestAt(packDir);
   return { name: manifest.name ?? path.basename(packDir), packDir, source };
 }
+
+// ---------------------------------------------------------------------------
+// Removal: un-register a pack (skill + provenance, always safe) and best-effort
+// reverse its reversible runtime config (deps + css that no remaining pack still
+// needs). Copied source files and text appends are REPORTED, never deleted —
+// they may hold the author's own edits or be imported by the lesson.
+// ---------------------------------------------------------------------------
+
+/** The npm deps a pack contributes for a given installed variant (base + variant). */
+function packDeps(manifest, variant) {
+  const rt = manifest.runtime ?? {};
+  const names = new Set([...Object.keys(rt.dependencies ?? {}), ...Object.keys(rt.devDependencies ?? {})]);
+  if (variant && rt.variants?.[variant]) {
+    for (const g of ["dependencies", "devDependencies"]) for (const k of Object.keys(rt.variants[variant][g] ?? {})) names.add(k);
+  }
+  return names;
+}
+
+/** Remove the `> **Pack \`name\`:** …` pointer line installPack appended. */
+function stripPointer(text, name) {
+  const esc = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return text.replace(new RegExp(`\\n?>\\s*\\*\\*Pack \`${esc}\`:.*\\n`, "g"), "\n");
+}
+
+/** Resolve the manifest for a provenance entry (offline for official/local). null on failure. */
+async function manifestForEntry(baseName, entry, templateRoot) {
+  try {
+    const src = typeof entry === "object" ? entry.source : null;
+    if (!src || src === baseName) return (await readManifest(baseName, templateRoot)).manifest;
+    const resolved = await resolvePack(src, { templateRoot });
+    return await readManifestAt(resolved.packDir);
+  } catch {
+    return null;
+  }
+}
+
+const provEntryBase = (p) => (typeof p === "string" ? p : p.name).split(":")[0];
+const provEntryVariant = (p) => {
+  const t = typeof p === "string" ? p : p.name;
+  return t.includes(":") ? t.split(":")[1] : null;
+};
+
+/**
+ * Remove an installed pack from the lesson containing `fromDir`.
+ * @returns {Promise<{name, removedDeps, removedCss, leftFiles, leftAppends, manifestResolved, sharedUnknown}>}
+ */
+export async function removePack(name, opts) {
+  const { fromDir, templateRoot } = opts;
+  const lessonRoot = await findLessonRoot(fromDir);
+  if (!lessonRoot) {
+    throw Object.assign(new Error(`not inside a Faraday lesson (from ${fromDir})`), { exitCode: 2 });
+  }
+
+  const provPath = path.join(lessonRoot, ".faraday", "provenance.json");
+  let prov = {};
+  try {
+    prov = JSON.parse(await fs.readFile(provPath, "utf8"));
+  } catch {
+    /* no provenance */
+  }
+  const entries = prov.packs ?? [];
+  const match = entries.find((p) => provEntryBase(p) === name);
+  if (!match) {
+    throw Object.assign(new Error(`pack ${name} is not installed here (try \`faraday pack list\`)`), { exitCode: 2 });
+  }
+  const remaining = entries.filter((p) => provEntryBase(p) !== name);
+
+  // 1. un-register (always safe): skill dir + doc pointers + provenance entry
+  await fs.rm(path.join(lessonRoot, ".faraday", "packs", name), { recursive: true, force: true });
+  for (const doc of ["AGENTS.md", "docs/authoring.md"]) {
+    const dp = path.join(lessonRoot, doc);
+    try {
+      await fs.writeFile(dp, stripPointer(await fs.readFile(dp, "utf8"), name));
+    } catch {
+      /* doc absent */
+    }
+  }
+  prov.packs = remaining;
+  await fs.writeFile(provPath, JSON.stringify(prov, null, 2) + "\n").catch(() => {});
+
+  const report = { name, removedDeps: [], removedCss: [], leftFiles: [], leftAppends: [], manifestResolved: false, sharedUnknown: false };
+  const manifest = await manifestForEntry(name, match, templateRoot);
+  if (!manifest) return report; // couldn't resolve — un-register only
+  report.manifestResolved = true;
+
+  const ourDeps = packDeps(manifest, provEntryVariant(match));
+  const ourCss = new Set(manifest.runtime?.cssImports ?? []);
+
+  // 2. what's still needed by the remaining packs (only trustworthy if ALL resolve)
+  const stillDeps = new Set(), stillCss = new Set();
+  for (const p of remaining) {
+    const m = await manifestForEntry(provEntryBase(p), p, templateRoot);
+    if (!m) { report.sharedUnknown = true; continue; }
+    for (const d of packDeps(m, provEntryVariant(p))) stillDeps.add(d);
+    for (const c of m.runtime?.cssImports ?? []) stillCss.add(c);
+  }
+
+  // 3. reverse deps + css that nothing else needs (skip if a sibling was unresolvable)
+  if (!report.sharedUnknown) {
+    const pkgPath = path.join(lessonRoot, "package.json");
+    try {
+      const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
+      for (const g of ["dependencies", "devDependencies"]) {
+        if (!pkg[g]) continue;
+        for (const d of Object.keys(pkg[g])) {
+          if (ourDeps.has(d) && !stillDeps.has(d)) { delete pkg[g][d]; report.removedDeps.push(d); }
+        }
+      }
+      await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+    } catch {
+      /* no package.json */
+    }
+    const appCss = path.join(lessonRoot, "src", "app.css");
+    try {
+      let css = await fs.readFile(appCss, "utf8");
+      for (const imp of ourCss) {
+        if (stillCss.has(imp)) continue;
+        const line = `@import "${imp}";`;
+        if (css.includes(line)) { css = css.replace(line + "\n", "").replace(line, ""); report.removedCss.push(imp); }
+      }
+      await fs.writeFile(appCss, css);
+    } catch {
+      /* no app.css */
+    }
+  }
+
+  // 4. report copied files + appends left in place (never auto-deleted)
+  report.leftFiles = (manifest.runtime?.copy ?? []).map((c) => c.to);
+  report.leftAppends = (manifest.runtime?.appends ?? []).map((a) => a.to);
+  return report;
+}

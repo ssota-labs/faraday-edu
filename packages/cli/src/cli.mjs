@@ -7,7 +7,7 @@ import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
-import { listPacks, installPack, resolvePack, readManifestAt, validateManifest } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, readManifestAt, validateManifest } from "./pack.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
@@ -25,6 +25,10 @@ Usage:
                                         runtime deps + skill guide, both at once.
                                         <source> = official name · ./path ·
                                         owner/repo[/sub] (github) · npm:<spec>
+  faraday pack remove <name> [--dir <lesson>] [--json]
+                                        un-install a pack: drop its skill guide +
+                                        pointer + provenance, reverse deps/css not
+                                        shared by another pack (copied files kept)
   faraday pack validate <name|source> [--json]
                                         check a pack's pack.json against the contract
   faraday help
@@ -194,8 +198,9 @@ async function runPack(argv, context) {
   const [sub, ...rest] = argv;
   if (sub === "list") return await runPackList(rest, context);
   if (sub === "add") return await runPackAdd(rest, context);
+  if (sub === "remove") return await runPackRemove(rest, context);
   if (sub === "validate") return await runPackValidate(rest, context);
-  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, validate)`);
+  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, remove, validate)`);
   e.exitCode = 2;
   throw e;
 }
@@ -296,6 +301,36 @@ async function runPackAdd(argv, context) {
       : "") +
     "\n",
   );
+}
+
+async function runPackRemove(argv, context) {
+  let name, dir, json = false;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--dir") dir = argv[++i];
+    else if (arg === "--json") json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (name === undefined) name = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!name) { const e = new Error("pack remove requires a <name>"); e.exitCode = 2; throw e; }
+  if (dir !== undefined && !dir) { const e = new Error("--dir requires a value"); e.exitCode = 2; throw e; }
+
+  const fromDir = dir ? path.resolve(context.cwd, dir) : context.cwd;
+  const r = await removePack(name, { fromDir });
+
+  if (json) {
+    context.stdout(JSON.stringify({ ok: true, command: "pack remove", ...r }, null, 2) + "\n");
+    return;
+  }
+  let out = `\n  Removed pack ${r.name} — unregistered its skill guide + AGENTS.md pointer + provenance.\n`;
+  if (r.removedDeps.length) out += `  Removed deps: ${r.removedDeps.join(", ")} — run \`pnpm install\` to prune.\n`;
+  if (r.removedCss.length) out += `  Removed css imports: ${r.removedCss.join(", ")}\n`;
+  if (!r.manifestResolved) out += `  (couldn't resolve the pack manifest — runtime deps/files left untouched.)\n`;
+  else if (r.sharedUnknown) out += `  (a sibling pack couldn't be resolved — left deps/css untouched to be safe.)\n`;
+  const left = [...r.leftFiles, ...r.leftAppends];
+  if (left.length) out += `  Left in place (may contain your edits — delete manually if unwanted): ${left.join(", ")}\n`;
+  context.stdout(out + "\n");
 }
 
 async function runPackValidate(argv, context) {
