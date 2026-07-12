@@ -25,6 +25,25 @@ preserves their pedagogy, examples, and voice — and saves enormous time.**
 Treat their material as the source of truth for *what* to teach and *in what order*;
 your job is to make it interactive, not to rewrite their curriculum unasked.
 
+## 1b. Fill gaps with research — deliberately, not reflexively
+
+Their material won't always be complete. Web-search to fill a gap **only when** one
+of these holds; otherwise build from what they gave you:
+
+- **a real gap** — the material omits a fact, definition, or worked value a lesson
+  needs, and you can't derive it;
+- **currency** — the topic moves (a current figure, a recent result) and a stale
+  value would mislead;
+- **accuracy stakes** — the domain punishes wrong facts (medicine, law, safety,
+  finance), so a claim must be grounded in an authority, not paraphrased from memory.
+
+Scale the depth to the stakes: for high-stakes domains, cite the source and
+cross-check a second one; for low-stakes, a light lookup is enough. **Anything you
+couldn't verify, mark as unverified** in the node's plan brief (see
+[orchestration.md](orchestration.md)) so it's checked before ship — this ties into
+the quality bar's "content is correct" gate. Don't let research balloon the scope:
+you're filling holes in *their* curriculum, not writing a new one.
+
 ## 2. Ask the few questions that shape everything
 
 Ask only what you can't infer from their material, and keep it to a handful:

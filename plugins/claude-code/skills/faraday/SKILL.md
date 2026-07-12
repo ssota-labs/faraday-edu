@@ -24,6 +24,7 @@ lesson. Work with the creator: propose, show, ask, adjust.
 | **Discover** | Take in the creator's material (PDF/PPT/MD/notes) or **ask for it**; ask the few questions that shape everything (audience, level, goal, scope). **Audience is a gate** — pin who the learner is (or state the assumption), then teach *their* way. | [references/discovery.md](references/discovery.md) · `audience` pack (`faraday pack show audience`) |
 | **Curriculum** | Decompose the subject into units, sequence by dependency, split/merge, and propose a **roadmap** for sign-off before building. | [references/curriculum.md](references/curriculum.md) |
 | **Learning path** | Turn the roadmap into a progression — levels, unlock gates, mastery checks, continuity — so learners keep going. | [references/learning-design.md](references/learning-design.md) |
+| **Plan & Execute** | For a multi-lesson curriculum (a long-running task): persist the signed-off roadmap to `.faraday/plan/`, then build lesson-by-lesson with an isolated sub-agent per node, resuming from the plan on any reset. Scaffold (`init`/`new`) **first** so design can read packs. | [references/orchestration.md](references/orchestration.md) |
 | **Interactive** | For each concept, design the *interaction* that reveals it (what the learner manipulates, what must visibly change) before touching the API. | [references/interactive-design.md](references/interactive-design.md) |
 | **Assess** | Pick each check's FORM by the outcome verb (recognize→MCQ, compute→numeric input, predict→sketch, do→mission) and place them in the concept→sim→check flow. | [references/assessment.md](references/assessment.md) |
 | **Visual** | Make it clear and polished within the theme system — hierarchy, restraint, mood. | [references/design.md](references/design.md) |
@@ -77,6 +78,11 @@ dir, next steps). Exit codes: `0` ok · `1` check failed · `2` usage · `4` env
    deps unless `--skip-install`), then `cd` in. Use the decision guide below to know
    which packs the subject actually uses; before shipping, `faraday pack remove <name>`
    the ones it doesn't (especially the heavy `three`/`tutor` runtimes).
+   **Starting a whole course/repo?** Use `faraday init <first-app>` — it drops a repo
+   `AGENTS.md` and scaffolds the first app at `apps/<first-app>/`; add more apps later
+   with `faraday new <name>` from the repo root. Each app is one independent project =
+   one curriculum; scaffolding first is what makes the design-time packs available
+   (see [references/orchestration.md](references/orchestration.md)).
 2. **Read the in-project guide** — the scaffold ships `AGENTS.md` and
    `docs/authoring.md`; the block API also lives in [references/blocks.md](references/blocks.md).
    Start from a `docs/examples/*.tsx` when one fits (stepped, continuous, course,
@@ -171,6 +177,7 @@ Design phase:
 - [references/assessment.md](references/assessment.md) — the five check forms (MCQ / numeric / sketch / mission / tutor-graded), matched to outcome verbs + audience.
 - **`lecture-design` pack** (default; `faraday pack show lecture-design` or `.faraday/packs/lecture-design/`) — the evidence-based default methodology + named methods (creator's own overrides).
 - [references/curriculum.md](references/curriculum.md) — decompose a subject → sequenced roadmap.
+- [references/orchestration.md](references/orchestration.md) — build a whole curriculum as a long-running task: persist the plan, one sub-agent per lesson, resume.
 - [references/learning-design.md](references/learning-design.md) — levels, unlock gates, mastery, continuity.
 - [references/interactive-design.md](references/interactive-design.md) — design the interaction that reveals a concept.
 - [references/design.md](references/design.md) — visual/UX design within the theme system.

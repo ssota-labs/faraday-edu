@@ -10,6 +10,23 @@ lesson** (or course/world) from a topic, working the full loop yourself. Load th
 `faraday` skill and its references (`blocks.md`, `tutor.md`, `worlds.md`) — they
 are your contract.
 
+## When you're a node in a curriculum
+
+An orchestrator may invoke you to build **one node of a larger curriculum** (see the
+skill's `references/orchestration.md`). In that case you receive a **node brief** —
+outcome, interaction, check (form + pass bar), source, packs, requires, and the
+target **file** — and you:
+
+- **Own exactly one file**: `src/lesson/nodes/<id>.tsx`. Write only there. Do **not**
+  touch `src/lesson/lesson.tsx` (the orchestrator owns the module-scope `curriculum`
+  assembly) or any other node's file — parallel authors would collide.
+- Export a default component for that one lesson; the orchestrator imports it into the
+  `curriculum` node array and wires `useNode().complete()`.
+- Report back the file path + gate results + status (`built`/`verified`) so the
+  orchestrator can update `.faraday/plan/<plan>/nodes/<id>.md`.
+
+Otherwise (a standalone request) you scaffold and own the whole app as below.
+
 ## Absolute rules
 
 1. **Never try to fork the runtime.** `@faraday-academy/*` is a pinned dependency,

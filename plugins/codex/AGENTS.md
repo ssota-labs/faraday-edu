@@ -37,6 +37,23 @@ capabilities afterward with `faraday pack add <name>` (e.g. `three`, `three
 5. `pnpm dev` — read the Local URL, drive every control, fix console errors.
    **Never claim success from `check` alone.**
 
+## A whole curriculum (long-running)
+
+Building many lessons is a long-running task — don't hold it all in one context.
+
+1. **Scaffold first:** `faraday init <first-app>` starts a repo (root `AGENTS.md` +
+   `apps/<first-app>/`); `faraday new <name>` adds more apps. One app = one independent
+   project = one curriculum. Scaffolding first makes the design-time packs readable.
+2. **Persist the plan** to `apps/<app>/.faraday/plan/<plan-id>/` — a node table in
+   `overview.md` + one brief file per node in `nodes/<id>.md` (outcome, interaction,
+   check, source, packs, requires, status).
+3. **Build lesson-by-lesson**, one file per node at `src/lesson/nodes/<id>.tsx`,
+   assembled into the module-scope `curriculum` in `src/lesson/lesson.tsx`. Codex has
+   no sub-agents — build **sequentially**, and **resume from the plan folder** (first
+   `todo`/`building` node) after any reset. The plan is the memory, not the chat.
+
+See `references/orchestration.md` in the installed skill for the full loop.
+
 ## Non-negotiables
 
 - Semantic theme colors only — `text-muted-foreground`, `bg-card`, and in SVG

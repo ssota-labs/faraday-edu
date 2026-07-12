@@ -48,6 +48,16 @@ Don't silently build 12 lessons off an outline in your head. Make the roadmap
 Iterate on the *structure* with the creator here — reorder, split, merge, rename —
 while it's still cheap. Only then build the real lessons.
 
+## Persist the plan, then build lesson-by-lesson
+
+A multi-lesson curriculum is a **long-running task** — don't hold it all in one
+context. Once the roadmap is signed off, write it to `.faraday/plan/<plan-id>/`
+(a node table + one brief file per node) and build the lessons against that
+persisted plan, one clean sub-agent per node, resuming from the plan on any reset.
+This — plan persistence, per-lesson isolation, the sub-agent loop — is
+[orchestration.md](orchestration.md). (Scaffolding first is a prerequisite, since
+design reads packs; see the order there.)
+
 ## Roadmap layout (when using `map2dPack`)
 
 Nodes are placed by `meta.{x,y}` (0..100, a fixed-aspect canvas). Arrange them to

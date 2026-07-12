@@ -1,4 +1,19 @@
-# Courses, worlds, 3D, LMS
+# Curriculum presentations (courses, worlds), 3D, LMS
+
+**The base concept is the *curriculum*** — a set of lessons, optionally with a
+prerequisite graph. How you *present* it is a separate, swappable choice:
+
+- **`<Course>`** — a linear textbook (chapters, prev/next). The simplest presentation.
+- **`<CurriculumHost>` + a presentation pack** — a graph with unlock progression. The
+  pack is the *shape*: `linearPack` (document-style list), `map2dPack` (2D map),
+  `world3dPack` (3D constellation). **"World" is just the immersive (game-screen)
+  family of presentations — not a synonym for the curriculum.**
+
+Two things are both called "pack" — keep them apart: a **presentation pack**
+(`map2dPack`, a runtime `WorldPack` adapter object you pass as a prop) is *not* a **CLI
+pack** (`faraday pack add three`, a capability installed into `.faraday/packs/`).
+`linearPack`/`map2dPack` ship in the base runtime; `world3dPack` rides along with the
+`three` CLI pack.
 
 ## `<Course>` — linear textbook
 

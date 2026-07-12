@@ -6,7 +6,7 @@ rebuilding lessons is not. Produce a roadmap the creator signs off on, then buil
 
 If the creator brought their own method or sequence, it leads. Otherwise this method
 implements the default's "design backward" and "prerequisite graph" moves — see
-[pedagogy.md](pedagogy.md) for the evidence.
+the `lecture-design` pack for the evidence.
 
 ## Method
 
@@ -18,7 +18,7 @@ implements the default's "design backward" and "prerequisite graph" moves — se
    list the atomic ideas — one "aha" each. Err toward too many; you'll merge later.
    For complex integrated skills (projects, diagnosis, troubleshooting), consider
    structuring around whole tasks ordered simple→complex instead of a topic list
-   (see pedagogy.md on 4C/ID).
+   (see the lecture-design pack on 4C/ID).
 2. **Map dependencies.** For each idea, ask "what must the learner understand first?"
    These prerequisite edges are the backbone of the roadmap. This is the highest-value
    step — it's what a flat table of contents lacks.
@@ -47,6 +47,16 @@ Don't silently build 12 lessons off an outline in your head. Make the roadmap
 
 Iterate on the *structure* with the creator here — reorder, split, merge, rename —
 while it's still cheap. Only then build the real lessons.
+
+## Persist the plan, then build lesson-by-lesson
+
+A multi-lesson curriculum is a **long-running task** — don't hold it all in one
+context. Once the roadmap is signed off, write it to `.faraday/plan/<plan-id>/`
+(a node table + one brief file per node) and build the lessons against that
+persisted plan, one clean sub-agent per node, resuming from the plan on any reset.
+This — plan persistence, per-lesson isolation, the sub-agent loop — is
+[orchestration.md](orchestration.md). (Scaffolding first is a prerequisite, since
+design reads packs; see the order there.)
 
 ## Roadmap layout (when using `map2dPack`)
 

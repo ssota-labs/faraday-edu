@@ -25,6 +25,25 @@ preserves their pedagogy, examples, and voice — and saves enormous time.**
 Treat their material as the source of truth for *what* to teach and *in what order*;
 your job is to make it interactive, not to rewrite their curriculum unasked.
 
+## 1b. Fill gaps with research — deliberately, not reflexively
+
+Their material won't always be complete. Web-search to fill a gap **only when** one
+of these holds; otherwise build from what they gave you:
+
+- **a real gap** — the material omits a fact, definition, or worked value a lesson
+  needs, and you can't derive it;
+- **currency** — the topic moves (a current figure, a recent result) and a stale
+  value would mislead;
+- **accuracy stakes** — the domain punishes wrong facts (medicine, law, safety,
+  finance), so a claim must be grounded in an authority, not paraphrased from memory.
+
+Scale the depth to the stakes: for high-stakes domains, cite the source and
+cross-check a second one; for low-stakes, a light lookup is enough. **Anything you
+couldn't verify, mark as unverified** in the node's plan brief (see
+[orchestration.md](orchestration.md)) so it's checked before ship — this ties into
+the quality bar's "content is correct" gate. Don't let research balloon the scope:
+you're filling holes in *their* curriculum, not writing a new one.
+
 ## 2. Ask the few questions that shape everything
 
 Ask only what you can't infer from their material, and keep it to a handful:
@@ -32,7 +51,7 @@ Ask only what you can't infer from their material, and keep it to a handful:
 - **Audience & level** — who is this for, and what do they already know? **This one
   is a gate, not optional**: a 9-year-old, a high-schooler, an undergrad, a curious
   adult, and a working professional get the same concept through *different moves*
-  (one default methodology per audience in [audience.md](audience.md)). If the
+  (one default methodology per audience in the `audience` pack). If the
   creator can't say, state the assumption you're making in the brief and let them
   veto it — never design with the audience silently unpinned.
 - **Goal** — what should the learner be able to *do* after? (an outcome, not "know about X")
@@ -41,7 +60,7 @@ Ask only what you can't infer from their material, and keep it to a handful:
 - **Their methodology** — do they already teach this with a method (their sequence,
   their assessment style, a framework their school uses)? **If yes, their method
   leads** — capture it. If no, you'll apply the evidence-based default in
-  [pedagogy.md](pedagogy.md).
+  the `lecture-design` pack.
 - **Constraints** — must-cover items, examples of theirs to keep, time budget, any
   brand/voice.
 
@@ -58,6 +77,6 @@ Before building, restate what you heard as a short brief and confirm it:
 One or two lines. A 10-second confirmation here prevents building the wrong thing.
 Then move to the **Curriculum** phase (if multi-lesson) or straight to
 **Interactive** design (single lesson). This intake feeds:
-[audience.md](audience.md) (how to hand *this* learner a concept),
+the `audience` pack (how to hand *this* learner a concept),
 [curriculum.md](curriculum.md), [learning-design.md](learning-design.md),
 [interactive-design.md](interactive-design.md).
