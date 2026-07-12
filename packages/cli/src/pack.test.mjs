@@ -7,7 +7,7 @@ import path from "node:path";
 import os from "node:os";
 import { generateLesson } from "./generate.mjs";
 import { runFaradayCli } from "./cli.mjs";
-import { listPacks, installPack, removePack, resolvePack, validateManifest, readManifestAt, readPackSkill, defaultPackNames } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, validateManifest, validatePackDir, readManifestAt, readPackSkill, defaultPackNames, scaffoldPack } from "./pack.mjs";
 
 /** Run the CLI capturing stdout/stderr (throws on non-zero). setExitCode is
  *  captured locally so a rejection test doesn't poison the runner's exit code. */
@@ -377,4 +377,183 @@ test("installPack from an external (local) source records {name, source} in prov
   const entry = prov.packs.find((p) => typeof p === "object" && p.name === "vocab-pack");
   assert.ok(entry, "external pack recorded as an object");
   assert.equal(entry.source, packDir);
+});
+
+test("pack new scaffolds each archetype with a folder skill + valid manifest", async () => {
+  for (const kind of ["skill", "copy", "runtime"]) {
+    const base = await tmp();
+    const r = await scaffoldPack("demo-pack", { cwd: base, kind });
+    assert.equal(r.kind, kind);
+    assert.equal(r.skill, "folder", "default skill is a folder");
+    // folder skill: an index that routes to sub-guides
+    for (const f of ["pack.json", "skill/SKILL.md", "skill/using.md", "skill/pedagogy.md", "quality.md", "examples/demo-pack.tsx"]) {
+      assert.ok(await exists(path.join(r.packDir, f)), `missing ${f}`);
+    }
+    assert.equal(
+      await exists(path.join(r.packDir, "runtime/demo-pack/index.tsx")),
+      kind === "copy",
+      "copy archetype ships an author-editable component; others don't",
+    );
+    const manifest = await readManifestAt(r.packDir);
+    assert.deepEqual(validateManifest(manifest), [], `${kind} manifest invalid`);
+    assert.equal(manifest.default, true, "scaffolded packs are default (batteries-included)");
+    assert.equal(manifest.skill?.reference, "skill", "skill points at the folder");
+    assert.equal(manifest.skill?.entry, "SKILL.md", "folder skill declares an entry index");
+  }
+});
+
+test("pack new --flat produces a single-file skill", async () => {
+  const base = await tmp();
+  const r = await scaffoldPack("tiny", { cwd: base, flat: true });
+  assert.equal(r.skill, "flat");
+  assert.ok(await exists(path.join(r.packDir, "skill/pack.md")), "single-file skill");
+  assert.equal(await exists(path.join(r.packDir, "skill/SKILL.md")), false, "no folder index");
+  const manifest = await readManifestAt(r.packDir);
+  assert.equal(manifest.skill?.reference, "skill/pack.md");
+  assert.equal(manifest.skill?.entry, undefined, "flat skill has no entry");
+  assert.deepEqual(validateManifest(manifest), []);
+});
+
+test("pack new rejects a bad name, an unknown kind, and a non-empty target", async () => {
+  const base = await tmp();
+  await assert.rejects(() => scaffoldPack("Bad Name", { cwd: base }), /kebab-case/);
+  await assert.rejects(() => scaffoldPack("ok", { cwd: base, kind: "bogus" }), /unknown --kind/);
+  await scaffoldPack("taken", { cwd: base });
+  await assert.rejects(() => scaffoldPack("taken", { cwd: base }), /not empty/);
+  await scaffoldPack("taken", { cwd: base, overwrite: true }); // --overwrite allows it
+});
+
+test("a scaffolded pack round-trips: pack new -> pack add into a lesson", async () => {
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("round-trip", { cwd: base, kind: "copy" });
+  const lesson = await scaffold("Round Trip Host");
+  await installPack(null, { fromDir: lesson, packDir, source: packDir });
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/round-trip/SKILL.md")), "folder skill index installed");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/round-trip/using.md")), "folder skill sub-guide installed");
+  assert.ok(await exists(path.join(lesson, "src/lesson/round-trip/index.tsx")), "runtime component copied");
+  const prov = JSON.parse(await read(lesson, ".faraday/provenance.json"));
+  assert.ok(prov.packs.some((p) => (typeof p === "string" ? p : p.name) === "round-trip"), "recorded in provenance");
+});
+
+test("validatePackDir catches on-disk breakage that shape-validation misses", async () => {
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("vp", { cwd: base });
+
+  // fresh scaffold: structurally valid, but warns about the unfilled TODOs
+  let r = await validatePackDir(packDir);
+  assert.deepEqual(r.errors, [], "fresh scaffold has no errors");
+  assert.ok(r.warnings.some((w) => /TODO/.test(w)), "unfilled scaffold is flagged");
+
+  // dead skill.entry -> error (shape-validation would pass this)
+  const manifestPath = path.join(packDir, "pack.json");
+  const m = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+  assert.deepEqual(validateManifest({ ...m, skill: { ...m.skill, entry: "GONE.md" } }), [], "shape check alone accepts a dead entry");
+  await fs.writeFile(manifestPath, JSON.stringify({ ...m, skill: { ...m.skill, entry: "GONE.md" } }, null, 2));
+  r = await validatePackDir(packDir);
+  assert.ok(r.errors.some((e) => /entry .*GONE\.md.* not found/.test(e)), "dead entry is an error");
+
+  // missing quality file -> error
+  await fs.writeFile(manifestPath, JSON.stringify(m, null, 2)); // restore
+  await fs.rm(path.join(packDir, "quality.md"));
+  r = await validatePackDir(packDir);
+  assert.ok(r.errors.some((e) => /quality .*does not exist/.test(e)), "missing quality file is an error");
+});
+
+test("validatePackDir warns on a copy source that installs nothing", async () => {
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("cp", { cwd: base, kind: "copy" });
+  await fs.rm(path.join(packDir, "runtime"), { recursive: true, force: true });
+  const r = await validatePackDir(packDir);
+  assert.deepEqual(r.errors, [], "a missing copy source is not fatal (installer skips it)");
+  assert.ok(r.warnings.some((w) => /runtime\/cp.*install nothing/.test(w)), "but it is warned");
+});
+
+test("every shipped official pack passes deep validation", async () => {
+  for (const p of await listPacks()) {
+    const { errors } = await validatePackDir((await resolvePack(p.name)).packDir);
+    assert.deepEqual(errors, [], `${p.name} has on-disk errors: ${errors.join("; ")}`);
+  }
+});
+
+// CLI-path tests: drive runFaradayCli end-to-end so a missing import / broken wiring
+// in runPack* is caught (unit tests that call installPack/validatePackDir directly
+// would not have caught the `validateManifest is not defined` regression in pack add).
+test("CLI: faraday pack add installs an official pack into a lesson", async () => {
+  const lesson = await scaffold("Cli Add Host");
+  const r = await cli(["pack", "add", "srs", "--dir", lesson]);
+  assert.equal(r.code, 0, `pack add failed: ${r.err}`);
+  assert.ok(await exists(path.join(lesson, "src/lesson/srs/Flashcards.tsx")), "runtime half installed");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/srs/pack.md")), "skill half installed");
+});
+
+test("CLI: faraday pack validate reports OK for an official pack, errors for a broken one", async () => {
+  const ok = await cli(["pack", "validate", "exam"]);
+  assert.equal(ok.code, 0);
+  assert.match(ok.out, /OK/);
+
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("brk", { cwd: base });
+  await fs.rm(path.join(packDir, "quality.md")); // referenced but now missing
+  // expected failure: drive runFaradayCli directly (throwOnError off) to capture exit code + stderr
+  let code = 0, err = "";
+  await runFaradayCli(["pack", "validate", packDir], {
+    cwd: process.cwd(), stdout: () => {}, stderr: (s) => (err += s), setExitCode: (c) => (code = c),
+  });
+  assert.equal(code, 2, "a pack missing a referenced file must fail");
+  assert.match(err, /quality .*does not exist/);
+});
+
+test("CLI: faraday pack new then add round-trips through the CLI", async () => {
+  const base = await tmp();
+  const newRes = await cli(["pack", "new", "cli-cap", "--kind", "copy", "--at", path.join(base, "cli-cap"), "--json"]);
+  assert.equal(newRes.code, 0);
+  const lesson = await scaffold("Cli New Host");
+  const addRes = await cli(["pack", "add", path.join(base, "cli-cap"), "--dir", lesson]);
+  assert.equal(addRes.code, 0, `pack add failed: ${addRes.err}`);
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/cli-cap/SKILL.md")), "folder skill installed via CLI");
+});
+
+test("installPack installs a pack's required packs first (composition)", async () => {
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("needs-srs", { cwd: base });
+  const m = JSON.parse(await read(packDir, "pack.json"));
+  m.requires = ["srs"]; // depend on the official srs pack
+  await fs.writeFile(path.join(packDir, "pack.json"), JSON.stringify(m, null, 2));
+
+  // a minimal lesson WITHOUT default packs, so srs is genuinely not present yet
+  const lessonBase = await tmp();
+  const lesson = path.join(lessonBase, "l");
+  await generateLesson({ targetDir: lesson, name: "Compose Host", noDefaults: true, uuid: () => "id" });
+  assert.equal(await exists(path.join(lesson, "src/lesson/srs/Flashcards.tsx")), false, "srs not pre-installed");
+
+  const r = await installPack(null, { fromDir: lesson, packDir, source: packDir });
+  assert.deepEqual(r.installedRequires, ["srs"], "required pack installed first");
+  assert.ok(await exists(path.join(lesson, "src/lesson/srs/Flashcards.tsx")), "dependency runtime pulled in");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/srs/pack.md")), "dependency skill pulled in");
+  const prov = JSON.parse(await read(lesson, ".faraday/provenance.json"));
+  assert.ok(prov.packs.includes("srs"), "dependency recorded in provenance");
+});
+
+test("installPack requires are cycle-guarded (mutually-requiring packs terminate)", async () => {
+  const base = await tmp();
+  const a = await scaffoldPack("cyc-a", { cwd: base, dir: path.join(base, "cyc-a") });
+  const b = await scaffoldPack("cyc-b", { cwd: base, dir: path.join(base, "cyc-b") });
+  const setReq = async (dir, req) => {
+    const p = path.join(dir, "pack.json");
+    const mm = JSON.parse(await fs.readFile(p, "utf8"));
+    mm.requires = [req];
+    await fs.writeFile(p, JSON.stringify(mm, null, 2));
+  };
+  await setReq(a.packDir, b.packDir); // a → b
+  await setReq(b.packDir, a.packDir); // b → a  (cycle)
+
+  const lessonBase = await tmp();
+  const lesson = path.join(lessonBase, "l");
+  await generateLesson({ targetDir: lesson, name: "Cycle Host", noDefaults: true, uuid: () => "id" });
+
+  // must terminate and install both exactly once
+  const r = await installPack(null, { fromDir: lesson, packDir: a.packDir, source: a.packDir });
+  assert.deepEqual(r.installedRequires, ["cyc-b"], "a installs b once");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/cyc-a/SKILL.md")), "a installed");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/cyc-b/SKILL.md")), "b installed");
 });

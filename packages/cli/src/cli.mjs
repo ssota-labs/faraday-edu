@@ -7,7 +7,7 @@ import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps, exists } from "./doctor.mjs";
-import { listPacks, installPack, removePack, resolvePack, readManifestAt, validateManifest, readPackSkill } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, readManifestAt, validatePackDir, readPackSkill, scaffoldPack } from "./pack.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
@@ -42,15 +42,21 @@ Usage:
                                         pass a <file> for one section, --all for all
   faraday pack validate <name|source> [--json]
                                         check a pack's pack.json against the contract
+  faraday pack new <name> [--kind skill|copy|runtime] [--flat] [--at <dir>] [--overwrite] [--json]
+                                        scaffold a new pack folder (for pack authors):
+                                        pack.json + a folder skill (SKILL.md index +
+                                        sub-guides) + quality.md + examples/. --flat
+                                        makes a single-file skill for tiny packs.
   faraday help
 
 The generated lesson depends on the versioned @faraday-academy/runtime package
 (pinned exactly) instead of vendoring it. Author your lesson in src/lesson/.
 
 Capabilities (3D, physics, the AI tutor, flashcards, exams, …) are **module packs**,
-not flags: scaffold with \`faraday new\`, then \`faraday pack add <name>\` for what the
-lesson needs (e.g. \`pack add three --physics\`, \`pack add tutor\`). \`pack list\` shows
-them all. \`--no-defaults\` skips the auto-installed pedagogy/audience packs.
+not flags. \`faraday new\` is batteries-included — it installs all nine, so every
+capability is on hand; \`--no-defaults\` scaffolds a minimal lesson and \`pack remove\`
+trims what a lesson doesn't need. \`pack add\` installs a third-party pack or re-adds a
+removed one; \`pack new\` scaffolds a pack of your own.
 
 Exit codes: 0 ok · 1 check failed · 2 usage error · 3 doctor/structure failed · 4 environment error`;
 
@@ -309,7 +315,8 @@ async function runPack(argv, context) {
   if (sub === "remove") return await runPackRemove(rest, context);
   if (sub === "show") return await runPackShow(rest, context);
   if (sub === "validate") return await runPackValidate(rest, context);
-  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, remove, show, validate)`);
+  if (sub === "new") return await runPackNew(rest, context);
+  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, remove, show, validate, new)`);
   e.exitCode = 2;
   throw e;
 }
@@ -328,7 +335,7 @@ async function runPackList(argv, context) {
         displayName: p.displayName ?? "",
         description: p.description ?? "",
         variants: Object.keys(p.runtime?.variants ?? {}),
-        aliasFlags: p.aliasFlags ?? [],
+        default: p.default ?? false,
       })),
       null,
       2,
@@ -371,12 +378,12 @@ async function runPackAdd(argv, context) {
   const resolved = await resolvePack(opts.source, {
     log: opts.json ? undefined : (m) => context.stderr(`  ${m}\n`),
   });
-  // 2. validate its manifest before touching the lesson
-  const manifest = await readManifestAt(resolved.packDir);
-  const problems = validateManifest(manifest);
-  if (problems.length) {
-    for (const p of problems) context.stderr(`  invalid pack.json: ${p}\n`);
-    const e = new Error(`pack ${resolved.name} has an invalid manifest`);
+  // 2. validate the pack (manifest + on-disk) before touching the lesson
+  const { errors, warnings } = await validatePackDir(resolved.packDir);
+  if (!opts.json) for (const w of warnings) context.stderr(`  warning: ${w}\n`);
+  if (errors.length) {
+    for (const p of errors) context.stderr(`  invalid pack: ${p}\n`);
+    const e = new Error(`pack ${resolved.name} has ${errors.length} problem(s)`);
     e.exitCode = 2;
     throw e;
   }
@@ -394,6 +401,7 @@ async function runPackAdd(argv, context) {
       ok: true, command: "pack add", pack: result.packName, source: result.source,
       variant: result.variant, dir: result.lessonRoot,
       addedDeps: result.addedDeps, installedRefs: result.installedRefs,
+      installedRequires: result.installedRequires ?? [],
       nextSteps: result.addedDeps.length ? ["pnpm install"] : [],
     }, null, 2) + "\n");
     return;
@@ -402,6 +410,9 @@ async function runPackAdd(argv, context) {
   const from = result.source && result.source !== result.packName ? ` (from ${result.source})` : "";
   context.stdout(
     `\n  Added pack ${label}${from} to ${rel}/\n\n` +
+    (result.installedRequires?.length
+      ? `  Also installed required packs: ${result.installedRequires.join(", ")}\n`
+      : "") +
     (result.addedDeps.length
       ? `  Pinned: ${result.addedDeps.join(", ")}\n  Run \`pnpm install\` to fetch them.\n`
       : `  Dependencies already present.\n`) +
@@ -511,19 +522,70 @@ async function runPackValidate(argv, context) {
   if (!source) { const e = new Error("pack validate requires a <name|source>"); e.exitCode = 2; throw e; }
 
   const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
-  const manifest = await readManifestAt(resolved.packDir);
-  const problems = validateManifest(manifest);
+  const { errors, warnings } = await validatePackDir(resolved.packDir);
   if (json) {
-    context.stdout(JSON.stringify({ ok: problems.length === 0, pack: resolved.name, problems }, null, 2) + "\n");
+    context.stdout(JSON.stringify({ ok: errors.length === 0, pack: resolved.name, errors, warnings }, null, 2) + "\n");
   }
-  if (problems.length === 0) {
-    if (!json) context.stdout(`faraday pack validate: ${resolved.name} — manifest OK\n`);
+  if (errors.length === 0) {
+    if (!json) {
+      const note = warnings.length ? ` (${warnings.length} warning${warnings.length > 1 ? "s" : ""})` : "";
+      context.stdout(`faraday pack validate: ${resolved.name} — OK${note}\n`);
+      for (const w of warnings) context.stderr(`  warning: ${w}\n`);
+    }
     return;
   }
-  if (!json) for (const p of problems) context.stderr(`  ${p}\n`);
-  const e = new Error(`${problems.length} manifest problem(s) in ${resolved.name}`);
+  if (!json) {
+    for (const p of errors) context.stderr(`  error: ${p}\n`);
+    for (const w of warnings) context.stderr(`  warning: ${w}\n`);
+  }
+  const e = new Error(`${errors.length} problem(s) in ${resolved.name}`);
   e.exitCode = 2;
   throw e;
+}
+
+function parsePackNewArgs(argv) {
+  const opts = { name: undefined, dir: undefined, kind: "skill", flat: false, overwrite: false, json: false };
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--at") opts.dir = argv[++i];
+    else if (arg === "--kind") opts.kind = argv[++i];
+    else if (arg === "--flat") opts.flat = true;
+    else if (arg === "--overwrite") opts.overwrite = true;
+    else if (arg === "--json") opts.json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (opts.name === undefined) opts.name = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!opts.name) { const e = new Error("pack new requires a <name>"); e.exitCode = 2; throw e; }
+  if (opts.dir !== undefined && !opts.dir) { const e = new Error("--at requires a value"); e.exitCode = 2; throw e; }
+  if (!opts.kind) { const e = new Error("--kind requires a value (skill, copy, runtime)"); e.exitCode = 2; throw e; }
+  return opts;
+}
+
+async function runPackNew(argv, context) {
+  const opts = parsePackNewArgs(argv);
+  const result = await scaffoldPack(opts.name, {
+    cwd: context.cwd,
+    dir: opts.dir,
+    kind: opts.kind,
+    flat: opts.flat,
+    overwrite: opts.overwrite,
+  });
+  const rel = path.relative(context.cwd, result.packDir) || ".";
+  if (opts.json) {
+    context.stdout(JSON.stringify({ ok: true, name: result.name, kind: result.kind, skill: result.skill, dir: rel, files: result.files }, null, 2) + "\n");
+    return;
+  }
+  context.stdout(`Created ${opts.kind} pack "${result.name}" (${result.skill} skill) in ${rel}/\n`);
+  for (const f of result.files) context.stdout(`  ${f}\n`);
+  const skillFiles = result.skill === "folder" ? "skill/SKILL.md + its sub-guides" : "skill/pack.md";
+  context.stdout(
+    `\nNext:\n` +
+    `  1. Fill the TODOs in pack.json, ${skillFiles}, quality.md.\n` +
+    `  2. Validate: faraday pack validate ${rel}   (checks the files exist + no leftover TODOs)\n` +
+    `  3. Try it in a lesson: faraday pack add ${rel} --dir <lesson>\n` +
+    `  See references/authoring-packs.md in the faraday skill for the full guide.\n`,
+  );
 }
 
 async function runDoctor(argv, context) {

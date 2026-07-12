@@ -33,7 +33,8 @@ non-obvious caveats.
 - Verify a lesson: `node packages/cli/bin/faraday.mjs check --dir <lesson>` (layout + exact pins).
 - Module packs: `pack list [--json]` (catalog) · `pack add <name|source> [--physics] [--dir]`
   (source = official name · `./path` · `owner/repo` · `npm:<spec>`) · `pack remove <name>` ·
-  `pack show <name|source>` (print skill guide) · `pack validate <name|source>`. `new` is
+  `pack show <name|source>` (print skill guide) · `pack validate <name|source>` ·
+  `pack new <name> [--kind skill|copy|runtime]` (scaffold a new pack for authors). `new` is
   batteries-included: all nine packs auto-install (`--no-defaults` to skip; `pack remove` to trim).
 - Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
 

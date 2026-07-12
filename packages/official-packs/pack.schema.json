@@ -14,9 +14,13 @@
     },
     "displayName": { "type": "string", "description": "Human-readable label shown by `faraday pack list`." },
     "description": { "type": "string" },
-    "aliasFlags": {
+    "default": {
+      "type": "boolean",
+      "description": "When true, `faraday new` auto-installs this pack (batteries-included). All official packs are default; `--no-defaults` skips them."
+    },
+    "requires": {
       "type": "array",
-      "description": "Optional legacy `faraday new` flags this pack backs, e.g. [\"--3d\"].",
+      "description": "Other packs this pack depends on, installed first (a pack building on an engine/base pack). Each entry is a pack source: official name, ./path, owner/repo, or npm:<spec>.",
       "items": { "type": "string" }
     },
     "runtime": {
@@ -38,23 +42,6 @@
         },
         "copy": { "$ref": "#/$defs/copyRules" },
         "appends": { "$ref": "#/$defs/appendRules" }
-      }
-    },
-    "scaffold": {
-      "type": "object",
-      "description": "Applied ONLY when scaffolding a new lesson (faraday new alias), never on `pack add` into existing work.",
-      "additionalProperties": false,
-      "properties": {
-        "copy": { "$ref": "#/$defs/copyRules" },
-        "appends": { "$ref": "#/$defs/appendRules" },
-        "variants": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": { "copy": { "$ref": "#/$defs/copyRules" }, "appends": { "$ref": "#/$defs/appendRules" } }
-          }
-        }
       }
     },
     "skill": {

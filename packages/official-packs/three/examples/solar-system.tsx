@@ -1,6 +1,7 @@
-// 3D demo lesson (scaffolded with `faraday new --3d`): a code-generated solar
-// system. Every object here is procedural Three.js geometry — no assets. This is
-// the AUTHOR AREA; rewrite it. The 3D block under src/faraday/three is locked.
+// Example — a code-generated solar system. Every object here is procedural
+// Three.js geometry (no assets). Copy this into src/lesson/lesson.tsx of a lesson
+// that has the `three` pack. This is the AUTHOR AREA; rewrite it. The 3D block
+// under @faraday-academy/three is a locked dependency.
 import { useMemo, useState } from "react";
 import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, ParamSwitch, Callout, Quiz } from "@faraday-academy/runtime/blocks";
 import { Scene3D, Body, OrbitPath, Planet, Label3D } from "@faraday-academy/three";

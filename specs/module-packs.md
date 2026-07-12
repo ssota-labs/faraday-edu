@@ -81,7 +81,14 @@ faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
 faraday pack remove <name> [--dir <lesson>] [--json]
 faraday pack show <name|source> [<file>] [--all] [--json]   # 스킬 가이드 출력 (설계 타임)
 faraday pack validate <name|source> [--json]    # pack.json 계약 검증
+faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스캐폴드 (저작자용)
 ```
+
+**`pack new`** — 팩 저작자용 스캐폴더. 균일 스켈레톤(`pack.json` + `skill/pack.md` +
+`quality.md` + `examples/`, `--kind copy`면 `runtime/<name>/index.tsx`도)을 찍는다. 세
+아키타입(skill/copy/runtime)이 런타임 절반의 세 경로에 대응. 저작 가이드는 스킬의
+`references/authoring-packs.md`. (구 `scaffold`·`aliasFlags` 매니페스트 필드는 제거됨 —
+능력은 플래그가 아니라 팩이고, `faraday new`엔 능력 플래그가 없다.)
 
 **폴더 스킬 + front-door** — `skill.reference`가 폴더면, `skill.entry`(예: `SKILL.md`
 / `overview.md`)를 **인덱스/라우터**로 지정할 수 있다. `pack show <name>`은 그 entry만

@@ -1,6 +1,7 @@
-// Physics demo lesson (scaffolded with `faraday new --physics`). Real rigid-body
-// physics via @react-three/rapier: balls fall under gravity and collide with the
-// floor and each other. AUTHOR AREA — rewrite it. The 3D block is locked.
+// Example — real rigid-body physics via @react-three/rapier: balls fall under
+// gravity and collide with the floor and each other. Needs the physics variant
+// (`faraday pack add three --physics`). Copy into src/lesson/lesson.tsx. AUTHOR
+// AREA — rewrite it. The 3D block is a locked dependency.
 import { useState } from "react";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz } from "@faraday-academy/runtime/blocks";

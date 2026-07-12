@@ -305,6 +305,7 @@ import { Tutor } from "@/faraday/tutor";
 faraday new <name> [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
 faraday check [--dir <lesson>]     레이아웃 + 런타임 pin 검증
 faraday pack list | add <name|source> [--physics] | remove <name> | show <name> | validate <name>
+faraday pack new <name> [--kind skill|copy|runtime]   새 팩 스캐폴드 (팩 저작자용)
 faraday help
 ```
 
