@@ -160,7 +160,7 @@ teaching, and you compose them per lesson:
 | Preview | Component | What it does | Built from |
 |---|---|---|---|
 | ![Curriculum world](docs/images/component-curriculum.png) | **📚 Curriculum / world** | Order lessons into a linear textbook, or a game-like map with unlock progression you navigate. | `<Course>` · `<CurriculumHost>` + world packs |
-| ![Lecture deck](docs/images/component-lecture.png) | **🎬 Lecture / deck** | Slideshow-style delivery — one idea per screen, prev/next, animation. | `<Paged>` · `runtime/motion` · `deck` pack *(soon)* |
+| ![Lecture deck](docs/images/component-lecture.png) | **🎬 Lecture / deck** | Slideshow-style delivery — one idea per screen, prev/next, animation. | `<Paged>` · `runtime/motion` · `deck` pack |
 | ![Quiz and assignment](docs/images/component-quiz.png) | **✅ Quiz / assignment** | Checks that *teach* — MCQ, typed numeric, sketch-to-predict, and missions cleared in the sim. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
 | ![LMS dashboard](docs/images/component-lms.png) | **📊 Student management** | Record progress and show a dashboard across a lesson or a whole curriculum (LMS). | `runtime/lms` (recorder + dashboard) |
 | ![AI tutor](docs/images/component-tutor.png) | **🤖 AI tutor** | A grounded, Socratic chat that answers only from the lesson's own content. | `tutor` pack (`--tutor`) |
@@ -403,10 +403,10 @@ flowchart LR
 | **Memorization** | `srs` — spaced-repetition flashcards | ✅ shipping | author-editable `<Flashcards>` (SM-2-lite), zero new deps |
 | **Lecture design** | `lecture-design` — teaching methods & pedagogy | ✅ shipping · **default** | skill-only folder (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
 | **Audience** | `audience` — delivery methodology per learner | ✅ shipping · **default** | skill-only (CRA / 5E / Peer Instruction / Mayer / Merrill + layout) |
-| **Lecture** | `deck` — animated slideshow | 🔜 | `<Paged>` + `runtime/motion` |
-| **Kids** | `kids` — tablet game | 🔜 | `<SketchPad>` + `<Challenge>` + `<Paged>` + CRA default |
+| **Lecture** | `deck` — animated slideshow | ✅ shipping | folder skill (slide-design → motion → pacing), composes `<Paged>` + motion, zero deps |
+| **Kids** | `kids` — tablet game | ✅ shipping | preset skill (CRA + big targets + celebration), builds on the `audience` pack, zero deps |
 | **Exam** | `exam` — practice / mock test | ✅ shipping | folder skill (blueprint → items → scoring → integrity), composes assessment blocks, zero deps |
-| **Notes** | `notes` — GoodNotes-style pen | 🔜 | `<SketchPad>` (pen / pressure) → full-page ink canvas |
+| **Notes** | `notes` — GoodNotes-style pen | ✅ shipping | author-editable `<Notebook>` ink canvas (Canvas + PointerEvents, pressure), zero deps |
 
 **Quality control is part of the pack.** Every pack is built against
 [`quality-bar.md`](plugins/claude-code/skills/faraday/references/quality-bar.md),

@@ -82,8 +82,8 @@ invisible to the agent, and vice versa.
 (`package.json`/`app.css`/copied files) **and** skill half (`.faraday/packs/<name>/` + an
 `AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
 into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
-reads `official-packs` directly. Six ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`.
-`lecture-design`/`audience` are **default packs** (`"default": true`) — `faraday new`
+reads `official-packs` directly. Nine ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`, `deck`,
+`kids`, `notes`. `lecture-design`/`audience` are **default packs** (`"default": true`) — `faraday new`
 auto-installs their skill halves so every lesson carries the pedagogy + audience knowledge
 in `.faraday/packs/`. A pack's skill can be a **folder with an `entry`** (front-door index,
 e.g. `lecture-design`/`exam`): `faraday pack show <name>` prints just the entry, `pack show

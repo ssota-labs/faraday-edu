@@ -32,8 +32,13 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "deck", "kids", "notes"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
+  }
+  // every shipped pack must have a valid manifest
+  for (const p of packs) {
+    const errs = validateManifest(await readManifestAt((await resolvePack(p.name)).packDir));
+    assert.deepEqual(errs, [], `${p.name} manifest invalid: ${errs.join("; ")}`);
   }
   const three = packs.find((p) => p.name === "three");
   assert.ok(three.runtime?.dependencies?.["@faraday-academy/three"], "three pins its runtime pkg");
@@ -213,6 +218,17 @@ test("default packs: audience + lecture-design are flagged, readPackSkill reads 
   const audFiles = await readPackSkill(aud.packDir, await readManifestAt(aud.packDir));
   assert.equal(audFiles.length, 1, "audience skill is a single file");
   assert.match(audFiles[0].content, /Audience/);
+});
+
+test("installPack(notes) copies the author-editable pen component, no new deps", async () => {
+  const target = await scaffold("Notes Host");
+  const before = JSON.parse(await read(target, "package.json"));
+  await installPack("notes", { fromDir: target });
+
+  assert.ok(await exists(path.join(target, "src/lesson/notes/Notebook.tsx")), "Notebook copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/notes/pack.md")), "skill installed");
+  const after = JSON.parse(await read(target, "package.json"));
+  assert.deepEqual(after.dependencies, before.dependencies, "notes adds no runtime deps");
 });
 
 test("pack show routes a folder skill via its entry, a sub-file, and --all", async () => {

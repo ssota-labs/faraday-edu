@@ -1,13 +1,14 @@
 # Module Packs — 설계 스펙
 
-> 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 여섯 개 공식 팩
-> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`). 팩은 CLI에서 분리돼
+> 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 아홉 개 공식 팩
+> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`deck`·`kids`·`notes`).
+> 팩은 CLI에서 분리돼
 > `packages/official-packs/`에 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는
 > 공식명·로컬경로·github(`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나
 > 팩을 배포**할 수 있다. `lecture-design`·`audience`는 **default 팩**(`new` 자동설치),
 > `lecture-design`·`exam`은 **폴더 스킬 + entry** front-door. `--3d`/`--physics`/`--tutor`
-> 는 `installPack`을 호출하는 얇은 별칭이고, 옛 `templates/addon-*`는 제거됐다. 나머지
-> 팩(deck·kids·notes)은 로드맵.
+> 는 `installPack`을 호출하는 얇은 별칭이고, 옛 `templates/addon-*`는 제거됐다.
+> 추가 팩(커뮤니티 기여 등)은 로드맵.
 
 ## 1. 배경 — 왜 "팩"인가
 
@@ -153,10 +154,10 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 | 튜터 | `tutor` (근거기반 AI) | ✅ 구현 | pin + author-editable 서버 copy + `appends`(pnpm) |
 | 암기 | `srs` (플래시카드) | ✅ 구현 | **소스 copy**(`src/lesson/srs/`) + deps 0개 |
 | 렉쳐구성 | `lecture-design` (교수법) | ✅ 구현 | **스킬-온리** + 스킬 **폴더** 설치 |
-| 렉쳐 | `deck` (슬라이드쇼) | 🔜 | `<Paged>` + `runtime/motion` |
-| 아이들 | `kids` (태블릿 게임) | 🔜 | `<SketchPad>`+`<Challenge>`+`<Paged>`+CRA |
+| 렉쳐 | `deck` (슬라이드쇼) | ✅ 구현 | 폴더 스킬(slide-design→motion→pacing), `<Paged>`+motion 조합, deps 0 |
+| 아이들 | `kids` (태블릿 게임) | ✅ 구현 | 프리셋 스킬(CRA+큰타깃+축하), `audience` 팩 위, deps 0 |
 | 시험 | `exam` | ✅ 구현 | **폴더 스킬 + entry**(blueprint→items→scoring→integrity), 평가 블록 조합, deps 0 |
-| 노트 | `notes` (펜 슬라이드쇼) | 🔜 | `<SketchPad>` → 풀페이지 잉크 캔버스 |
+| 노트 | `notes` (펜 노트) | ✅ 구현 | **소스 copy** `<Notebook>` 펜 캔버스(Canvas+PointerEvents, 필압), deps 0 |
 
 네 팩이 매니페스트의 서로 다른 경로를 한 번씩 검증한다: **pin**(three/tutor) ·
 **소스 copy**(srs) · **appends**(tutor) · **scaffold 데모**(three) ·
@@ -165,8 +166,8 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 
 ## 9. 구현 요약
 
-- `packages/official-packs/{three,tutor,srs,lecture-design}/` — 네 개 공식 팩
-  (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
+- `packages/official-packs/{three,tutor,srs,lecture-design,audience,exam,deck,kids,notes}/`
+  — 아홉 개 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
 - `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`
   번들. `cli/package.json` `files`에 `packs` 추가, `<cli>/packs`는 gitignore.
 - `packages/cli/src/pack.mjs`:
@@ -182,7 +183,7 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 - `cli.mjs` — `faraday pack list [--json]` / `add <name|source> [--physics] [--dir] [--json]`
   / `remove <name> [--dir] [--json]` / `validate <name|source> [--json]`.
 - `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부 + 제거·default·pack show 라우팅·
-  exam 폴더 스킬 (총 30개 통과).
+  exam 폴더 스킬·9팩 검증 (총 31개 통과).
 
 **설치 위치** (예: `pack add srs`):
 ```
