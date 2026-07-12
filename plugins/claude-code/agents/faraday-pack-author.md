@@ -61,12 +61,28 @@ published package). Default to a folder skill.
    then wire `examples/<name>.tsx` into `src/lesson/lesson.tsx` and run `tsc -b`
    (via `pnpm check`/`pnpm typecheck`). **The example must compile.** If it doesn't,
    the pack is wrong — fix the component or the manifest, not the test.
-5. **Self-grade against `quality.md`.** Read your own bar and honestly grade the
+5. **Render gate — does the UI actually come out right?** Typecheck proves it
+   compiles, not that it renders. For any pack with a UI component (`copy`/`runtime`
+   archetypes especially), start the dev server and verify it renders clean:
+   ```bash
+   pnpm dev &                 # in /tmp/faraday-probe
+   curl -sf localhost:<port>/ >/dev/null   # served without a 500
+   ```
+   Read the dev-server output and the browser console for runtime errors / React
+   warnings / failed asset loads — a component that throws on mount typechecks fine
+   but renders nothing. Fix until the probe lesson mounts clean.
+   - **Visual pass (UI-heavy packs).** A headless "no errors" check can't see that
+     the widget *looks and behaves* right. Hand the dev URL to the orchestrator (or a
+     human) to open in the browser preview: screenshot it, drive every control, and
+     confirm the component does what the guide claims and inherits the theme. State
+     plainly if you could not do the visual pass — do not claim the UI is good on a
+     headless check alone.
+6. **Self-grade against `quality.md`.** Read your own bar and honestly grade the
    example against each rule. If any rule fails, revise until it passes. This is the
    eval loop applied to your own fixture; don't grade yourself a pass you didn't earn.
-6. **Report.** What the pack is, where it lives, the archetype, and the results of
-   steps 3–5 (validate output, typecheck result, per-rule quality grade). Name any
-   limitation honestly.
+7. **Report.** What the pack is, where it lives, the archetype, and the results of
+   steps 3–6 (validate output, typecheck result, render/visual result, per-rule
+   quality grade). Name any limitation honestly — especially a skipped visual pass.
 
 ## Rules
 

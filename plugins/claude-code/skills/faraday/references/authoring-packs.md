@@ -137,12 +137,17 @@ lesson and building:
 ```bash
 faraday pack validate <name|source>              # manifest + files-exist + no leftover TODOs
 faraday new probe --skip-install --at /tmp/faraday-probe
-faraday pack add <source> --dir /tmp/faraday-probe   # install both halves
+faraday pack add <source> --dir /tmp/faraday-probe   # install both halves (+ any `requires`)
 cd /tmp/faraday-probe && pnpm install && pnpm check  # layout + pins + the example TYPECHECKS
+pnpm dev                                          # then RENDER it — see below
 ```
 
 Do not declare a pack done on `validate` alone — a pack that validates green can
-still ship a component that doesn't compile. `<source>` is an official name, a local
+still ship a component that doesn't compile, and a component that compiles can still
+throw on mount and render nothing. For any pack with a UI, add a **render gate**:
+start `pnpm dev`, confirm the probe lesson serves without a runtime error, and — for
+UI-heavy packs — open it in the browser preview to screenshot it and drive every
+control. "Typechecks" is not "looks and works right." `<source>` is an official name, a local
 path (`./my-pack`), a GitHub repo (`owner/repo[/sub]`), or npm (`npm:@scope/pack`) —
 so a pack works the same whether it's official or third-party.
 
