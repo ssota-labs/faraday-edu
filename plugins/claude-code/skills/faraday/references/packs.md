@@ -52,7 +52,9 @@ finished lesson doesn't need (e.g. the heavy `three`/`tutor` runtimes) before sh
 ## Authoring / validating a pack
 
 A pack is any folder with a valid `pack.json` (contract:
-`packages/official-packs/pack.schema.json`). Validate one with
-`faraday pack validate <name|source>`. Third parties distribute packs from a local
-path, a GitHub repo (`owner/repo`), or npm (`npm:@scope/pack`) — no need to be
-official.
+`packages/official-packs/pack.schema.json`). Scaffold the skeleton with
+`faraday pack new <name> [--kind skill|copy|runtime]`, validate with
+`faraday pack validate <name|source>`, and try it via `faraday pack add <source>
+--dir <lesson>`. Third parties distribute packs from a local path, a GitHub repo
+(`owner/repo`), or npm (`npm:@scope/pack`) — no need to be official. Full guide:
+[authoring-packs.md](authoring-packs.md).

@@ -303,6 +303,7 @@ Static (non-tutor) lessons stay server-free. Full guide: the scaffolded
 faraday new <name> [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
 faraday check [--dir <lesson>]     verify the lesson layout + runtime pin
 faraday pack list | add <name|source> [--physics] | remove <name> | show <name> | validate <name>
+faraday pack new <name> [--kind skill|copy|runtime]   scaffold a new pack (for authors)
 faraday help
 ```
 

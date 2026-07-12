@@ -23,17 +23,6 @@
     "cssImports": ["@faraday-academy/three/styles.css"],
     "copy": [{ "from": "examples", "to": "docs/examples" }]
   },
-  "scaffold": {
-    "copy": [
-      { "from": "scaffold/lesson.tsx", "to": "src/lesson/lesson.tsx" },
-      { "from": "scaffold/models", "to": "public/models" }
-    ],
-    "variants": {
-      "physics": {
-        "copy": [{ "from": "scaffold/physics-lesson.tsx", "to": "src/lesson/lesson.tsx" }]
-      }
-    }
-  },
   "skill": {
     "reference": "skill/pack.md",
     "loadWhen": "the lesson needs a 3D scene, an orbital/spatial model, or a 3D curriculum world"

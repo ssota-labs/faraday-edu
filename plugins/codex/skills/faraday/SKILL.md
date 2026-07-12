@@ -177,6 +177,7 @@ Build API:
 - [references/blocks.md](references/blocks.md) — the full block API + canonical lesson shapes.
 - [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, packs, 3D moods, LMS.
 - [references/tutor.md](references/tutor.md) — embed + ground the `tutor` pack AI, edit its persona/model.
+- [references/authoring-packs.md](references/authoring-packs.md) — **build a new pack**: the contract, the three archetypes, `faraday pack new`, the skill/quality skeleton, the eval loop.
 
 Verify:
 - [references/quality-bar.md](references/quality-bar.md) — the acceptance rubric (game-screen worlds, textbook-chapter lessons).
