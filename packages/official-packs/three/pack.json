@@ -2,6 +2,7 @@
   "name": "three",
   "displayName": "3D scenes (React Three Fiber)",
   "description": "Add @faraday-academy/three — R3F 3D blocks, procedural helpers (Body/Planet/OrbitPath/Label3D), a glTF <Model> loader, and a mood-per-scene system — to an existing lesson. Pass --physics for Rapier gravity/collision.",
+  "default": true,
   "runtime": {
     "dependencies": {
       "@faraday-academy/three": "0.1.0",

@@ -2,6 +2,7 @@
   "name": "tutor",
   "displayName": "Grounded AI tutor (durable)",
   "description": "Embed <Tutor> from @faraday-academy/tutor and a durable Vite + Nitro + Workflow server (author-editable api/ + workflows/). Grounded, Socratic, survives refreshes/timeouts. Needs AI_GATEWAY_API_KEY in .env.local locally; OIDC on Vercel.",
+  "default": true,
   "runtime": {
     "dependencies": {
       "@ai-sdk/workflow": "^1.0.11",

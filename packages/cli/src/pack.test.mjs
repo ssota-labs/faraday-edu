@@ -202,10 +202,10 @@ test("resolvePack classifies official names and local paths", async () => {
   assert.equal(local.source, packDir);
 });
 
-test("default packs: audience + lecture-design are flagged, readPackSkill reads file & folder", async () => {
+test("default packs: every shipped pack is default, readPackSkill reads file & folder", async () => {
   const defaults = await defaultPackNames();
-  assert.ok(defaults.includes("lecture-design"), "lecture-design is default");
-  assert.ok(defaults.includes("audience"), "audience is default");
+  const all = (await listPacks()).map((p) => p.name);
+  assert.deepEqual([...defaults].sort(), [...all].sort(), "every shipped pack is a default pack");
 
   // folder skill (lecture-design) → multiple files
   const ld = await resolvePack("lecture-design");
@@ -268,16 +268,17 @@ test("exam pack: folder skill with an index + sub-guides, skill-only", async () 
   assert.deepEqual(validateManifest(manifest), [], "exam manifest is valid");
 });
 
-test("faraday new auto-installs default packs (skill-only), --no-defaults opts out", async () => {
+test("faraday new auto-installs every default pack, --no-defaults opts out", async () => {
   const withBase = await tmp();
   await generateLesson({ targetDir: path.join(withBase, "l"), name: "Def On", uuid: () => "id" });
   const prov = JSON.parse(await read(path.join(withBase, "l"), ".faraday/provenance.json"));
-  assert.ok(prov.packs.includes("lecture-design") && prov.packs.includes("audience"), "defaults recorded");
+  const all = (await listPacks()).map((p) => p.name);
+  assert.deepEqual([...prov.packs].sort(), [...all].sort(), "every default pack recorded");
   assert.ok(await exists(path.join(withBase, "l", ".faraday/packs/audience/audience.md")), "audience skill installed");
   assert.ok(await exists(path.join(withBase, "l", ".faraday/packs/lecture-design/overview.md")), "lecture-design folder installed");
-  // skill-only: no new deps beyond the runtime pin
+  // heavy runtime packs are defaults too now: three pins its R3F deps
   const pkg = JSON.parse(await read(path.join(withBase, "l"), "package.json"));
-  assert.ok(!Object.keys(pkg.dependencies).some((d) => d.includes("lecture-design") || d === "audience"));
+  assert.ok(pkg.dependencies["@faraday-academy/three"], "three (a default) pinned its runtime deps");
 
   const noDef = await tmp();
   await generateLesson({ targetDir: path.join(noDef, "l"), name: "Def Off", noDefaults: true, uuid: () => "id" });
