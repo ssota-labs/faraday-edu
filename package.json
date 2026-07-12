@@ -7,6 +7,8 @@
     "test:cli": "pnpm --filter @faraday-academy/cli test",
     "publish:packages": "node scripts/publish-packages.mjs",
     "publish:packages:dry": "node scripts/publish-packages.mjs --dry-run",
+    "sync:skills": "node scripts/sync-skills.mjs",
+    "sync:skills:check": "node scripts/sync-skills.mjs --check",
     "stage1:cold-e2e": "node scripts/stage1-cold-e2e.mjs"
   },
   "license": "SEE LICENSE IN LICENSE.md",
