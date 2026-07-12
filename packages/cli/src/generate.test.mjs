@@ -59,6 +59,64 @@ test("generateLesson produces the expected tree + injections", async () => {
   await fs.rm(base, { recursive: true, force: true });
 });
 
+test("generateLesson scaffolds the .faraday/plan/ folder", async () => {
+  const base = await tmp();
+  const target = path.join(base, "out");
+  await generateLesson({ targetDir: target, name: "Plan Lesson", uuid: () => "fixed-id", noDefaults: true });
+  assert.ok(await exists(path.join(target, ".faraday/plan/index.md")), "plan/index.md must exist");
+  const idx = await read(target, ".faraday/plan/index.md");
+  assert.match(idx, /one folder per plan/i);
+  await fs.rm(base, { recursive: true, force: true });
+});
+
+test("faraday init bootstraps a repo with a root AGENTS.md + first app under apps/", async () => {
+  const base = await tmp();
+  let out = "";
+  await runFaradayCli(
+    ["init", "general-physics", "--skip-install", "--json"],
+    { cwd: base, stdout: (s) => (out += s), stderr: () => {}, throwOnError: true },
+  );
+  const parsed = JSON.parse(out);
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.command, "init");
+  assert.equal(parsed.packageName, "general-physics");
+  assert.ok(await exists(path.join(base, "AGENTS.md")), "root AGENTS.md must exist");
+  assert.match(await read(base, "AGENTS.md"), /Faraday courseware repo/);
+  assert.ok(await exists(path.join(base, "apps/general-physics/src/lesson/lesson.tsx")));
+  assert.ok(await exists(path.join(base, "apps/general-physics/.faraday/plan/index.md")));
+  await fs.rm(base, { recursive: true, force: true });
+});
+
+test("faraday new inside a repo (apps/ present) lands under apps/", async () => {
+  const base = await tmp();
+  await runFaradayCli(
+    ["init", "first-app", "--skip-install"],
+    { cwd: base, stdout: () => {}, stderr: () => {}, throwOnError: true },
+  );
+  let out = "";
+  await runFaradayCli(
+    ["new", "second-app", "--skip-install", "--json"],
+    { cwd: base, stdout: (s) => (out += s), stderr: () => {}, throwOnError: true },
+  );
+  const parsed = JSON.parse(out);
+  assert.equal(parsed.dir, path.join(base, "apps", "second-app"));
+  assert.ok(await exists(path.join(base, "apps/second-app/src/lesson/lesson.tsx")));
+  await fs.rm(base, { recursive: true, force: true });
+});
+
+test("faraday new outside a repo stays standalone (backward compatible)", async () => {
+  const base = await tmp();
+  let out = "";
+  await runFaradayCli(
+    ["new", "solo", "--skip-install", "--json"],
+    { cwd: base, stdout: (s) => (out += s), stderr: () => {}, throwOnError: true },
+  );
+  const parsed = JSON.parse(out);
+  assert.equal(parsed.dir, path.join(base, "solo"));
+  assert.equal(await exists(path.join(base, "apps")), false, "no apps/ dir when standalone");
+  await fs.rm(base, { recursive: true, force: true });
+});
+
 test("faraday new --json --skip-install reports structured output", async () => {
   const base = await tmp();
   let out = "";

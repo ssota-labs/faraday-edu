@@ -14,7 +14,7 @@ against it before calling anything done.
 
 | Zone | Path | Rule |
 |---|---|---|
-| **Author area** | `src/lesson/**` | Write your lesson here. `src/lesson/lesson.tsx` is the fixed entry and must `export default` a React component. Add sibling files freely. |
+| **Author area** | `src/lesson/**` | Write your lesson here. `src/lesson/lesson.tsx` is the fixed entry and must `export default` a React component. Add sibling files freely. For a **multi-lesson curriculum**, put each node's lesson in its own file under `src/lesson/nodes/<id>.tsx` and import them into the module-scope `curriculum` in `lesson.tsx` — this keeps lessons file-isolated so they can be built independently (see `docs/examples/curriculum.tsx`). |
 | **Runtime (dependency)** | `@faraday-academy/*` | The shadcn UI, lesson blocks, runtime, and styles — **pinned npm packages**, not vendored. You consume them via `@faraday-academy/runtime/*`; you don't edit them. `pnpm check` verifies the pin. |
 
 `src/main.tsx`, `index.html`, and the config files are the app shell — you rarely touch them.

@@ -20,6 +20,27 @@ import { installPack, defaultPackNames } from "./pack.mjs";
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TITLE_PLACEHOLDER = "Faraday Lesson";
 
+// Seed for .faraday/plan/index.md — the app's build-plan folder. One folder per
+// curriculum plan; the orchestrator fills these in during the Curriculum phase.
+const PLAN_INDEX_STUB = `# Build plans
+
+This app's curriculum build plans live here — **one folder per plan** (an app can
+hold several, e.g. different tracks or audiences):
+
+    <plan-id>/
+      overview.md      # brief · audience · methodology · pack decisions · node index
+      nodes/
+        <id>.md        # one file per lesson node: brief + status (todo→building→verified)
+
+Each lesson node is authored as its own file at \`src/lesson/nodes/<id>.tsx\` and
+assembled into the module-scope \`curriculum\` in \`src/lesson/lesson.tsx\`. This keeps
+lessons file-isolated so they can be built independently (e.g. one sub-agent per node).
+
+See \`references/orchestration.md\` in the faraday skill for the build loop.
+
+_No plans yet — create one when you design a curriculum._
+`;
+
 async function replaceInFile(file, from, to) {
   const text = await fs.readFile(file, "utf8");
   if (!text.includes(from)) return false;
@@ -86,6 +107,13 @@ export async function generateLesson(opts) {
       2,
     ) + "\n",
   );
+
+  // 5b. plan folder — where curriculum build plans live (one folder per plan).
+  //     The orchestrator writes overview.md + nodes/<id>.md here and keeps them as
+  //     the resumable source of truth while authoring a multi-lesson curriculum.
+  //     See references/orchestration.md in the faraday skill.
+  await fs.mkdir(path.join(targetDir, ".faraday", "plan"), { recursive: true });
+  await fs.writeFile(path.join(targetDir, ".faraday", "plan", "index.md"), PLAN_INDEX_STUB);
 
   // 6. default packs — skill-only knowledge (pedagogy, audience) every lesson gets
   //    so the agent has it in .faraday/packs/ and it travels with the lesson.

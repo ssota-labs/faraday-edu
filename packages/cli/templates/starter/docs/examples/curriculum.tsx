@@ -1,7 +1,27 @@
-// Example — a CURRICULUM (world seed): several lessons bundled into a navigable
-// map with unlock progression. Copy into src/lesson/lesson.tsx to try it.
-// Swap `pack={map2dPack}` for `pack={linearPack}` to change the whole world's
-// shape without touching the content — that's the ports-and-adapters seam.
+// Example — a CURRICULUM: several lessons bundled into a navigable map with unlock
+// progression. `map2dPack` is one PRESENTATION of the curriculum (a 2D game-screen
+// map); swap `pack={map2dPack}` for `pack={linearPack}` (a document-style list) to
+// change the whole presentation without touching the content — the ports-and-adapters
+// seam. ("world" is just the immersive family of presentations, not the curriculum.)
+//
+// This demo inlines every node's lesson in one file so it's copy-paste runnable. For
+// a REAL curriculum, put each node's lesson in its own file so lessons stay isolated
+// and can be built independently (e.g. one sub-agent per node — see the faraday skill's
+// references/orchestration.md). Keep only the `curriculum` object here:
+//
+//     src/lesson/
+//       lesson.tsx          // this file: the module-scope `curriculum` assembly
+//       nodes/
+//         intro.tsx         // export default function Intro() { ... one lesson ... }
+//         path-a.tsx
+//
+//     // in lesson.tsx:
+//     import Intro from "./nodes/intro";
+//     const curriculum: Curriculum = { title, nodes: [{ id: "intro", …, lesson: <Intro /> }] };
+//
+// Only the `curriculum` OBJECT must live at module scope (progress is keyed on its
+// identity); the node components can be imported from anywhere. See examples/voyage-log
+// for the split in practice.
 import { CurriculumHost, map2dPack, useNode, type Curriculum } from "@faraday-academy/runtime/world";
 import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
 
