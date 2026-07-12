@@ -63,7 +63,7 @@ The CLI is `faraday`. Prefer the published package; fall back to the local repo:
 ```bash
 npx @faraday-academy/cli@latest <args>        # canonical (Stage 1)
 # during pre-publish local dev, equivalently:
-node /path/to/faraday-edu/packages/cli/bin/faraday.mjs <args>
+node /path/to/faraday-academy/packages/cli/bin/faraday.mjs <args>
 ```
 
 Use `--json` on `new` for a machine-readable result you can parse (title, absolute

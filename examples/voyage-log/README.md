@@ -66,6 +66,19 @@ CDP. See `AUTHORING-GAPS.md` §5.
 
 ## Related
 
-- Root spec: [`DEMO-IDEATION.md`](../../../docs/DEMO-IDEATION.md) §4 (C-B)
+- Root spec: [`DEMO-IDEATION.md`](../../docs/DEMO-IDEATION.md) §4 (C-B)
 - Authoring reference: [`docs/authoring.md`](docs/authoring.md)
 - Friction log from building this demo: [`AUTHORING-GAPS.md`](AUTHORING-GAPS.md)
+
+## Creator CTA
+
+```text
+/plugin marketplace add ssota-labs/faraday-academy
+/plugin install faraday@faraday
+
+Then say:
+  “Turn this topic into an interactive Faraday lesson: orbital mechanics.
+   Scaffold, author, run pnpm check and pnpm dev, then give me the URL.”
+
+Repo: https://github.com/ssota-labs/faraday-academy
+```

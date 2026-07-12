@@ -1,15 +1,27 @@
 {
   "name": "@faraday-academy/cli",
   "version": "0.1.0",
-  "private": true,
   "description": "Faraday — a toolcraft-style, shadcn-based scaffolder for AI-authored interactive lessons (CLI-only phase). Working codename.",
   "type": "module",
   "bin": {
     "faraday": "./bin/faraday.mjs"
   },
-  "files": ["bin", "src", "templates"],
+  "files": ["bin", "src", "templates", "LICENSE"],
   "scripts": {
-    "test": "node --test src/*.test.mjs"
+    "test": "node --test src/*.test.mjs",
+    "prepack": "cp ../../LICENSE ./LICENSE 2>/dev/null || true"
   },
-  "license": "UNLICENSED"
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssota-labs/faraday-academy.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/ssota-labs/faraday-academy#readme",
+  "bugs": {
+    "url": "https://github.com/ssota-labs/faraday-academy/issues"
+  },
+  "license": "MIT"
 }

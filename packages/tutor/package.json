@@ -3,14 +3,36 @@
   "version": "0.1.0",
   "description": "Faraday Academy tutor addon — the durable <Tutor> chat widget (client), docked beside the lesson with Markdown/math rendering. Pairs with the author-editable Nitro + Workflow server that `faraday new --tutor` drops into the lesson.",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "sideEffects": ["*.css"],
   "exports": {
     ".": "./index.ts",
     "./styles.css": "./styles.css",
     "./package.json": "./package.json"
   },
-  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "files": [
+    "chat",
+    "dock.tsx",
+    "index.ts",
+    "resizable.tsx",
+    "styles.css",
+    "tutor.tsx",
+    "vite-env.d.ts",
+    "LICENSE"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "prepack": "cp ../../LICENSE ./LICENSE 2>/dev/null || true"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssota-labs/faraday-academy.git",
+    "directory": "packages/tutor"
+  },
+  "homepage": "https://github.com/ssota-labs/faraday-academy#readme",
   "dependencies": {
     "@ai-sdk/react": "^4.0.12",
     "@ai-sdk/workflow": "^1.0.11",
@@ -24,7 +46,7 @@
     "streamdown": "^2.5.0"
   },
   "peerDependencies": {
-    "@faraday-academy/runtime": "workspace:^",
+    "@faraday-academy/runtime": "0.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

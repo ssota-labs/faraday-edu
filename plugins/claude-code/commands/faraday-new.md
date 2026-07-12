@@ -19,7 +19,7 @@ Follow the `faraday` skill. Steps:
    ```bash
    npx @faraday-academy/cli@latest new <name> [flags] --json
    ```
-   (Pre-publish local dev: `node <faraday-edu>/packages/cli/bin/faraday.mjs new <name> [flags] --json`.)
+   (Pre-publish local dev: `node <faraday-academy>/packages/cli/bin/faraday.mjs new <name> [flags] --json`.)
    Parse the `--json` result for the created dir and next steps, then `cd` in.
 
 3. **Read the in-project guide** (`AGENTS.md`, `docs/authoring.md`) and the skill's

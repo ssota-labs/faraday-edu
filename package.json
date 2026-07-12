@@ -4,7 +4,11 @@
   "description": "Faraday monorepo — the @faraday-academy/cli scaffolder, the runtime + addon packages lessons pin, and live example lessons.",
   "scripts": {
     "test": "pnpm --filter @faraday-academy/cli test",
-    "test:cli": "pnpm --filter @faraday-academy/cli test"
+    "test:cli": "pnpm --filter @faraday-academy/cli test",
+    "publish:packages": "node scripts/publish-packages.mjs",
+    "publish:packages:dry": "node scripts/publish-packages.mjs --dry-run",
+    "stage1:cold-e2e": "node scripts/stage1-cold-e2e.mjs"
   },
+  "license": "MIT",
   "packageManager": "pnpm@11.5.2"
 }

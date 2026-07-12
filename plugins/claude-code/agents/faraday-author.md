@@ -30,7 +30,7 @@ are your contract.
    subjects with a required `mood`; `--physics` for real dynamics; `--tutor` if the
    reader should ask questions; `<Course>`/`<CurriculumHost>` for multi-lesson).
 2. **Scaffold** — `npx @faraday-academy/cli@latest new <name> [flags] --json` (or the
-   local `node <faraday-edu>/packages/cli/bin/faraday.mjs`), parse the JSON, `cd` in.
+   local `node <faraday-academy>/packages/cli/bin/faraday.mjs`), parse the JSON, `cd` in.
 3. **Learn the surface** — read `AGENTS.md`, `docs/authoring.md`, and any
    `docs/examples/*.tsx`. Start from an example when one fits.
 4. **Author** `src/lesson/lesson.tsx` (+ siblings): `<Lesson>` frame, a

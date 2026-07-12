@@ -13,7 +13,7 @@
 | 자산 | 상태 | 런칭 함의 |
 |---|---|---|
 | 모노레포 `@faraday-academy/{cli,runtime,three,tutor}` | ✅ PR #10 merge | **CLI만 publish하면 안 됨** — 레슨이 런타임을 npm pin |
-| 스킬/플러그인 (Claude + Codex) | ✅ 레포 내 존재 | marketplace URL이 아직 `titanism/…` → 설치 실패 |
+| 스킬/플러그인 (Claude + Codex) | ✅ URL → `ssota-labs/faraday-academy` | 설치 스모크는 클린 Claude/Codex 세션에서 확인 |
 | `examples/voyage-log` (C-B) | ✅ 6노드 + `vercel.json` | 라이브 URL 없음 · Vercel install은 npm 패키지 필요 |
 | 단편 데모 S1–S4 | ❌ 미작성 | 콘텐츠 Wow 앵커 부족 |
 | npm `@faraday-academy/*` | ❌ registry 404 | 외부 `npx` / 예제 Vercel / 콜드 세션 전부 막힘 |

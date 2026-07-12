@@ -7,8 +7,8 @@ creators who already run an agent and want the whole loop as one install.
 
 | Agent | Folder | Install |
 |---|---|---|
-| **Claude Code** | [`claude-code/`](claude-code/) | `/plugin marketplace add titanism/faraday-edu` → `/plugin install faraday@faraday` |
-| **Codex** | [`codex/`](codex/) | `codex plugin marketplace add titanism/faraday-edu` (or copy `.agents/skills/` + `AGENTS.md`) |
+| **Claude Code** | [`claude-code/`](claude-code/) | `/plugin marketplace add ssota-labs/faraday-academy` → `/plugin install faraday@faraday` |
+| **Codex** | [`codex/`](codex/) | `codex plugin marketplace add ssota-labs/faraday-academy` (or copy `.agents/skills/` + `AGENTS.md`) |
 
 Both ship the same **`faraday` skill** — a courseware **design partner**, not just a
 scaffolder. A lean `SKILL.md` front door walks Discover → Design → Build → Verify →

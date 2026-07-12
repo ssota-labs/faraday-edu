@@ -203,7 +203,7 @@ error. `--json` makes `new` emit a structured result an agent can parse.
 ## Repo layout
 
 ```
-faraday-edu/                    # repo root = the pnpm workspace (apps/* + packages/*)
+faraday-academy/                    # repo root = the pnpm workspace (apps/* + packages/*)
 ├─ apps/
 │  └─ labs/                     # @faraday-academy/labs — internal Vite catalog of components + skills/packs
 ├─ packages/

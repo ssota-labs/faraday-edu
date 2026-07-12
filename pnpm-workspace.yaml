@@ -1,10 +1,18 @@
 packages:
   - apps/*
   - packages/*
+  # Stage 1: include examples so monorepo installs can link @faraday-academy/*
+  # before/while registry publish. Independent Vercel deploys still work once
+  # packages are on npm (Root Directory = examples/<name> → registry install).
+  - examples/*
 allowBuilds:
   # Vite/labs bundles with esbuild — allow its native binary to build.
   esbuild: true
 
-# examples/* are intentionally NOT workspace members — each example (e.g.
-# voyage-log) is a self-contained generated app with its own lockfile and is
-# deployed independently (Vercel root = examples/<name>).
+# Until @faraday-academy/* is on npm, force examples to the workspace packages.
+preferWorkspacePackages: true
+linkWorkspacePackages: true
+overrides:
+  "@faraday-academy/runtime": "workspace:*"
+  "@faraday-academy/three": "workspace:*"
+  "@faraday-academy/tutor": "workspace:*"

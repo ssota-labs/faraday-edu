@@ -6,17 +6,17 @@ gates, embed a durable grounded AI tutor, and deploy — without leaving the cha
 
 ## Install
 
-The `faraday-edu` repo is itself a Claude Code marketplace. In Claude Code:
+The `faraday-academy` repo is itself a Claude Code marketplace. In Claude Code:
 
 ```
-/plugin marketplace add titanism/faraday-edu
+/plugin marketplace add ssota-labs/faraday-academy
 /plugin install faraday@faraday
 ```
 
 Local checkout instead of GitHub:
 
 ```
-/plugin marketplace add /path/to/faraday-edu
+/plugin marketplace add /path/to/faraday-academy
 /plugin install faraday@faraday
 ```
 
@@ -49,7 +49,7 @@ validate .` from the repo root before publishing).
 
 - **The Faraday CLI.** Commands call `npx @faraday-academy/cli@latest`. During
   pre-publish local development, that's equivalent to
-  `node /path/to/faraday-edu/packages/cli/bin/faraday.mjs` — the skill knows both.
+  `node /path/to/faraday-academy/packages/cli/bin/faraday.mjs` — the skill knows both.
 - **pnpm** (the scaffold installs with it).
 - **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded
   lesson's `.env.local` (never committed). Deploys use OIDC instead.

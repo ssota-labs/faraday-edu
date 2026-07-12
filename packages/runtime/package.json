@@ -1,7 +1,6 @@
 {
   "name": "@faraday-academy/runtime",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib) — a versioned package that generated lessons pin and consume via @faraday-academy/runtime/* (no longer vendored). @faraday-academy/labs previews the same source via the @/faraday alias. react/react-dom are peers so a consumer dedupes to one copy.",
   "sideEffects": [
@@ -19,9 +18,31 @@
     "./styles/*": "./styles/*",
     "./package.json": "./package.json"
   },
+  "files": [
+    "blocks",
+    "runtime",
+    "world",
+    "lms",
+    "ui",
+    "styles",
+    "lib",
+    "faraday.css",
+    "vite-env.d.ts",
+    "LICENSE"
+  ],
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "prepack": "cp ../../LICENSE ./LICENSE 2>/dev/null || true"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssota-labs/faraday-academy.git",
+    "directory": "packages/runtime"
+  },
+  "homepage": "https://github.com/ssota-labs/faraday-academy#readme",
   "peerDependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -44,5 +65,5 @@
     "vite": "^7.0.0",
     "typescript": "~5.9.0"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }
