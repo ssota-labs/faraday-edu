@@ -31,8 +31,8 @@ non-obvious caveats.
   inside the generated lesson (needs npm-registry access). Skip installing with
   `--skip-install` or `FARADAY_SKIP_INSTALL=1` (handy in CI / offline).
 - Verify a lesson: `node packages/cli/bin/faraday.mjs check --dir <lesson>` (layout + exact pins).
-- Install a module pack into a lesson: `node packages/cli/bin/faraday.mjs pack add <name> [--physics]
-  [--dir <lesson>]`; `pack list` shows the shipped packs (`three`/`tutor`/`srs`/`lecture-design`).
+- Module packs: `pack list [--json]` (catalog) · `pack add <name|source> [--physics] [--dir]`
+  (source = official name · `./path` · `owner/repo` · `npm:<spec>`) · `pack validate <name|source>`.
 - Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
 
 ### Working inside a generated lesson (2D / `--3d` / `--physics`)
@@ -72,12 +72,15 @@ invisible to the agent, and vice versa.
   per phase: `discovery` `audience` `curriculum` `learning-design` `interactive-design`
   `assessment` `pedagogy` `design` `quality-bar` `blocks` `worlds` `tutor`.
 
-**Module packs** (`packages/cli/packs/<name>/pack.json`) bind the two layers: a declarative
-manifest (deps · `cssImports` · `copy` · `appends` · `scaffold` · `skill`) that
-`faraday pack add <name>` installs into a lesson — runtime half (`package.json`/`app.css`/
-copied files) **and** skill half (`.faraday/packs/<name>/` + an `AGENTS.md` pointer), recorded
-in `.faraday/provenance.json`. Four ship today: `three` (pinned pkg + demo + physics variant),
-`tutor` (pinned pkg + author-editable server), `srs` (copied `<Flashcards>` source, zero deps),
-`lecture-design` (skill-only pedagogy folder). `new --3d`/`--physics`/`--tutor` are thin
-aliases over `installPack` (see `src/pack.mjs`, `src/generate.mjs`). Full format + install
-locations: [`specs/module-packs.md`](specs/module-packs.md).
+**Module packs** live in `packages/official-packs/<name>/` (contract:
+`packages/official-packs/pack.schema.json`) and bind the two layers via a declarative
+`pack.json` manifest (deps · `cssImports` · `copy` · `appends` · `scaffold` · `skill`).
+`faraday pack add <name|source>` resolves the source (official name · `./path` ·
+`owner/repo` github · `npm:<spec>`) then installs both halves into a lesson — runtime half
+(`package.json`/`app.css`/copied files) **and** skill half (`.faraday/packs/<name>/` + an
+`AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
+into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
+reads `official-packs` directly. Four ship today: `three`, `tutor`, `srs`, `lecture-design`.
+`new --3d`/`--physics`/`--tutor` are thin aliases over `installPack`. Validate a manifest
+with `faraday pack validate`. See `src/pack.mjs` (`resolvePack`/`installPack`/`validateManifest`)
+and [`specs/module-packs.md`](specs/module-packs.md).

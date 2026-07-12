@@ -1,9 +1,11 @@
 # Module Packs — 설계 스펙
 
-> 상태: **구현됨**. `faraday pack add/list` + 네 개 팩(`three`·`tutor`·`srs`·
-> `lecture-design`)이 동작합니다. `--3d`/`--physics`/`--tutor` 플래그는 이제
-> `installPack`을 호출하는 얇은 별칭이며, 옛 `templates/addon-*`는 제거됐습니다.
-> 나머지 팩(exam·deck·kids·notes)은 로드맵입니다.
+> 상태: **구현됨**. `faraday pack list/add/validate` + 네 개 공식 팩(`three`·
+> `tutor`·`srs`·`lecture-design`). 팩은 CLI에서 분리돼 `packages/official-packs/`에
+> 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는 공식명·로컬경로·github
+> (`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나 팩을 배포**할 수
+> 있다. `--3d`/`--physics`/`--tutor`는 `installPack`을 호출하는 얇은 별칭이고, 옛
+> `templates/addon-*`는 제거됐다. 나머지 팩(exam·deck·kids·notes)은 로드맵.
 
 ## 1. 배경 — 왜 "팩"인가
 
@@ -71,10 +73,18 @@ packs/<name>/
 ## 4. `faraday pack` 명령
 
 ```
-faraday pack list                       # 사용 가능한 팩 나열
-faraday pack add <name> [--physics] [--dir <lesson>]
-faraday pack remove <name>              # (로드맵)
+faraday pack list [--json]                     # 공식 팩 나열 (라이브 카탈로그)
+faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
+faraday pack validate <name|source> [--json]   # pack.json 계약 검증
+faraday pack remove <name>                     # (로드맵)
 ```
+
+**소스(`<name|source>`)** — `resolvePack()`이 해석해 로컬 팩 디렉터리로 만든 뒤
+기존 `installPack()`에 넘긴다:
+- **공식명** — `three` → 번들/official-packs
+- **로컬 경로** — `./my-pack`, `/abs/path` (pack.json 포함 디렉터리)
+- **github** — `owner/repo[/sub]` (tarball 다운로드 → `~/.faraday/cache` → 해석)
+- **npm** — `npm:@scope/pack` (`npm pack` → cache → 해석)
 
 `pack add`가 하는 일 (한 명령, 두 절반):
 
@@ -134,15 +144,22 @@ faraday pack remove <name>              # (로드맵)
 
 ## 9. 구현 요약
 
-- `packages/cli/packs/{three,tutor,srs,lecture-design}/` — 네 개 팩 (pack.json +
-  skill + examples/runtime + quality.md).
-- `packages/cli/src/pack.mjs` — `listPacks()` + `installPack()`. 매니페스트 지원:
-  `dependencies`/`devDependencies`/`variants` · `cssImports` · `copy`(파일/폴더) ·
-  `appends`(멱등, marker) · `scaffold`(new-lesson 전용 데모) · `skill`(파일/폴더).
-- `generate.mjs` — 애드온 로직 제거, `--3d`/`--physics`/`--tutor`는 `installPack`
-  위임. `templates/addon-3d`·`addon-tutor` 삭제.
-- `cli.mjs` — `faraday pack list` / `pack add <name> [--physics] [--dir]`.
-- `pack.test.mjs` — 네 팩의 설치·멱등성·거부 경로 검증 (총 21개 테스트 통과).
+- `packages/official-packs/{three,tutor,srs,lecture-design}/` — 네 개 공식 팩
+  (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
+- `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`
+  번들. `cli/package.json` `files`에 `packs` 추가, `<cli>/packs`는 gitignore.
+- `packages/cli/src/pack.mjs`:
+  - `packsRoot()` — official-packs(소스) 우선, 번들 폴백.
+  - `resolvePack(source)` — 공식명·로컬·github·npm 해석 → 로컬 packDir.
+  - `installPack()` — `packDir`/`source` 인자 지원. 매니페스트 지원: `dependencies`/
+    `devDependencies`/`variants` · `cssImports` · `copy`(파일/폴더) · `appends`(멱등) ·
+    `scaffold`(new 전용) · `skill`(파일/폴더). provenance: 공식=문자열 태그,
+    외부=`{name, source}`.
+  - `validateManifest()` — zero-dep 구조 검증 (ajv 없이).
+- `generate.mjs` — 애드온 로직 제거, `--3d`/`--physics`/`--tutor`는 `installPack` 위임.
+- `cli.mjs` — `faraday pack list [--json]` / `add <name|source> [--physics] [--dir] [--json]`
+  / `validate <name|source> [--json]`.
+- `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부(로컬) 소스 (총 24개 테스트 통과).
 
 **설치 위치** (예: `pack add srs`):
 ```

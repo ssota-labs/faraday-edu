@@ -7,7 +7,7 @@ import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
-import { listPacks, installPack } from "./pack.mjs";
+import { listPacks, installPack, resolvePack, readManifestAt, validateManifest } from "./pack.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
@@ -19,10 +19,14 @@ Usage:
                                         move the @faraday-academy/* pins (the only
                                         supported way): pin-bump → install →
                                         doctor, and roll back if doctor fails
-  faraday pack list                     list available module packs
-  faraday pack add <name> [--physics] [--dir <lesson>]
+  faraday pack list [--json]            list available (official) module packs
+  faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
                                         install a pack into an existing lesson —
-                                        runtime deps + skill guide, both at once
+                                        runtime deps + skill guide, both at once.
+                                        <source> = official name · ./path ·
+                                        owner/repo[/sub] (github) · npm:<spec>
+  faraday pack validate <name|source> [--json]
+                                        check a pack's pack.json against the contract
   faraday help
 
 The generated lesson depends on the versioned @faraday-academy/runtime package
@@ -190,14 +194,33 @@ async function runPack(argv, context) {
   const [sub, ...rest] = argv;
   if (sub === "list") return await runPackList(rest, context);
   if (sub === "add") return await runPackAdd(rest, context);
-  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add)`);
+  if (sub === "validate") return await runPackValidate(rest, context);
+  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, validate)`);
   e.exitCode = 2;
   throw e;
 }
 
 async function runPackList(argv, context) {
-  if (argv.length) { const e = new Error(`Unexpected argument: ${argv[0]}`); e.exitCode = 2; throw e; }
+  let json = false;
+  for (const arg of argv) {
+    if (arg === "--json") json = true;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
   const packs = await listPacks();
+  if (json) {
+    context.stdout(JSON.stringify(
+      packs.map((p) => ({
+        name: p.name,
+        displayName: p.displayName ?? "",
+        description: p.description ?? "",
+        variants: Object.keys(p.runtime?.variants ?? {}),
+        aliasFlags: p.aliasFlags ?? [],
+      })),
+      null,
+      2,
+    ) + "\n");
+    return;
+  }
   if (packs.length === 0) {
     context.stdout("No packs available.\n");
     return;
@@ -211,16 +234,17 @@ async function runPackList(argv, context) {
 }
 
 function parsePackAddArgs(argv) {
-  const opts = { name: undefined, dir: undefined, variant: null };
+  const opts = { source: undefined, dir: undefined, variant: null, json: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--dir") opts.dir = argv[++i];
     else if (arg === "--physics") opts.variant = "physics";
+    else if (arg === "--json") opts.json = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
-    else if (opts.name === undefined) opts.name = arg;
+    else if (opts.source === undefined) opts.source = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
   }
-  if (!opts.name) { const e = new Error("pack add requires a <name>"); e.exitCode = 2; throw e; }
+  if (!opts.source) { const e = new Error("pack add requires a <name|source>"); e.exitCode = 2; throw e; }
   if (opts.dir !== undefined && !opts.dir) { const e = new Error("--dir requires a value"); e.exitCode = 2; throw e; }
   return opts;
 }
@@ -228,12 +252,42 @@ function parsePackAddArgs(argv) {
 async function runPackAdd(argv, context) {
   const opts = parsePackAddArgs(argv);
   const fromDir = opts.dir ? path.resolve(context.cwd, opts.dir) : context.cwd;
-  const result = await installPack(opts.name, { fromDir, variant: opts.variant });
+
+  // 1. resolve the source (official name · ./path · owner/repo · npm:spec) to a local dir
+  const resolved = await resolvePack(opts.source, {
+    log: opts.json ? undefined : (m) => context.stderr(`  ${m}\n`),
+  });
+  // 2. validate its manifest before touching the lesson
+  const manifest = await readManifestAt(resolved.packDir);
+  const problems = validateManifest(manifest);
+  if (problems.length) {
+    for (const p of problems) context.stderr(`  invalid pack.json: ${p}\n`);
+    const e = new Error(`pack ${resolved.name} has an invalid manifest`);
+    e.exitCode = 2;
+    throw e;
+  }
+  // 3. install both halves
+  const result = await installPack(resolved.name, {
+    fromDir,
+    packDir: resolved.packDir,
+    source: resolved.source,
+    variant: opts.variant,
+  });
 
   const rel = path.relative(context.cwd, result.lessonRoot) || ".";
+  if (opts.json) {
+    context.stdout(JSON.stringify({
+      ok: true, command: "pack add", pack: result.packName, source: result.source,
+      variant: result.variant, dir: result.lessonRoot,
+      addedDeps: result.addedDeps, installedRefs: result.installedRefs,
+      nextSteps: result.addedDeps.length ? ["pnpm install"] : [],
+    }, null, 2) + "\n");
+    return;
+  }
   const label = result.variant ? `${result.packName} (--${result.variant})` : result.packName;
+  const from = result.source && result.source !== result.packName ? ` (from ${result.source})` : "";
   context.stdout(
-    `\n  Added pack ${label} to ${rel}/\n\n` +
+    `\n  Added pack ${label}${from} to ${rel}/\n\n` +
     (result.addedDeps.length
       ? `  Pinned: ${result.addedDeps.join(", ")}\n  Run \`pnpm install\` to fetch them.\n`
       : `  Dependencies already present.\n`) +
@@ -242,6 +296,32 @@ async function runPackAdd(argv, context) {
       : "") +
     "\n",
   );
+}
+
+async function runPackValidate(argv, context) {
+  let source, json = false;
+  for (const arg of argv) {
+    if (arg === "--json") json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (source === undefined) source = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!source) { const e = new Error("pack validate requires a <name|source>"); e.exitCode = 2; throw e; }
+
+  const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
+  const manifest = await readManifestAt(resolved.packDir);
+  const problems = validateManifest(manifest);
+  if (json) {
+    context.stdout(JSON.stringify({ ok: problems.length === 0, pack: resolved.name, problems }, null, 2) + "\n");
+  }
+  if (problems.length === 0) {
+    if (!json) context.stdout(`faraday pack validate: ${resolved.name} — manifest OK\n`);
+    return;
+  }
+  if (!json) for (const p of problems) context.stderr(`  ${p}\n`);
+  const e = new Error(`${problems.length} manifest problem(s) in ${resolved.name}`);
+  e.exitCode = 2;
+  throw e;
 }
 
 async function runDoctor(argv, context) {

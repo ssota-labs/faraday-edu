@@ -127,17 +127,24 @@ math in `<TeX>`). Grade each MUST pass/fail before reporting done.
 
 ## Decision guide — what to scaffold
 
+Capabilities beyond a plain 2D lesson are **module packs** — run `faraday pack list`
+for the live catalog and see [references/packs.md](references/packs.md); the flags
+below are scaffold-time aliases for the corresponding pack.
+
 - **2D (default)** — diagrams, charts, algorithm walk-throughs, parameter
-  exploration. Stays light; no `three`. The right default for most topics.
-- **`--3d`** — the subject is inherently spatial (astronomy, molecules, geometry,
-  anatomy). Adds R3F `<Scene3D>`. Domain scenes **must** set a `mood`.
-- **`--physics`** — genuine dynamics: collisions, gravity, stacking, joints
-  (implies `--3d`). For scripted motion (orbits) use the render loop, not physics.
-- **`--tutor`** — the reader benefits from asking questions. Adds a durable,
+  exploration. Stays light; no packs. The right default for most topics.
+- **`three` (`--3d`)** — the subject is inherently spatial (astronomy, molecules,
+  geometry, anatomy). Adds R3F `<Scene3D>`. Domain scenes **must** set a `mood`.
+- **`three --physics`** — genuine dynamics: collisions, gravity, stacking, joints
+  (implies 3D). For scripted motion (orbits) use the render loop, not physics.
+- **`tutor` (`--tutor`)** — the reader benefits from asking questions. Adds a durable,
   grounded chat tutor. Needs `AI_GATEWAY_API_KEY` locally. See [references/tutor.md](references/tutor.md).
+- **other packs** — memorization (`srs`), pedagogy (`lecture-design`), and more. Add
+  to an existing lesson anytime with `faraday pack add <name>`.
 - **Single lesson vs. course vs. world** — one idea → one `<Lesson>`; a sequence →
   `<Course>`; a graph with unlock progression / a roadmap map → `<CurriculumHost>` +
-  a pack. Design this in the Curriculum phase, build it per [references/worlds.md](references/worlds.md).
+  a **world pack** (`map2dPack`/`world3dPack` — a presentation shape, *not* a module
+  pack). Design this in the Curriculum phase, build it per [references/worlds.md](references/worlds.md).
 
 ## Styling (non-negotiable baseline)
 
@@ -160,9 +167,10 @@ Design phase:
 - [references/design.md](references/design.md) — visual/UX design within the theme system.
 
 Build API:
+- [references/packs.md](references/packs.md) — module packs: discover with `faraday pack list`, install with `faraday pack add`, read `.faraday/packs/<name>/`.
 - [references/blocks.md](references/blocks.md) — the full block API + canonical lesson shapes.
-- [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, packs, 3D moods, LMS.
-- [references/tutor.md](references/tutor.md) — embed + ground the `--tutor` AI, edit its persona/model.
+- [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, **world packs** (presentation shapes), 3D moods, LMS.
+- [references/tutor.md](references/tutor.md) — embed + ground the `tutor` pack AI, edit its persona/model.
 
 Verify:
 - [references/quality-bar.md](references/quality-bar.md) — the acceptance rubric (game-screen worlds, textbook-chapter lessons).

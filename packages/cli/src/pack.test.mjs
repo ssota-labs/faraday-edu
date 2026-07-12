@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { generateLesson } from "./generate.mjs";
-import { listPacks, installPack } from "./pack.mjs";
+import { listPacks, installPack, resolvePack, validateManifest, readManifestAt } from "./pack.mjs";
 
 async function tmp() {
   return fs.mkdtemp(path.join(os.tmpdir(), "faraday-pack-test-"));
@@ -143,4 +143,64 @@ test("installPack rejects an unknown pack, a lesson-less dir, and a bad variant"
   const target = path.join(base, "lesson");
   await generateLesson({ targetDir: target, name: "Pack Host 3", uuid: () => "fixed-id" });
   await assert.rejects(() => installPack("three", { fromDir: target, variant: "nonsense" }), /no variant/);
+});
+
+test("validateManifest catches shape errors and passes real packs", async () => {
+  assert.deepEqual(validateManifest({ displayName: "ok" }), []);
+  // a real shipped pack validates clean
+  const three = await resolvePack("three");
+  assert.deepEqual(validateManifest(await readManifestAt(three.packDir)), []);
+
+  const errs = validateManifest({
+    runtime: { copy: [{ from: "x" }], dependencies: { pkg: 1 } },
+    skill: { reference: 5 },
+  });
+  assert.ok(errs.some((e) => /displayName is required/.test(e)));
+  assert.ok(errs.some((e) => /runtime\.copy\[0\]/.test(e)));
+  assert.ok(errs.some((e) => /runtime\.dependencies/.test(e)));
+  assert.ok(errs.some((e) => /skill\.reference/.test(e)));
+});
+
+test("resolvePack classifies official names and local paths", async () => {
+  const off = await resolvePack("three");
+  assert.equal(off.name, "three");
+  assert.equal(off.source, "three");
+  assert.ok(await exists(path.join(off.packDir, "pack.json")));
+  await assert.rejects(() => resolvePack("does-not-exist"), /Unknown pack/);
+
+  // a local pack dir
+  const base = await tmp();
+  const packDir = path.join(base, "my-pack");
+  await fs.mkdir(packDir, { recursive: true });
+  await fs.writeFile(
+    path.join(packDir, "pack.json"),
+    JSON.stringify({ displayName: "Mine", skill: { reference: "g.md" } }),
+  );
+  await fs.writeFile(path.join(packDir, "g.md"), "# guide");
+  const local = await resolvePack(packDir);
+  assert.equal(local.packDir, packDir);
+  assert.equal(local.source, packDir);
+});
+
+test("installPack from an external (local) source records {name, source} in provenance", async () => {
+  const base = await tmp();
+  const target = path.join(base, "lesson");
+  await generateLesson({ targetDir: target, name: "External Host", uuid: () => "fixed-id" });
+
+  const packDir = path.join(base, "vocab-pack");
+  await fs.mkdir(packDir, { recursive: true });
+  await fs.writeFile(
+    path.join(packDir, "pack.json"),
+    JSON.stringify({ displayName: "Vocab", skill: { reference: "guide.md", loadWhen: "teaching vocab" } }),
+  );
+  await fs.writeFile(path.join(packDir, "guide.md"), "# vocab guide");
+
+  const result = await installPack("vocab-pack", { fromDir: target, packDir, source: packDir });
+  assert.equal(result.source, packDir);
+  assert.ok(await exists(path.join(target, ".faraday/packs/vocab-pack/guide.md")), "skill installed");
+
+  const prov = JSON.parse(await read(target, ".faraday/provenance.json"));
+  const entry = prov.packs.find((p) => typeof p === "object" && p.name === "vocab-pack");
+  assert.ok(entry, "external pack recorded as an object");
+  assert.equal(entry.source, packDir);
 });

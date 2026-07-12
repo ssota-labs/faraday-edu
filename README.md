@@ -274,8 +274,8 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 │  └─ labs/                     # @faraday-academy/labs — internal Vite catalog of components + skills/packs
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
-│  │  ├─ templates/starter/     #   the app shell stamped by `faraday new`
-│  │  └─ packs/                 #   module packs (three · tutor · srs · lecture-design)
+│  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
+│  ├─ official-packs/           # installable module packs (three · tutor · srs · lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (--3d / --physics)
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (--tutor)
