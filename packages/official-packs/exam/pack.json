@@ -1,0 +1,12 @@
+{
+  "name": "exam",
+  "displayName": "Exam / mock test",
+  "description": "Turn a topic into a practice test or mock exam — a blueprint-driven set of checks (MCQ, numeric, mission) with honest scoring and review. Skill-only: composes the existing assessment blocks, no new deps. Folder skill with an index that routes to sub-guides.",
+  "runtime": {},
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the goal is a practice test / mock exam — assessing mastery across a topic rather than teaching one concept"
+  },
+  "quality": "quality.md"
+}

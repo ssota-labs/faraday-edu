@@ -6,7 +6,22 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { generateLesson } from "./generate.mjs";
+import { runFaradayCli } from "./cli.mjs";
 import { listPacks, installPack, removePack, resolvePack, validateManifest, readManifestAt, readPackSkill, defaultPackNames } from "./pack.mjs";
+
+/** Run the CLI capturing stdout/stderr (throws on non-zero). setExitCode is
+ *  captured locally so a rejection test doesn't poison the runner's exit code. */
+async function cli(args) {
+  let out = "", err = "", code = 0;
+  await runFaradayCli(args, {
+    cwd: process.cwd(),
+    stdout: (s) => (out += s),
+    stderr: (s) => (err += s),
+    setExitCode: (c) => (code = c),
+    throwOnError: true,
+  });
+  return { out, err, code };
+}
 
 async function tmp() {
   return fs.mkdtemp(path.join(os.tmpdir(), "faraday-pack-test-"));
@@ -17,7 +32,7 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
   const three = packs.find((p) => p.name === "three");
@@ -198,6 +213,43 @@ test("default packs: audience + lecture-design are flagged, readPackSkill reads 
   const audFiles = await readPackSkill(aud.packDir, await readManifestAt(aud.packDir));
   assert.equal(audFiles.length, 1, "audience skill is a single file");
   assert.match(audFiles[0].content, /Audience/);
+});
+
+test("pack show routes a folder skill via its entry, a sub-file, and --all", async () => {
+  // folder skill with entry -> prints just the index (overview.md), plus a 'more' hint
+  const idx = await cli(["pack", "show", "lecture-design"]);
+  assert.match(idx.out, /overview/i, "printed the entry file");
+  assert.match(idx.out, /more in this pack:/, "listed the sub-files to fetch");
+  assert.doesNotMatch(idx.out, /Space and retrieve/, "did NOT dump the sub-files by default");
+
+  // a specific sub-file
+  const one = await cli(["pack", "show", "lecture-design", "spaced-retrieval.md"]);
+  assert.match(one.out, /Space and retrieve/, "printed the requested sub-file");
+  assert.doesNotMatch(one.out, /more in this pack:/, "no index hint when a file is requested");
+
+  // --all concatenates every file with headers
+  const all = await cli(["pack", "show", "lecture-design", "--all"]);
+  assert.match(all.out, /===== overview.md =====/);
+  assert.match(all.out, /===== spaced-retrieval.md =====/);
+
+  // exam pack front door
+  const exam = await cli(["pack", "show", "exam"]);
+  assert.match(exam.out, /practice test/i, "exam SKILL.md is the entry");
+
+  // unknown sub-file errors
+  await assert.rejects(() => cli(["pack", "show", "exam", "nope.md"]), /no file/);
+});
+
+test("exam pack: folder skill with an index + sub-guides, skill-only", async () => {
+  const exam = await resolvePack("exam");
+  const manifest = await readManifestAt(exam.packDir);
+  assert.equal(manifest.skill.entry, "SKILL.md");
+  assert.deepEqual(manifest.runtime ?? {}, {}, "exam adds no runtime deps");
+  const files = await readPackSkill(exam.packDir, manifest);
+  const paths = files.map((f) => f.path);
+  assert.ok(paths.includes("SKILL.md"), "has the index");
+  assert.ok(paths.includes("blueprint.md") && paths.includes("scoring-feedback.md"), "has sub-guides");
+  assert.deepEqual(validateManifest(manifest), [], "exam manifest is valid");
 });
 
 test("faraday new auto-installs default packs (skill-only), --no-defaults opts out", async () => {

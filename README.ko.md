@@ -406,7 +406,7 @@ flowchart LR
 | **대상(Audience)** | `audience` — 학습자별 전달 방법론 | ✅ 제공 중 · **default** | 스킬-온리 (CRA / 5E / Peer Instruction / Mayer / Merrill + 레이아웃) |
 | **렉쳐** | `deck` — 애니메이션 슬라이드쇼 | 🔜 | `<Paged>` + `runtime/motion` |
 | **아이들** | `kids` — 태블릿 게임 | 🔜 | `<SketchPad>` + `<Challenge>` + `<Paged>` + CRA 기본값 |
-| **시험** | `exam` — 실전 / 모의고사 | 🔜 | `<Quiz>` / `<NumericAnswer>` / `<Challenge>` + `assessment.md` |
+| **시험** | `exam` — 실전 / 모의고사 | ✅ 제공 중 | 폴더 스킬 (블루프린트 → 문항 → 채점 → 무결성), 평가 블록 조합, deps 0개 |
 | **노트** | `notes` — 굿노트식 펜 | 🔜 | `<SketchPad>`(펜 / 필압) → 풀페이지 잉크 캔버스 |
 
 **품질 관리도 팩의 일부입니다.** 모든 팩은

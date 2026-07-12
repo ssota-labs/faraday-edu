@@ -340,6 +340,7 @@ export function validateManifest(manifest) {
     if (!isObj(sk)) errs.push("skill must be an object");
     else {
       if (sk.reference != null && !isStr(sk.reference)) errs.push("skill.reference must be a string");
+      if (sk.entry != null && !isStr(sk.entry)) errs.push("skill.entry must be a string");
       if (sk.loadWhen != null && !isStr(sk.loadWhen)) errs.push("skill.loadWhen must be a string");
     }
   }

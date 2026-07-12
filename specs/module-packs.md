@@ -1,11 +1,13 @@
 # Module Packs — 설계 스펙
 
-> 상태: **구현됨**. `faraday pack list/add/validate` + 네 개 공식 팩(`three`·
-> `tutor`·`srs`·`lecture-design`). 팩은 CLI에서 분리돼 `packages/official-packs/`에
-> 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는 공식명·로컬경로·github
-> (`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나 팩을 배포**할 수
-> 있다. `--3d`/`--physics`/`--tutor`는 `installPack`을 호출하는 얇은 별칭이고, 옛
-> `templates/addon-*`는 제거됐다. 나머지 팩(exam·deck·kids·notes)은 로드맵.
+> 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 여섯 개 공식 팩
+> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`). 팩은 CLI에서 분리돼
+> `packages/official-packs/`에 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는
+> 공식명·로컬경로·github(`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나
+> 팩을 배포**할 수 있다. `lecture-design`·`audience`는 **default 팩**(`new` 자동설치),
+> `lecture-design`·`exam`은 **폴더 스킬 + entry** front-door. `--3d`/`--physics`/`--tutor`
+> 는 `installPack`을 호출하는 얇은 별칭이고, 옛 `templates/addon-*`는 제거됐다. 나머지
+> 팩(deck·kids·notes)은 로드맵.
 
 ## 1. 배경 — 왜 "팩"인가
 
@@ -76,9 +78,16 @@ packs/<name>/
 faraday pack list [--json]                     # 공식 팩 나열 (라이브 카탈로그)
 faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
 faraday pack remove <name> [--dir <lesson>] [--json]
-faraday pack show <name|source> [--json]        # 스킬 가이드를 stdout으로 (설계 타임)
+faraday pack show <name|source> [<file>] [--all] [--json]   # 스킬 가이드 출력 (설계 타임)
 faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 ```
+
+**폴더 스킬 + front-door** — `skill.reference`가 폴더면, `skill.entry`(예: `SKILL.md`
+/ `overview.md`)를 **인덱스/라우터**로 지정할 수 있다. `pack show <name>`은 그 entry만
+출력하고(하위 파일 목록을 힌트로 덧붙임), `pack show <name> <file>`은 특정 하위 파일,
+`--all`은 전체를 이어붙인다. 즉 베이스 `SKILL.md`의 progressive-disclosure 패턴을 팩에도
+적용한다. `installPack`은 폴더 전체를 `.faraday/packs/<name>/`로 복사하므로, 빌드 타임엔
+에이전트가 entry를 읽고 필요한 하위 파일만 연다. `lecture-design`·`exam`이 이 형태.
 
 **Default 팩** — `pack.json`에 `"default": true`인 팩(`lecture-design`·`audience`)은
 `faraday new`가 자동 설치한다(`--no-defaults`로 opt-out). 유일 소스는 팩이고, 설계
@@ -146,7 +155,7 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 | 렉쳐구성 | `lecture-design` (교수법) | ✅ 구현 | **스킬-온리** + 스킬 **폴더** 설치 |
 | 렉쳐 | `deck` (슬라이드쇼) | 🔜 | `<Paged>` + `runtime/motion` |
 | 아이들 | `kids` (태블릿 게임) | 🔜 | `<SketchPad>`+`<Challenge>`+`<Paged>`+CRA |
-| 시험 | `exam` | 🔜 | `<Quiz>`/`<NumericAnswer>`/`<Challenge>`+assessment |
+| 시험 | `exam` | ✅ 구현 | **폴더 스킬 + entry**(blueprint→items→scoring→integrity), 평가 블록 조합, deps 0 |
 | 노트 | `notes` (펜 슬라이드쇼) | 🔜 | `<SketchPad>` → 풀페이지 잉크 캔버스 |
 
 네 팩이 매니페스트의 서로 다른 경로를 한 번씩 검증한다: **pin**(three/tutor) ·
@@ -172,7 +181,8 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
   - `removePack()` — un-register(항상) + 비공유 deps/css 되돌리기; 복사 파일은 보고만.
 - `cli.mjs` — `faraday pack list [--json]` / `add <name|source> [--physics] [--dir] [--json]`
   / `remove <name> [--dir] [--json]` / `validate <name|source> [--json]`.
-- `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부(로컬) + 제거·공유deps (총 26개 통과).
+- `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부 + 제거·default·pack show 라우팅·
+  exam 폴더 스킬 (총 30개 통과).
 
 **설치 위치** (예: `pack add srs`):
 ```

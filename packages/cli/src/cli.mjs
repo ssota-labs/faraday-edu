@@ -29,9 +29,10 @@ Usage:
                                         un-install a pack: drop its skill guide +
                                         pointer + provenance, reverse deps/css not
                                         shared by another pack (copied files kept)
-  faraday pack show <name|source> [--json]
-                                        print a pack's skill guide to stdout (read
-                                        it at design time, no lesson needed)
+  faraday pack show <name|source> [<file>] [--all] [--json]
+                                        print a pack's skill guide (design-time, no
+                                        lesson). folder skills print their index;
+                                        pass a <file> for one section, --all for all
   faraday pack validate <name|source> [--json]
                                         check a pack's pack.json against the contract
   faraday help
@@ -340,11 +341,13 @@ async function runPackRemove(argv, context) {
 }
 
 async function runPackShow(argv, context) {
-  let source, json = false;
+  let source, subpath, json = false, all = false;
   for (const arg of argv) {
     if (arg === "--json") json = true;
+    else if (arg === "--all") all = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
     else if (source === undefined) source = arg;
+    else if (subpath === undefined) subpath = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
   }
   if (!source) { const e = new Error("pack show requires a <name|source>"); e.exitCode = 2; throw e; }
@@ -352,22 +355,46 @@ async function runPackShow(argv, context) {
   const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
   const manifest = await readManifestAt(resolved.packDir);
   const files = await readPackSkill(resolved.packDir, manifest);
+  const entry = manifest.skill?.entry;
+
+  // Which files to print:
+  //   <name> <file>  -> that sub-file · --all -> every file · single file -> it ·
+  //   folder + entry -> just the entry (the router) · folder, no entry -> everything.
+  let shown;
+  if (subpath) {
+    shown = files.filter((f) => f.path === subpath || f.path === `${subpath}.md` || f.path.endsWith(`/${subpath}`));
+    if (!shown.length) {
+      const e = new Error(`no file "${subpath}" in pack ${resolved.name} (has: ${files.map((f) => f.path).join(", ") || "none"})`);
+      e.exitCode = 2;
+      throw e;
+    }
+  } else if (all || files.length <= 1 || !entry) {
+    shown = files;
+  } else {
+    shown = files.filter((f) => f.path === entry);
+    if (!shown.length) shown = files; // entry declared but missing -> fall back
+  }
 
   if (json) {
-    context.stdout(JSON.stringify({ name: resolved.name, displayName: manifest.displayName ?? "", files }, null, 2) + "\n");
+    context.stdout(JSON.stringify({
+      name: resolved.name, displayName: manifest.displayName ?? "", entry: entry ?? null,
+      available: files.map((f) => f.path), files: shown,
+    }, null, 2) + "\n");
     return;
   }
-  if (files.length === 0) {
+  if (shown.length === 0) {
     context.stdout(`pack ${resolved.name} has no skill guide.\n`);
     return;
   }
-  if (files.length === 1) {
-    const c = files[0].content;
-    context.stdout(c.endsWith("\n") ? c : c + "\n");
-    return;
+  let out = shown.length === 1
+    ? (shown[0].content.endsWith("\n") ? shown[0].content : shown[0].content + "\n")
+    : `<!-- pack: ${resolved.name} — ${manifest.displayName ?? ""} (${shown.length} files) -->\n` +
+      shown.map((f) => `\n\n===== ${f.path} =====\n\n${f.content.replace(/\n+$/, "")}\n`).join("");
+  // When routed to the entry and there's more, tell the reader how to fetch the rest.
+  if (!subpath && !all && entry && files.length > 1) {
+    const rest = files.filter((f) => f.path !== entry).map((f) => f.path);
+    out += `\n<!-- more in this pack: ${rest.join(", ")} — read one with \`faraday pack show ${resolved.name} <file>\`, or all with --all -->\n`;
   }
-  let out = `<!-- pack: ${resolved.name} — ${manifest.displayName ?? ""} (${files.length} files) -->\n`;
-  for (const f of files) out += `\n\n===== ${f.path} =====\n\n${f.content.replace(/\n+$/, "")}\n`;
   context.stdout(out);
 }
 

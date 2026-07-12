@@ -6,6 +6,7 @@
   "runtime": {},
   "skill": {
     "reference": "skill",
+    "entry": "overview.md",
     "loadWhen": "you are designing how a lesson or curriculum teaches — choosing a methodology, sequencing, assessment cadence, or feedback"
   },
   "quality": "quality.md"

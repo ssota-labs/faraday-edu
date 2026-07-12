@@ -405,7 +405,7 @@ flowchart LR
 | **Audience** | `audience` — delivery methodology per learner | ✅ shipping · **default** | skill-only (CRA / 5E / Peer Instruction / Mayer / Merrill + layout) |
 | **Lecture** | `deck` — animated slideshow | 🔜 | `<Paged>` + `runtime/motion` |
 | **Kids** | `kids` — tablet game | 🔜 | `<SketchPad>` + `<Challenge>` + `<Paged>` + CRA default |
-| **Exam** | `exam` — practice / mock test | 🔜 | `<Quiz>` / `<NumericAnswer>` / `<Challenge>` + `assessment.md` |
+| **Exam** | `exam` — practice / mock test | ✅ shipping | folder skill (blueprint → items → scoring → integrity), composes assessment blocks, zero deps |
 | **Notes** | `notes` — GoodNotes-style pen | 🔜 | `<SketchPad>` (pen / pressure) → full-page ink canvas |
 
 **Quality control is part of the pack.** Every pack is built against

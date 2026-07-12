@@ -82,9 +82,11 @@ invisible to the agent, and vice versa.
 (`package.json`/`app.css`/copied files) **and** skill half (`.faraday/packs/<name>/` + an
 `AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
 into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
-reads `official-packs` directly. Five ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`. The last two are
-**default packs** (`"default": true`) — `faraday new` auto-installs their skill halves so
-every lesson carries the pedagogy + audience knowledge in `.faraday/packs/`; read them at
-design time with `faraday pack show <name>`. `new --3d`/`--physics`/`--tutor` are thin aliases
+reads `official-packs` directly. Six ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`.
+`lecture-design`/`audience` are **default packs** (`"default": true`) — `faraday new`
+auto-installs their skill halves so every lesson carries the pedagogy + audience knowledge
+in `.faraday/packs/`. A pack's skill can be a **folder with an `entry`** (front-door index,
+e.g. `lecture-design`/`exam`): `faraday pack show <name>` prints just the entry, `pack show
+<name> <file>` a sub-file, `--all` everything — read them at design time, no lesson needed. `new --3d`/`--physics`/`--tutor` are thin aliases
 over `installPack`. See `src/pack.mjs` (`resolvePack`/`installPack`/`removePack`/`readPackSkill`/
 `validateManifest`) and [`specs/module-packs.md`](specs/module-packs.md).
