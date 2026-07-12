@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { generateLesson } from "./generate.mjs";
-import { listPacks, installPack, resolvePack, validateManifest, readManifestAt } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, validateManifest, readManifestAt } from "./pack.mjs";
 
 async function tmp() {
   return fs.mkdtemp(path.join(os.tmpdir(), "faraday-pack-test-"));
@@ -180,6 +180,55 @@ test("resolvePack classifies official names and local paths", async () => {
   const local = await resolvePack(packDir);
   assert.equal(local.packDir, packDir);
   assert.equal(local.source, packDir);
+});
+
+test("removePack un-registers a pack and reverses its unshared deps/css", async () => {
+  const target = await scaffold("Remove Host");
+  await installPack("three", { fromDir: target });
+  assert.ok(await exists(path.join(target, ".faraday/packs/three/pack.md")), "installed first");
+
+  const r = await removePack("three", { fromDir: target });
+  assert.equal(r.manifestResolved, true);
+
+  // skill half + pointer + provenance gone
+  assert.equal(await exists(path.join(target, ".faraday/packs/three")), false, "skill dir removed");
+  assert.ok(!(await read(target, "AGENTS.md")).includes("Pack `three`:"), "AGENTS.md pointer stripped");
+  const prov = JSON.parse(await read(target, ".faraday/provenance.json"));
+  assert.ok(!prov.packs.some((p) => (typeof p === "string" ? p : p.name).startsWith("three")), "provenance entry gone");
+
+  // reversible runtime config reversed
+  const pkg = JSON.parse(await read(target, "package.json"));
+  assert.ok(!("@faraday-academy/three" in pkg.dependencies), "three dep removed");
+  assert.ok(!(await read(target, "src/app.css")).includes("@faraday-academy/three/styles.css"), "three css removed");
+  assert.ok(r.removedDeps.includes("@faraday-academy/three"));
+
+  // copied files are reported, not deleted
+  assert.ok(r.leftFiles.includes("docs/examples"));
+
+  await assert.rejects(() => removePack("three", { fromDir: target }), /not installed/);
+});
+
+test("removePack keeps a dependency still required by another installed pack", async () => {
+  const base = await tmp();
+  const target = path.join(base, "lesson");
+  await generateLesson({ targetDir: target, name: "Shared Deps", uuid: () => "fixed-id" });
+
+  // a local pack that also depends on @react-three/fiber (shared with `three`)
+  const packDir = path.join(base, "viz-pack");
+  await fs.mkdir(packDir, { recursive: true });
+  await fs.writeFile(
+    path.join(packDir, "pack.json"),
+    JSON.stringify({ displayName: "Viz", runtime: { dependencies: { "@react-three/fiber": "^9.0.0" } } }),
+  );
+
+  await installPack("three", { fromDir: target });
+  await installPack("viz-pack", { fromDir: target, packDir, source: packDir });
+
+  const r = await removePack("three", { fromDir: target });
+  const pkg = JSON.parse(await read(target, "package.json"));
+  assert.ok("@react-three/fiber" in pkg.dependencies, "shared dep kept");
+  assert.ok(!("@faraday-academy/three" in pkg.dependencies), "unshared three dep removed");
+  assert.ok(!r.removedDeps.includes("@react-three/fiber"), "shared dep not reported as removed");
 });
 
 test("installPack from an external (local) source records {name, source} in provenance", async () => {
