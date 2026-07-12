@@ -9,7 +9,7 @@ slug), so per-chapter `useState` / `useStepper` resets cleanly — no stale stat
 leaks across chapters. You can freely mix stepped and continuous chapters.
 
 ```tsx
-import { Course } from "@/faraday/runtime";
+import { Course } from "@faraday-academy/runtime/runtime";
 export default function MyCourse() {
   return <Course title="…" chapters={[
     { slug: "intro", title: "Intro", element: <IntroChapter /> },   // each is a normal <Lesson>
@@ -26,9 +26,9 @@ owns progress, the world↔lesson toggle, the HUD, and an event stream for
 LMS/tutor hooks. The *shape* of the world is a swappable **pack**
 (ports-and-adapters) — change one prop, keep the content:
 
-- `linearPack` — status list (doc-style, renders inline). `@/faraday/world`
-- `map2dPack` — 2D tactical node map (**game screen**). `@/faraday/world`
-- `world3dPack` — 3D open-world constellation (**game screen**, needs `--3d`). `@/faraday/three`
+- `linearPack` — status list (doc-style, renders inline). `@faraday-academy/runtime/world`
+- `map2dPack` — 2D tactical node map (**game screen**). `@faraday-academy/runtime/world`
+- `world3dPack` — 3D open-world constellation (**game screen**, needs `--3d`). `@faraday-academy/three`
 
 **Game packs are immersive.** The host mounts the world as a full-viewport game
 screen — no page header, no reading column — and overlays a game HUD: a status
@@ -41,7 +41,7 @@ inline (small map embedded in a page); `hint="…"` overrides the HUD hint. Do
 **not** wrap an immersive world in `<Lesson>`/prose — the world IS the screen.
 
 ```tsx
-import { CurriculumHost, map2dPack, type Curriculum } from "@/faraday/world";
+import { CurriculumHost, map2dPack, type Curriculum } from "@faraday-academy/runtime/world";
 // Module scope — REQUIRED. Recreating this object inside the component resets progress.
 const curriculum: Curriculum = { title: "…", nodes: [
   { id: "a", title: "A", meta: { x: 15, y: 50 }, lesson: <LessonA /> },
@@ -63,7 +63,7 @@ Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with `--3d`).
 
 ## 3D lessons (`--3d`) — Three.js / R3F
 
-Import from `@/faraday/three`. `three` is only installed/bundled with `--3d`.
+Import from `@faraday-academy/three`. `three` is only installed/bundled with `--3d`.
 
 **Colour split:** DOM/SVG/Tailwind → semantic tokens (never raw `#hex`). three.js
 material `color` props → **hex required** (three can't parse `oklch`). `<Label3D>`
@@ -93,7 +93,7 @@ is the exception (DOM overlay → theme text).
 > **Helpers are decorations, not simulators.** `<Planet>` moves at a constant
 > parametric rate — fine for atmosphere, wrong for teaching Kepler. When the
 > teaching point **is** equal areas / real dynamics, integrate yourself
-> (`useFrame` + `M = E − e·sinE`); `platform/examples/voyage-log/src/lesson/nodes/kepler.tsx`
+> (`useFrame` + `M = E − e·sinE`); `examples/voyage-log/src/lesson/nodes/kepler.tsx`
 > shows the integration *technique* (Newton-solve Kepler's equation, wedge
 > areas) — copy the math, **not** the page structure: that file predates the
 > quality bar (ASCII math in `<code>`, a `<Stat>` strip under the figure, a
@@ -126,7 +126,7 @@ vars (it can't parse `oklch`). Pass hex to 3D objects.
 For photoreal/organic shapes not practical to code-generate:
 
 ```tsx
-import { Scene3D, Model } from "@/faraday/three";
+import { Scene3D, Model } from "@faraday-academy/three";
 <Scene3D mood="lab"><Model url="/models/fox.glb" scale={0.05} animation="Walk" /></Scene3D>
 ```
 
@@ -170,13 +170,13 @@ but you'll reach for them immediately):
 
 ## LMS — progress tracking
 
-The vendored `@/faraday/lms` exposes a progress recorder + dashboard components
+The `@faraday-academy/runtime/lms` module exposes a progress recorder + dashboard components
 that attach to a lesson or a whole curriculum. Wire it to the `CurriculumHost`
 event stream:
 
 ```tsx
-import { CurriculumHost } from "@/faraday/world";
-import { useLmsRecorder, ProgressDashboard } from "@/faraday/lms";
+import { CurriculumHost } from "@faraday-academy/runtime/world";
+import { useLmsRecorder, ProgressDashboard } from "@faraday-academy/runtime/lms";
 const rec = useLmsRecorder("my-course");           // → { onEvent, events, clear }
 <CurriculumHost curriculum={c} pack={map2dPack} onEvent={rec.onEvent} />
 <ProgressDashboard events={rec.events} />          // summarizes internally
@@ -184,7 +184,7 @@ const rec = useLmsRecorder("my-course");           // → { onEvent, events, cle
 
 For a cohort read-out pass `learners={[{ id, name, summary: summarize(rec.events) }]}`
 (`summarize` builds the `LmsSummary`, incl. `perNode`). Use for roster/progress.
-Like everything under `src/faraday/`, it's locked — compose it, don't edit it.
+Like everything in the runtime, it's a pinned dependency — compose it, don't edit it.
 
 ## Rendering gotcha (3D & charts)
 

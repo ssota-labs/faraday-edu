@@ -51,19 +51,19 @@ general public, Merrill's First Principles for professionals) in
 | Zone | Path | Rule |
 |---|---|---|
 | **Author area** | `src/lesson/**` | You write here. `src/lesson/lesson.tsx` is the fixed entry; it must `export default` a React component. Add sibling files freely (`src/lesson/chapters/`, helpers, models). |
-| **Protected area** | `src/faraday/**` | Vendored UI, blocks, runtime, styles, world/tutor code. **Never edit.** Sealed by a SHA-256 manifest — `faraday check` fails on any drift, and so will CI/deploy. |
+| **Runtime (dependency)** | `@faraday-academy/*` | The UI, blocks, runtime, styles, and world code — **pinned npm packages**, not vendored. Consume them via `@faraday-academy/runtime/*` (and `/three`, `/tutor`); you can't edit them. `faraday check` verifies the pins, and so will CI/deploy. |
 
-If a primitive seems missing, **note it — do not work around the lock** by editing
-`src/faraday/`. Also never run `shadcn add` (it writes into the locked tree).
+If a primitive seems missing, **note it — don't try to fork the runtime**. The UI lives in
+the pinned `@faraday-academy/runtime` package, not your lesson, so `shadcn add` won't help.
 
 ## Invoking the CLI
 
 The CLI is `faraday`. Prefer the published package; fall back to the local repo:
 
 ```bash
-npx @faraday-kit/cli@latest <args>        # canonical (Stage 1)
+npx @faraday-academy/cli@latest <args>        # canonical (Stage 1)
 # during pre-publish local dev, equivalently:
-node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs <args>
+node /path/to/faraday-edu/packages/cli/bin/faraday.mjs <args>
 ```
 
 Use `--json` on `new` for a machine-readable result you can parse (title, absolute
@@ -72,13 +72,13 @@ dir, next steps). Exit codes: `0` ok · `1` check failed · `2` usage · `4` env
 ## The build loop
 
 1. **Scaffold.** Pick flags from the decision guide below:
-   `npx @faraday-kit/cli@latest new <name> [--3d|--physics] [--tutor] [--json]`
+   `npx @faraday-academy/cli@latest new <name> [--3d|--physics] [--tutor] [--json]`
    (installs deps unless `--skip-install`). `cd` into the new dir.
 2. **Read the in-project guide** — the scaffold ships `AGENTS.md` and
    `docs/authoring.md`; the block API also lives in [references/blocks.md](references/blocks.md).
    Start from a `docs/examples/*.tsx` when one fits (stepped, continuous, course,
    curriculum, lms, tutor) — copy it to `src/lesson/lesson.tsx` and adapt.
-3. **Author** `src/lesson/**` from `@/faraday/blocks` + `@/faraday/runtime`.
+3. **Author** `src/lesson/**` from `@faraday-academy/runtime/blocks` + `@faraday-academy/runtime/runtime`.
 4. **Gate:** `pnpm check` — structure + integrity must exit 0.
 5. **Verify live:** `pnpm dev`, drive it (see below), end lessons with a `<Quiz>`.
 6. **Ship (optional):** `pnpm build` → static `dist/`, or deploy (static host, or
@@ -91,7 +91,7 @@ but **not sufficient** — a lesson that runs while showing wrong behaviour is w
 than none. Always attempt verification, and layer the checks from cheap to
 meaningful:
 
-1. **Gates** — `pnpm check` (locked tree intact) + `pnpm typecheck` / `pnpm build`
+1. **Gates** — `pnpm check` (layout + pin) + `pnpm typecheck` / `pnpm build`
    (the whole graph compiles). These catch structure and type errors, not meaning.
 2. **Drive the behaviour** — `pnpm dev`, then exercise every control and confirm the
    thing the reader manipulates changes what it should. **The world/roadmap screen

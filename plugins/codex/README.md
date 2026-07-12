@@ -48,8 +48,8 @@ Invoke the skill with `$faraday`, or let Codex pick it up implicitly.
 
 ## Prerequisites
 
-- **The Faraday CLI.** The skill calls `npx @faraday-kit/cli@latest`; pre-publish,
-  that's `node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs`.
+- **The Faraday CLI.** The skill calls `npx @faraday-academy/cli@latest`; pre-publish,
+  that's `node /path/to/faraday-edu/packages/cli/bin/faraday.mjs`.
 - **pnpm** (the scaffold installs with it).
 - **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded
   lesson's `.env.local` (never committed). Deploys use OIDC instead.
@@ -61,6 +61,6 @@ scaffold → read the in-project guide → author src/lesson/lesson.tsx
         → pnpm check (gates) → pnpm dev (drive it) → deploy
 ```
 
-Faraday's rule: `src/faraday/**` is vendored and sealed (SHA-256 manifest) — author
-only in `src/lesson/**`, never edit the lock. Full API in
+Faraday's rule: the runtime is a pinned `@faraday-academy/*` dependency, not vendored — author
+only in `src/lesson/**`, never fork the runtime. Full API in
 `skills/faraday/references/`.

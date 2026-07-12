@@ -10,24 +10,24 @@ with `blocks.md` / `tutor.md` / `worlds.md`.
 A CLI scaffolder for AI-authored interactive textbooks. `faraday new <name>`
 produces a self-contained Vite + React app for **one interactive lesson**; flags
 add a grounded AI tutor (`--tutor`), 3D (`--3d`), and physics (`--physics`).
-Invoke the CLI as `npx @faraday-kit/cli@latest <args>` (pre-publish local dev:
-`node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs <args>`).
+Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local dev:
+`node /path/to/faraday-edu/packages/cli/bin/faraday.mjs <args>`).
 
 ## The two-zone rule (governs everything)
 
 - **Author zone** `src/lesson/**` — write here. `src/lesson/lesson.tsx` is the
   fixed entry and must `export default` a React component.
-- **Protected zone** `src/faraday/**` — vendored UI/blocks/runtime/styles, sealed
-  by a SHA-256 manifest. **Never edit it.** `faraday check` (`pnpm check`) fails on
-  any drift. Never run `shadcn add` (writes into the lock). Missing primitive →
-  note it, don't work around the lock.
+- **Runtime dependency** `@faraday-academy/*` — pinned UI/blocks/runtime/styles/world,
+  installed from npm. **You consume it, can't edit it.** `faraday check` (`pnpm check`) fails on
+  any drift. Never run `shadcn add` (the UI is in the runtime, not your lesson). Missing primitive →
+  note it, don't fork the runtime.
 
 ## The loop
 
-1. `npx @faraday-kit/cli@latest new <name> [flags] --json` → parse JSON, `cd` in.
+1. `npx @faraday-academy/cli@latest new <name> [flags] --json` → parse JSON, `cd` in.
 2. Read the scaffold's `AGENTS.md` + `docs/authoring.md`; start from a
    `docs/examples/*.tsx` when one fits.
-3. Author `src/lesson/lesson.tsx` from `@/faraday/blocks` + `@/faraday/runtime`:
+3. Author `src/lesson/lesson.tsx` from `@faraday-academy/runtime/blocks` + `@faraday-academy/runtime/runtime`:
    a `<Lesson>` frame, a `<Workbench>` (or `<Stage>`) interactive centerpiece, a
    `<Callout>` key idea, a closing `<Quiz>`.
 4. `pnpm check` must exit 0 (fix drift by reverting locked-tree edits).
@@ -43,5 +43,5 @@ Invoke the CLI as `npx @faraday-kit/cli@latest <args>` (pre-publish local dev:
 - `--tutor` needs `AI_GATEWAY_API_KEY` in the lesson's `.env.local` (never commit
   it); on Vercel it uses OIDC. Ground the tutor by passing lesson text as
   `context`. Verify `/api/chat` streams with `curl` (preview tools mishandle SSE).
-- One lesson / one idea. No routing/backend/network calls (except the vendored
+- One lesson / one idea. No routing/backend/network calls (except the author-editable
   `--tutor` server layer). Don't add dependencies unless truly needed.

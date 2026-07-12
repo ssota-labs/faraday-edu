@@ -47,9 +47,9 @@ validate .` from the repo root before publishing).
 
 ## Prerequisites
 
-- **The Faraday CLI.** Commands call `npx @faraday-kit/cli@latest`. During
+- **The Faraday CLI.** Commands call `npx @faraday-academy/cli@latest`. During
   pre-publish local development, that's equivalent to
-  `node /path/to/faraday-edu/platform/packages/cli/bin/faraday.mjs` — the skill knows both.
+  `node /path/to/faraday-edu/packages/cli/bin/faraday.mjs` — the skill knows both.
 - **pnpm** (the scaffold installs with it).
 - **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded
   lesson's `.env.local` (never committed). Deploys use OIDC instead.
@@ -61,5 +61,5 @@ scaffold → read the in-project guide → author src/lesson/lesson.tsx
         → pnpm check (gates) → pnpm dev (drive it) → deploy
 ```
 
-Faraday's rule: `src/faraday/**` is vendored and sealed (SHA-256 manifest) — the
-plugin authors only in `src/lesson/**` and never edits the lock.
+Faraday's rule: the runtime is a pinned `@faraday-academy/*` dependency, not vendored — the
+plugin authors only in `src/lesson/**` and never tries to fork the runtime.

@@ -12,7 +12,7 @@ Follow the `faraday` skill's `references/tutor.md`. Steps:
    `workflows/tutor-agent.ts` / `api/chat.post.ts`, it wasn't scaffolded with
    `--tutor`. Either re-scaffold with `--tutor`, or tell the user this lesson is
    static and needs `--tutor` at creation. Do **not** hand-add the server layer —
-   it's vendored.
+   it's a pinned dependency.
 
 2. **Key setup** (local): ensure `.env.local` exists with `AI_GATEWAY_API_KEY`:
    ```bash
@@ -22,7 +22,7 @@ Follow the `faraday` skill's `references/tutor.md`. Steps:
 
 3. **Embed `<Tutor>`** in `src/lesson/lesson.tsx`, grounded in the lesson text:
    ```tsx
-   import { Tutor } from "@/faraday/tutor";
+   import { Tutor } from "@faraday-academy/tutor";
    <Tutor title="…" context={LESSON_TEXT} greeting="…" />
    ```
    Pass the actual lesson content (or the relevant slice) as `context` so answers

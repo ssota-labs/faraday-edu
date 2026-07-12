@@ -1,0 +1,48 @@
+{
+  "name": "@faraday-academy/runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The Faraday runtime layer (ui, blocks, runtime, styles, world, lms, lib) — a versioned package that generated lessons pin and consume via @faraday-academy/runtime/* (no longer vendored). @faraday-academy/labs previews the same source via the @/faraday alias. react/react-dom are peers so a consumer dedupes to one copy.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./blocks": "./blocks/index.ts",
+    "./runtime": "./runtime/index.ts",
+    "./world": "./world/index.ts",
+    "./lms": "./lms/index.ts",
+    "./lib/utils": "./lib/utils.ts",
+    "./ui/*": "./ui/*.tsx",
+    "./styles.css": "./faraday.css",
+    "./faraday.css": "./faraday.css",
+    "./styles/*": "./styles/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.5.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "katex": "^0.16.11",
+    "recharts": "^3.8.0",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vite": "^7.0.0",
+    "typescript": "~5.9.0"
+  },
+  "license": "UNLICENSED"
+}

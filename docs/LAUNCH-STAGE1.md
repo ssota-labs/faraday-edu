@@ -12,7 +12,7 @@
 
 | # | 갭 | 심각도 | 현재 상태 | 왜 막히나 |
 |---|---|---|---|---|
-| 1 | **`@faraday-kit/cli` npm 미배포** | 🔴 Blocker | `package.json` `private: true`, registry 404 | 스킬/README가 `npx @faraday-kit/cli@latest`를 호출 → 외부 유저 퍼널 즉시 사망 |
+| 1 | **`@faraday-academy/cli` npm 미배포** | 🔴 Blocker | `package.json` `private: true`, registry 404 | 스킬/README가 `npx @faraday-academy/cli@latest`를 호출 → 외부 유저 퍼널 즉시 사망 |
 | 2 | **플러그인 마켓플레이스 URL 불일치** | 🔴 Blocker | docs: `titanism/faraday-edu` · 실제 공개 레포: `ssota-labs/faraday-edu` · `titanism/…` 없음 | `/plugin marketplace add`가 실패 |
 | 3 | **공개 데모 링크 0개** | 🔴 Blocker | 예제는 템플릿 안 `docs/examples/*.tsx`뿐 | 콘텐츠 CTA(“이거 봐”)가 갈 곳이 없음 |
 | 4 | **콘텐츠 → 설치 → 첫 레슨 퍼널 미설계** | 🟠 High | GTM.md에 아이디어만 | 스킬 배포해도 “다음에 뭐 하지?”가 끊김 |
@@ -59,7 +59,7 @@
 [프롬프트]  “내 슬라이드/이 주제로 인터랙티브 레슨 만들어줘”
     │  스킬 Discover → Design → Build → Verify
     ▼
-[로컬]  npx @faraday-kit/cli new … → pnpm check → pnpm dev
+[로컬]  npx @faraday-academy/cli new … → pnpm check → pnpm dev
     ▼
 [데모]  우리가 미리 올려둔 live demo + “fork this” 예제
     │  유저 결과물도 vercel preview로 공유
@@ -80,11 +80,11 @@
 
 ### A1. CLI를 npm에 올린다 🔴
 - [ ] `private: true` 해제 전략 결정 (publish용 워크플로 또는 `publishConfig`)
-- [ ] 패키지명 확정: `@faraday-kit/cli` (스킬과 일치 유지)
+- [ ] 패키지명 확정: `@faraday-academy/cli` (스킬과 일치 유지)
 - [ ] 라이선스: MIT 또는 Apache-2.0 중 하나 명시
 - [ ] `files` 필드에 `bin`/`src`/`templates` 포함 확인 (이미 있음)
 - [ ] `npm publish --access public` (스코프 패키지)
-- [ ] 검증: 클린 머신에서 `npx @faraday-kit/cli@latest help` / `new demo --skip-install`
+- [ ] 검증: 클린 머신에서 `npx @faraday-academy/cli@latest help` / `new demo --skip-install`
 
 ### A2. 플러그인 설치 경로를 고친다 🔴
 - [ ] 모든 docs/README/marketplace owner URL을 **`ssota-labs/faraday-edu`**로 통일  
@@ -113,7 +113,7 @@
 - [ ] 튜터 데모용 Vercel 프로젝트 + Gateway OIDC 한 번 연결해 두기
 
 ### A5. 런칭 체크리스트 (Go / No-Go)
-- [ ] `npx @faraday-kit/cli@latest new …` 외부에서 성공
+- [ ] `npx @faraday-academy/cli@latest new …` 외부에서 성공
 - [ ] marketplace add (실제 org) 성공
 - [ ] S1–S4 중 최소 Claude 2개 + Codex 1개 통과
 - [ ] 데모 URL ≥3 라이브 (아래 B)
@@ -135,9 +135,9 @@
 | S2 | 케플러 쓸기 | `--3d` | 공간·mood·조작 | static |
 | S3 | 갈톤 보드 500알 | `--physics` | 떨어뜨리면 정규분포 | static |
 | S4 | 이진 탐색 + 튜터 | `--tutor` | 그라운딩 챗 (답 비누출) | Vercel (OIDC) |
-| C★ | **항해 일지 (C-B)** ✅ | CurriculumHost + `world3dPack` | 맵 언락 + 코스 샷 | `platform/examples/voyage-log` → Vercel |
+| C★ | **항해 일지 (C-B)** ✅ | CurriculumHost + `world3dPack` | 맵 언락 + 코스 샷 | `examples/voyage-log` → Vercel |
 
-구현: [`platform/examples/voyage-log/`](../platform/examples/voyage-log/) · 아이디에이션: [DEMO-IDEATION.md](DEMO-IDEATION.md).
+구현: [`examples/voyage-log/`](../examples/voyage-log/) · 아이디에이션: [DEMO-IDEATION.md](DEMO-IDEATION.md).
 
 ### B2. 데모 운영 규칙
 - 각 데모 페이지 하단에 고정 CTA:  
@@ -233,7 +233,7 @@ Go/No-Go 게이트 (A5)
 |---|---|
 | 이 런칭 계획 | `LAUNCH-STAGE1.md` (본 문서) |
 | 스킬·플러그인 | `plugins/claude-code`, `plugins/codex` |
-| CLI 패키지 | `@faraday-kit/cli` on npm |
+| CLI 패키지 | `@faraday-academy/cli` on npm |
 | 데모 | Vercel 프로젝트 × N + README 링크 |
 | 콘텐츠 초안 | 발행 채널 + (선택) Notion 캘린더 |
 

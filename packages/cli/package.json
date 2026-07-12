@@ -1,0 +1,15 @@
+{
+  "name": "@faraday-academy/cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Faraday — a toolcraft-style, shadcn-based scaffolder for AI-authored interactive lessons (CLI-only phase). Working codename.",
+  "type": "module",
+  "bin": {
+    "faraday": "./bin/faraday.mjs"
+  },
+  "files": ["bin", "src", "templates"],
+  "scripts": {
+    "test": "node --test src/*.test.mjs"
+  },
+  "license": "UNLICENSED"
+}

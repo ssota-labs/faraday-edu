@@ -28,8 +28,8 @@ every lesson layout. A right-edge tab opens it; on narrow screens it's a drawer.
 Do **not** drop `<Tutor>` inline in the content flow — the dock is the placement.
 
 ```tsx
-import { Lesson, Prose, Quiz } from "@/faraday/blocks";
-import { TutorDock } from "@/faraday/tutor";
+import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { TutorDock } from "@faraday-academy/tutor";
 
 <TutorDock
   title="Binary-search tutor"
@@ -59,10 +59,10 @@ and ask rather than dump answers, never leak quiz/exercise solutions.
 
 - `workflows/tutor-agent.ts` — the durable agent **and its system prompt**. Edit
   here to change persona, rules, or the model (`MODEL_ID`) and reasoning level.
-  This file is in the author zone, not the locked tree.
+  This file is in the author zone (your lesson), not a pinned dependency.
 - `api/chat.post.ts` + `api/chat/[runId]/stream.get.ts` — server routes (start a
   run; reconnect to it). Nitro serves these under `/api/`.
-- `src/faraday/tutor/**` — the chat UI + `<Tutor>` client. **Vendored + locked**
+- `@faraday-academy/tutor` — the chat UI + `<Tutor>` client. **A pinned dependency**
   (don't edit; `faraday check` verifies it).
 
 Static (non-tutor) lessons stay server-free; only `--tutor` adds the `api/` +

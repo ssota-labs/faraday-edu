@@ -210,9 +210,9 @@
 | 단편 | S2 케플러 | 3D mood | static |
 | 단편 | S3 갈톤 | 물리·바이럴 클립 | static |
 | 단편 | S4 이진+튜터 | 튜터 레이어 | Vercel |
-| **커리큘럼** | **C-B 항해 일지** ✅ 진행 | “코스까지 딸깍” 증명 | `platform/examples/voyage-log` → Vercel |
+| **커리큘럼** | **C-B 항해 일지** ✅ 진행 | “코스까지 딸깍” 증명 | `examples/voyage-log` → Vercel |
 
-구현 위치: [`platform/examples/voyage-log/`](../platform/examples/voyage-log/) (모노레포 예제, `faraday new --3d`).
+구현 위치: [`examples/voyage-log/`](../examples/voyage-log/) (모노레포 예제, `faraday new --3d`).
 노드 6은 정적 배포를 위해 `--tutor` 대신 **시계 동기화 Quiz 미션**으로 둔다.
 
 ### 미니 커리큘럼 폴백 (3노드, 하루 컷)

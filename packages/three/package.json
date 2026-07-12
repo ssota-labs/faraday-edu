@@ -1,0 +1,38 @@
+{
+  "name": "@faraday-academy/three",
+  "version": "0.1.0",
+  "description": "Faraday Academy 3D addon — R3F/three.js block (Scene3D, Body, Model, world packs) that 3D lessons pin. R3F is a peer the lesson provides; optional @react-three/rapier unlocks the physics pack.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "sideEffects": ["*.css"],
+  "exports": {
+    ".": "./index.ts",
+    "./physics": "./physics/index.ts",
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "peerDependencies": {
+    "@faraday-academy/runtime": "workspace:^",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/rapier": "^2.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.171.0"
+  },
+  "peerDependenciesMeta": { "@react-three/rapier": { "optional": true } },
+  "devDependencies": {
+    "@faraday-academy/runtime": "workspace:*",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/rapier": "^2.1.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.171.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "~5.9.0",
+    "vite": "^7.0.0"
+  }
+}

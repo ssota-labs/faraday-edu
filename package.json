@@ -1,0 +1,10 @@
+{
+  "name": "faraday",
+  "private": true,
+  "description": "Faraday monorepo — the @faraday-academy/cli scaffolder, the runtime + addon packages lessons pin, and live example lessons.",
+  "scripts": {
+    "test": "pnpm --filter @faraday-academy/cli test",
+    "test:cli": "pnpm --filter @faraday-academy/cli test"
+  },
+  "packageManager": "pnpm@11.5.2"
+}
