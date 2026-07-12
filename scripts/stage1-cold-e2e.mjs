@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Stage 1 cold-path smoke (local CLI stand-in for Claude/Codex agent E2E).
-// Covers: marketplace URL · CLI scaffold 2D/--3d · example check/typecheck/build.
+// Covers: marketplace URL · CLI scaffold 2D + `pack add three` · example check/typecheck/build.
 // Exit 0 on pass. Real marketplace install in Claude/Codex remains a human gate.
 
 import { spawnSync } from "node:child_process";
@@ -64,12 +64,13 @@ function main() {
   console.log("\n── CLI unit tests ──");
   run("node", ["--test", "packages/cli/src/*.test.mjs"]);
 
-  console.log("\n── Scaffold 2D + 3D (skip-install) ──");
+  console.log("\n── Scaffold 2D + pack add three (skip-install) ──");
   const work = mkdtempSync(path.join(tmpdir(), "faraday-cold-"));
   const s1 = path.join(work, "s1");
   const s2 = path.join(work, "s2");
   run("node", [cli, "new", "s1", "--at", s1, "--skip-install", "--overwrite"]);
-  run("node", [cli, "new", "s2", "--3d", "--at", s2, "--skip-install", "--overwrite"]);
+  run("node", [cli, "new", "s2", "--at", s2, "--skip-install", "--overwrite"]);
+  run("node", [cli, "pack", "add", "three", "--dir", s2]);
 
   for (const dir of [s1, s2]) {
     const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8"));

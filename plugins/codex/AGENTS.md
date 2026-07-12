@@ -8,9 +8,9 @@ with `blocks.md` / `tutor.md` / `worlds.md`.
 ## What Faraday is
 
 A CLI scaffolder for AI-authored interactive textbooks. `faraday new <name>`
-produces a self-contained Vite + React app for **one interactive lesson**; flags
-add a grounded AI tutor (`--tutor`), 3D (`--3d`), and physics (`--physics`).
-Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local dev:
+produces a self-contained Vite + React app for **one interactive lesson**; add
+capabilities afterward with `faraday pack add <name>` (e.g. `three`, `three
+--physics`, `tutor`). Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local dev:
 `node /path/to/faraday-academy/packages/cli/bin/faraday.mjs <args>`).
 
 ## The two-zone rule (governs everything)
@@ -24,7 +24,9 @@ Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local de
 
 ## The loop
 
-1. `npx @faraday-academy/cli@latest new <name> [flags] --json` → parse JSON, `cd` in.
+1. `npx @faraday-academy/cli@latest new <name> --json` → parse JSON, `cd` in, then
+   `faraday pack add <name>` any capabilities the topic needs (`three`, `three
+   --physics`, `tutor`, …).
 2. Read the scaffold's `AGENTS.md` + `docs/authoring.md`; start from a
    `docs/examples/*.tsx` when one fits.
 3. Author `src/lesson/lesson.tsx` from `@faraday-academy/runtime/blocks` + `@faraday-academy/runtime/runtime`:
@@ -40,8 +42,8 @@ Invoke the CLI as `npx @faraday-academy/cli@latest <args>` (pre-publish local de
   `style={{ fill: "var(--primary)" }}`. Never `#hex` or `text-blue-500`.
 - Domain `<Scene3D>` scenes **must** set a `mood` (`space`/`cell`/`lab`/`physics`/
   `abstract`); shipping `neutral` for a real subject is a defect.
-- `--tutor` needs `AI_GATEWAY_API_KEY` in the lesson's `.env.local` (never commit
-  it); on Vercel it uses OIDC. Ground the tutor by passing lesson text as
+- The `tutor` pack needs `AI_GATEWAY_API_KEY` in the lesson's `.env.local` (never
+  commit it); on Vercel it uses OIDC. Ground the tutor by passing lesson text as
   `context`. Verify `/api/chat` streams with `curl` (preview tools mishandle SSE).
 - One lesson / one idea. No routing/backend/network calls (except the author-editable
-  `--tutor` server layer). Don't add dependencies unless truly needed.
+  `tutor` pack server layer). Don't add dependencies unless truly needed.

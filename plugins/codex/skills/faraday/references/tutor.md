@@ -1,6 +1,6 @@
-# The AI tutor (`--tutor`)
+# The AI tutor (`tutor` pack)
 
-`faraday new <name> --tutor` turns the lesson app into a Vite + Nitro + Workflow
+`faraday pack add tutor` turns the lesson app into a Vite + Nitro + Workflow
 hybrid and vendors a `<Tutor>` component. It follows Vercel's AI SDK design and
 runs a **Workflow DevKit durable agent**: a reply survives a page refresh, a
 network drop, or a serverless timeout and resumes mid-answer.
@@ -65,7 +65,7 @@ and ask rather than dump answers, never leak quiz/exercise solutions.
 - `@faraday-academy/tutor` — the chat UI + `<Tutor>` client. **A pinned dependency**
   (don't edit; `faraday check` verifies it).
 
-Static (non-tutor) lessons stay server-free; only `--tutor` adds the `api/` +
+Static (non-tutor) lessons stay server-free; only the `tutor` pack adds the `api/` +
 `workflows/` layer.
 
 ## Model, thinking, caching (defaults)

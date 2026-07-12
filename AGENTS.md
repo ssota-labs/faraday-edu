@@ -23,7 +23,7 @@ non-obvious caveats.
 - To materialize a secret, save it as a Cursor Secret whose name **exactly matches** a key in
   `.env.example` (e.g. add `AI_GATEWAY_API_KEY` to `.env.example` + Secrets). With no matching
   Secrets it is a no-op and writes nothing. Re-run manually with `node scripts/setup-env-local.mjs`
-  (add `--dir <path>` to target a generated lesson's own `.env.example`, e.g. a `--tutor` lesson).
+  (add `--dir <path>` to target a generated lesson's own `.env.example`, e.g. a lesson with the `tutor` pack).
 
 ### Running / testing the CLI (from repo root)
 - Tests: `node --test packages/cli/src/*.test.mjs` (Node's built-in runner; no ports, no services).
@@ -37,7 +37,7 @@ non-obvious caveats.
   (`lecture-design`, `audience`) auto-install at `new` (`--no-defaults` to skip).
 - Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
 
-### Working inside a generated lesson (2D / `--3d` / `--physics`)
+### Working inside a generated lesson
 - `pnpm check` (structure + SHA-256 integrity gates), `pnpm typecheck`, `pnpm build`,
   `pnpm dev`, `pnpm preview` (fixed port 4173).
 - **Non-obvious:** `pnpm dev` (Vite) deliberately uses **no fixed port** — it auto-selects a
@@ -45,7 +45,7 @@ non-obvious caveats.
 - Author in `src/lesson/**`. The runtime is a pinned `@faraday-academy/*` dependency, not
   vendored — there is no `src/faraday/**`; `faraday check` verifies the layout + exact pins.
 
-### Tutor mode (`--tutor`)
+### Tutor pack (`faraday pack add tutor`)
 - Adds a server-backed AI chat tutor: the generated app becomes a Vite + Nitro + Workflow
   hybrid serving on `http://localhost:3000`. It needs an `AI_GATEWAY_API_KEY` in the
   generated lesson's `.env.local` (Vercel AI Gateway) only for live model responses; it boots
@@ -87,6 +87,5 @@ reads `official-packs` directly. Nine ship today: `three`, `tutor`, `srs`, `lect
 auto-installs their skill halves so every lesson carries the pedagogy + audience knowledge
 in `.faraday/packs/`. A pack's skill can be a **folder with an `entry`** (front-door index,
 e.g. `lecture-design`/`exam`): `faraday pack show <name>` prints just the entry, `pack show
-<name> <file>` a sub-file, `--all` everything — read them at design time, no lesson needed. `new --3d`/`--physics`/`--tutor` are thin aliases
-over `installPack`. See `src/pack.mjs` (`resolvePack`/`installPack`/`removePack`/`readPackSkill`/
+<name> <file>` a sub-file, `--all` everything — read them at design time, no lesson needed. Capabilities are added with `faraday pack add <name>`, not flags — one uniform mechanism for all packs. See `src/pack.mjs` (`resolvePack`/`installPack`/`removePack`/`readPackSkill`/
 `validateManifest`) and [`specs/module-packs.md`](specs/module-packs.md).

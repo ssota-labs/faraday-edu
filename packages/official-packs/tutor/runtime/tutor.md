@@ -1,7 +1,7 @@
-# The AI Tutor (`--tutor`)
+# The AI Tutor (`tutor` pack)
 
-This lesson was scaffolded with `--tutor`, so it ships a **durable, grounded AI
-chat tutor** you can drop beside any content. It follows Vercel's AI SDK design
+This lesson has the `tutor` pack added (`faraday pack add tutor`), so it ships a
+**durable, grounded AI chat tutor** you can drop beside any content. It follows Vercel's AI SDK design
 and runs a Workflow DevKit durable agent, so a reply survives a page refresh or
 network drop and resumes mid-answer.
 

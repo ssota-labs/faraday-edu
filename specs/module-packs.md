@@ -6,8 +6,8 @@
 > `packages/official-packs/`에 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는
 > 공식명·로컬경로·github(`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나
 > 팩을 배포**할 수 있다. `lecture-design`·`audience`는 **default 팩**(`new` 자동설치),
-> `lecture-design`·`exam`은 **폴더 스킬 + entry** front-door. `--3d`/`--physics`/`--tutor`
-> 는 `installPack`을 호출하는 얇은 별칭이고, 옛 `templates/addon-*`는 제거됐다.
+> `lecture-design`·`exam`은 **폴더 스킬 + entry** front-door. 능력은 `faraday pack add`로
+> 추가하며 `faraday new`엔 능력 플래그가 없다(`--3d`/`--tutor` 제거). 옛 `templates/addon-*`도 제거됐다.
 > 추가 팩(커뮤니티 기여 등)은 로드맵.
 
 ## 1. 배경 — 왜 "팩"인가
@@ -52,7 +52,6 @@ packs/<name>/
   "name": "three",
   "displayName": "3D scenes (React Three Fiber)",
   "description": "...",
-  "aliasFlags": ["--3d"],
   "runtime": {
     "dependencies": { "@faraday-academy/three": "0.1.0", "@react-three/fiber": "^9.0.0" },
     "devDependencies": { "@types/three": "^0.171.0" },
@@ -118,8 +117,8 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 
 설치 후 소비자는 `pnpm install`로 새 deps를 받는다.
 
-**하위호환:** `--3d`/`--physics`/`--tutor`는 `pack add three [--physics]` /
-`pack add tutor`의 별칭으로 흡수한다 (기존 `new` 플래그 유지).
+**능력 = 팩:** `--3d`/`--physics`/`--tutor` 플래그는 **제거됐다**. 모든 능력은
+`pack add three [--physics]` / `pack add tutor` 등 `faraday pack add`로 균일하게 추가한다.
 
 ## 5. 스킬 쪽 설치 위치 — 레슨 로컬
 
@@ -178,12 +177,13 @@ faraday pack validate <name|source> [--json]    # pack.json 계약 검증
     `scaffold`(new 전용) · `skill`(파일/폴더). provenance: 공식=문자열 태그,
     외부=`{name, source}`.
   - `validateManifest()` — zero-dep 구조 검증 (ajv 없이).
-- `generate.mjs` — 애드온 로직 제거, `--3d`/`--physics`/`--tutor`는 `installPack` 위임.
+- `generate.mjs` — 능력 플래그(`--3d`/`--physics`/`--tutor`) 제거 → 플레인 스캐폴드 +
+  default 팩만. 능력은 `faraday pack add`로 추가.
   - `removePack()` — un-register(항상) + 비공유 deps/css 되돌리기; 복사 파일은 보고만.
 - `cli.mjs` — `faraday pack list [--json]` / `add <name|source> [--physics] [--dir] [--json]`
   / `remove <name> [--dir] [--json]` / `validate <name|source> [--json]`.
 - `pack.test.mjs` — 설치·멱등성·거부 + 해석기·검증·외부 + 제거·default·pack show 라우팅·
-  exam 폴더 스킬·9팩 검증 (총 31개 통과).
+  exam 폴더 스킬·9팩 검증 (총 28개 통과).
 
 **설치 위치** (예: `pack add srs`):
 ```

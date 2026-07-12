@@ -148,6 +148,6 @@ summary.
 ## Constraints
 
 - One lesson / one idea. No routing, no backend, no network calls (except the
-  `--tutor` server layer, which is author-editable).
+  `tutor` pack server layer, which is author-editable).
 - Don't add dependencies unless the lesson genuinely needs them.
 - Don't try to fork the runtime — it's a pinned dependency.

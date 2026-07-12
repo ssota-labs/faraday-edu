@@ -38,7 +38,7 @@ validate .` from the repo root before publishing).
   - **Build API** — `blocks.md` (block API + lesson shapes), `worlds.md`
     (`<Course>`/`<CurriculumHost>`/packs/3D/LMS), `tutor.md` (the grounded tutor).
 - **Slash commands**
-  - `/faraday-new <topic> [--3d|--physics] [--tutor]` — scaffold + author a lesson.
+  - `/faraday-new <topic>` — scaffold + author a lesson (add capabilities with `faraday pack add`).
   - `/faraday-tutor` — add / embed and verify the grounded AI tutor.
   - `/faraday-check` — run the gates and fix integrity drift.
   - `/faraday-deploy [preview|prod]` — build + deploy (static, or Vercel for tutors).
@@ -51,8 +51,9 @@ validate .` from the repo root before publishing).
   pre-publish local development, that's equivalent to
   `node /path/to/faraday-academy/packages/cli/bin/faraday.mjs` — the skill knows both.
 - **pnpm** (the scaffold installs with it).
-- **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded
-  lesson's `.env.local` (never committed). Deploys use OIDC instead.
+- **A Vercel AI Gateway key** *only* for lessons with the `tutor` pack (`faraday
+  pack add tutor`), in the lesson's `.env.local` (never committed). Deploys use
+  OIDC instead.
 
 ## The loop it automates
 

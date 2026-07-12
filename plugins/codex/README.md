@@ -51,8 +51,9 @@ Invoke the skill with `$faraday`, or let Codex pick it up implicitly.
 - **The Faraday CLI.** The skill calls `npx @faraday-academy/cli@latest`; pre-publish,
   that's `node /path/to/faraday-academy/packages/cli/bin/faraday.mjs`.
 - **pnpm** (the scaffold installs with it).
-- **A Vercel AI Gateway key** *only* for `--tutor` lessons, in the scaffolded
-  lesson's `.env.local` (never committed). Deploys use OIDC instead.
+- **A Vercel AI Gateway key** *only* for lessons with the `tutor` pack (`faraday
+  pack add tutor`), in the lesson's `.env.local` (never committed). Deploys use
+  OIDC instead.
 
 ## The loop it automates
 

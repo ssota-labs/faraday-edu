@@ -15,7 +15,7 @@
 Faraday is a **scaffolder** for AI-authored interactive courseware. You (or your
 coding agent) run one command and get a self-contained Vite + React app for a
 lesson — a live canvas the reader *manipulates*, not a wall of text. Add a
-durable, grounded **AI tutor** with a flag. Bundle lessons into a **curriculum or
+durable, grounded **AI tutor** with one `pack add`. Bundle lessons into a **curriculum or
 game-like world**, wire in **LMS** progress tracking, and deploy. No workspace, no
 npm publish, no backend unless you ask for one.
 
@@ -163,7 +163,7 @@ teaching, and you compose them per lesson:
 | ![Lecture deck](docs/images/component-lecture.png) | **🎬 Lecture / deck** | Slideshow-style delivery — one idea per screen, prev/next, animation. | `<Paged>` · `runtime/motion` · `deck` pack |
 | ![Quiz and assignment](docs/images/component-quiz.png) | **✅ Quiz / assignment** | Checks that *teach* — MCQ, typed numeric, sketch-to-predict, and missions cleared in the sim. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
 | ![LMS dashboard](docs/images/component-lms.png) | **📊 Student management** | Record progress and show a dashboard across a lesson or a whole curriculum (LMS). | `runtime/lms` (recorder + dashboard) |
-| ![AI tutor](docs/images/component-tutor.png) | **🤖 AI tutor** | A grounded, Socratic chat that answers only from the lesson's own content. | `tutor` pack (`--tutor`) |
+| ![AI tutor](docs/images/component-tutor.png) | **🤖 AI tutor** | A grounded, Socratic chat that answers only from the lesson's own content. | `tutor` pack |
 
 <!-- 📸 component-*.png thumbnails — see docs/images/README.md. Broken icons above are placeholders until you drop the files in. -->
 
@@ -188,11 +188,11 @@ lesson blocks, grouped by what they do:
 
 On top of the blocks:
 
-- **3D** (`@faraday-academy/three`, `--3d`) — `<Scene3D>` (R3F) with procedural
+- **3D** (`@faraday-academy/three`, `pack add three`) — `<Scene3D>` (R3F) with procedural
   helpers (`<Body>`, `<Planet>`, `<OrbitPath>`, `<Label3D>`), a `<Model>` glTF
   loader, and a `mood` per scene (`space`, `cell`, `lab`, `physics`, `abstract`).
   **Procedural-first, asset-fallback.**
-- **Physics** (`--physics`) — Rapier gravity/collision via `@react-three/rapier`.
+- **Physics** (`pack add three --physics`) — Rapier gravity/collision via `@react-three/rapier`.
 - **Curriculum / world** (`runtime/world`) — bundle many lessons: `<Course>` for
   a linear textbook (chapter nav, prev/next, `#hash`), or `<CurriculumHost>` with
   **unlock progression** and a swappable **pack** — `linearPack` (status list),
@@ -200,7 +200,7 @@ On top of the blocks:
   the seam you swap to reskin the whole world.
 - **LMS** (`runtime/lms`) — a progress recorder + dashboard that attach to a
   lesson or a whole curriculum.
-- **Tutor AI** (`@faraday-academy/tutor`, `--tutor`) — a **durable, grounded**
+- **Tutor AI** (`@faraday-academy/tutor`, `pack add tutor`) — a **durable, grounded**
   chat agent embedded beside your content. More below.
 
 ---
@@ -213,16 +213,16 @@ them on demand from a topic — you don't wire any of it by hand.
 
 - **Watch Dijkstra find the shortest path.** Step through a graph as the frontier
   expands, scrubbing back and forth — then ask the built-in tutor *why* it never
-  revisits a settled node. *(stepped frames + `<Scrubber>` + `--tutor`)*
+  revisits a settled node. *(stepped frames + `<Scrubber>` + `tutor` pack)*
 - **Feel compound interest compound.** Drag principal, rate, and compounding
   frequency; the balance curve and the final number update live. The "Rule of 72"
   stops being a formula you memorize. *(live knobs + `<Chart>` + `<Stat>`)*
 - **See Kepler's second law sweep equal areas.** A planet on a real elliptical
   orbit in 3D speeds up near the sun; drag the eccentricity and the equal-area
-  sweeps stay equal. *(3D, `space` mood — `--3d`)*
+  sweeps stay equal. *(3D, `space` mood — `three` pack)*
 - **Drop 500 balls through a Galton board.** Real physics — each ball bounces off
   the pegs and piles up into a bell curve you never programmed. *(Rapier —
-  `--physics`)*
+  `three --physics`)*
 - **Take a 3-part course on waves.** Transverse vs. longitudinal, then
   interference you mix with sliders, then standing-wave harmonics — with chapter
   nav, prev/next, and deep links. *(`<Course>`)*
@@ -246,13 +246,13 @@ Once you know what you want, just tell your agent:
 
 ```text
 "Make a lesson that shows the solar system in 3D. Planets orbit,
- and let the user control the time speed with a slider."   → --3d
+ and let the user control the time speed with a slider."   → pack add three
 ```
 
 ```text
 "Make a Galton board with a physics engine to teach probability.
  Let me change the number of balls, and show the normal distribution
- build up."   → --physics
+ build up."   → pack add three --physics
 ```
 
 With a plugin installed, the agent scaffolds with the right flags, composes the
@@ -260,9 +260,9 @@ blocks, and passes the gates for you.
 
 ---
 
-## The AI tutor (`--tutor`)
+## The AI tutor (`tutor` pack)
 
-`faraday new <name> --tutor` turns the app into a Vite + Nitro + Workflow hybrid
+`faraday pack add tutor` turns the app into a Vite + Nitro + Workflow hybrid
 and vendors a `<Tutor>` component. It follows Vercel's AI SDK design and runs a
 Workflow DevKit **durable agent**: a reply survives a page refresh, a network
 drop, or a serverless timeout and resumes mid-answer.
@@ -300,16 +300,20 @@ Static (non-tutor) lessons stay server-free. Full guide: the scaffolded
 ## CLI reference
 
 ```
-faraday new <name> [--3d | --physics] [--tutor] [--at <dir>] [--overwrite] [--skip-install] [--json]
-faraday check [--dir <lesson>]     verify the protected src/faraday/** tree
+faraday new <name> [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
+faraday check [--dir <lesson>]     verify the lesson layout + runtime pin
+faraday pack list | add <name|source> [--physics] | remove <name> | show <name> | validate <name>
 faraday help
 ```
 
-| Flag | Effect |
+**Capabilities are packs, not flags.** Scaffold a plain lesson with `new`, then add
+what it needs with `faraday pack add <name>` — `three` (`--physics` variant), `tutor`,
+`srs`, `exam`, `deck`, `kids`, `notes`, … (`faraday pack list` shows them all). The
+pedagogy + audience packs auto-install at `new`; `--no-defaults` skips them.
+
+| `new` flag | Effect |
 |---|---|
-| `--3d` | include the Three.js (R3F) 3D block + a solar-system demo. Omit for 2D — `three` is never installed or bundled without it. |
-| `--physics` | `--3d` plus the Rapier physics engine + a gravity/collision demo. |
-| `--tutor` | add the durable grounded AI tutor (`api/` + `workflows/` server layer; needs `AI_GATEWAY_API_KEY` locally). |
+| `--no-defaults` | skip the auto-installed `lecture-design` + `audience` packs. |
 | `--at <dir>` | scaffold into `<dir>` instead of `./<name>`. |
 | `--overwrite` | allow writing into a non-empty target. |
 | `--skip-install` | skip `pnpm install` (or set `FARADAY_SKIP_INSTALL=1`). |
@@ -331,10 +335,10 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
 │  ├─ official-packs/           # installable module packs (three · tutor · srs · lecture-design · audience) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
-│  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (--3d / --physics)
-│  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (--tutor)
+│  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
+│  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)
 ├─ examples/                    # Standalone demos (own lockfile; Vercel root = examples/<name>)
-│  └─ voyage-log/               #   sample curriculum (--3d)
+│  └─ voyage-log/               #   sample curriculum (three pack)
 ├─ plugins/
 │  ├─ claude-code/              # Claude Code plugin + marketplace (install & drive Faraday)
 │  └─ codex/                    # Codex AGENTS.md + custom prompts
@@ -351,10 +355,11 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 
 ## What the scaffolder does
 
-Copy starter → target · restore `.gitignore` · pin `@faraday-academy/runtime`
-(+ `three`/`tutor` for `--3d`/`--tutor`) · wire `app.css` to the runtime stylesheet
-· inject package name + HTML title · issue a `lessonId` provenance record ·
-`pnpm install`. `faraday check`/`doctor` then verify the layout + exact pins.
+Copy starter → target · restore `.gitignore` · pin `@faraday-academy/runtime` ·
+auto-install the default packs (`lecture-design`, `audience`) · wire `app.css` to
+the runtime stylesheet · inject package name + HTML title · issue a `lessonId`
+provenance record · `pnpm install`. Add capabilities afterward with
+`faraday pack add <name>`. `faraday check`/`doctor` verify the layout + exact pins.
 
 ## Develop Faraday itself
 
@@ -414,12 +419,12 @@ and the `faraday-author` subagent builds a lesson end-to-end so the output can b
 graded. The direction is an eval loop: an agent generates lessons from prompts,
 other agents score them against the rubric, and a pack is gated on its pass rate.
 
-**Try it.** Four packs ship today — run `faraday pack list`, then
+**Try it.** Nine packs ship today — run `faraday pack list`, then
 `faraday pack add <name> [--physics] [--dir <lesson>]`. One command installs the
 runtime half (deps / source / CSS) **and** the skill half (an authoring guide the
-agent loads, pointed to from `AGENTS.md`) into an existing lesson at once. The
-`--3d`/`--physics`/`--tutor` flags on `faraday new` are now thin aliases over the
-same installer. Full format + install locations + roadmap:
+agent loads, pointed to from `AGENTS.md`) into an existing lesson at once. There are
+**no capability flags** on `faraday new` — every capability is a `pack add`, one
+uniform mechanism. Full format + install locations + roadmap:
 [`specs/module-packs.md`](specs/module-packs.md).
 
 ---
@@ -428,7 +433,7 @@ same installer. Full format + install locations + roadmap:
 
 Faraday is the **build-time** half of a two-AI system: a *creation AI* authors
 courseware now (what the plugins drive); a *tutor AI* teaches students at runtime
-(what `--tutor` embeds). The platform phase adds managed AI (Vercel AI Gateway),
+(what the tutor pack embeds). The platform phase adds managed AI (Vercel AI Gateway),
 multi-tenancy (Vercel Platforms), and creator↔student payments — turning the
 open-core CLI into a three-sided marketplace. Read [VISION.md](docs/VISION.md) and
 [GTM.md](docs/GTM.md) for the full arc.

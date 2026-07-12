@@ -28,7 +28,7 @@ LMS/tutor hooks. The *shape* of the world is a swappable **pack**
 
 - `linearPack` — status list (doc-style, renders inline). `@faraday-academy/runtime/world`
 - `map2dPack` — 2D tactical node map (**game screen**). `@faraday-academy/runtime/world`
-- `world3dPack` — 3D open-world constellation (**game screen**, needs `--3d`). `@faraday-academy/three`
+- `world3dPack` — 3D open-world constellation (**game screen**, needs the `three` pack). `@faraday-academy/three`
 
 **Game packs are immersive.** The host mounts the world as a full-viewport game
 screen — no page header, no reading column — and overlays a game HUD: a status
@@ -55,15 +55,15 @@ canvas (`map2dPack` is a fixed 720×440 SVG, so `y:50` centres and extreme `x` c
 clip labels); omit for auto layout. A lesson self-completes via
 `useNode().complete()`; the idiomatic wiring is **`<Quiz onCorrect={complete} />`**
 (answer correctly → node done → dependents unlock). The learner can also press
-Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with `--3d`).
+Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with the `three` pack).
 
 > **Progress footgun:** keep `curriculum` at **module scope**. Defining it inside
 > the component creates a new object every render and wipes unlock state.
 > `CurriculumHost` warns in dev when identity flips with the same title.
 
-## 3D lessons (`--3d`) — Three.js / R3F
+## 3D lessons (`three` pack) — Three.js / R3F
 
-Import from `@faraday-academy/three`. `three` is only installed/bundled with `--3d`.
+Import from `@faraday-academy/three`. `three` is only installed/bundled with the `three` pack (`faraday pack add three`).
 
 **Colour split:** DOM/SVG/Tailwind → semantic tokens (never raw `#hex`). three.js
 material `color` props → **hex required** (three can't parse `oklch`). `<Label3D>`
@@ -134,10 +134,10 @@ Drop `.glb` in `public/models/`. Curated open-license sources: NASA 3D Resources
 Smithsonian 3D, NIH 3D / BioModels, Poly Haven (CC0), Khronos glTF samples (CC0),
 CC-licensed Sketchfab. Prefer procedural when it's clear enough.
 
-### Physics (`--physics`)
+### Physics (`three --physics`)
 
-Rapier engine (implies `--3d`). Wrap scene bodies in `<Physics>` from
-`@react-three/rapier`:
+Rapier engine (the `--physics` variant of the `three` pack). Wrap scene bodies in
+`<Physics>` from `@react-three/rapier`:
 
 ```tsx
 import { Physics, RigidBody } from "@react-three/rapier";

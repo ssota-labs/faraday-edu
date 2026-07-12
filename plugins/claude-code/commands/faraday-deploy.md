@@ -12,15 +12,15 @@ Deploy the current Faraday lesson. Target: **$ARGUMENTS** (default: preview).
 1. **Gate first.** `pnpm check` must exit 0 and the lesson must render in
    `pnpm dev`. Do not deploy a lesson you haven't driven.
 
-2. **Static lesson (no `--tutor`)** — pure client bundle:
+2. **Static lesson (no `tutor` pack)** — pure client bundle:
    ```bash
    pnpm build            # → dist/  (deployable to any static host)
    ```
    Deploy `dist/` to any static host, or `vercel deploy` (add `--prod` for
    production).
 
-3. **Tutor lesson (`--tutor`)** — has an `api/` + `workflows/` server layer, so it
-   needs a Node host. Deploy to **Vercel**:
+3. **Tutor lesson (has the `tutor` pack)** — has an `api/` + `workflows/` server
+   layer, so it needs a Node host. Deploy to **Vercel**:
    ```bash
    vercel deploy         # add --prod for production
    ```

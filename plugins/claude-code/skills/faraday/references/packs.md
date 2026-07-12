@@ -32,13 +32,18 @@ faraday pack add ./path | owner/repo | npm:@scope/pack   # third-party sources
 
 | Pack | Use when |
 |---|---|
-| `three` (`--3d`; `--physics` variant) | the subject is inherently **spatial** — astronomy, molecules, geometry, anatomy. `--physics` for genuine dynamics (collisions, gravity, joints). |
-| `tutor` (`--tutor`) | the reader benefits from **asking questions** — a durable, grounded chat tutor beside the content. |
+| `three` (`--physics` variant) | the subject is inherently **spatial** — astronomy, molecules, geometry, anatomy. `pack add three --physics` for genuine dynamics (collisions, gravity, joints). |
+| `tutor` | the reader benefits from **asking questions** — a durable, grounded chat tutor beside the content. |
 | `srs` | the goal is **memorization/recall** (vocabulary, facts, formulas) — spaced-repetition flashcards. |
-| `lecture-design` | you're **designing how it teaches** — a folder-ized pedagogy library (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill). |
+| `exam` | a practice test / mock exam across a topic — blueprint → items → scoring. |
+| `deck` | slideshow delivery — one idea per screen, prev/next, animation. |
+| `kids` | a young-learner tablet lesson — CRA, big targets, celebration. |
+| `notes` | handwriting / sketch on a stylus — a full-page pen ink canvas. |
+| `lecture-design` · `audience` | **designing how it teaches** — pedagogy + per-audience methodology (default packs, auto-installed at `new`). |
 
-`--3d`/`--physics`/`--tutor` on `faraday new` are **aliases** for `pack add three`/
-`pack add tutor` at scaffold time — same installer, plus the pack's demo.
+There are **no capability flags** on `faraday new`. Scaffold a plain lesson, then
+`faraday pack add <name>` for what it needs (`three --physics`, `tutor`, …) — one
+uniform mechanism for every pack.
 
 ## Authoring / validating a pack
 

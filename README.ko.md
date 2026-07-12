@@ -15,7 +15,7 @@
 Faraday는 AI가 저작하는 인터랙티브 교육 콘텐츠를 위한 **스캐폴더**입니다.
 여러분(또는 여러분의 코딩 에이전트)이 명령어 하나를 실행하면, 한 수업을 위한
 자체 완결형 Vite + React 앱이 만들어집니다 — 텍스트 벽이 아니라, 독자가 직접
-*조작하는* 살아있는 캔버스입니다. 플래그 하나로 근거 기반의 견고한 **AI 튜터**를
+*조작하는* 살아있는 캔버스입니다. 명령 하나로 근거 기반의 견고한 **AI 튜터**를
 추가하고, 여러 수업을 **커리큘럼이나 게임 같은 세계**로 묶고, **LMS** 진도
 추적을 연결해 배포하세요. 워크스페이스도, npm 퍼블리시도, (원하지 않는 한)
 백엔드도 필요 없습니다.
@@ -166,7 +166,7 @@ flowchart LR
 | ![렉쳐 덱](docs/images/component-lecture.png) | **🎬 렉쳐 / 슬라이드** | 슬라이드쇼식 전달 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<Paged>` · `runtime/motion` · `deck` 팩 |
 | ![퀴즈/과제](docs/images/component-quiz.png) | **✅ 퀴즈 / 과제** | *가르치는* 확인 — 객관식, 숫자 입력, 스케치 예측, 시뮬레이션에서 클리어하는 미션. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
 | ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 수업 또는 커리큘럼 전체의 진도를 기록하고 대시보드로 보여줍니다 (LMS). | `runtime/lms` (기록기 + 대시보드) |
-| ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 (`--tutor`) |
+| ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 |
 
 <!-- 📸 component-*.png 썸네일 — docs/images/README.md 참고. 위 깨진 아이콘은 파일을 넣기 전까지의 placeholder 입니다. -->
 
@@ -192,18 +192,18 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
 
 블록 위에 얹히는 것:
 
-- **3D** (`@faraday-academy/three`, `--3d`) — 절차적(procedural) 헬퍼(`<Body>`,
+- **3D** (`@faraday-academy/three`, `pack add three`) — 절차적(procedural) 헬퍼(`<Body>`,
   `<Planet>`, `<OrbitPath>`, `<Label3D>`), glTF 로더 `<Model>`, 씬마다 `mood`
   (`space`, `cell`, `lab`, `physics`, `abstract`)를 갖춘 `<Scene3D>`(R3F).
   **절차적 우선, 에셋은 폴백.**
-- **Physics** (`--physics`) — `@react-three/rapier`를 통한 Rapier 중력/충돌.
+- **Physics** (`pack add three --physics`) — `@react-three/rapier`를 통한 Rapier 중력/충돌.
 - **Curriculum / world (커리큘럼 / 세계)** (`runtime/world`) — 여러 수업을 묶기:
   선형 교과서용 `<Course>`(챕터 내비게이션, 이전/다음, `#hash`), 또는 **잠금
   해제 진행(unlock progression)**과 교체 가능한 **팩**을 가진 `<CurriculumHost>`
   — `linearPack`(상태 목록), `map2dPack`(2D 노드 맵), `world3dPack`(3D 오픈월드 /
   RPG). 팩이 곧 세계 전체를 갈아끼우는 이음새입니다.
 - **LMS** (`runtime/lms`) — 수업이나 커리큘럼 전체에 붙는 진도 기록기 + 대시보드.
-- **Tutor AI** (`@faraday-academy/tutor`, `--tutor`) — 콘텐츠 옆에 임베드되는
+- **Tutor AI** (`@faraday-academy/tutor`, `pack add tutor`) — 콘텐츠 옆에 임베드되는
   **견고하고 근거 기반의** 채팅 에이전트. 아래에서 더 설명합니다.
 
 ---
@@ -216,15 +216,15 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
 
 - **다익스트라가 최단경로를 찾는 걸 지켜보세요.** 프런티어가 확장되는 그래프를
   한 단계씩 밟아가며 앞뒤로 스크럽하고 — 왜 확정된 노드를 다시 방문하지 않는지
-  내장 튜터에게 *물어보세요*. *(단계별 프레임 + `<Scrubber>` + `--tutor`)*
+  내장 튜터에게 *물어보세요*. *(단계별 프레임 + `<Scrubber>` + `tutor` 팩)*
 - **복리가 불어나는 걸 체감하세요.** 원금, 이율, 복리 주기를 드래그하면 잔액
   곡선과 최종 숫자가 실시간으로 갱신됩니다. "72의 법칙"이 더 이상 외우는 공식이
   아니게 됩니다. *(실시간 노브 + `<Chart>` + `<Stat>`)*
 - **케플러 제2법칙이 같은 면적을 쓸어내는 걸 보세요.** 실제 타원 궤도 위의
   행성이 3D에서 태양 근처에서 빨라지고, 이심률을 드래그해도 같은 면적의
-  쓸어냄은 그대로 유지됩니다. *(3D, `space` mood — `--3d`)*
+  쓸어냄은 그대로 유지됩니다. *(3D, `space` mood — `three` 팩)*
 - **골턴 보드에 공 500개를 떨어뜨리세요.** 실제 물리 — 각 공이 못에 튕기며
-  당신이 프로그래밍하지 않은 종 모양 곡선으로 쌓입니다. *(Rapier — `--physics`)*
+  당신이 프로그래밍하지 않은 종 모양 곡선으로 쌓입니다. *(Rapier — `three --physics`)*
 - **파동에 관한 3부작 강좌를 들으세요.** 횡파 vs 종파, 그다음 슬라이더로 섞는
   간섭, 그다음 정상파 배음 — 챕터 내비게이션, 이전/다음, 딥링크와 함께.
   *(`<Course>`)*
@@ -248,12 +248,12 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
 
 ```text
 "태양계를 3D로 보여주는 수업을 만들어줘. 행성들이 궤도를 돌고,
- 사용자가 시간 속도를 슬라이더로 조절할 수 있게 해줘."   → --3d
+ 사용자가 시간 속도를 슬라이더로 조절할 수 있게 해줘."   → pack add three
 ```
 
 ```text
 "확률을 가르치는 골턴 보드를 물리 엔진으로 만들어줘.
- 공 개수를 바꿀 수 있게 하고, 정규분포가 쌓이는 걸 보여줘."  → --physics
+ 공 개수를 바꿀 수 있게 하고, 정규분포가 쌓이는 걸 보여줘."  → pack add three --physics
 ```
 
 플러그인이 설치돼 있으면, 에이전트가 알아서 올바른 플래그로 스캐폴드하고,
@@ -261,9 +261,9 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
 
 ---
 
-## AI 튜터 (`--tutor`)
+## AI 튜터 (`tutor` 팩)
 
-`faraday new <name> --tutor`는 앱을 Vite + Nitro + Workflow 하이브리드로 바꾸고
+`faraday pack add tutor`는 앱을 Vite + Nitro + Workflow 하이브리드로 바꾸고
 `<Tutor>` 컴포넌트를 벤더링합니다. Vercel의 AI SDK 설계를 따르며 Workflow
 DevKit **durable agent(견고한 에이전트)**를 구동합니다: 답변이 페이지 새로고침,
 네트워크 끊김, 서버리스 타임아웃을 견디고 답변 도중에도 이어서 재개됩니다.
@@ -302,16 +302,20 @@ import { Tutor } from "@/faraday/tutor";
 ## CLI 레퍼런스
 
 ```
-faraday new <name> [--3d | --physics] [--tutor] [--at <dir>] [--overwrite] [--skip-install] [--json]
-faraday check [--dir <lesson>]     보호된 src/faraday/** 트리를 검증
+faraday new <name> [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
+faraday check [--dir <lesson>]     레이아웃 + 런타임 pin 검증
+faraday pack list | add <name|source> [--physics] | remove <name> | show <name> | validate <name>
 faraday help
 ```
 
-| 플래그 | 효과 |
+**능력은 플래그가 아니라 팩입니다.** `new`로 평범한 레슨을 만든 뒤, 필요한 걸
+`faraday pack add <name>`로 추가하세요 — `three`(`--physics` variant), `tutor`,
+`srs`, `exam`, `deck`, `kids`, `notes` … (`faraday pack list`로 전체 확인). 교수법·
+audience 팩은 `new` 시 자동 설치되며, `--no-defaults`로 끕니다.
+
+| `new` 플래그 | 효과 |
 |---|---|
-| `--3d` | Three.js(R3F) 3D 블록 + 태양계 데모 포함. 생략하면 2D — `three`는 이 플래그 없이는 설치·번들되지 않습니다. |
-| `--physics` | `--3d`에 더해 Rapier 물리 엔진 + 중력/충돌 데모. |
-| `--tutor` | 견고한 근거 기반 AI 튜터 추가 (`api/` + `workflows/` 서버 레이어; 로컬에서는 `AI_GATEWAY_API_KEY` 필요). |
+| `--no-defaults` | 자동 설치되는 `lecture-design` + `audience` 팩 건너뛰기. |
 | `--at <dir>` | `./<name>` 대신 `<dir>`에 스캐폴드. |
 | `--overwrite` | 비어 있지 않은 대상에도 쓰기 허용. |
 | `--skip-install` | `pnpm install` 건너뛰기 (또는 `FARADAY_SKIP_INSTALL=1` 설정). |
@@ -333,10 +337,10 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 │  │  └─ templates/starter/     #   `faraday new`가 찍어내는 앱 셸 (팩은 빌드 시 번들)
 │  ├─ official-packs/           # 설치 가능한 모듈 팩 (three · tutor · srs · lecture-design · audience) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
-│  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (--3d / --physics)
-│  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (--tutor)
+│  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
+│  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)
 ├─ examples/                    # 독립 실행형 데모 (자체 lockfile; Vercel root = examples/<name>)
-│  └─ voyage-log/               #   예시 커리큘럼 (--3d)
+│  └─ voyage-log/               #   예시 커리큘럼 (three 팩)
 ├─ plugins/
 │  ├─ claude-code/              # Claude Code 플러그인 + 마켓플레이스 (Faraday 설치 & 구동)
 │  └─ codex/                    # Codex AGENTS.md + 커스텀 프롬프트
@@ -354,7 +358,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 ## 스캐폴더가 하는 일
 
 starter 복사 → 대상 · `.gitignore` 복원 · `@faraday-academy/runtime` pin
-(`--3d`/`--tutor`이면 `three`/`tutor`도) · `app.css`를 런타임 스타일시트에 연결
+기본 팩(`lecture-design`·`audience`) 자동설치 · `app.css`를 런타임 스타일시트에 연결
 · 패키지명 + HTML 제목 주입 · `lessonId` 출처(provenance) 레코드 발급 ·
 `pnpm install`. 그다음 `faraday check`/`doctor`가 레이아웃 + 정확한 pin을
 검증합니다.
@@ -419,7 +423,7 @@ flowchart LR
 `faraday pack add <name> [--physics] [--dir <lesson>]`. 한 명령이 런타임 절반
 (deps / 소스 / CSS) **과** 스킬 절반(에이전트가 로드하는 저작 가이드, `AGENTS.md`
 에서 가리킴)을 기존 레슨에 한 번에 설치합니다. `faraday new`의
-`--3d`/`--physics`/`--tutor` 플래그는 이제 같은 설치기를 호출하는 얇은 별칭입니다.
+`faraday new`엔 능력 플래그가 없습니다 — 모든 능력은 `faraday pack add`로 추가하는 단일 메커니즘입니다.
 전체 포맷 + 설치 위치 + 로드맵: [`specs/module-packs.md`](specs/module-packs.md).
 
 ---
@@ -428,7 +432,7 @@ flowchart LR
 
 Faraday는 두 개의 AI 시스템 중 **빌드 타임** 절반입니다: *창작 AI*가 지금
 교육 콘텐츠를 저작하고(플러그인이 구동하는 부분), *튜터 AI*가 런타임에 학생을
-가르칩니다(`--tutor`가 임베드하는 부분). 플랫폼 단계에서는 관리형 AI(Vercel AI
+가르칩니다(tutor 팩이 임베드하는 부분). 플랫폼 단계에서는 관리형 AI(Vercel AI
 Gateway), 멀티테넌시(Vercel Platforms), 그리고 제작자↔학생 결제가 추가되어 —
 오픈코어 CLI를 3면 마켓플레이스로 바꿉니다. 전체 흐름은
 [VISION.md](docs/VISION.md)와 [GTM.md](docs/GTM.md)를 읽어보세요.

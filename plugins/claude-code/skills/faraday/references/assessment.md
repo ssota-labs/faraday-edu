@@ -14,7 +14,7 @@ performance mission proves it. Mismatched form is a quality-bar fail.
 | calculate, derive, estimate, read off | **Free numeric response** — they type the number; tolerance makes rounding fair | `<NumericAnswer answer tolerance? unit?>` | auto (tolerance) |
 | predict, visualize, construct | **Sketch-predict** — draw the expected curve/construction (pen/pencil/touch), then reveal the true overlay and self-assess against it | `<SketchPad prompt background? overlay onSelfAssess>` | self, against the revealed answer |
 | do, tune, build, achieve, optimize | **Performance mission** — clear a goal state INSIDE the interactive (hit the target, balance it, reach the threshold) | `<Challenge goal done hint? onDone>` wrapping the sim | auto (win condition from sim state) |
-| explain, argue, design (open) | **Tutor-graded open response** — free text needs judgment; only with `--tutor` | `<Tutor>` grounded in the lesson ([tutor.md](tutor.md)) | AI, Socratic |
+| explain, argue, design (open) | **Tutor-graded open response** — free text needs judgment; only with the `tutor` pack | `<Tutor>` grounded in the lesson ([tutor.md](tutor.md)) | AI, Socratic |
 
 Component notes:
 

@@ -143,7 +143,7 @@ supports, wired to `complete()`:
 | calculate / estimate | typed numeric answer with tolerance | `<NumericAnswer answer unit? tolerance?>` |
 | predict / visualize | sketch it (pen/Pencil/touch), reveal the true overlay, self-assess | `<SketchPad prompt overlay background?>` |
 | do / tune / achieve | mission: reach the goal state inside the sim | `<Challenge goal done onDone>` |
-| explain (open text) | tutor-graded conversation (`--tutor` only) | `<Tutor>` |
+| explain (open text) | tutor-graded conversation (`tutor` pack only) | `<Tutor>` |
 
 ```tsx
 <Challenge
@@ -258,9 +258,9 @@ missing primitive, note it in your summary.
 
 ## 3D lessons (Three.js) — opt-in
 
-Scaffold with `faraday new <name> --3d` to include a Three.js (React Three Fiber)
-block + a solar-system demo. **Without `--3d`, three is never installed or bundled**
-— 2D lessons stay light. Import the 3D block from `@faraday-academy/three`:
+Run `faraday pack add three` to include a Three.js (React Three Fiber)
+block + a solar-system demo. **Without the `three` pack, three is never installed
+or bundled** — 2D lessons stay light. Import the 3D block from `@faraday-academy/three`:
 
 - `<Scene3D mood height? camera? controls? autoRotate?>` — a preconfigured R3F
   canvas (perspective camera, OrbitControls). Drop it into a `<Workbench>` center;
@@ -314,10 +314,10 @@ Resources**, **Smithsonian 3D**, **NIH 3D / BioModels**, **Poly Haven** (CC0),
 Khronos glTF sample assets (CC0), and CC-licensed **Sketchfab**. Keep files small;
 prefer procedural when it's clear enough. See `docs/examples/model.tsx` (a CC0 fox).
 
-### Physics (`--physics`)
+### Physics (`three --physics`)
 
-Scaffold with `faraday new --physics` for the Rapier engine (implies `--3d`). Wrap
-scene bodies in `<Physics>` from `@react-three/rapier`:
+Run `faraday pack add three --physics` for the Rapier engine (the `--physics`
+variant of the `three` pack). Wrap scene bodies in `<Physics>` from `@react-three/rapier`:
 
 ```tsx
 import { Physics, RigidBody } from "@react-three/rapier";
@@ -357,7 +357,7 @@ swappable **pack** (ports-and-adapters) — change one prop, keep the content:
 
 - `linearPack` — a status list (doc-style, renders inline). `@faraday-academy/runtime/world`
 - `map2dPack` — a 2D tactical node map (game screen). `@faraday-academy/runtime/world`
-- `world3dPack` — a 3D open-world constellation (game screen, needs `--3d`). `@faraday-academy/three`
+- `world3dPack` — a 3D open-world constellation (game screen, needs the `three` pack). `@faraday-academy/three`
 
 Game packs are **immersive**: the host mounts the world as a full-viewport game
 screen (no page header, no reading column) and overlays a game HUD — a status
@@ -386,7 +386,7 @@ canvas — `map2dPack` is a fixed 720×440 SVG, so `y:50` centres and extreme `x
 can clip labels); omit them for an auto layout. A lesson self-completes via
 `useNode().complete()` — the idiomatic wiring is `<Quiz onCorrect={complete} />`
 (answer correctly → node done → dependents unlock); the learner can also press
-Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with `--3d`).
+Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with the `three` pack).
 
 ## Checking your work
 
