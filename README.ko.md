@@ -339,7 +339,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — `faraday` 스캐폴더 (bin + src)
 │  │  └─ templates/starter/     #   `faraday new`가 찍어내는 앱 셸 (팩은 빌드 시 번들)
-│  ├─ official-packs/           # 아홉 개 모듈 팩 (three · tutor · srs · exam · deck · kids · notes · lecture-design · audience) + pack.schema.json
+│  ├─ official-packs/           # 카테고리별 모듈 팩: curriculum/ (map2d) · component/ (srs·notes·deck·kids) · runtime/ (three·tutor) · assessment/ (exam) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
 │  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)

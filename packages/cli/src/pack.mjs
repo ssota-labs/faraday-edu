@@ -41,24 +41,84 @@ export async function packsRoot(root = PACKAGE_ROOT) {
   return candidates[0];
 }
 
-/** All packs shipped with the CLI: [{ name, ...manifest }]. */
+async function readManifestJson(manifestPath) {
+  try {
+    return JSON.parse(await fs.readFile(manifestPath, "utf8"));
+  } catch {
+    return null; // malformed manifest — skip in listing
+  }
+}
+
+/**
+ * All packs shipped with the CLI: [{ name, category, ...manifest }].
+ *
+ * Official packs are organised into category folders — `<root>/<category>/<name>/`
+ * — so two categories can hold same-named packs. The category is derived from the
+ * parent folder. A pack.json placed directly at `<root>/<name>/` (flat) still works
+ * and takes its category from the manifest field, if any.
+ */
 export async function listPacks(root = PACKAGE_ROOT) {
   const dir = await packsRoot(root);
   if (!(await pathExists(dir))) return [];
-  const entries = await fs.readdir(dir, { withFileTypes: true });
   const packs = [];
-  for (const entry of entries) {
+  for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
-    const manifestPath = path.join(dir, entry.name, "pack.json");
-    if (!(await pathExists(manifestPath))) continue;
-    try {
-      const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
-      packs.push({ name: entry.name, ...manifest });
-    } catch {
-      /* malformed manifest — skip in listing */
+    const entryDir = path.join(dir, entry.name);
+    // flat pack: pack.json directly under the root
+    if (await pathExists(path.join(entryDir, "pack.json"))) {
+      const m = await readManifestJson(path.join(entryDir, "pack.json"));
+      if (m) packs.push({ name: entry.name, ...m });
+      continue;
+    }
+    // otherwise a category folder: each child dir with a pack.json is a pack,
+    // and its category is this folder's name (authoritative over any field).
+    for (const child of await fs.readdir(entryDir, { withFileTypes: true })) {
+      if (!child.isDirectory()) continue;
+      const manifestPath = path.join(entryDir, child.name, "pack.json");
+      if (!(await pathExists(manifestPath))) continue;
+      const m = await readManifestJson(manifestPath);
+      if (m) packs.push({ name: child.name, ...m, category: entry.name });
     }
   }
   return packs.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Locate an official pack by a bare name (`three`) or a category-qualified name
+ * (`runtime/three`). Returns { name, packDir, category } or null. Throws (exit 2)
+ * if a bare name is ambiguous across categories.
+ */
+export async function findOfficialPackDir(source, root = PACKAGE_ROOT) {
+  const base = await packsRoot(root);
+  if (source.includes("/")) {
+    const packDir = path.join(base, source);
+    if (await pathExists(path.join(packDir, "pack.json"))) {
+      return { name: path.basename(source), packDir, category: source.split("/")[0] };
+    }
+    return null;
+  }
+  const matches = [];
+  // flat pack at the root
+  if (await pathExists(path.join(base, source, "pack.json"))) {
+    matches.push({ name: source, packDir: path.join(base, source), category: null });
+  }
+  // nested under any category folder
+  for (const entry of await fs.readdir(base, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const packDir = path.join(base, entry.name, source);
+    if (await pathExists(path.join(packDir, "pack.json"))) {
+      matches.push({ name: source, packDir, category: entry.name });
+    }
+  }
+  if (matches.length === 0) return null;
+  if (matches.length > 1) {
+    const qualified = matches.map((m) => `${m.category}/${source}`).join(", ");
+    throw Object.assign(
+      new Error(`ambiguous pack "${source}" — exists in multiple categories; use one of: ${qualified}`),
+      { exitCode: 2 },
+    );
+  }
+  return matches[0];
 }
 
 /** Read + parse `pack.json` from a resolved pack directory. */
@@ -79,13 +139,13 @@ export async function readManifestAt(packDir) {
 }
 
 async function readManifest(packName, root = PACKAGE_ROOT) {
-  const packDir = path.join(await packsRoot(root), packName);
-  if (!(await pathExists(path.join(packDir, "pack.json")))) {
+  const found = await findOfficialPackDir(packName, root);
+  if (!found) {
     const err = new Error(`Unknown pack: ${packName} (try \`faraday pack list\`)`);
     err.exitCode = 2;
     throw err;
   }
-  return { packDir, manifest: await readManifestAt(packDir) };
+  return { packDir: found.packDir, manifest: await readManifestAt(found.packDir) };
 }
 
 function mergeSortedDeps(pkg, group, deps) {
@@ -304,7 +364,7 @@ export function validateManifest(manifest) {
   if (!isStr(manifest.displayName)) errs.push("displayName is required (string)");
   if (manifest.name != null && !/^[a-z0-9][a-z0-9-]*$/.test(manifest.name))
     errs.push("name must be kebab-case ([a-z0-9-])");
-  for (const k of ["description", "quality"]) {
+  for (const k of ["description", "quality", "category"]) {
     if (manifest[k] != null && !isStr(manifest[k])) errs.push(`${k} must be a string`);
   }
   if (manifest.default != null && typeof manifest.default !== "boolean")
@@ -507,19 +567,22 @@ async function resolveNpm(spec, log) {
  */
 export async function resolvePack(source, opts = {}) {
   const { templateRoot, log } = opts;
+  // Official packs live in a category-foldered tree. Both a bare name (`three`)
+  // and a qualified `category/name` (`runtime/three`) resolve here — and the tree
+  // is checked BEFORE a slashy source is treated as `owner/repo` (github), so a
+  // qualified official name wins over the github source grammar.
+  const official = await findOfficialPackDir(source, templateRoot);
+  if (official) return { name: official.name, packDir: official.packDir, source };
+
   const c = classifySource(source);
+  if (c.kind === "official") {
+    throw Object.assign(
+      new Error(`Unknown pack: ${source} (try \`faraday pack list\`, or a ./path, owner/repo, or npm: source)`),
+      { exitCode: 2 },
+    );
+  }
 
   let packDir;
-  if (c.kind === "official") {
-    packDir = path.join(await packsRoot(templateRoot), c.name);
-    if (!(await pathExists(path.join(packDir, "pack.json")))) {
-      throw Object.assign(
-        new Error(`Unknown pack: ${c.name} (try \`faraday pack list\`, or a ./path, owner/repo, or npm: source)`),
-        { exitCode: 2 },
-      );
-    }
-    return { name: c.name, packDir, source: c.name };
-  }
   if (c.kind === "local") {
     packDir = path.resolve(process.cwd(), c.p.replace(/^~(?=$|\/)/, os.homedir()));
   } else if (c.kind === "github") {

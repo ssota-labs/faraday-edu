@@ -14,6 +14,11 @@
     },
     "displayName": { "type": "string", "description": "Human-readable label shown by `faraday pack list`." },
     "description": { "type": "string" },
+    "category": {
+      "type": "string",
+      "description": "What kind of pack this is — `faraday pack list` groups by it. Official packs derive their category from their parent folder (packages/official-packs/<category>/<name>/), so this field is only needed for a flat/third-party pack that isn't in a category folder. Known values below; third parties may use their own label.",
+      "enum": ["curriculum", "component", "runtime", "assessment", "methodology"]
+    },
     "default": {
       "type": "boolean",
       "description": "When true, `faraday new` auto-installs this pack (batteries-included). All official packs are default; `--no-defaults` skips them."

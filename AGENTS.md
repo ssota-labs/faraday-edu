@@ -75,7 +75,7 @@ invisible to the agent, and vice versa.
   per phase: `discovery` `audience` `curriculum` `learning-design` `interactive-design`
   `assessment` `pedagogy` `design` `quality-bar` `blocks` `worlds` `tutor`.
 
-**Module packs** live in `packages/official-packs/<name>/` (contract:
+**Module packs** live in `packages/official-packs/<category>/<name>/` (contract:
 `packages/official-packs/pack.schema.json`) and bind the two layers via a declarative
 `pack.json` manifest (deps · `cssImports` · `copy` · `appends` · `scaffold` · `skill`).
 `faraday pack add <name|source>` resolves the source (official name · `./path` ·

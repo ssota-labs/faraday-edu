@@ -16,11 +16,13 @@ skeleton, the quality/eval discipline).
 
 ## Before you write anything
 
-Read two built-ins as working models — do not skip this:
-- `packages/official-packs/exam/` — a **folder skill**: `SKILL.md` index routing to
-  focused sub-guides, a gradeable `quality.md`.
-- `packages/official-packs/srs/` — a **copy** pack: a real author-editable component,
-  token-only styling, an honest "when it doesn't fit" section.
+Official packs live in category folders — `packages/official-packs/<category>/<name>/`
+(categories: `curriculum`, `component`, `runtime`, `assessment`, `methodology`). Read
+two built-ins as working models — do not skip this:
+- `packages/official-packs/assessment/exam/` — a **folder skill**: `SKILL.md` index
+  routing to focused sub-guides, a gradeable `quality.md`.
+- `packages/official-packs/component/srs/` — a **copy** pack: a real author-editable
+  component, token-only styling, an honest "when it doesn't fit" section.
 
 Pick the archetype by how the runtime half installs: `skill` (compose existing
 blocks, no deps) · `copy` (ship an author-editable component) · `runtime` (pin a
@@ -29,8 +31,9 @@ published package). Default to a folder skill.
 ## The loop
 
 1. **Scaffold.** `faraday pack new <name> [--kind skill|copy|runtime]` (folder skill
-   by default). Scaffold into `packages/official-packs/<name>` for an official pack,
-   or the path the user names for a third-party one.
+   by default). For an official pack, scaffold into its category folder —
+   `packages/official-packs/<category>/<name>` (`--at`); for a third-party pack, the
+   path the user names.
 2. **Fill every TODO with real content** — no placeholders survive:
    - `pack.json` — a true `displayName`, a `description` that names the outcome, a
      `loadWhen` scoped to when an agent should reach for it.

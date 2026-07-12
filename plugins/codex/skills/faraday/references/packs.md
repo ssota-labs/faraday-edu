@@ -8,12 +8,19 @@ capability is on hand from the start. `faraday pack add` installs one individual
 mechanism — the skill's job is to know packs exist, use the right ones, then
 **read each pack's own guide** at `.faraday/packs/<name>/`.
 
-> **Packs come in kinds.** Most are **capability** packs (`three`, `tutor`, `exam`,
-> `srs`, `deck`, `kids`, `notes`) or **knowledge** packs (`audience`, `lecture-design`)
-> — all default-installed. A few are **presentation** packs — how a `<CurriculumHost>`
-> is drawn (`map2d`, `world3d`); these are **opt-in** (`faraday pack add map2d`), since
-> you pick one per curriculum. The built-in `linearPack` needs no pack. See
-> [worlds.md](worlds.md) for presentations.
+> **Packs are grouped by category** — official packs live in a category folder
+> (`packages/official-packs/<category>/<name>/`) and `faraday pack list` groups by it.
+> Add by bare name (`faraday pack add three`) or, if two categories ever share a name,
+> qualify it (`faraday pack add runtime/three`):
+> - **curriculum** — how a `<CurriculumHost>` is drawn (`map2d`). **Opt-in**
+>   (`faraday pack add map2d`) — you pick one per curriculum; the built-in `linearPack`
+>   needs no pack, and `world3d` rides with the `three` pack. See [worlds.md](worlds.md).
+> - **component** — UI you drop into a lesson (`srs`, `notes`, `deck`, `kids`).
+> - **runtime** — engines / durable services (`three`, `tutor`).
+> - **assessment** — test builders (`exam`).
+> - **methodology** — pedagogy knowledge, skill-only (`audience`, `lecture-design`).
+>
+> All except the curriculum packs are default-installed (batteries-included).
 
 ## The loop
 

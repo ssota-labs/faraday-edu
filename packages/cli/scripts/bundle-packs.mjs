@@ -15,20 +15,36 @@ const DEST = path.join(CLI_ROOT, "packs");
 // Files at the official-packs root that are NOT packs (schema, docs).
 const NON_PACK_ENTRIES = new Set(["pack.schema.json", "README.md"]);
 
+async function hasPackJson(dir) {
+  try {
+    await fs.access(path.join(dir, "pack.json"));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function main() {
   await fs.rm(DEST, { recursive: true, force: true });
-  const entries = await fs.readdir(SOURCE, { withFileTypes: true });
   const bundled = [];
-  for (const entry of entries) {
+  // Packs are organised into category folders (<category>/<name>/); a flat
+  // <name>/ is still supported. Preserve the layout so packsRoot() finds them the
+  // same way whether reading source or the bundle.
+  for (const entry of await fs.readdir(SOURCE, { withFileTypes: true })) {
     if (!entry.isDirectory() || NON_PACK_ENTRIES.has(entry.name)) continue;
-    const manifest = path.join(SOURCE, entry.name, "pack.json");
-    try {
-      await fs.access(manifest);
-    } catch {
-      continue; // not a pack (no manifest)
+    const entryDir = path.join(SOURCE, entry.name);
+    if (await hasPackJson(entryDir)) {
+      await copyDirectory(entryDir, path.join(DEST, entry.name));
+      bundled.push(entry.name);
+      continue;
     }
-    await copyDirectory(path.join(SOURCE, entry.name), path.join(DEST, entry.name));
-    bundled.push(entry.name);
+    for (const child of await fs.readdir(entryDir, { withFileTypes: true })) {
+      if (!child.isDirectory()) continue;
+      const childDir = path.join(entryDir, child.name);
+      if (!(await hasPackJson(childDir))) continue;
+      await copyDirectory(childDir, path.join(DEST, entry.name, child.name));
+      bundled.push(`${entry.name}/${child.name}`);
+    }
   }
   process.stdout.write(`bundle-packs: copied ${bundled.length} pack(s) -> packs/ (${bundled.sort().join(", ")})\n`);
 }

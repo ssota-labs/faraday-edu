@@ -40,6 +40,11 @@ test("listPacks includes all shipped packs", async () => {
     const errs = validateManifest(await readManifestAt((await resolvePack(p.name)).packDir));
     assert.deepEqual(errs, [], `${p.name} manifest invalid: ${errs.join("; ")}`);
   }
+  // every official pack declares a known category (drives `pack list` grouping)
+  const CATEGORIES = new Set(["curriculum", "component", "runtime", "assessment", "methodology"]);
+  for (const p of packs) {
+    assert.ok(CATEGORIES.has(p.category), `${p.name} must have a known category, got ${p.category}`);
+  }
   const three = packs.find((p) => p.name === "three");
   assert.ok(three.runtime?.dependencies?.["@faraday-academy/three"], "three pins its runtime pkg");
   assert.ok(three.runtime?.variants?.physics, "three exposes a physics variant");

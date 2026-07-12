@@ -48,10 +48,10 @@ every official pack:
 Start at `skill` and only reach for `copy`/`runtime` when you genuinely ship code.
 
 **Read two built-ins before you start** — they carry conventions this guide only
-summarizes: `packages/official-packs/exam/` (a folder skill: an index routing to
-sub-guides, gradeable `quality.md`) and `packages/official-packs/srs/` (a `copy`
-pack: a real author-editable component, token-only styling, a "when it doesn't fit"
-section). Match their tone and rigor and your pack drops in like the built-ins.
+summarizes: `packages/official-packs/assessment/exam/` (a folder skill: an index
+routing to sub-guides, gradeable `quality.md`) and `packages/official-packs/component/srs/`
+(a `copy` pack: a real author-editable component, token-only styling, a "when it
+doesn't fit" section). Match their tone and rigor and your pack drops in like the built-ins.
 
 ## The manifest (`pack.json`)
 
@@ -170,7 +170,9 @@ raise it. Re-run after editing a guide to check the change didn't lower quality.
 
 ## Distributing
 
-Official packs live in `packages/official-packs/` and are bundled into the CLI at
-`prepack`. Third parties need nothing official: publish the folder anywhere a source
-resolves — a local path, a GitHub repo, or an npm package — and `faraday pack add`
+Official packs live in a category folder under `packages/official-packs/<category>/<name>/`
+(the category drives `pack list` grouping and lets two categories hold a same-named
+pack) and are bundled into the CLI at `prepack`. Third parties need nothing official:
+publish the folder anywhere a source resolves — a local path, a GitHub repo, or an npm
+package — declare a `category` in `pack.json` if you like, and `faraday pack add`
 installs it like any other.

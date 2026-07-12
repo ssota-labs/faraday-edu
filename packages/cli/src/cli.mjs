@@ -334,6 +334,7 @@ async function runPackList(argv, context) {
         name: p.name,
         displayName: p.displayName ?? "",
         description: p.description ?? "",
+        category: p.category ?? null,
         variants: Object.keys(p.runtime?.variants ?? {}),
         default: p.default ?? false,
       })),
@@ -346,11 +347,30 @@ async function runPackList(argv, context) {
     context.stdout("No packs available.\n");
     return;
   }
-  context.stdout("Available packs:\n");
+  // Group by category for a readable catalog. Known categories lead in a sensible
+  // order; anything else (incl. uncategorized) falls to the end.
+  const ORDER = ["curriculum", "component", "runtime", "assessment", "methodology"];
+  const groups = new Map();
   for (const p of packs) {
-    const variants = Object.keys(p.runtime?.variants ?? {});
-    const suffix = variants.length ? ` (variants: ${variants.join(", ")})` : "";
-    context.stdout(`  ${p.name} — ${p.displayName ?? ""}${suffix}\n`);
+    const key = p.category ?? "other";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(p);
+  }
+  const keys = [...groups.keys()].sort((a, b) => {
+    const ia = ORDER.indexOf(a), ib = ORDER.indexOf(b);
+    return (ia === -1 ? ORDER.length : ia) - (ib === -1 ? ORDER.length : ib) || a.localeCompare(b);
+  });
+  context.stdout("Available packs:\n");
+  for (const key of keys) {
+    context.stdout(`\n  ${key}\n`);
+    for (const p of groups.get(key)) {
+      const variants = Object.keys(p.runtime?.variants ?? {});
+      const bits = [];
+      if (variants.length) bits.push(`variants: ${variants.join(", ")}`);
+      if (p.default === false) bits.push("opt-in");
+      const suffix = bits.length ? ` (${bits.join("; ")})` : "";
+      context.stdout(`    ${p.name} — ${p.displayName ?? ""}${suffix}\n`);
+    }
   }
 }
 

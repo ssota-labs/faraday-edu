@@ -337,7 +337,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
-│  ├─ official-packs/           # nine module packs (three · tutor · srs · exam · deck · kids · notes · lecture-design · audience) + pack.schema.json
+│  ├─ official-packs/           # module packs by category: curriculum/ (map2d) · component/ (srs·notes·deck·kids) · runtime/ (three·tutor) · assessment/ (exam) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)

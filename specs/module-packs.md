@@ -174,7 +174,7 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 
 ## 9. 구현 요약
 
-- `packages/official-packs/{three,tutor,srs,lecture-design,audience,exam,deck,kids,notes}/`
+- `packages/official-packs/<category>/<name>/` — categories: `curriculum` (map2d) · `component` (srs·notes·deck·kids) · `runtime` (three·tutor) · `assessment` (exam) · `methodology` (audience·lecture-design)
   — 아홉 개 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
 - `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`
   번들. `cli/package.json` `files`에 `packs` 추가, `<cli>/packs`는 gitignore.
