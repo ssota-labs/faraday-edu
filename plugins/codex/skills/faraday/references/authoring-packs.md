@@ -25,13 +25,14 @@ agent looks.*
 Don't hand-copy an existing pack. Stamp the skeleton:
 
 ```bash
-faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]
+faraday pack new <name> [--kind skill|copy|runtime] [--flat] [--at <dir>]
 ```
 
-It writes `pack.json` + `skill/pack.md` + `quality.md` + `examples/<name>.tsx`
+It writes `pack.json` + a **folder skill** (`skill/SKILL.md` index + `using.md` /
+`pedagogy.md` / `extending.md` sub-guides) + `quality.md` + `examples/<name>.tsx`
 (and, for `--kind copy`, an author-editable `runtime/<name>/index.tsx`). Fill the
 TODOs, then `faraday pack validate <dir>` and `faraday pack add <dir> --dir <lesson>`
-to try it.
+to try it. Use `--flat` only for a tiny single-page pack.
 
 ## Pick an archetype
 
@@ -45,6 +46,12 @@ every official pack:
 | **`runtime`** | N | pins a published `@scope/pkg`, wires CSS, copies glue/config | the heavy code lives in a versioned package | three · tutor |
 
 Start at `skill` and only reach for `copy`/`runtime` when you genuinely ship code.
+
+**Read two built-ins before you start** — they carry conventions this guide only
+summarizes: `packages/official-packs/exam/` (a folder skill: an index routing to
+sub-guides, gradeable `quality.md`) and `packages/official-packs/srs/` (a `copy`
+pack: a real author-editable component, token-only styling, a "when it doesn't fit"
+section). Match their tone and rigor and your pack drops in like the built-ins.
 
 ## The manifest (`pack.json`)
 
@@ -84,20 +91,27 @@ The full contract is `packages/official-packs/pack.schema.json`. The fields:
 There are no capability flags and no `scaffold`/`aliasFlags` fields — capabilities
 are packs, added uniformly.
 
-## The skill guide (`skill/pack.md`) — the uniform skeleton
+## The skill guide — a folder with an index
 
-Every pack's guide follows the same six moves. An agent reads it *after* install to
-learn how to use the pack well:
+**Default to a folder skill.** `skill/SKILL.md` is the **index / front door**: it
+says when the pack fits and routes to focused sub-guides; an agent reads the entry
+and opens only the guide it needs (progressive disclosure — the same pattern as the
+base `SKILL.md`). Set `skill.reference` to the folder and `skill.entry` to the index.
+Only collapse to a single `skill/pack.md` (`--flat`) for a genuinely one-page pack.
 
-1. **Title + "Load this when …"** — mirror the manifest's `loadWhen`.
-2. **When it fits (and when it doesn't)** — the negative space. Off-label use is the
-   most common quality failure; name it here.
-3. **Why / pedagogy** — the evidence or design principle. Why this shape.
-4. **Using it** — the minimal correct code; call out the non-obvious rules.
-5. **Extending** — where the author can go further; point at copied, editable files.
-6. **Quality gate** — defer to `quality.md`; restate the 2–3 rules that matter most.
+The guide — across the index + sub-guides — covers the same six moves:
 
-Write it to an agent, not an end user: imperative, specific, and honest about limits.
+1. **Title + "Load this when …"** *(index)* — mirror the manifest's `loadWhen`.
+2. **When it fits (and when it doesn't)** *(index)* — the negative space. Off-label
+   use is the most common quality failure; name it here.
+3. **Why / pedagogy** *(`pedagogy.md`)* — the evidence or design principle.
+4. **Using it** *(`using.md`)* — the minimal correct code; the non-obvious rules.
+5. **Extending** *(`extending.md`)* — where the author can go further; editable files.
+6. **Quality gate** *(index → `../quality.md`)* — restate the 2–3 rules that matter.
+
+Split further as the pack grows (see `exam`: blueprint → item-writing → scoring →
+integrity). Keep the index the single front door. Write to an agent, not an end
+user: imperative, specific, honest about limits.
 
 ## The quality bar (`quality.md`)
 
@@ -106,17 +120,30 @@ A short pass/fail checklist an agent grades a generated lesson against — each 
 pack was chosen because of the outcome it serves, not because it's flashy. This file
 is what makes the *eval loop* possible (below).
 
-## Validate, then test in a real lesson
+## Validate, then compile it in a real lesson
+
+`validate` is a real gate, not just a shape check — it fails if a referenced file
+(`skill.reference`/`entry`, `quality`) is missing and warns on leftover scaffold
+`TODO`s and copy sources that would install nothing. But it does **not** compile
+your code. The one guardrail that catches a component that doesn't typecheck (or an
+example that imports a path the pack doesn't install) is installing into a real
+lesson and building:
 
 ```bash
-faraday pack validate <name|source>        # structural check against the contract
-faraday pack add <source> --dir <lesson>   # install into a scratch lesson
-cd <lesson> && pnpm check                   # layout + pins intact
+faraday pack validate <name|source>         # manifest + files-exist + no leftover TODOs
+faraday new probe --skip-install --at /tmp/probe
+faraday pack add <source> --dir /tmp/probe  # install both halves
+cd /tmp/probe && pnpm install && pnpm check  # layout + pins + the example TYPECHECKS
 ```
 
-`<source>` is an official name, a local path (`./my-pack`), a GitHub repo
-(`owner/repo[/sub]`), or npm (`npm:@scope/pack`) — so a pack works the same whether
-it's official or third-party.
+Do not declare a pack done on `validate` alone — a pack that validates green can
+still ship a component that doesn't compile. `<source>` is an official name, a local
+path (`./my-pack`), a GitHub repo (`owner/repo[/sub]`), or npm (`npm:@scope/pack`) —
+so a pack works the same whether it's official or third-party.
+
+**Let the `faraday-pack-author` subagent run this whole loop** (scaffold → fill →
+validate → install → typecheck → self-grade against `quality.md`) when you want a
+pack built and vetted end to end.
 
 ## The eval loop (quality gating)
 

@@ -44,6 +44,9 @@ validate .` from the repo root before publishing).
   - `/faraday-deploy [preview|prod]` — build + deploy (static, or Vercel for tutors).
 - **Subagent `faraday-author`** — a clean-session agent that builds a complete,
   verified lesson end-to-end and reports back.
+- **Subagent `faraday-pack-author`** — builds AND vets a new module pack end-to-end:
+  scaffold → fill both halves → validate on disk → install into a probe lesson →
+  typecheck the example → self-grade against the pack's quality bar.
 
 ## Prerequisites
 
