@@ -7,7 +7,7 @@ import path from "node:path";
 import os from "node:os";
 import { generateLesson } from "./generate.mjs";
 import { runFaradayCli } from "./cli.mjs";
-import { listPacks, installPack, removePack, resolvePack, validateManifest, readManifestAt, readPackSkill, defaultPackNames, scaffoldPack } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, validateManifest, validatePackDir, readManifestAt, readPackSkill, defaultPackNames, scaffoldPack } from "./pack.mjs";
 
 /** Run the CLI capturing stdout/stderr (throws on non-zero). setExitCode is
  *  captured locally so a rejection test doesn't poison the runner's exit code. */
@@ -358,12 +358,14 @@ test("installPack from an external (local) source records {name, source} in prov
   assert.equal(entry.source, packDir);
 });
 
-test("pack new scaffolds each archetype with a valid, default manifest", async () => {
+test("pack new scaffolds each archetype with a folder skill + valid manifest", async () => {
   for (const kind of ["skill", "copy", "runtime"]) {
     const base = await tmp();
     const r = await scaffoldPack("demo-pack", { cwd: base, kind });
     assert.equal(r.kind, kind);
-    for (const f of ["pack.json", "skill/pack.md", "quality.md", "examples/demo-pack.tsx"]) {
+    assert.equal(r.skill, "folder", "default skill is a folder");
+    // folder skill: an index that routes to sub-guides
+    for (const f of ["pack.json", "skill/SKILL.md", "skill/using.md", "skill/pedagogy.md", "quality.md", "examples/demo-pack.tsx"]) {
       assert.ok(await exists(path.join(r.packDir, f)), `missing ${f}`);
     }
     assert.equal(
@@ -374,8 +376,21 @@ test("pack new scaffolds each archetype with a valid, default manifest", async (
     const manifest = await readManifestAt(r.packDir);
     assert.deepEqual(validateManifest(manifest), [], `${kind} manifest invalid`);
     assert.equal(manifest.default, true, "scaffolded packs are default (batteries-included)");
-    assert.ok(manifest.skill?.reference && manifest.quality, "wires skill + quality");
+    assert.equal(manifest.skill?.reference, "skill", "skill points at the folder");
+    assert.equal(manifest.skill?.entry, "SKILL.md", "folder skill declares an entry index");
   }
+});
+
+test("pack new --flat produces a single-file skill", async () => {
+  const base = await tmp();
+  const r = await scaffoldPack("tiny", { cwd: base, flat: true });
+  assert.equal(r.skill, "flat");
+  assert.ok(await exists(path.join(r.packDir, "skill/pack.md")), "single-file skill");
+  assert.equal(await exists(path.join(r.packDir, "skill/SKILL.md")), false, "no folder index");
+  const manifest = await readManifestAt(r.packDir);
+  assert.equal(manifest.skill?.reference, "skill/pack.md");
+  assert.equal(manifest.skill?.entry, undefined, "flat skill has no entry");
+  assert.deepEqual(validateManifest(manifest), []);
 });
 
 test("pack new rejects a bad name, an unknown kind, and a non-empty target", async () => {
@@ -392,8 +407,49 @@ test("a scaffolded pack round-trips: pack new -> pack add into a lesson", async 
   const { packDir } = await scaffoldPack("round-trip", { cwd: base, kind: "copy" });
   const lesson = await scaffold("Round Trip Host");
   await installPack(null, { fromDir: lesson, packDir, source: packDir });
-  assert.ok(await exists(path.join(lesson, ".faraday/packs/round-trip/pack.md")), "skill half installed");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/round-trip/SKILL.md")), "folder skill index installed");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/round-trip/using.md")), "folder skill sub-guide installed");
   assert.ok(await exists(path.join(lesson, "src/lesson/round-trip/index.tsx")), "runtime component copied");
   const prov = JSON.parse(await read(lesson, ".faraday/provenance.json"));
   assert.ok(prov.packs.some((p) => (typeof p === "string" ? p : p.name) === "round-trip"), "recorded in provenance");
+});
+
+test("validatePackDir catches on-disk breakage that shape-validation misses", async () => {
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("vp", { cwd: base });
+
+  // fresh scaffold: structurally valid, but warns about the unfilled TODOs
+  let r = await validatePackDir(packDir);
+  assert.deepEqual(r.errors, [], "fresh scaffold has no errors");
+  assert.ok(r.warnings.some((w) => /TODO/.test(w)), "unfilled scaffold is flagged");
+
+  // dead skill.entry -> error (shape-validation would pass this)
+  const manifestPath = path.join(packDir, "pack.json");
+  const m = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+  assert.deepEqual(validateManifest({ ...m, skill: { ...m.skill, entry: "GONE.md" } }), [], "shape check alone accepts a dead entry");
+  await fs.writeFile(manifestPath, JSON.stringify({ ...m, skill: { ...m.skill, entry: "GONE.md" } }, null, 2));
+  r = await validatePackDir(packDir);
+  assert.ok(r.errors.some((e) => /entry .*GONE\.md.* not found/.test(e)), "dead entry is an error");
+
+  // missing quality file -> error
+  await fs.writeFile(manifestPath, JSON.stringify(m, null, 2)); // restore
+  await fs.rm(path.join(packDir, "quality.md"));
+  r = await validatePackDir(packDir);
+  assert.ok(r.errors.some((e) => /quality .*does not exist/.test(e)), "missing quality file is an error");
+});
+
+test("validatePackDir warns on a copy source that installs nothing", async () => {
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("cp", { cwd: base, kind: "copy" });
+  await fs.rm(path.join(packDir, "runtime"), { recursive: true, force: true });
+  const r = await validatePackDir(packDir);
+  assert.deepEqual(r.errors, [], "a missing copy source is not fatal (installer skips it)");
+  assert.ok(r.warnings.some((w) => /runtime\/cp.*install nothing/.test(w)), "but it is warned");
+});
+
+test("every shipped official pack passes deep validation", async () => {
+  for (const p of await listPacks()) {
+    const { errors } = await validatePackDir((await resolvePack(p.name)).packDir);
+    assert.deepEqual(errors, [], `${p.name} has on-disk errors: ${errors.join("; ")}`);
+  }
 });

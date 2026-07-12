@@ -7,7 +7,7 @@ import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
-import { listPacks, installPack, removePack, resolvePack, readManifestAt, validateManifest, readPackSkill, scaffoldPack } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, readManifestAt, validatePackDir, readPackSkill, scaffoldPack } from "./pack.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
@@ -35,9 +35,11 @@ Usage:
                                         pass a <file> for one section, --all for all
   faraday pack validate <name|source> [--json]
                                         check a pack's pack.json against the contract
-  faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>] [--overwrite] [--json]
+  faraday pack new <name> [--kind skill|copy|runtime] [--flat] [--at <dir>] [--overwrite] [--json]
                                         scaffold a new pack folder (for pack authors):
-                                        pack.json + skill/pack.md + quality.md + examples/
+                                        pack.json + a folder skill (SKILL.md index +
+                                        sub-guides) + quality.md + examples/. --flat
+                                        makes a single-file skill for tiny packs.
   faraday help
 
 The generated lesson depends on the versioned @faraday-academy/runtime package
@@ -406,27 +408,34 @@ async function runPackValidate(argv, context) {
   if (!source) { const e = new Error("pack validate requires a <name|source>"); e.exitCode = 2; throw e; }
 
   const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
-  const manifest = await readManifestAt(resolved.packDir);
-  const problems = validateManifest(manifest);
+  const { errors, warnings } = await validatePackDir(resolved.packDir);
   if (json) {
-    context.stdout(JSON.stringify({ ok: problems.length === 0, pack: resolved.name, problems }, null, 2) + "\n");
+    context.stdout(JSON.stringify({ ok: errors.length === 0, pack: resolved.name, errors, warnings }, null, 2) + "\n");
   }
-  if (problems.length === 0) {
-    if (!json) context.stdout(`faraday pack validate: ${resolved.name} — manifest OK\n`);
+  if (errors.length === 0) {
+    if (!json) {
+      const note = warnings.length ? ` (${warnings.length} warning${warnings.length > 1 ? "s" : ""})` : "";
+      context.stdout(`faraday pack validate: ${resolved.name} — OK${note}\n`);
+      for (const w of warnings) context.stderr(`  warning: ${w}\n`);
+    }
     return;
   }
-  if (!json) for (const p of problems) context.stderr(`  ${p}\n`);
-  const e = new Error(`${problems.length} manifest problem(s) in ${resolved.name}`);
+  if (!json) {
+    for (const p of errors) context.stderr(`  error: ${p}\n`);
+    for (const w of warnings) context.stderr(`  warning: ${w}\n`);
+  }
+  const e = new Error(`${errors.length} problem(s) in ${resolved.name}`);
   e.exitCode = 2;
   throw e;
 }
 
 function parsePackNewArgs(argv) {
-  const opts = { name: undefined, dir: undefined, kind: "skill", overwrite: false, json: false };
+  const opts = { name: undefined, dir: undefined, kind: "skill", flat: false, overwrite: false, json: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--at") opts.dir = argv[++i];
     else if (arg === "--kind") opts.kind = argv[++i];
+    else if (arg === "--flat") opts.flat = true;
     else if (arg === "--overwrite") opts.overwrite = true;
     else if (arg === "--json") opts.json = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
@@ -445,19 +454,21 @@ async function runPackNew(argv, context) {
     cwd: context.cwd,
     dir: opts.dir,
     kind: opts.kind,
+    flat: opts.flat,
     overwrite: opts.overwrite,
   });
   const rel = path.relative(context.cwd, result.packDir) || ".";
   if (opts.json) {
-    context.stdout(JSON.stringify({ ok: true, name: result.name, kind: result.kind, dir: rel, files: result.files }, null, 2) + "\n");
+    context.stdout(JSON.stringify({ ok: true, name: result.name, kind: result.kind, skill: result.skill, dir: rel, files: result.files }, null, 2) + "\n");
     return;
   }
-  context.stdout(`Created ${opts.kind} pack "${result.name}" in ${rel}/\n`);
+  context.stdout(`Created ${opts.kind} pack "${result.name}" (${result.skill} skill) in ${rel}/\n`);
   for (const f of result.files) context.stdout(`  ${f}\n`);
+  const skillFiles = result.skill === "folder" ? "skill/SKILL.md + its sub-guides" : "skill/pack.md";
   context.stdout(
     `\nNext:\n` +
-    `  1. Fill the TODOs in pack.json, skill/pack.md, quality.md.\n` +
-    `  2. Validate: faraday pack validate ${rel}\n` +
+    `  1. Fill the TODOs in pack.json, ${skillFiles}, quality.md.\n` +
+    `  2. Validate: faraday pack validate ${rel}   (checks the files exist + no leftover TODOs)\n` +
     `  3. Try it in a lesson: faraday pack add ${rel} --dir <lesson>\n` +
     `  See references/authoring-packs.md in the faraday skill for the full guide.\n`,
   );

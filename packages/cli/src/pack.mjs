@@ -329,6 +329,84 @@ export function validateManifest(manifest) {
   return errs;
 }
 
+/**
+ * Deep validation of a pack ON DISK — what `validateManifest` (shape-only) can't
+ * see: referenced files actually exist, and no scaffold TODOs are left unfilled.
+ * Returns { errors, warnings }; the CLI fails (exit 2) on any error.
+ * @param {string} packDir
+ * @returns {Promise<{errors: string[], warnings: string[]}>}
+ */
+export async function validatePackDir(packDir) {
+  const errors = [];
+  const warnings = [];
+  let manifest;
+  try {
+    manifest = await readManifestAt(packDir);
+  } catch (e) {
+    return { errors: [e.message], warnings };
+  }
+  errors.push(...validateManifest(manifest));
+
+  // 1. skill half must exist on disk (a dead reference installs nothing)
+  const sk = manifest.skill;
+  if (sk?.reference) {
+    const refAbs = path.join(packDir, sk.reference);
+    if (!(await pathExists(refAbs))) {
+      errors.push(`skill.reference "${sk.reference}" does not exist`);
+    } else {
+      const st = await fs.stat(refAbs);
+      if (sk.entry) {
+        if (!st.isDirectory()) errors.push(`skill.entry is set but skill.reference "${sk.reference}" is a file, not a folder`);
+        else if (!(await pathExists(path.join(refAbs, sk.entry)))) errors.push(`skill.entry "${sk.entry}" not found in skill folder "${sk.reference}"`);
+      } else if (st.isDirectory()) {
+        warnings.push(`skill.reference is a folder but no skill.entry (index) is declared`);
+      }
+    }
+  }
+
+  // 2. quality file must exist if referenced
+  if (manifest.quality && !(await pathExists(path.join(packDir, manifest.quality)))) {
+    errors.push(`quality "${manifest.quality}" does not exist`);
+  }
+
+  // 3. copy sources: the installer silently skips absent `from` paths, so a typo'd
+  //    or missing source is a warning here (a copy pack that ships nothing).
+  const copyRules = [
+    ...(manifest.runtime?.copy ?? []),
+    ...Object.values(manifest.runtime?.variants ?? {}).flatMap((v) => v?.copy ?? []),
+  ];
+  for (const c of copyRules) {
+    if (c?.from && !(await pathExists(path.join(packDir, c.from)))) {
+      warnings.push(`runtime copy source "${c.from}" does not exist — it will install nothing`);
+    }
+  }
+
+  // 4. leftover scaffold TODOs — an unfilled pack should not pass review
+  const todoFiles = [];
+  const scan = async (rel) => {
+    const abs = path.join(packDir, rel);
+    if (!(await pathExists(abs))) return;
+    if ((await fs.readFile(abs, "utf8")).includes("TODO")) todoFiles.push(rel);
+  };
+  await scan("pack.json");
+  for (const dir of ["skill", "examples"]) {
+    const abs = path.join(packDir, dir);
+    if (!(await pathExists(abs))) continue;
+    const walk = async (d, base) => {
+      for (const e of await fs.readdir(d, { withFileTypes: true })) {
+        const r = `${base}/${e.name}`;
+        if (e.isDirectory()) await walk(path.join(d, e.name), r);
+        else await scan(r);
+      }
+    };
+    await walk(abs, dir);
+  }
+  await scan("quality.md");
+  if (todoFiles.length) warnings.push(`unfilled scaffold TODOs in: ${[...new Set(todoFiles)].join(", ")}`);
+
+  return { errors, warnings };
+}
+
 // ---------------------------------------------------------------------------
 // Source resolution: turn a `pack add <source>` argument into a local pack dir.
 // Sources: official name · local path (./ ../ / ~) · owner/repo[/sub] (github) ·
@@ -605,17 +683,19 @@ export async function defaultPackNames(root = PACKAGE_ROOT) {
 const PACK_KINDS = ["skill", "copy", "runtime"];
 const pascalCase = (s) => s.replace(/(^|-)([a-z0-9])/g, (_, __, c) => c.toUpperCase());
 
-function packManifestTemplate(name, kind) {
+function packManifestTemplate(name, kind, flat) {
   const m = {
     name,
     displayName: `TODO: ${name} — short human label`,
     description: "TODO: one sentence — what this pack adds to a lesson, and when to use it.",
     default: true,
     runtime: {},
-    skill: {
-      reference: "skill/pack.md",
-      loadWhen: "TODO: the situation in which an agent should load this pack",
-    },
+    // Folder skill by default: SKILL.md is an index that routes to sub-guides,
+    // so an agent reads the entry and opens only the guide it needs. Use --flat
+    // for a tiny single-file skill.
+    skill: flat
+      ? { reference: "skill/pack.md", loadWhen: "TODO: the situation in which an agent should load this pack" }
+      : { reference: "skill", entry: "SKILL.md", loadWhen: "TODO: the situation in which an agent should load this pack" },
     quality: "quality.md",
   };
   if (kind === "copy") {
@@ -637,6 +717,7 @@ function packManifestTemplate(name, kind) {
   return m;
 }
 
+// Flat (single-file) skill — only for --flat / tiny packs.
 function packSkillTemplate(name) {
   return `# Pack: \`${name}\` — <short title> (agent guide)
 
@@ -671,6 +752,73 @@ See \`quality.md\`. Key rules: <the 2-3 things that make a use of this pack good
 `;
 }
 
+// Folder skill (default) — an index that routes to focused sub-guides. Mirrors
+// the exam / lecture-design packs. Returns [{ rel, content }, …] under skill/.
+function packSkillFolder(name) {
+  return [
+    {
+      rel: "skill/SKILL.md",
+      content: `# Pack: \`${name}\` — <short title> (index)
+
+Load this when **<the trigger>** — mirror the manifest's \`loadWhen\`. One or two
+sentences on what this pack gives a lesson. This is the folder skill's **front
+door**: it routes to the sub-guides — open the one for the step you're on, not all
+of them.
+
+## When it fits (and when it doesn't)
+
+Say what this pack is *for* — and, just as important, when NOT to reach for it
+(the negative space). Off-label use is the most common quality failure; name it.
+
+## The guides
+
+1. [using.md](using.md) — the minimal, correct way to use what this pack installs.
+2. [pedagogy.md](pedagogy.md) — why this shape; the evidence / design principle.
+3. [extending.md](extending.md) — going further; the author-editable surface.
+
+Add or split guides as the pack grows — keep this index the single front door.
+
+## Quality gate
+
+See [../quality.md](../quality.md). Key rules: <the 2–3 things that make a use of
+this pack good>.
+`,
+    },
+    {
+      rel: "skill/using.md",
+      content: `# \`${name}\` — using it
+
+The minimal, correct way to use what this pack installs.
+
+\`\`\`tsx
+// TODO: the smallest complete usage.
+\`\`\`
+
+- Call out the non-obvious rules (stable ids, required props, common gotchas).
+- Show the *right* shape, not every option — the reader can discover the rest.
+`,
+    },
+    {
+      rel: "skill/pedagogy.md",
+      content: `# \`${name}\` — why / pedagogy
+
+The evidence or design principle behind this capability: why this shape, not
+another. Tie it to a learning outcome, not decoration — an agent should be able to
+justify reaching for this pack over a plain block.
+`,
+    },
+    {
+      rel: "skill/extending.md",
+      content: `# \`${name}\` — extending
+
+Where the author can go further — swap the algorithm, wire to the
+\`@faraday-academy/runtime/lms\` recorder, theme it. Point at the author-editable
+files this pack copies (if any); make clear what is safe to edit vs. a pinned dep.
+`,
+    },
+  ];
+}
+
 function packQualityTemplate(name) {
   return `# Pack \`${name}\` — quality bar
 
@@ -684,34 +832,70 @@ pass/fail — an agent grades a generated lesson against them (the eval loop).
 `;
 }
 
-function packExampleTemplate(name) {
+function packExampleTemplate(name, kind) {
+  const C = pascalCase(name);
+  const usesComponent = kind === "copy";
+  const importLine = usesComponent
+    ? `import { Lesson, Prose } from "@faraday-academy/runtime/blocks";\nimport { ${C} } from "./${name}";`
+    : `import { Lesson, Prose } from "@faraday-academy/runtime/blocks";`;
+  const body = usesComponent
+    ? `      <${C} items={[/* TODO: the smallest set that shows the point */]} />`
+    : `        <p>Show the capability this pack adds, in the smallest complete lesson.</p>`;
+  const wrap = usesComponent ? (b) => b : (b) => `      <Prose>\n        <h1>TODO: ${name} example</h1>\n${b}\n      </Prose>`;
   return `// Example lesson for the \`${name}\` pack — copy into src/lesson/lesson.tsx.
 // Keep it to ONE idea that shows the pack at its best; it doubles as an eval fixture.
-import { Lesson, Prose } from "@faraday-academy/runtime/blocks";
+${importLine}
 
-export default function ${pascalCase(name)}Example() {
+export default function ${C}Example() {
   return (
     <Lesson>
-      <Prose>
-        <h1>TODO: ${name} example</h1>
-        <p>Show the capability this pack adds, in the smallest complete lesson.</p>
-      </Prose>
+${wrap(body)}
     </Lesson>
   );
 }
 `;
 }
 
+// Author-editable component (copy archetype). A typed-props skeleton with selection
+// state + a11y + token styling, so the shape matches the real copy packs (srs/notes)
+// instead of a bare <div>.
 function packComponentTemplate(name) {
   const C = pascalCase(name);
   return `// Author-editable component the \`${name}\` pack copies into src/lesson/${name}/.
 // Once installed this is YOURS to edit — it is copied, not a locked dependency.
-import type { ReactNode } from "react";
+// Style with theme tokens (Tailwind / var(--…)) only; keep it keyboard-operable.
+import { useState } from "react";
 
-export function ${C}({ children }: { children?: ReactNode }) {
-  return <div className="${name}">{children}</div>;
+export interface ${C}Item {
+  id: string;
+  // TODO: the fields one item needs (label, value, detail, …).
+}
+
+export function ${C}({ items }: { items: ${C}Item[] }) {
+  const [selectedId, setSelectedId] = useState(items[0]?.id);
+  // TODO: render \`items\` and drive the view from \`selectedId\`. Replace this stub.
+  return (
+    <div className="${name} rounded-lg border border-border p-4">
+      {items.map((it) => (
+        <button
+          key={it.id}
+          type="button"
+          aria-pressed={selectedId === it.id}
+          onClick={() => setSelectedId(it.id)}
+          className="mr-2 rounded px-2 py-1 aria-pressed:bg-accent"
+        >
+          {it.id}
+        </button>
+      ))}
+    </div>
+  );
 }
 `;
+}
+
+function packComponentIndexTemplate(name) {
+  const C = pascalCase(name);
+  return `export { ${C}, type ${C}Item } from "./${C}";\n`;
 }
 
 /**
@@ -721,12 +905,14 @@ export function ${C}({ children }: { children?: ReactNode }) {
  * @param {string} [opts.cwd]
  * @param {string} [opts.dir]        target directory (default ./<name>)
  * @param {"skill"|"copy"|"runtime"} [opts.kind]  archetype (default "skill")
+ * @param {boolean} [opts.flat]      single-file skill instead of a folder (default false)
  * @param {boolean} [opts.overwrite]
- * @returns {Promise<{packDir: string, name: string, kind: string, files: string[]}>}
+ * @returns {Promise<{packDir: string, name: string, kind: string, skill: "folder"|"flat", files: string[]}>}
  */
 export async function scaffoldPack(name, opts = {}) {
   const cwd = opts.cwd ?? process.cwd();
   const kind = opts.kind ?? "skill";
+  const flat = opts.flat ?? false;
   if (!/^[a-z0-9][a-z0-9-]*$/.test(name ?? "")) {
     const e = new Error(`pack name must be kebab-case ([a-z0-9-]), got "${name}"`);
     e.exitCode = 2;
@@ -751,10 +937,17 @@ export async function scaffoldPack(name, opts = {}) {
     await fs.writeFile(abs, content);
     files.push(rel);
   };
-  await write("pack.json", JSON.stringify(packManifestTemplate(name, kind), null, 2) + "\n");
-  await write("skill/pack.md", packSkillTemplate(name));
+  await write("pack.json", JSON.stringify(packManifestTemplate(name, kind, flat), null, 2) + "\n");
+  if (flat) {
+    await write("skill/pack.md", packSkillTemplate(name));
+  } else {
+    for (const f of packSkillFolder(name)) await write(f.rel, f.content);
+  }
   await write("quality.md", packQualityTemplate(name));
-  await write(`examples/${name}.tsx`, packExampleTemplate(name));
-  if (kind === "copy") await write(`runtime/${name}/index.tsx`, packComponentTemplate(name));
-  return { packDir, name, kind, files };
+  await write(`examples/${name}.tsx`, packExampleTemplate(name, kind));
+  if (kind === "copy") {
+    await write(`runtime/${name}/${pascalCase(name)}.tsx`, packComponentTemplate(name));
+    await write(`runtime/${name}/index.tsx`, packComponentIndexTemplate(name));
+  }
+  return { packDir, name, kind, skill: flat ? "flat" : "folder", files };
 }
