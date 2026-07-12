@@ -59,7 +59,7 @@ MUST:
   words, worked reasoning, interpretation of what the interactive shows. Rough
   floor for a curriculum-node lesson at secondary level and up: 4+ `<Prose>`
   sections / ~500+ words — a lesson whose text is a lead + two short paragraphs
-  fails. For young children (the CRA row in audience.md) substance shifts from
+  fails. For young children (the CRA row in the audience pack) substance shifts from
   prose to interaction turns: prose is deliberately minimal, but the lesson must
   still carry several distinct teach-and-check moves — thin is still thin.
 - **Multiple, different interactions.** A substantial concept gets 2–4
@@ -207,7 +207,7 @@ MUST:
 SHOULD:
 
 - The persona / tone matches the audience methodology (a Socratic tutor for children
-  reads differently from one for professionals — see audience.md).
+  reads differently from one for professionals — see the audience pack).
 - The tutor knows its name: asked who it is, it says it's Faraday, the lesson's
   built-in tutor — not a generic model/assistant.
 - The grounding prefix is byte-stable (deterministic `buildInstructions`) so implicit

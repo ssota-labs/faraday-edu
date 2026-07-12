@@ -6,7 +6,7 @@ rebuilding lessons is not. Produce a roadmap the creator signs off on, then buil
 
 If the creator brought their own method or sequence, it leads. Otherwise this method
 implements the default's "design backward" and "prerequisite graph" moves — see
-[pedagogy.md](pedagogy.md) for the evidence.
+the `lecture-design` pack for the evidence.
 
 ## Method
 
@@ -18,7 +18,7 @@ implements the default's "design backward" and "prerequisite graph" moves — se
    list the atomic ideas — one "aha" each. Err toward too many; you'll merge later.
    For complex integrated skills (projects, diagnosis, troubleshooting), consider
    structuring around whole tasks ordered simple→complex instead of a topic list
-   (see pedagogy.md on 4C/ID).
+   (see the lecture-design pack on 4C/ID).
 2. **Map dependencies.** For each idea, ask "what must the learner understand first?"
    These prerequisite edges are the backbone of the roadmap. This is the highest-value
    step — it's what a flat table of contents lacks.

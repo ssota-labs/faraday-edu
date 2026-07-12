@@ -1,0 +1,12 @@
+{
+  "name": "deck",
+  "displayName": "Slideshow / lecture deck",
+  "description": "Deliver a lesson as an animated slideshow — one idea per screen, prev/next, motion. Skill-only: composes the runtime's <Paged> + motion, no new deps. Folder skill with an index that routes to sub-guides.",
+  "runtime": {},
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the lesson should be delivered slideshow-style — one idea per screen, paced with prev/next, for a talk, a kiosk, or a tablet"
+  },
+  "quality": "quality.md"
+}

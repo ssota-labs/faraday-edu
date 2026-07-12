@@ -21,7 +21,7 @@ lesson. Work with the creator: propose, show, ask, adjust.
 
 | Phase | Do | Reference |
 |---|---|---|
-| **Discover** | Take in the creator's material (PDF/PPT/MD/notes) or **ask for it**; ask the few questions that shape everything (audience, level, goal, scope). **Audience is a gate** — pin who the learner is (or state the assumption), then teach *their* way. | [references/discovery.md](references/discovery.md) · [references/audience.md](references/audience.md) |
+| **Discover** | Take in the creator's material (PDF/PPT/MD/notes) or **ask for it**; ask the few questions that shape everything (audience, level, goal, scope). **Audience is a gate** — pin who the learner is (or state the assumption), then teach *their* way. | [references/discovery.md](references/discovery.md) · `audience` pack (`faraday pack show audience`) |
 | **Curriculum** | Decompose the subject into units, sequence by dependency, split/merge, and propose a **roadmap** for sign-off before building. | [references/curriculum.md](references/curriculum.md) |
 | **Learning path** | Turn the roadmap into a progression — levels, unlock gates, mastery checks, continuity — so learners keep going. | [references/learning-design.md](references/learning-design.md) |
 | **Interactive** | For each concept, design the *interaction* that reveals it (what the learner manipulates, what must visibly change) before touching the API. | [references/interactive-design.md](references/interactive-design.md) |
@@ -36,12 +36,14 @@ do **Discover** (even a 30-second version) so you build the right thing, and alw
 
 **Methodology:** if the creator has their own teaching method, it leads. If not,
 apply the evidence-based default — backward design, mastery-gated prerequisite
-graph, generative interactions, spaced retrieval, feed-forward feedback — in
-[references/pedagogy.md](references/pedagogy.md), and layer the **audience
-default** on top: one methodology per learner population (CRA for children, 5E
-for secondary, Peer Instruction for undergrads, Mayer's principles for the
-general public, Merrill's First Principles for professionals) in
-[references/audience.md](references/audience.md).
+graph, generative interactions, spaced retrieval, feed-forward feedback — from the
+**`lecture-design` pack**, and layer the **audience default** on top: one
+methodology per learner population (CRA for children, 5E for secondary, Peer
+Instruction for undergrads, Mayer's principles for the general public, Merrill's
+First Principles for professionals) from the **`audience` pack**. Both are
+**default packs** — auto-installed at `faraday new` (read them at
+`.faraday/packs/{lecture-design,audience}/`), or load either at design time with
+`faraday pack show <name>`.
 
 ## The one rule that governs everything: two zones
 
@@ -127,17 +129,24 @@ math in `<TeX>`). Grade each MUST pass/fail before reporting done.
 
 ## Decision guide — what to scaffold
 
+Capabilities beyond a plain 2D lesson are **module packs** — run `faraday pack list`
+for the live catalog and see [references/packs.md](references/packs.md); the flags
+below are scaffold-time aliases for the corresponding pack.
+
 - **2D (default)** — diagrams, charts, algorithm walk-throughs, parameter
-  exploration. Stays light; no `three`. The right default for most topics.
-- **`--3d`** — the subject is inherently spatial (astronomy, molecules, geometry,
-  anatomy). Adds R3F `<Scene3D>`. Domain scenes **must** set a `mood`.
-- **`--physics`** — genuine dynamics: collisions, gravity, stacking, joints
-  (implies `--3d`). For scripted motion (orbits) use the render loop, not physics.
-- **`--tutor`** — the reader benefits from asking questions. Adds a durable,
+  exploration. Stays light; no packs. The right default for most topics.
+- **`three` (`--3d`)** — the subject is inherently spatial (astronomy, molecules,
+  geometry, anatomy). Adds R3F `<Scene3D>`. Domain scenes **must** set a `mood`.
+- **`three --physics`** — genuine dynamics: collisions, gravity, stacking, joints
+  (implies 3D). For scripted motion (orbits) use the render loop, not physics.
+- **`tutor` (`--tutor`)** — the reader benefits from asking questions. Adds a durable,
   grounded chat tutor. Needs `AI_GATEWAY_API_KEY` locally. See [references/tutor.md](references/tutor.md).
+- **other packs** — memorization (`srs`), pedagogy (`lecture-design`), and more. Add
+  to an existing lesson anytime with `faraday pack add <name>`.
 - **Single lesson vs. course vs. world** — one idea → one `<Lesson>`; a sequence →
   `<Course>`; a graph with unlock progression / a roadmap map → `<CurriculumHost>` +
-  a pack. Design this in the Curriculum phase, build it per [references/worlds.md](references/worlds.md).
+  a **world pack** (`map2dPack`/`world3dPack` — a presentation shape, *not* a module
+  pack). Design this in the Curriculum phase, build it per [references/worlds.md](references/worlds.md).
 
 ## Styling (non-negotiable baseline)
 
@@ -151,18 +160,19 @@ visual/UX design (hierarchy, layout, mood, polish), see [references/design.md](r
 
 Design phase:
 - [references/discovery.md](references/discovery.md) — intake creator material (PDF/PPT/MD) + the questions to ask.
-- [references/audience.md](references/audience.md) — who the learner is → the default delivery methodology per audience (creator's own overrides).
+- **`audience` pack** (default; `faraday pack show audience` or `.faraday/packs/audience/`) — who the learner is → the delivery methodology per audience (creator's own overrides).
 - [references/assessment.md](references/assessment.md) — the five check forms (MCQ / numeric / sketch / mission / tutor-graded), matched to outcome verbs + audience.
-- [references/pedagogy.md](references/pedagogy.md) — the evidence-based default methodology (creator's own overrides).
+- **`lecture-design` pack** (default; `faraday pack show lecture-design` or `.faraday/packs/lecture-design/`) — the evidence-based default methodology + named methods (creator's own overrides).
 - [references/curriculum.md](references/curriculum.md) — decompose a subject → sequenced roadmap.
 - [references/learning-design.md](references/learning-design.md) — levels, unlock gates, mastery, continuity.
 - [references/interactive-design.md](references/interactive-design.md) — design the interaction that reveals a concept.
 - [references/design.md](references/design.md) — visual/UX design within the theme system.
 
 Build API:
+- [references/packs.md](references/packs.md) — module packs: discover with `faraday pack list`, install with `faraday pack add`, read `.faraday/packs/<name>/`.
 - [references/blocks.md](references/blocks.md) — the full block API + canonical lesson shapes.
-- [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, packs, 3D moods, LMS.
-- [references/tutor.md](references/tutor.md) — embed + ground the `--tutor` AI, edit its persona/model.
+- [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, **world packs** (presentation shapes), 3D moods, LMS.
+- [references/tutor.md](references/tutor.md) — embed + ground the `tutor` pack AI, edit its persona/model.
 
 Verify:
 - [references/quality-bar.md](references/quality-bar.md) — the acceptance rubric (game-screen worlds, textbook-chapter lessons).

@@ -1,15 +1,16 @@
 {
   "name": "@faraday-academy/cli",
   "version": "0.1.0",
-  "description": "Faraday — a toolcraft-style, shadcn-based scaffolder for AI-authored interactive lessons (CLI-only phase). Working codename.",
+  "description": "Faraday Academy — a shadcn-based scaffolder for AI-authored interactive lessons, with installable module packs (faraday pack add).",
   "type": "module",
   "bin": {
     "faraday": "./bin/faraday.mjs"
   },
-  "files": ["bin", "src", "templates", "LICENSE.md"],
+  "files": ["bin", "src", "templates", "packs", "LICENSE.md"],
   "scripts": {
+    "build": "node scripts/bundle-packs.mjs",
     "test": "node --test src/*.test.mjs",
-    "prepack": "cp ../../LICENSE.md ./LICENSE.md 2>/dev/null || true"
+    "prepack": "node scripts/bundle-packs.mjs && (cp ../../LICENSE.md ./LICENSE.md 2>/dev/null || true)"
   },
   "publishConfig": {
     "access": "public"

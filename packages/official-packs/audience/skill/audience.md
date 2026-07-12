@@ -3,7 +3,7 @@
 **Pinning the audience is a gate, not a nicety.** The same concept is taught with
 different *moves* to a 9-year-old, a high-schooler, an undergrad, a curious adult,
 and a working professional — and building before you know which one you're serving
-produces courseware for nobody. In [discovery.md](discovery.md) you must get an
+produces courseware for nobody. In Discovery you must get an
 explicit answer to *"who is the learner?"* (or state the assumption you're making
 and flag it). Then apply this reference.
 
@@ -11,7 +11,7 @@ and flag it). Then apply this reference.
 defaults for creators who *don't* bring a method — one well-evidenced methodology
 per audience, chosen because each has survived real scrutiny. Don't blend all
 five into every lesson; pick the row that matches, and let
-[pedagogy.md](pedagogy.md) (the audience-independent default: backward design,
+the `lecture-design` pack (the audience-independent default: backward design,
 mastery gates, generative interaction, retrieval, feed-forward feedback) run
 underneath.
 
@@ -58,7 +58,7 @@ then the formalism names what they already saw.
 - Formal notation is expected at this level; introduce it in Explain, in `<TeX>`.
 
 → *Faraday:* this maps 1:1 onto the lesson-section arc in
-[interactive-design.md](interactive-design.md): prediction `<Quiz>` → `<Workbench>`
+interactive design: prediction `<Quiz>` → `<Workbench>`
 → Prose+`<TeX>` → second interactive (`<Chart>`/`<Compare>`/`<CodeCell>`) →
 `<Quiz onCorrect={complete}>`. Unlock worlds work well here too.
 
@@ -160,7 +160,7 @@ distributed across screens.
   independently of the rows above.
 - **Audience ≠ learning styles.** These rows adapt *method and register* to a
   population's prior knowledge and motivation — never build visual/auditory-style
-  variants ([pedagogy.md](pedagogy.md) anti-patterns).
+  variants (the `lecture-design` pack anti-patterns).
 - **Mixed/unknown audience** → default to the adolescent/5E row (its arc is the
   most forgiving) and say so in the brief; a stated assumption the creator can
   veto beats a silent guess. When the creator names a span across TWO rows
@@ -170,7 +170,7 @@ distributed across screens.
 - **Assessment forms follow the audience too** — children clear missions,
   undergrads type numbers and face ConcepTests, professionals get the job task
   as the gate. The per-audience defaults live in
-  [assessment.md](assessment.md) ("Audience defaults").
-- The quality bar ([quality-bar.md](quality-bar.md)) applies to every audience —
+  the assessment reference ("Audience defaults").
+- The quality bar (the quality bar) applies to every audience —
   what changes is prose register, symbol density, and which interactions carry
   the load, not whether the lesson is substantial.

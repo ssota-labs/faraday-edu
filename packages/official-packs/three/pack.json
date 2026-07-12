@@ -1,0 +1,42 @@
+{
+  "name": "three",
+  "displayName": "3D scenes (React Three Fiber)",
+  "description": "Add @faraday-academy/three — R3F 3D blocks, procedural helpers (Body/Planet/OrbitPath/Label3D), a glTF <Model> loader, and a mood-per-scene system — to an existing lesson. Pass --physics for Rapier gravity/collision.",
+  "aliasFlags": ["--3d"],
+  "runtime": {
+    "dependencies": {
+      "@faraday-academy/three": "0.1.0",
+      "@react-three/drei": "^10.0.0",
+      "@react-three/fiber": "^9.0.0",
+      "three": "^0.171.0"
+    },
+    "devDependencies": {
+      "@types/three": "^0.171.0"
+    },
+    "variants": {
+      "physics": {
+        "dependencies": {
+          "@react-three/rapier": "^2.1.0"
+        }
+      }
+    },
+    "cssImports": ["@faraday-academy/three/styles.css"],
+    "copy": [{ "from": "examples", "to": "docs/examples" }]
+  },
+  "scaffold": {
+    "copy": [
+      { "from": "scaffold/lesson.tsx", "to": "src/lesson/lesson.tsx" },
+      { "from": "scaffold/models", "to": "public/models" }
+    ],
+    "variants": {
+      "physics": {
+        "copy": [{ "from": "scaffold/physics-lesson.tsx", "to": "src/lesson/lesson.tsx" }]
+      }
+    }
+  },
+  "skill": {
+    "reference": "skill/pack.md",
+    "loadWhen": "the lesson needs a 3D scene, an orbital/spatial model, or a 3D curriculum world"
+  },
+  "quality": "quality.md"
+}

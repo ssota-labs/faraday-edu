@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://faraday-academy.dev/pack.schema.json",
+  "title": "Faraday module pack manifest (pack.json)",
+  "description": "The contract for a Faraday module pack. A pack is a self-contained folder with this manifest at its root, installed into a lesson by `faraday pack add`. Official packs live in packages/official-packs/; third parties may distribute a pack from any local path, GitHub repo, or npm package.",
+  "type": "object",
+  "required": ["displayName"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Optional. The CLI derives the pack name from its folder; this is documentation only.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "displayName": { "type": "string", "description": "Human-readable label shown by `faraday pack list`." },
+    "description": { "type": "string" },
+    "aliasFlags": {
+      "type": "array",
+      "description": "Optional legacy `faraday new` flags this pack backs, e.g. [\"--3d\"].",
+      "items": { "type": "string" }
+    },
+    "runtime": {
+      "type": "object",
+      "description": "The runtime half — merged/copied into the lesson's real project tree.",
+      "additionalProperties": false,
+      "properties": {
+        "dependencies": { "$ref": "#/$defs/depMap" },
+        "devDependencies": { "$ref": "#/$defs/depMap" },
+        "variants": {
+          "type": "object",
+          "description": "Named optional bundles, selected via `faraday pack add <name> --<variant>`.",
+          "additionalProperties": { "$ref": "#/$defs/variantRuntime" }
+        },
+        "cssImports": {
+          "type": "array",
+          "description": "CSS specifiers appended (idempotently) to src/app.css as @import lines.",
+          "items": { "type": "string" }
+        },
+        "copy": { "$ref": "#/$defs/copyRules" },
+        "appends": { "$ref": "#/$defs/appendRules" }
+      }
+    },
+    "scaffold": {
+      "type": "object",
+      "description": "Applied ONLY when scaffolding a new lesson (faraday new alias), never on `pack add` into existing work.",
+      "additionalProperties": false,
+      "properties": {
+        "copy": { "$ref": "#/$defs/copyRules" },
+        "appends": { "$ref": "#/$defs/appendRules" },
+        "variants": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": { "copy": { "$ref": "#/$defs/copyRules" }, "appends": { "$ref": "#/$defs/appendRules" } }
+          }
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "description": "The skill half — a .md file or a directory copied to .faraday/packs/<name>/ with a pointer added to AGENTS.md.",
+      "additionalProperties": false,
+      "properties": {
+        "reference": { "type": "string", "description": "Path (relative to the pack) to a .md file or a directory." },
+        "entry": { "type": "string", "description": "For a directory reference: the front-door/index file (relative to the reference dir) that routes to the rest. `faraday pack show <name>` prints just this; `faraday pack show <name> <file>` prints a specific sub-file." },
+        "loadWhen": { "type": "string", "description": "Hint templated into the AGENTS.md pointer: \"Load it when <loadWhen>.\"" }
+      }
+    },
+    "quality": { "type": "string", "description": "Path (relative to the pack) to a quality-bar markdown file." }
+  },
+  "$defs": {
+    "depMap": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "npm package name -> version specifier."
+    },
+    "variantRuntime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dependencies": { "$ref": "#/$defs/depMap" },
+        "devDependencies": { "$ref": "#/$defs/depMap" }
+      }
+    },
+    "copyRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "additionalProperties": false,
+        "properties": {
+          "from": { "type": "string", "description": "Path relative to the pack (file or directory)." },
+          "to": { "type": "string", "description": "Path relative to the lesson root." }
+        }
+      }
+    },
+    "appendRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["to", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "to": { "type": "string", "description": "Lesson-relative file to append to (skipped if absent)." },
+          "text": { "type": "string" },
+          "marker": { "type": "string", "description": "If present in the file already, the append is skipped (idempotent)." }
+        }
+      }
+    }
+  }
+}

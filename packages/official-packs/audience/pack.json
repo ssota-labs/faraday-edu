@@ -1,0 +1,12 @@
+{
+  "name": "audience",
+  "displayName": "Audience → delivery methodology",
+  "description": "Who the learner is (children / secondary / undergrad / general public / professional) and the one evidence-based methodology to hand them the concept — CRA, 5E, Peer Instruction, Mayer, Merrill — plus layout defaults. Skill-only. A default pack: auto-installed at `faraday new`.",
+  "default": true,
+  "runtime": {},
+  "skill": {
+    "reference": "skill/audience.md",
+    "loadWhen": "you are pinning who the learner is and choosing how to hand them the concept (audience is a gate in Discover)"
+  },
+  "quality": "quality.md"
+}

@@ -1,12 +1,16 @@
-# Faraday
+# Faraday Academy
+
+***English** · [한국어](README.ko.md)*
 
 > **Turn a lesson you already teach into a high-quality interactive textbook — with a grounded AI tutor — in one shot.**
 >
-> Status: CLI phase (Phase 0 complete, building toward GTM Stage 1 soft launch).
-> Launch plan: [LAUNCH-STAGE1.md](docs/LAUNCH-STAGE1.md). Architecture:
-> [VISION.md](docs/VISION.md) · customer strategy: [GTM.md](docs/GTM.md).
-> Working codename; modeled on toolcraft-style self-contained packaging, headed
-> toward a mirror-dimension-style web platform later.
+> Status: CLI phase (Phase 0 complete, building toward GTM Stage 1). See
+> [VISION.md](docs/VISION.md) for the architecture and [GTM.md](docs/GTM.md) for the
+> customer strategy. A self-contained scaffolder today, headed toward a hosted web
+> platform later.
+
+<!-- 📸 hero.gif — see docs/images/README.md -->
+![A live Faraday lesson: drag a slider and the chart updates in real time](docs/images/hero.gif)
 
 Faraday is a **scaffolder** for AI-authored interactive courseware. You (or your
 coding agent) run one command and get a self-contained Vite + React app for a
@@ -15,9 +19,39 @@ durable, grounded **AI tutor** with a flag. Bundle lessons into a **curriculum o
 game-like world**, wire in **LMS** progress tracking, and deploy. No workspace, no
 npm publish, no backend unless you ask for one.
 
-The name of the game is the **Studio Seed**: a locked, vendored runtime does the
-hard, correctness-critical parts; you (or your agent) get a wide-open authoring
-zone; and quality gates enforce the contract before anything ships.
+---
+
+## Get started in 5 minutes
+
+You never open a terminal. Everything below is something you **type to your coding
+agent** (Claude Code, Cursor, Codex) in its chat — the agent runs the actual
+commands for you. Two messages and you have a lesson.
+
+**1. Ask your agent to install the Faraday skill.** Paste this into the chat:
+
+```text
+Please install the Faraday skill so you can build interactive lessons for me.
+Run: npx skills add ssota-labs/faraday-academy
+```
+
+**2. Ask for the lesson you want** — plain language, no flags to remember:
+
+```text
+Make an interactive lesson that teaches binary search,
+and add a grounded AI tutor.
+```
+
+That's it. From there the skill drives the whole loop for you — it scaffolds the
+lesson, writes the code, checks it, opens a live preview in your browser so you
+can play with it, and deploys when you ask. You stay in the chat the entire time.
+
+More paste-ready prompts (3D, physics, courses) are in
+[Example lessons](#example-lessons--the-feel).
+
+> **Comfortable installing plugins yourself?** Claude Code users can instead run
+> `/plugin marketplace add ssota-labs/faraday-academy` then `/plugin install
+> faraday@faraday`. See [`plugins/claude-code/`](plugins/claude-code/) and
+> [`plugins/codex/`](plugins/codex/) for per-agent details.
 
 ---
 
@@ -27,63 +61,113 @@ GTM **Stage 1** is early-adopter *creators* — tutors, TAs, teachers, course
 authors — who **already run a coding agent** (Claude Code, Codex). Zero tool
 friction: you already have the agent, Faraday is just a scaffolder it drives.
 
-The fastest path is to install a **Faraday plugin** for your agent and let it do
-the work:
+---
 
-- **Claude Code** → [`plugins/claude-code/`](plugins/claude-code/) — a plugin
-  (skill + `/faraday-*` slash commands + an authoring subagent).
-- **Codex** → [`plugins/codex/`](plugins/codex/) — an `AGENTS.md` + custom
-  prompts you drop into `~/.codex/`.
+## Why Faraday
 
-Each plugin teaches your agent the whole loop below: scaffold → author against the
-locked-tree contract and blocks API → pass the gates → embed the tutor → deploy.
-See each plugin's README for one-command install.
+Coding agents made it suddenly easy — and cheap — to *build* things with code, and
+educational material is one of the biggest beneficiaries. Yet most of it is still
+trapped in **static text**: slides, PDFs, textbooks. The same idea taught as an
+**interactive** — a simulation you steer, a quiz that adapts, an animation, a live
+graph, a 3D scene, an AI tutor beside the text — lands better, because the learner
+*does* the idea instead of reading it.
 
-Prefer the raw CLI? It's four verbs — keep reading.
+This isn't a new dream. Flash-era science simulations proved interactive material
+works. But it never went mainstream, because **code was expensive** — you needed an
+engineer for every lesson. Coding agents remove that cost: an educator can now
+describe what they want and get a working interactive.
+
+Early-adopter educators are already trying this. The catch: **quality takes trial
+and error.** A raw agent can build *an* interactive, but getting one that actually
+teaches well — the right interaction, the right assessment, a coherent look — takes
+many iterations.
+
+Faraday front-loads that quality. It ships the **components and modules** good
+courseware reuses, plus a **skill** that teaches the agent how to combine them well —
+so you convey *intent* and the agent produces high-quality material with far less
+trial and error.
+
+And by packaging capabilities as **module packs** — from the surface UI of a lesson
+down to the *software of teaching itself* (pedagogy, methodology) — anyone can bottle
+their own know-how and share it. The goal is a **community** where a great lesson
+format, or a proven teaching method, is one `faraday pack add` away.
 
 ---
 
 ## The loop
 
-In a clean agent session (or by hand):
+You drive everything by talking to your agent — it runs the tools for you. A
+typical lesson moves through five phases:
 
-```bash
-npx @faraday-academy/cli new my-lesson         # scaffold a 2D lesson + pnpm install
-#   add --tutor        durable grounded AI tutor (adds a tiny server layer)
-#   add --3d           Three.js / React Three Fiber block + demo
-#   add --physics      Rapier physics (implies --3d)
-cd my-lesson
+1. **Scaffold** — the agent creates a fresh lesson app (2D by default; it adds
+   3D, physics, or the AI tutor when your request calls for them).
+2. **Author** — it writes `src/lesson/lesson.tsx` using the Faraday blocks and
+   runtime. This is the creative part, and it's what your prompt shapes.
+3. **Check** — it runs the structure + integrity gates and fixes anything that
+   trips them.
+4. **Preview** — it serves the lesson locally so you can play with it and ask for
+   changes.
+5. **Deploy** — on request, it builds a static bundle (or a server build for
+   tutor lessons) and ships it.
 
-# author src/lesson/lesson.tsx using @/faraday/blocks + @/faraday/runtime
-# (this is where your agent — or you — does the creative work)
-
-pnpm check                                 # structure + SHA-256 integrity gates
-pnpm dev                                   # Vite serves on a free port; drive it
-pnpm build                                 # static bundle in dist/ (deployable)
+```mermaid
+flowchart LR
+    You(["You — plain-language prompt"]) --> S
+    subgraph Agent["Your agent runs the loop for you"]
+        direction LR
+        S["1 · Scaffold"] --> A["2 · Author"]
+        A --> C["3 · Check"]
+        C -->|"gates fail — fix & retry"| A
+        C -->|"gates pass"| P["4 · Preview"]
+        P -->|"you ask for changes"| A
+        P -->|"looks good"| D["5 · Deploy"]
+    end
+    D --> Live(["Live lesson"])
 ```
 
-> During local development of this repo, `npx @faraday-academy/cli` is equivalent to
-> `node packages/cli/bin/faraday.mjs` run from the repo root.
+You stay in plain language the whole way — "make the graph bigger," "add a quiz,"
+"now deploy it." The **Author → Check → Preview** stretch loops as many times as
+it takes; you just keep asking for changes. The [CLI reference](#cli-reference)
+below documents the commands the agent runs under the hood, if you're curious.
 
 ---
 
-## Two zones (the core contract)
+## Two areas (how a lesson is laid out)
 
-Every scaffolded lesson has exactly two zones. This split is the whole idea.
+Every scaffolded lesson has two areas. Knowing which is which just helps you and
+your agent stay oriented — it's all your code, and you (or your agent) can change
+any of it.
 
-| Zone | Path | Rule |
+| Area | Path | What it is |
 |---|---|---|
-| **Author area** | `src/lesson/**` | Your lesson. `src/lesson/lesson.tsx` is the fixed entry and must `export default` a React component. Add sibling files freely. |
-| **Protected area** | `src/faraday/**` | Vendored shadcn UI, lesson blocks, runtime, styles, world/tutor runtimes. **Do not edit.** Sealed by a SHA-256 manifest — `faraday check` (`pnpm check`) fails on drift. |
+| **Author area** | `src/lesson/**` | Your lesson. `src/lesson/lesson.tsx` is the fixed entry and must `export default` a React component. Add sibling files freely — this is where the work happens. |
+| **Runtime area** | `src/faraday/**` | The generated runtime: shadcn UI, lesson blocks, runtime, styles, world/tutor runtimes. Your agent normally authors *against* it rather than *into* it, so upgrades stay clean. A SHA-256 manifest lets `pnpm check` flag when it has changed — a heads-up, not a lock. Edit it if you have a reason to. |
 
-`src/main.tsx`, `index.html`, and config are the app shell; you rarely touch them.
-Templates already import via the `@/faraday/*` alias, so there is **no import
-rewriting** at scaffold time.
+`src/main.tsx`, `index.html`, and config are the app shell; you rarely need to
+touch them. Templates already import via the `@/faraday/*` alias, so there's no
+import rewriting at scaffold time.
 
 The scaffolded project ships its own authoring guide in `AGENTS.md` and
 `docs/authoring.md` — your agent reads those to learn the blocks API.
 
 ---
+
+## Components — what a course is made of
+
+A course isn't one thing. Faraday gives your agent a component for each part of
+teaching, and you compose them per lesson:
+
+| Preview | Component | What it does | Built from |
+|---|---|---|---|
+| ![Curriculum world](docs/images/component-curriculum.png) | **📚 Curriculum / world** | Order lessons into a linear textbook, or a game-like map with unlock progression you navigate. | `<Course>` · `<CurriculumHost>` + world packs |
+| ![Lecture deck](docs/images/component-lecture.png) | **🎬 Lecture / deck** | Slideshow-style delivery — one idea per screen, prev/next, animation. | `<Paged>` · `runtime/motion` · `deck` pack |
+| ![Quiz and assignment](docs/images/component-quiz.png) | **✅ Quiz / assignment** | Checks that *teach* — MCQ, typed numeric, sketch-to-predict, and missions cleared in the sim. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
+| ![LMS dashboard](docs/images/component-lms.png) | **📊 Student management** | Record progress and show a dashboard across a lesson or a whole curriculum (LMS). | `runtime/lms` (recorder + dashboard) |
+| ![AI tutor](docs/images/component-tutor.png) | **🤖 AI tutor** | A grounded, Socratic chat that answers only from the lesson's own content. | `tutor` pack (`--tutor`) |
+
+<!-- 📸 component-*.png thumbnails — see docs/images/README.md. Broken icons above are placeholders until you drop the files in. -->
+
+Underneath, each of these is a **module** you can mix. Here's the detail.
 
 ## What you can build (the layer stack)
 
@@ -91,24 +175,33 @@ Faraday closes the feature set **horizontally** at Stage 1 — every layer works
 today under BYOK / self-deploy. Later stages remove friction (managed AI,
 multi-tenancy, payments), they don't add features. (See [VISION.md](docs/VISION.md) §2.)
 
-- **Lesson** — one interactive idea. ~15 shadcn-based blocks: `<Lesson>`,
-  `<Prose>`, `<Stage>`, `<Workbench>` (live canvas + floating control panel),
-  `<ControlGroup>`, `<Chart>`, `<ParamSlider>`, `<ParamSwitch>`, `<Segmented>`,
-  `<Scrubber>` + `useStepper`, `<Quiz>`, `<Callout>`, `<Reveal>`, `<Compare>`,
-  `<Stat>`. Themed via externalized CSS style/design/theme token layers.
-- **3D** (`--3d`) — `<Scene3D>` (R3F) with procedural helpers (`<Body>`,
-  `<Planet>`, `<OrbitPath>`, `<Label3D>`) and a `<Model>` glTF loader.
-  **Procedural-first, asset-fallback.** Domain scenes must carry a `mood`
-  (`space`, `cell`, `lab`, `physics`, `abstract`).
+Each layer is a **module** — a pinned `@faraday-academy/*` package (or a
+sub-module inside `runtime`) that your agent composes. The runtime ships ~24
+lesson blocks, grouped by what they do:
+
+| Group | Blocks | For |
+|---|---|---|
+| **Layout & canvas** | `<Lesson>` `<Prose>` `<Stage>` `<Workbench>` `<ControlGroup>` `<Paged>` | Structure the page; `<Workbench>` is the live canvas + floating controls; `<Paged>` is a screen-at-a-time (tablet / slideshow) layout. |
+| **Live controls** | `<ParamSlider>` `<ParamSwitch>` `<Segmented>` `<Scrubber>` + `useStepper` `<Readout>` `<Chart>` `<Stat>` | The knobs the reader turns and the numbers / plots that react in real time. |
+| **Assessment** | `<Quiz>` `<NumericAnswer>` `<Challenge>` `<SketchPad>` | Recognize (MCQ), compute (typed answer), *do* (a mission you clear in the sim), predict (pen / Apple-Pencil sketch vs. a revealed answer). |
+| **Explanation** | `<Derivation>` `<TeX>` `<CodeCell>` `<Reveal>` `<Compare>` `<Callout>` | Formulas derived line-by-line, KaTeX math, a runnable JS cell, progressive reveals and side-by-sides. |
+
+On top of the blocks:
+
+- **3D** (`@faraday-academy/three`, `--3d`) — `<Scene3D>` (R3F) with procedural
+  helpers (`<Body>`, `<Planet>`, `<OrbitPath>`, `<Label3D>`), a `<Model>` glTF
+  loader, and a `mood` per scene (`space`, `cell`, `lab`, `physics`, `abstract`).
+  **Procedural-first, asset-fallback.**
 - **Physics** (`--physics`) — Rapier gravity/collision via `@react-three/rapier`.
-- **Curriculum / world** — `<Course>` for a linear textbook (chapter nav,
-  prev/next, `#hash`), or `<CurriculumHost>` for a graph of lessons with **unlock
-  progression** and a swappable **pack** (`linearPack`, `map2dPack`,
-  `world3dPack`) — a status list, a 2D node map, or a 3D open-world constellation.
-- **LMS** — vendored progress recorder + dashboard components that attach to a
+- **Curriculum / world** (`runtime/world`) — bundle many lessons: `<Course>` for
+  a linear textbook (chapter nav, prev/next, `#hash`), or `<CurriculumHost>` with
+  **unlock progression** and a swappable **pack** — `linearPack` (status list),
+  `map2dPack` (2D node map), or `world3dPack` (3D open-world / RPG). The pack is
+  the seam you swap to reskin the whole world.
+- **LMS** (`runtime/lms`) — a progress recorder + dashboard that attach to a
   lesson or a whole curriculum.
-- **Tutor AI** (`--tutor`) — a **durable, grounded** chat agent embedded beside
-  your content. More below.
+- **Tutor AI** (`@faraday-academy/tutor`, `--tutor`) — a **durable, grounded**
+  chat agent embedded beside your content. More below.
 
 ---
 
@@ -141,6 +234,30 @@ Swap the subject and the world follows its mood: a glowing **animal cell**
 (`cell`), a **molecule** in a clean lab (`lab`), an **abstract geometry** surface
 (`abstract`). The through-line: the reader *does* the idea instead of reading it.
 
+### Prompts to paste into your agent
+
+Once you know what you want, just tell your agent:
+
+```text
+"Make an interactive lesson that teaches binary search.
+ Step through how the search range narrows in a sorted array,
+ and add a grounded tutor."
+```
+
+```text
+"Make a lesson that shows the solar system in 3D. Planets orbit,
+ and let the user control the time speed with a slider."   → --3d
+```
+
+```text
+"Make a Galton board with a physics engine to teach probability.
+ Let me change the number of balls, and show the normal distribution
+ build up."   → --physics
+```
+
+With a plugin installed, the agent scaffolds with the right flags, composes the
+blocks, and passes the gates for you.
+
 ---
 
 ## The AI tutor (`--tutor`)
@@ -149,6 +266,9 @@ Swap the subject and the world follows its mood: a glowing **animal cell**
 and vendors a `<Tutor>` component. It follows Vercel's AI SDK design and runs a
 Workflow DevKit **durable agent**: a reply survives a page refresh, a network
 drop, or a serverless timeout and resumes mid-answer.
+
+<!-- 📸 tutor-wide.png — see docs/images/README.md -->
+![The grounded AI tutor docked beside a lesson, answering from the lesson's content](docs/images/tutor-wide.png)
 
 ```tsx
 import { Tutor } from "@/faraday/tutor";
@@ -203,17 +323,18 @@ error. `--json` makes `new` emit a structured result an agent can parse.
 ## Repo layout
 
 ```
-faraday-academy/                    # repo root = the pnpm workspace (apps/* + packages/*)
+faraday-academy/                # repo root = the pnpm workspace (apps/* + packages/*)
 ├─ apps/
 │  └─ labs/                     # @faraday-academy/labs — internal Vite catalog of components + skills/packs
 ├─ packages/
-│  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src + templates)
-│  │  └─ templates/             #   starter (app shell) + addon-3d + addon-tutor (scaffolding assets)
+│  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
+│  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
+│  ├─ official-packs/           # installable module packs (three · tutor · srs · lecture-design · audience) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (--3d / --physics)
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (--tutor)
 ├─ examples/                    # Standalone demos (own lockfile; Vercel root = examples/<name>)
-│  └─ voyage-log/               #   C-B 항해 일지 curriculum (--3d)
+│  └─ voyage-log/               #   sample curriculum (--3d)
 ├─ plugins/
 │  ├─ claude-code/              # Claude Code plugin + marketplace (install & drive Faraday)
 │  └─ codex/                    # Codex AGENTS.md + custom prompts
@@ -244,6 +365,65 @@ node packages/cli/bin/faraday.mjs help      # run the CLI from the repo
 
 ---
 
+## Extending Faraday — module packs
+
+> **Roadmap / architecture.** The pattern below is *how* Faraday grows. Some packs
+> ship today (✅); others are planned (🔜). This describes the direction, not a
+> finished catalog.
+
+Faraday is modular on **two layers at once**, and that's what makes it extensible:
+
+- **Runtime layer** (code) — the blocks, world packs, LMS, 3D, and tutor above.
+- **Skill layer** (agent knowledge) — the `faraday` skill loads a per-phase
+  reference (`curriculum.md`, `assessment.md`, `worlds.md`, `packs.md`, …) only
+  when it needs it, so the agent knows *when and how* to use each module.
+
+A **module pack** bolts onto *both* layers at once: a runtime module **plus** the
+skill knowledge that drives it, an example lesson, and a quality-bar entry. Adding
+a "department" means adding one pack — the runtime code and the agent's knowledge
+always ship together:
+
+```mermaid
+flowchart LR
+    subgraph Pack["📦 a module pack (faraday pack add)"]
+        direction TB
+        RT["runtime half<br/>deps · components · css"]
+        SK["skill half<br/>how &amp; when to use it"]
+    end
+    RT -->|installed into| Lesson["🗂️ your lesson<br/>package.json · src/ · app.css"]
+    SK -->|installed into| Dot["🧠 .faraday/packs/&lt;name&gt;/<br/>+ AGENTS.md pointer"]
+    Lesson --> Agent(["🤖 your coding agent<br/>builds &amp; edits the lesson"])
+    Dot --> Agent
+```
+
+| Department | Pack | Status | Built from |
+|---|---|---|---|
+| **Curriculum** | `three` — 3D scenes / space RPG | ✅ shipping | `@faraday-academy/three` + scaffold demo + physics variant |
+| **Tutor** | `tutor` — grounded AI tutor | ✅ shipping | pinned widget + author-editable durable server |
+| **Memorization** | `srs` — spaced-repetition flashcards | ✅ shipping | author-editable `<Flashcards>` (SM-2-lite), zero new deps |
+| **Lecture design** | `lecture-design` — teaching methods & pedagogy | ✅ shipping · **default** | skill-only folder (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
+| **Audience** | `audience` — delivery methodology per learner | ✅ shipping · **default** | skill-only (CRA / 5E / Peer Instruction / Mayer / Merrill + layout) |
+| **Lecture** | `deck` — animated slideshow | ✅ shipping | folder skill (slide-design → motion → pacing), composes `<Paged>` + motion, zero deps |
+| **Kids** | `kids` — tablet game | ✅ shipping | preset skill (CRA + big targets + celebration), builds on the `audience` pack, zero deps |
+| **Exam** | `exam` — practice / mock test | ✅ shipping | folder skill (blueprint → items → scoring → integrity), composes assessment blocks, zero deps |
+| **Notes** | `notes` — GoodNotes-style pen | ✅ shipping | author-editable `<Notebook>` ink canvas (Canvas + PointerEvents, pressure), zero deps |
+
+**Quality control is part of the pack.** Every pack is built against
+[`quality-bar.md`](plugins/claude-code/skills/faraday/references/quality-bar.md),
+and the `faraday-author` subagent builds a lesson end-to-end so the output can be
+graded. The direction is an eval loop: an agent generates lessons from prompts,
+other agents score them against the rubric, and a pack is gated on its pass rate.
+
+**Try it.** Four packs ship today — run `faraday pack list`, then
+`faraday pack add <name> [--physics] [--dir <lesson>]`. One command installs the
+runtime half (deps / source / CSS) **and** the skill half (an authoring guide the
+agent loads, pointed to from `AGENTS.md`) into an existing lesson at once. The
+`--3d`/`--physics`/`--tutor` flags on `faraday new` are now thin aliases over the
+same installer. Full format + install locations + roadmap:
+[`specs/module-packs.md`](specs/module-packs.md).
+
+---
+
 ## Where this is headed
 
 Faraday is the **build-time** half of a two-AI system: a *creation AI* authors
@@ -252,3 +432,27 @@ courseware now (what the plugins drive); a *tutor AI* teaches students at runtim
 multi-tenancy (Vercel Platforms), and creator↔student payments — turning the
 open-core CLI into a three-sided marketplace. Read [VISION.md](docs/VISION.md) and
 [GTM.md](docs/GTM.md) for the full arc.
+
+---
+
+## License
+
+Faraday is **fair-code** distributed software — source-available, but **not**
+OSI-approved open source.
+
+- Everything **except** files containing `.ee.` in their name and content under
+  `ee/` directories is licensed under the **Sustainable Use License**
+  ([LICENSE.md](LICENSE.md)). You may self-host and modify it for your own
+  internal business purposes or non-commercial use, and redistribute it free of
+  charge for non-commercial purposes.
+- **Lessons you generate are yours.** The lesson output the CLI scaffolds for
+  you — your author-area code plus the built `dist/` bundle — is carved out: you
+  may deploy and **sell** it (e.g. sell course access to your students) for any
+  purpose, no separate agreement required. See the "Generated Lessons" section of
+  [LICENSE.md](LICENSE.md).
+- You may not offer **Faraday itself** (the CLI, runtime, and addon packages) as a
+  paid managed hosting service for third-party customers, including monthly or
+  usage-based hosted instances, without a separate commercial agreement.
+- Files containing `.ee.` and content under `ee/` directories are licensed under
+  the **Faraday Enterprise License** ([LICENSE_EE.md](LICENSE_EE.md)) and require a
+  valid commercial agreement.

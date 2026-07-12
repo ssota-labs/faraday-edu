@@ -1,0 +1,16 @@
+{
+  "name": "notes",
+  "displayName": "Pen notebook (GoodNotes-style)",
+  "description": "Add a full-page, pressure-sensitive ink canvas for handwriting / sketching lessons on a stylus device. Ships an author-editable <Notebook> component (Canvas + PointerEvents, localStorage-persisted) into src/lesson/notes — no new npm dependencies.",
+  "runtime": {
+    "copy": [
+      { "from": "runtime/notes", "to": "src/lesson/notes" },
+      { "from": "examples", "to": "docs/examples" }
+    ]
+  },
+  "skill": {
+    "reference": "skill/pack.md",
+    "loadWhen": "the lesson is handwriting/sketch-driven on a stylus device — a full-page ink notebook the learner writes or draws in"
+  },
+  "quality": "quality.md"
+}

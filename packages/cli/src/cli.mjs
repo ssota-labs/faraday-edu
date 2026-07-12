@@ -7,17 +7,34 @@ import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
+import { listPacks, installPack, removePack, resolvePack, readManifestAt, validateManifest, readPackSkill } from "./pack.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
 Usage:
-  faraday new <name> [--3d | --physics] [--tutor] [--at <dir>] [--overwrite] [--skip-install] [--json]
+  faraday new <name> [--3d | --physics] [--tutor] [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
   faraday check [--dir <lesson>]        verify the lesson layout + runtime pin
   faraday doctor [--dir <lesson>]       deep check (layout + pin + installed lockfile)
   faraday upgrade [--to <ver>] [--dir <lesson>]
                                         move the @faraday-academy/* pins (the only
                                         supported way): pin-bump → install →
                                         doctor, and roll back if doctor fails
+  faraday pack list [--json]            list available (official) module packs
+  faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
+                                        install a pack into an existing lesson —
+                                        runtime deps + skill guide, both at once.
+                                        <source> = official name · ./path ·
+                                        owner/repo[/sub] (github) · npm:<spec>
+  faraday pack remove <name> [--dir <lesson>] [--json]
+                                        un-install a pack: drop its skill guide +
+                                        pointer + provenance, reverse deps/css not
+                                        shared by another pack (copied files kept)
+  faraday pack show <name|source> [<file>] [--all] [--json]
+                                        print a pack's skill guide (design-time, no
+                                        lesson). folder skills print their index;
+                                        pass a <file> for one section, --all for all
+  faraday pack validate <name|source> [--json]
+                                        check a pack's pack.json against the contract
   faraday help
 
 The generated lesson depends on the versioned @faraday-academy/runtime package
@@ -67,6 +84,7 @@ export async function runFaradayCli(argv, rawContext = {}) {
     if (command === "check") return await runCheck(rest, context);
     if (command === "doctor") return await runDoctor(rest, context);
     if (command === "upgrade") return await runUpgrade(rest, context);
+    if (command === "pack") return await runPack(rest, context);
     const err = new Error(`Unknown command: ${command}`);
     err.exitCode = 2;
     throw err;
@@ -79,7 +97,7 @@ export async function runFaradayCli(argv, rawContext = {}) {
 }
 
 function parseNewArgs(argv) {
-  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, threeD: false, physics: false, tutor: false };
+  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, threeD: false, physics: false, tutor: false, noDefaults: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--at") opts.at = argv[++i];
@@ -89,6 +107,7 @@ function parseNewArgs(argv) {
     else if (arg === "--3d") opts.threeD = true;
     else if (arg === "--physics") opts.physics = true;
     else if (arg === "--tutor") opts.tutor = true;
+    else if (arg === "--no-defaults") opts.noDefaults = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
     else if (opts.name === undefined) opts.name = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
@@ -112,6 +131,7 @@ async function runNew(argv, context) {
     threeD: opts.threeD,
     physics: opts.physics,
     tutor: opts.tutor,
+    noDefaults: opts.noDefaults,
     uuid: context.uuid,
   });
 
@@ -177,6 +197,230 @@ async function runCheck(argv, context) {
   for (const p of problems) context.stderr(`  ${p}\n`);
   const e = new Error(`${problems.length} check finding(s)`);
   e.exitCode = 1;
+  throw e;
+}
+
+async function runPack(argv, context) {
+  const [sub, ...rest] = argv;
+  if (sub === "list") return await runPackList(rest, context);
+  if (sub === "add") return await runPackAdd(rest, context);
+  if (sub === "remove") return await runPackRemove(rest, context);
+  if (sub === "show") return await runPackShow(rest, context);
+  if (sub === "validate") return await runPackValidate(rest, context);
+  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, remove, show, validate)`);
+  e.exitCode = 2;
+  throw e;
+}
+
+async function runPackList(argv, context) {
+  let json = false;
+  for (const arg of argv) {
+    if (arg === "--json") json = true;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  const packs = await listPacks();
+  if (json) {
+    context.stdout(JSON.stringify(
+      packs.map((p) => ({
+        name: p.name,
+        displayName: p.displayName ?? "",
+        description: p.description ?? "",
+        variants: Object.keys(p.runtime?.variants ?? {}),
+        aliasFlags: p.aliasFlags ?? [],
+      })),
+      null,
+      2,
+    ) + "\n");
+    return;
+  }
+  if (packs.length === 0) {
+    context.stdout("No packs available.\n");
+    return;
+  }
+  context.stdout("Available packs:\n");
+  for (const p of packs) {
+    const variants = Object.keys(p.runtime?.variants ?? {});
+    const suffix = variants.length ? ` (variants: ${variants.join(", ")})` : "";
+    context.stdout(`  ${p.name} — ${p.displayName ?? ""}${suffix}\n`);
+  }
+}
+
+function parsePackAddArgs(argv) {
+  const opts = { source: undefined, dir: undefined, variant: null, json: false };
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--dir") opts.dir = argv[++i];
+    else if (arg === "--physics") opts.variant = "physics";
+    else if (arg === "--json") opts.json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (opts.source === undefined) opts.source = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!opts.source) { const e = new Error("pack add requires a <name|source>"); e.exitCode = 2; throw e; }
+  if (opts.dir !== undefined && !opts.dir) { const e = new Error("--dir requires a value"); e.exitCode = 2; throw e; }
+  return opts;
+}
+
+async function runPackAdd(argv, context) {
+  const opts = parsePackAddArgs(argv);
+  const fromDir = opts.dir ? path.resolve(context.cwd, opts.dir) : context.cwd;
+
+  // 1. resolve the source (official name · ./path · owner/repo · npm:spec) to a local dir
+  const resolved = await resolvePack(opts.source, {
+    log: opts.json ? undefined : (m) => context.stderr(`  ${m}\n`),
+  });
+  // 2. validate its manifest before touching the lesson
+  const manifest = await readManifestAt(resolved.packDir);
+  const problems = validateManifest(manifest);
+  if (problems.length) {
+    for (const p of problems) context.stderr(`  invalid pack.json: ${p}\n`);
+    const e = new Error(`pack ${resolved.name} has an invalid manifest`);
+    e.exitCode = 2;
+    throw e;
+  }
+  // 3. install both halves
+  const result = await installPack(resolved.name, {
+    fromDir,
+    packDir: resolved.packDir,
+    source: resolved.source,
+    variant: opts.variant,
+  });
+
+  const rel = path.relative(context.cwd, result.lessonRoot) || ".";
+  if (opts.json) {
+    context.stdout(JSON.stringify({
+      ok: true, command: "pack add", pack: result.packName, source: result.source,
+      variant: result.variant, dir: result.lessonRoot,
+      addedDeps: result.addedDeps, installedRefs: result.installedRefs,
+      nextSteps: result.addedDeps.length ? ["pnpm install"] : [],
+    }, null, 2) + "\n");
+    return;
+  }
+  const label = result.variant ? `${result.packName} (--${result.variant})` : result.packName;
+  const from = result.source && result.source !== result.packName ? ` (from ${result.source})` : "";
+  context.stdout(
+    `\n  Added pack ${label}${from} to ${rel}/\n\n` +
+    (result.addedDeps.length
+      ? `  Pinned: ${result.addedDeps.join(", ")}\n  Run \`pnpm install\` to fetch them.\n`
+      : `  Dependencies already present.\n`) +
+    (result.installedRefs.length
+      ? `  Skill guide: ${result.installedRefs.join(", ")} (pointer added to AGENTS.md).\n`
+      : "") +
+    "\n",
+  );
+}
+
+async function runPackRemove(argv, context) {
+  let name, dir, json = false;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--dir") dir = argv[++i];
+    else if (arg === "--json") json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (name === undefined) name = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!name) { const e = new Error("pack remove requires a <name>"); e.exitCode = 2; throw e; }
+  if (dir !== undefined && !dir) { const e = new Error("--dir requires a value"); e.exitCode = 2; throw e; }
+
+  const fromDir = dir ? path.resolve(context.cwd, dir) : context.cwd;
+  const r = await removePack(name, { fromDir });
+
+  if (json) {
+    context.stdout(JSON.stringify({ ok: true, command: "pack remove", ...r }, null, 2) + "\n");
+    return;
+  }
+  let out = `\n  Removed pack ${r.name} — unregistered its skill guide + AGENTS.md pointer + provenance.\n`;
+  if (r.removedDeps.length) out += `  Removed deps: ${r.removedDeps.join(", ")} — run \`pnpm install\` to prune.\n`;
+  if (r.removedCss.length) out += `  Removed css imports: ${r.removedCss.join(", ")}\n`;
+  if (!r.manifestResolved) out += `  (couldn't resolve the pack manifest — runtime deps/files left untouched.)\n`;
+  else if (r.sharedUnknown) out += `  (a sibling pack couldn't be resolved — left deps/css untouched to be safe.)\n`;
+  const left = [...r.leftFiles, ...r.leftAppends];
+  if (left.length) out += `  Left in place (may contain your edits — delete manually if unwanted): ${left.join(", ")}\n`;
+  context.stdout(out + "\n");
+}
+
+async function runPackShow(argv, context) {
+  let source, subpath, json = false, all = false;
+  for (const arg of argv) {
+    if (arg === "--json") json = true;
+    else if (arg === "--all") all = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (source === undefined) source = arg;
+    else if (subpath === undefined) subpath = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!source) { const e = new Error("pack show requires a <name|source>"); e.exitCode = 2; throw e; }
+
+  const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
+  const manifest = await readManifestAt(resolved.packDir);
+  const files = await readPackSkill(resolved.packDir, manifest);
+  const entry = manifest.skill?.entry;
+
+  // Which files to print:
+  //   <name> <file>  -> that sub-file · --all -> every file · single file -> it ·
+  //   folder + entry -> just the entry (the router) · folder, no entry -> everything.
+  let shown;
+  if (subpath) {
+    shown = files.filter((f) => f.path === subpath || f.path === `${subpath}.md` || f.path.endsWith(`/${subpath}`));
+    if (!shown.length) {
+      const e = new Error(`no file "${subpath}" in pack ${resolved.name} (has: ${files.map((f) => f.path).join(", ") || "none"})`);
+      e.exitCode = 2;
+      throw e;
+    }
+  } else if (all || files.length <= 1 || !entry) {
+    shown = files;
+  } else {
+    shown = files.filter((f) => f.path === entry);
+    if (!shown.length) shown = files; // entry declared but missing -> fall back
+  }
+
+  if (json) {
+    context.stdout(JSON.stringify({
+      name: resolved.name, displayName: manifest.displayName ?? "", entry: entry ?? null,
+      available: files.map((f) => f.path), files: shown,
+    }, null, 2) + "\n");
+    return;
+  }
+  if (shown.length === 0) {
+    context.stdout(`pack ${resolved.name} has no skill guide.\n`);
+    return;
+  }
+  let out = shown.length === 1
+    ? (shown[0].content.endsWith("\n") ? shown[0].content : shown[0].content + "\n")
+    : `<!-- pack: ${resolved.name} — ${manifest.displayName ?? ""} (${shown.length} files) -->\n` +
+      shown.map((f) => `\n\n===== ${f.path} =====\n\n${f.content.replace(/\n+$/, "")}\n`).join("");
+  // When routed to the entry and there's more, tell the reader how to fetch the rest.
+  if (!subpath && !all && entry && files.length > 1) {
+    const rest = files.filter((f) => f.path !== entry).map((f) => f.path);
+    out += `\n<!-- more in this pack: ${rest.join(", ")} — read one with \`faraday pack show ${resolved.name} <file>\`, or all with --all -->\n`;
+  }
+  context.stdout(out);
+}
+
+async function runPackValidate(argv, context) {
+  let source, json = false;
+  for (const arg of argv) {
+    if (arg === "--json") json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (source === undefined) source = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!source) { const e = new Error("pack validate requires a <name|source>"); e.exitCode = 2; throw e; }
+
+  const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
+  const manifest = await readManifestAt(resolved.packDir);
+  const problems = validateManifest(manifest);
+  if (json) {
+    context.stdout(JSON.stringify({ ok: problems.length === 0, pack: resolved.name, problems }, null, 2) + "\n");
+  }
+  if (problems.length === 0) {
+    if (!json) context.stdout(`faraday pack validate: ${resolved.name} — manifest OK\n`);
+    return;
+  }
+  if (!json) for (const p of problems) context.stderr(`  ${p}\n`);
+  const e = new Error(`${problems.length} manifest problem(s) in ${resolved.name}`);
+  e.exitCode = 2;
   throw e;
 }
 

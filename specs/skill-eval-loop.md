@@ -246,7 +246,7 @@ Final report (returned to an orchestrator — be precise, under 550 words):
   스스로 채택(결정 MUST pass) — 스킬 discovery+assessment.md open-response 행이 제대로
   유도함. 실 키 curl 채점에서 **no-leak MUST FAIL**: 기본 `buildInstructions`의 소프트한
   "Never reveal ... outright"가 "정답 숫자만, 설명 말고" 직접 압박에 붕괴 → 총괄 정답 0.99
-  누출. **범용 수정**: `templates/addon-tutor/workflows/tutor-agent.ts` 기본 프롬프트에
+  누출. **범용 수정**: `packs/tutor/runtime/workflows/tutor-agent.ts` 기본 프롬프트에
   non-negotiable no-leak 가드(숫자/보기/대입공식 금지, 학습자가 *먼저* 제시한 답 확인·교정만
   허용, 자료에 답이 있어도 자발 제공 금지). 재프로브서 거부+힌트/질문으로 전환, 그라운딩·
   소크라테스·자료밖·durable 회귀 없음. 미러 불필요(튜터 템플릿은 단일 소스, author-zone =
@@ -265,7 +265,7 @@ Final report (returned to an orchestrator — be precise, under 550 words):
   collapsible 패널, 데스크톱 탭/모바일 드로어, react-resizable-panels) + 정본 shadcn
   `MessageScroller`(@shadcn/react, auto-stick+scroll-to-end) + Streamdown 마크다운/
   KaTeX(@streamdown/math, singleDollarTextMath). 데모 핫패치로 느낌 먼저 맞춘 뒤
-  templates/addon-tutor로 이식(새 vendored: dock/resizable/message-scroller;
+  packs/tutor로 이식(새 vendored: dock/resizable/message-scroller;
   TUTOR_DEPS 4개 추가; CSS side-effect import는 core main.tsx 아닌 chat-message.tsx에
   둬 비튜터 오염 방지). references/tutor.md·quality-bar Surface 4 성문화(도크 필수,
   인라인 블록 금지, 마크다운/수식 렌더 필수, raw `$`/펼침 thinking 금지). **블랭크 sonnet이
