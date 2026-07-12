@@ -32,7 +32,7 @@ Ask only what you can't infer from their material, and keep it to a handful:
 - **Audience & level** — who is this for, and what do they already know? **This one
   is a gate, not optional**: a 9-year-old, a high-schooler, an undergrad, a curious
   adult, and a working professional get the same concept through *different moves*
-  (one default methodology per audience in [audience.md](audience.md)). If the
+  (one default methodology per audience in the `audience` pack). If the
   creator can't say, state the assumption you're making in the brief and let them
   veto it — never design with the audience silently unpinned.
 - **Goal** — what should the learner be able to *do* after? (an outcome, not "know about X")
@@ -41,7 +41,7 @@ Ask only what you can't infer from their material, and keep it to a handful:
 - **Their methodology** — do they already teach this with a method (their sequence,
   their assessment style, a framework their school uses)? **If yes, their method
   leads** — capture it. If no, you'll apply the evidence-based default in
-  [pedagogy.md](pedagogy.md).
+  the `lecture-design` pack.
 - **Constraints** — must-cover items, examples of theirs to keep, time budget, any
   brand/voice.
 
@@ -58,6 +58,6 @@ Before building, restate what you heard as a short brief and confirm it:
 One or two lines. A 10-second confirmation here prevents building the wrong thing.
 Then move to the **Curriculum** phase (if multi-lesson) or straight to
 **Interactive** design (single lesson). This intake feeds:
-[audience.md](audience.md) (how to hand *this* learner a concept),
+the `audience` pack (how to hand *this* learner a concept),
 [curriculum.md](curriculum.md), [learning-design.md](learning-design.md),
 [interactive-design.md](interactive-design.md).

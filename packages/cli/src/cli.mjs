@@ -7,12 +7,12 @@ import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps } from "./doctor.mjs";
-import { listPacks, installPack, removePack, resolvePack, readManifestAt, validateManifest } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, readManifestAt, validateManifest, readPackSkill } from "./pack.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
 Usage:
-  faraday new <name> [--3d | --physics] [--tutor] [--at <dir>] [--overwrite] [--skip-install] [--json]
+  faraday new <name> [--3d | --physics] [--tutor] [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
   faraday check [--dir <lesson>]        verify the lesson layout + runtime pin
   faraday doctor [--dir <lesson>]       deep check (layout + pin + installed lockfile)
   faraday upgrade [--to <ver>] [--dir <lesson>]
@@ -29,6 +29,9 @@ Usage:
                                         un-install a pack: drop its skill guide +
                                         pointer + provenance, reverse deps/css not
                                         shared by another pack (copied files kept)
+  faraday pack show <name|source> [--json]
+                                        print a pack's skill guide to stdout (read
+                                        it at design time, no lesson needed)
   faraday pack validate <name|source> [--json]
                                         check a pack's pack.json against the contract
   faraday help
@@ -93,7 +96,7 @@ export async function runFaradayCli(argv, rawContext = {}) {
 }
 
 function parseNewArgs(argv) {
-  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, threeD: false, physics: false, tutor: false };
+  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, threeD: false, physics: false, tutor: false, noDefaults: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--at") opts.at = argv[++i];
@@ -103,6 +106,7 @@ function parseNewArgs(argv) {
     else if (arg === "--3d") opts.threeD = true;
     else if (arg === "--physics") opts.physics = true;
     else if (arg === "--tutor") opts.tutor = true;
+    else if (arg === "--no-defaults") opts.noDefaults = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
     else if (opts.name === undefined) opts.name = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
@@ -126,6 +130,7 @@ async function runNew(argv, context) {
     threeD: opts.threeD,
     physics: opts.physics,
     tutor: opts.tutor,
+    noDefaults: opts.noDefaults,
     uuid: context.uuid,
   });
 
@@ -199,8 +204,9 @@ async function runPack(argv, context) {
   if (sub === "list") return await runPackList(rest, context);
   if (sub === "add") return await runPackAdd(rest, context);
   if (sub === "remove") return await runPackRemove(rest, context);
+  if (sub === "show") return await runPackShow(rest, context);
   if (sub === "validate") return await runPackValidate(rest, context);
-  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, remove, validate)`);
+  const e = new Error(`Unknown pack subcommand: ${sub ?? "(none)"} (try: list, add, remove, show, validate)`);
   e.exitCode = 2;
   throw e;
 }
@@ -331,6 +337,38 @@ async function runPackRemove(argv, context) {
   const left = [...r.leftFiles, ...r.leftAppends];
   if (left.length) out += `  Left in place (may contain your edits — delete manually if unwanted): ${left.join(", ")}\n`;
   context.stdout(out + "\n");
+}
+
+async function runPackShow(argv, context) {
+  let source, json = false;
+  for (const arg of argv) {
+    if (arg === "--json") json = true;
+    else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
+    else if (source === undefined) source = arg;
+    else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
+  }
+  if (!source) { const e = new Error("pack show requires a <name|source>"); e.exitCode = 2; throw e; }
+
+  const resolved = await resolvePack(source, { log: json ? undefined : (m) => context.stderr(`  ${m}\n`) });
+  const manifest = await readManifestAt(resolved.packDir);
+  const files = await readPackSkill(resolved.packDir, manifest);
+
+  if (json) {
+    context.stdout(JSON.stringify({ name: resolved.name, displayName: manifest.displayName ?? "", files }, null, 2) + "\n");
+    return;
+  }
+  if (files.length === 0) {
+    context.stdout(`pack ${resolved.name} has no skill guide.\n`);
+    return;
+  }
+  if (files.length === 1) {
+    const c = files[0].content;
+    context.stdout(c.endsWith("\n") ? c : c + "\n");
+    return;
+  }
+  let out = `<!-- pack: ${resolved.name} — ${manifest.displayName ?? ""} (${files.length} files) -->\n`;
+  for (const f of files) out += `\n\n===== ${f.path} =====\n\n${f.content.replace(/\n+$/, "")}\n`;
+  context.stdout(out);
 }
 
 async function runPackValidate(argv, context) {

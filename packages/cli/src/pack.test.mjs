@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { generateLesson } from "./generate.mjs";
-import { listPacks, installPack, removePack, resolvePack, validateManifest, readManifestAt } from "./pack.mjs";
+import { listPacks, installPack, removePack, resolvePack, validateManifest, readManifestAt, readPackSkill, defaultPackNames } from "./pack.mjs";
 
 async function tmp() {
   return fs.mkdtemp(path.join(os.tmpdir(), "faraday-pack-test-"));
@@ -180,6 +180,41 @@ test("resolvePack classifies official names and local paths", async () => {
   const local = await resolvePack(packDir);
   assert.equal(local.packDir, packDir);
   assert.equal(local.source, packDir);
+});
+
+test("default packs: audience + lecture-design are flagged, readPackSkill reads file & folder", async () => {
+  const defaults = await defaultPackNames();
+  assert.ok(defaults.includes("lecture-design"), "lecture-design is default");
+  assert.ok(defaults.includes("audience"), "audience is default");
+
+  // folder skill (lecture-design) → multiple files
+  const ld = await resolvePack("lecture-design");
+  const ldFiles = await readPackSkill(ld.packDir, await readManifestAt(ld.packDir));
+  assert.ok(ldFiles.length > 1, "lecture-design skill is a multi-file folder");
+  assert.ok(ldFiles.every((f) => f.path.endsWith(".md") && typeof f.content === "string"));
+
+  // file skill (audience) → single file
+  const aud = await resolvePack("audience");
+  const audFiles = await readPackSkill(aud.packDir, await readManifestAt(aud.packDir));
+  assert.equal(audFiles.length, 1, "audience skill is a single file");
+  assert.match(audFiles[0].content, /Audience/);
+});
+
+test("faraday new auto-installs default packs (skill-only), --no-defaults opts out", async () => {
+  const withBase = await tmp();
+  await generateLesson({ targetDir: path.join(withBase, "l"), name: "Def On", uuid: () => "id" });
+  const prov = JSON.parse(await read(path.join(withBase, "l"), ".faraday/provenance.json"));
+  assert.ok(prov.packs.includes("lecture-design") && prov.packs.includes("audience"), "defaults recorded");
+  assert.ok(await exists(path.join(withBase, "l", ".faraday/packs/audience/audience.md")), "audience skill installed");
+  assert.ok(await exists(path.join(withBase, "l", ".faraday/packs/lecture-design/overview.md")), "lecture-design folder installed");
+  // skill-only: no new deps beyond the runtime pin
+  const pkg = JSON.parse(await read(path.join(withBase, "l"), "package.json"));
+  assert.ok(!Object.keys(pkg.dependencies).some((d) => d.includes("lecture-design") || d === "audience"));
+
+  const noDef = await tmp();
+  await generateLesson({ targetDir: path.join(noDef, "l"), name: "Def Off", noDefaults: true, uuid: () => "id" });
+  const prov2 = JSON.parse(await read(path.join(noDef, "l"), ".faraday/provenance.json"));
+  assert.ok(!(prov2.packs ?? []).length, "no default packs with --no-defaults");
 });
 
 test("removePack un-registers a pack and reverses its unshared deps/css", async () => {

@@ -76,8 +76,15 @@ packs/<name>/
 faraday pack list [--json]                     # 공식 팩 나열 (라이브 카탈로그)
 faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
 faraday pack remove <name> [--dir <lesson>] [--json]
-faraday pack validate <name|source> [--json]   # pack.json 계약 검증
+faraday pack show <name|source> [--json]        # 스킬 가이드를 stdout으로 (설계 타임)
+faraday pack validate <name|source> [--json]    # pack.json 계약 검증
 ```
+
+**Default 팩** — `pack.json`에 `"default": true`인 팩(`lecture-design`·`audience`)은
+`faraday new`가 자동 설치한다(`--no-defaults`로 opt-out). 유일 소스는 팩이고, 설계
+타임엔 `faraday pack show <name>`으로, 빌드 타임엔 레슨의 `.faraday/packs/<name>/`
+에서 읽는다. 베이스 스킬의 `references/pedagogy.md`·`audience.md`는 제거되고 SKILL.md가
+이 팩들을 가리킨다.
 
 **`pack remove`** — un-register(스킬 디렉터리 + AGENTS 포인터 + provenance 엔트리)는
 항상 안전하게 제거하고, deps/css는 **다른 설치된 팩이 공유하지 않는 것만** 되돌린다.

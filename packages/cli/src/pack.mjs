@@ -576,3 +576,38 @@ export async function removePack(name, opts) {
   report.leftAppends = (manifest.runtime?.appends ?? []).map((a) => a.to);
   return report;
 }
+
+// ---------------------------------------------------------------------------
+// pack show: read a pack's skill guide without installing (design-time access,
+// no lesson needed). Default packs: auto-installed by `faraday new`.
+// ---------------------------------------------------------------------------
+
+/** Read a pack's skill reference as ordered markdown files (a single file or a folder). */
+export async function readPackSkill(packDir, manifest) {
+  const ref = manifest.skill?.reference;
+  if (!ref) return [];
+  const refPath = path.join(packDir, ref);
+  const st = await fs.stat(refPath).catch(() => null);
+  if (!st) return [];
+  const files = [];
+  if (st.isDirectory()) {
+    const walk = async (dir, rel = "") => {
+      const entries = (await fs.readdir(dir, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name));
+      for (const e of entries) {
+        const abs = path.join(dir, e.name);
+        const r = rel ? `${rel}/${e.name}` : e.name;
+        if (e.isDirectory()) await walk(abs, r);
+        else if (e.name.endsWith(".md")) files.push({ path: r, content: await fs.readFile(abs, "utf8") });
+      }
+    };
+    await walk(refPath);
+  } else {
+    files.push({ path: path.basename(refPath), content: await fs.readFile(refPath, "utf8") });
+  }
+  return files;
+}
+
+/** Names of official packs marked `"default": true` (auto-installed by `faraday new`). */
+export async function defaultPackNames(root = PACKAGE_ROOT) {
+  return (await listPacks(root)).filter((p) => p.default === true).map((p) => p.name);
+}

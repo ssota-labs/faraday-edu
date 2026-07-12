@@ -2,7 +2,7 @@
 
 A multiple-choice quiz is one instrument, not the definition of assessment. The
 check's **form must match the outcome verb** you wrote in backward design
-([pedagogy.md](pedagogy.md) move 1): if the outcome says *compute*, a
+(the `lecture-design` pack move 1): if the outcome says *compute*, a
 recognition MCQ under-tests it; if the outcome says *do/tune/achieve*, only a
 performance mission proves it. Mismatched form is a quality-bar fail.
 
@@ -31,7 +31,7 @@ Component notes:
   and fires `onDone` once. Add a visible target/goal INTO the scene (a flag, a
   zone) — a mission against an invisible goal is a guessing game.
 - Every form supports feed-forward hints. Use them; bare "wrong" is a
-  quality-bar fail ([pedagogy.md](pedagogy.md) move 5).
+  quality-bar fail (the `lecture-design` pack move 5).
 
 ## The flow: concept → instrument → check, per section
 
@@ -49,14 +49,14 @@ A chapter is a chain of sections, and each section closes its own loop
    node's outcome, wired to `complete()`. Prefer the *strongest* form the
    outcome supports: a `<Challenge>` or `<NumericAnswer>` gate over an MCQ
    when the verb allows it. Re-quiz one earlier idea while you're at it
-   (spacing — [pedagogy.md](pedagogy.md) move 4). In a standalone lesson
+   (spacing — the `lecture-design` pack move 4). In a standalone lesson
    (no `<CurriculumHost>`) there is no gate to wire — the summative check
    still closes the chapter; just leave `onCorrect`/`onDone` off.
 
 Mixing forms within a lesson is the norm, not the exception: a typical solid
 chapter runs pretest-MCQ → mission → numeric → summative gate.
 
-## Audience defaults ([audience.md](audience.md) rows)
+## Audience defaults (the `audience` pack rows)
 
 - **Children / CRA** — missions first (`<Challenge>`: "make the bulb exactly
   this bright"), picture-anchored MCQs; no numeric typing before the symbols

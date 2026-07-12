@@ -1,7 +1,8 @@
 {
   "name": "lecture-design",
   "displayName": "Teaching methods & pedagogy",
-  "description": "A folder-ized pedagogy library for lecture/curriculum design — the evidence-based default (backward design, prerequisite graphs, generative learning, spaced retrieval, feed-forward) plus named methodologies (5E, CRA, Peer Instruction, Mayer, Merrill). Skill-only: no runtime code, no dependencies.",
+  "description": "A folder-ized pedagogy library for lecture/curriculum design — the evidence-based default (backward design, prerequisite graphs, generative learning, spaced retrieval, feed-forward) plus named methodologies (5E, CRA, Peer Instruction, Mayer, Merrill). Skill-only. A default pack: auto-installed at `faraday new`.",
+  "default": true,
   "runtime": {},
   "skill": {
     "reference": "skill",

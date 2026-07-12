@@ -32,7 +32,9 @@ non-obvious caveats.
   `--skip-install` or `FARADAY_SKIP_INSTALL=1` (handy in CI / offline).
 - Verify a lesson: `node packages/cli/bin/faraday.mjs check --dir <lesson>` (layout + exact pins).
 - Module packs: `pack list [--json]` (catalog) · `pack add <name|source> [--physics] [--dir]`
-  (source = official name · `./path` · `owner/repo` · `npm:<spec>`) · `pack validate <name|source>`.
+  (source = official name · `./path` · `owner/repo` · `npm:<spec>`) · `pack remove <name>` ·
+  `pack show <name|source>` (print skill guide) · `pack validate <name|source>`. Default packs
+  (`lecture-design`, `audience`) auto-install at `new` (`--no-defaults` to skip).
 - Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
 
 ### Working inside a generated lesson (2D / `--3d` / `--physics`)
@@ -80,7 +82,9 @@ invisible to the agent, and vice versa.
 (`package.json`/`app.css`/copied files) **and** skill half (`.faraday/packs/<name>/` + an
 `AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
 into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
-reads `official-packs` directly. Four ship today: `three`, `tutor`, `srs`, `lecture-design`.
-`new --3d`/`--physics`/`--tutor` are thin aliases over `installPack`. Validate a manifest
-with `faraday pack validate`. See `src/pack.mjs` (`resolvePack`/`installPack`/`validateManifest`)
-and [`specs/module-packs.md`](specs/module-packs.md).
+reads `official-packs` directly. Five ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`. The last two are
+**default packs** (`"default": true`) — `faraday new` auto-installs their skill halves so
+every lesson carries the pedagogy + audience knowledge in `.faraday/packs/`; read them at
+design time with `faraday pack show <name>`. `new --3d`/`--physics`/`--tutor` are thin aliases
+over `installPack`. See `src/pack.mjs` (`resolvePack`/`installPack`/`removePack`/`readPackSkill`/
+`validateManifest`) and [`specs/module-packs.md`](specs/module-packs.md).

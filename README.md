@@ -28,7 +28,7 @@ commands for you. Two messages and you have a lesson.
 
 ```text
 Please install the Faraday skill so you can build interactive lessons for me.
-Run: npx skills add ssota-labs/faraday-academy/plugins/claude-code/skills/faraday
+Run: npx skills add ssota-labs/faraday-academy
 ```
 
 **2. Ask for the lesson you want** — plain language, no flags to remember:
@@ -306,7 +306,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
-│  ├─ official-packs/           # installable module packs (three · tutor · srs · lecture-design) + pack.schema.json
+│  ├─ official-packs/           # installable module packs (three · tutor · srs · lecture-design · audience) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (--3d / --physics)
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (--tutor)
@@ -365,7 +365,8 @@ always ship together:
 | **Curriculum** | `three` — 3D scenes / space RPG | ✅ shipping | `@faraday-academy/three` + scaffold demo + physics variant |
 | **Tutor** | `tutor` — grounded AI tutor | ✅ shipping | pinned widget + author-editable durable server |
 | **Memorization** | `srs` — spaced-repetition flashcards | ✅ shipping | author-editable `<Flashcards>` (SM-2-lite), zero new deps |
-| **Lecture design** | `lecture-design` — teaching methods & pedagogy | ✅ shipping | skill-only folder (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
+| **Lecture design** | `lecture-design` — teaching methods & pedagogy | ✅ shipping · **default** | skill-only folder (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
+| **Audience** | `audience` — delivery methodology per learner | ✅ shipping · **default** | skill-only (CRA / 5E / Peer Instruction / Mayer / Merrill + layout) |
 | **Lecture** | `deck` — animated slideshow | 🔜 | `<Paged>` + `runtime/motion` |
 | **Kids** | `kids` — tablet game | 🔜 | `<SketchPad>` + `<Challenge>` + `<Paged>` + CRA default |
 | **Exam** | `exam` — practice / mock test | 🔜 | `<Quiz>` / `<NumericAnswer>` / `<Challenge>` + `assessment.md` |

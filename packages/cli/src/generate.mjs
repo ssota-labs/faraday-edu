@@ -15,7 +15,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { copyDirectory, assertDirectory, isEffectivelyEmpty } from "./copy.mjs";
 import { sanitizePackageName, normalizeTitle } from "./pkg.mjs";
-import { installPack } from "./pack.mjs";
+import { installPack, defaultPackNames } from "./pack.mjs";
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TITLE_PLACEHOLDER = "Faraday Lesson";
@@ -104,6 +104,15 @@ export async function generateLesson(opts) {
   }
   if (tutor) {
     await installPack("tutor", { fromDir: targetDir, scaffold: true, templateRoot: opts.templateRoot });
+  }
+
+  // 7. default packs — skill-only knowledge (pedagogy, audience) every lesson gets
+  //    so the agent has it in .faraday/packs/ and it travels with the lesson.
+  //    Opt out with --no-defaults.
+  if (!opts.noDefaults) {
+    for (const dn of await defaultPackNames(opts.templateRoot)) {
+      await installPack(dn, { fromDir: targetDir, templateRoot: opts.templateRoot });
+    }
   }
 
   return { targetDir, packageName, title };
