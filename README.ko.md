@@ -9,6 +9,9 @@
 > 지금은 자체 완결형(self-contained) 스캐폴더이며, 이후 호스팅형 웹 플랫폼으로
 > 나아갑니다.
 
+<!-- 📸 hero.gif — docs/images/README.md 참고 -->
+![살아있는 Faraday 수업: 슬라이더를 드래그하면 그래프가 실시간으로 갱신됩니다](docs/images/hero.gif)
+
 Faraday는 AI가 저작하는 인터랙티브 교육 콘텐츠를 위한 **스캐폴더**입니다.
 여러분(또는 여러분의 코딩 에이전트)이 명령어 하나를 실행하면, 한 수업을 위한
 자체 완결형 Vite + React 앱이 만들어집니다 — 텍스트 벽이 아니라, 독자가 직접
@@ -152,6 +155,23 @@ flowchart LR
 
 ---
 
+## 구성요소 — 하나의 수업은 무엇으로 이루어지나
+
+수업은 한 덩어리가 아닙니다. Faraday는 가르치는 각 부분마다 컴포넌트를 제공하고,
+여러분은 수업마다 이를 조합합니다:
+
+| 미리보기 | 구성요소 | 하는 일 | 무엇으로 |
+|---|---|---|---|
+| ![커리큘럼 월드](docs/images/component-curriculum.png) | **📚 커리큘럼 / 월드** | 수업을 선형 교과서로, 또는 잠금 해제 진행이 있는 게임 같은 지도로 엮어 탐험합니다. | `<Course>` · `<CurriculumHost>` + 월드 팩 |
+| ![렉쳐 덱](docs/images/component-lecture.png) | **🎬 렉쳐 / 슬라이드** | 슬라이드쇼식 전달 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<Paged>` · `runtime/motion` · `deck` 팩 *(예정)* |
+| ![퀴즈/과제](docs/images/component-quiz.png) | **✅ 퀴즈 / 과제** | *가르치는* 확인 — 객관식, 숫자 입력, 스케치 예측, 시뮬레이션에서 클리어하는 미션. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
+| ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 수업 또는 커리큘럼 전체의 진도를 기록하고 대시보드로 보여줍니다 (LMS). | `runtime/lms` (기록기 + 대시보드) |
+| ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 (`--tutor`) |
+
+<!-- 📸 component-*.png 썸네일 — docs/images/README.md 참고. 위 깨진 아이콘은 파일을 넣기 전까지의 placeholder 입니다. -->
+
+그 아래에서 각각은 섞어 쓸 수 있는 **모듈**입니다. 자세한 내용은 다음과 같습니다.
+
 ## 무엇을 만들 수 있나 (레이어 스택)
 
 Faraday는 Stage 1에서 기능 셋을 **수평적으로** 닫습니다 — 모든 레이어가
@@ -247,6 +267,9 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
 `<Tutor>` 컴포넌트를 벤더링합니다. Vercel의 AI SDK 설계를 따르며 Workflow
 DevKit **durable agent(견고한 에이전트)**를 구동합니다: 답변이 페이지 새로고침,
 네트워크 끊김, 서버리스 타임아웃을 견디고 답변 도중에도 이어서 재개됩니다.
+
+<!-- 📸 tutor-wide.png — docs/images/README.md 참고 -->
+![수업 옆에 도킹된 근거 기반 AI 튜터가 수업 내용을 바탕으로 답합니다](docs/images/tutor-wide.png)
 
 ```tsx
 import { Tutor } from "@/faraday/tutor";
@@ -354,12 +377,25 @@ Faraday는 **두 개의 층에서 동시에** 모듈화되어 있고, 그게 확
 
 - **런타임 층** (코드) — 위의 블록, 월드 팩, LMS, 3D, 튜터.
 - **스킬 층** (에이전트 지식) — `faraday` 스킬이 국면마다 필요한 레퍼런스
-  (`curriculum.md`, `pedagogy.md`, `assessment.md`, `worlds.md` …)를 그때만
+  (`curriculum.md`, `assessment.md`, `worlds.md`, `packs.md` …)를 그때만
   불러옵니다. 그래서 에이전트가 각 모듈을 *언제·어떻게* 쓸지 압니다.
 
 **모듈 팩**은 이 *두 층에 동시에* 얹힙니다: 런타임 모듈 **+** 그걸 구동하는 스킬
 지식 **+** 예제 수업 **+** 품질 기준 항목. "부문" 하나를 추가한다는 건 팩 하나를
 추가하는 것 — 런타임 코드와 에이전트 지식이 항상 짝으로 함께 갑니다:
+
+```mermaid
+flowchart LR
+    subgraph Pack["📦 모듈 팩 (faraday pack add)"]
+        direction TB
+        RT["런타임 절반<br/>deps · 컴포넌트 · css"]
+        SK["스킬 절반<br/>언제·어떻게 쓰나"]
+    end
+    RT -->|설치| Lesson["🗂️ 여러분의 레슨<br/>package.json · src/ · app.css"]
+    SK -->|설치| Dot["🧠 .faraday/packs/&lt;name&gt;/<br/>+ AGENTS.md 포인터"]
+    Lesson --> Agent(["🤖 코딩 에이전트<br/>레슨을 만들고 편집"])
+    Dot --> Agent
+```
 
 | 부문 | 팩 | 상태 | 무엇으로 만드나 |
 |---|---|---|---|

@@ -9,6 +9,9 @@
 > customer strategy. A self-contained scaffolder today, headed toward a hosted web
 > platform later.
 
+<!-- 📸 hero.gif — see docs/images/README.md -->
+![A live Faraday lesson: drag a slider and the chart updates in real time](docs/images/hero.gif)
+
 Faraday is a **scaffolder** for AI-authored interactive courseware. You (or your
 coding agent) run one command and get a self-contained Vite + React app for a
 lesson — a live canvas the reader *manipulates*, not a wall of text. Add a
@@ -149,6 +152,23 @@ The scaffolded project ships its own authoring guide in `AGENTS.md` and
 
 ---
 
+## Components — what a course is made of
+
+A course isn't one thing. Faraday gives your agent a component for each part of
+teaching, and you compose them per lesson:
+
+| Preview | Component | What it does | Built from |
+|---|---|---|---|
+| ![Curriculum world](docs/images/component-curriculum.png) | **📚 Curriculum / world** | Order lessons into a linear textbook, or a game-like map with unlock progression you navigate. | `<Course>` · `<CurriculumHost>` + world packs |
+| ![Lecture deck](docs/images/component-lecture.png) | **🎬 Lecture / deck** | Slideshow-style delivery — one idea per screen, prev/next, animation. | `<Paged>` · `runtime/motion` · `deck` pack *(soon)* |
+| ![Quiz and assignment](docs/images/component-quiz.png) | **✅ Quiz / assignment** | Checks that *teach* — MCQ, typed numeric, sketch-to-predict, and missions cleared in the sim. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
+| ![LMS dashboard](docs/images/component-lms.png) | **📊 Student management** | Record progress and show a dashboard across a lesson or a whole curriculum (LMS). | `runtime/lms` (recorder + dashboard) |
+| ![AI tutor](docs/images/component-tutor.png) | **🤖 AI tutor** | A grounded, Socratic chat that answers only from the lesson's own content. | `tutor` pack (`--tutor`) |
+
+<!-- 📸 component-*.png thumbnails — see docs/images/README.md. Broken icons above are placeholders until you drop the files in. -->
+
+Underneath, each of these is a **module** you can mix. Here's the detail.
+
 ## What you can build (the layer stack)
 
 Faraday closes the feature set **horizontally** at Stage 1 — every layer works
@@ -246,6 +266,9 @@ blocks, and passes the gates for you.
 and vendors a `<Tutor>` component. It follows Vercel's AI SDK design and runs a
 Workflow DevKit **durable agent**: a reply survives a page refresh, a network
 drop, or a serverless timeout and resumes mid-answer.
+
+<!-- 📸 tutor-wide.png — see docs/images/README.md -->
+![The grounded AI tutor docked beside a lesson, answering from the lesson's content](docs/images/tutor-wide.png)
 
 ```tsx
 import { Tutor } from "@/faraday/tutor";
@@ -352,13 +375,26 @@ Faraday is modular on **two layers at once**, and that's what makes it extensibl
 
 - **Runtime layer** (code) — the blocks, world packs, LMS, 3D, and tutor above.
 - **Skill layer** (agent knowledge) — the `faraday` skill loads a per-phase
-  reference (`curriculum.md`, `pedagogy.md`, `assessment.md`, `worlds.md`, …) only
+  reference (`curriculum.md`, `assessment.md`, `worlds.md`, `packs.md`, …) only
   when it needs it, so the agent knows *when and how* to use each module.
 
 A **module pack** bolts onto *both* layers at once: a runtime module **plus** the
 skill knowledge that drives it, an example lesson, and a quality-bar entry. Adding
 a "department" means adding one pack — the runtime code and the agent's knowledge
 always ship together:
+
+```mermaid
+flowchart LR
+    subgraph Pack["📦 a module pack (faraday pack add)"]
+        direction TB
+        RT["runtime half<br/>deps · components · css"]
+        SK["skill half<br/>how &amp; when to use it"]
+    end
+    RT -->|installed into| Lesson["🗂️ your lesson<br/>package.json · src/ · app.css"]
+    SK -->|installed into| Dot["🧠 .faraday/packs/&lt;name&gt;/<br/>+ AGENTS.md pointer"]
+    Lesson --> Agent(["🤖 your coding agent<br/>builds &amp; edits the lesson"])
+    Dot --> Agent
+```
 
 | Department | Pack | Status | Built from |
 |---|---|---|---|
