@@ -46,7 +46,7 @@
 [콘텐츠]  트위터/쓰레드/블로그/릴스
     │  CTA: “Claude Code에서 Faraday 깔고 같은 거 만들어봐”
     ▼
-[설치]  marketplace add ssota-labs/faraday-edu → install faraday
+[설치]  marketplace add ssota-labs/faraday-academy → install faraday
     │  (Codex: marketplace add 또는 Path B copy)
     ▼
 [프롬프트]  “내 슬라이드/이 주제로 인터랙티브 레슨 만들어줘”
@@ -75,7 +75,7 @@
 |---|---|---|---|---|
 | 1 | **`@faraday-academy/*` npm 미배포 (4패키지)** | 🔴 Blocker | 전부 registry 404 · cli/runtime `private: true` | `npx`·레슨 `pnpm i`·voyage-log Vercel install 즉시 사망 |
 | 1b | **publish 기술 게이트** | 🔴 Blocker | runtime/three/tutor가 **소스(.ts/.tsx) export** · three/tutor peer에 `workspace:^` | publish 전 `files`/peer 버전 치환·org 권한·라이선스 확정 필요 |
-| 2 | **플러그인 marketplace URL 불일치** | 🔴 Blocker | 코드/README: `titanism/faraday-edu` · 실제: `ssota-labs/faraday-edu` | `/plugin marketplace add` 실패 |
+| 2 | **플러그인 marketplace URL 불일치** | 🔴 Blocker | 코드/README: `titanism/faraday-edu` · 실제 레포: **`ssota-labs/faraday-academy`** (구 `faraday-edu` rename) | `/plugin marketplace add` 실패 |
 | 3 | **공개 데모 링크 0개** | 🔴 Blocker | voyage-log는 코드만 · S1–S4 없음 | 콘텐츠 CTA가 갈 곳 없음 |
 | 4 | **콘텐츠 → 설치 → 첫 레슨 퍼널** | 🟠 High | 문서에 카피 있음, 실채널 미발행 | 스킬 올려도 유입 0 |
 | 5 | **`faraday deploy` 미구현** | 🟡 Medium | 스킬이 vercel/`pnpm build` 우회 | 런칭 블로커 아님 |
@@ -87,7 +87,7 @@
 - Claude Code · Codex 플러그인
 - CurriculumHost / packs / LMS (runtime)
 - C-B `examples/voyage-log` (Vercel 설정 포함)
-- 공개 GitHub: `https://github.com/ssota-labs/faraday-edu`
+- 공개 GitHub: `https://github.com/ssota-labs/faraday-academy` (구 `faraday-edu`)
 
 ---
 
@@ -112,13 +112,14 @@
 - [ ] 검증: 클린 머신 `npx @faraday-academy/cli@latest new demo --skip-install` 후 `pnpm i && pnpm check`
 
 ### A2. 플러그인 설치 경로 수정 🔴
-- [ ] 전수 `titanism/faraday-edu` → **`ssota-labs/faraday-edu`**
+- [ ] 전수 `titanism/faraday-edu` (및 문서의 `ssota-labs/faraday-edu`) → **`ssota-labs/faraday-academy`**
   - `.claude-plugin/marketplace.json`
   - `plugins/claude-code/**`, `plugins/codex/**` README·plugin.json
-  - `plugins/README.md`
-- [ ] Claude: `/plugin marketplace add ssota-labs/faraday-edu` → `/plugin install faraday@faraday`
+  - `plugins/README.md` · `examples/README.md` · 스킬/런칭 카피
+- [ ] Claude: `/plugin marketplace add ssota-labs/faraday-academy` → `/plugin install faraday@faraday`
 - [ ] Codex: marketplace add + Path B(copy) 병기
 - [ ] 클린 세션에서 **설치만** 스모크
+- [ ] (확인) `faraday-edu` 구 URL이 redirect로 살아도 **문서·CTA는 canonical 이름만** 쓴다
 
 ### A3. 콜드 세션 E2E (centralize 이후) 🟠
 
@@ -195,7 +196,7 @@
 
 ```text
 Install (Claude Code):
-  /plugin marketplace add ssota-labs/faraday-edu
+  /plugin marketplace add ssota-labs/faraday-academy
   /plugin install faraday@faraday
 
 Then say:
@@ -203,7 +204,7 @@ Then say:
    Scaffold, author, run pnpm check and pnpm dev, then give me the URL.”
 
 Live demo: <demo-url>
-Repo: https://github.com/ssota-labs/faraday-edu
+Repo: https://github.com/ssota-labs/faraday-academy
 ```
 
 ### C4. KPI
@@ -266,7 +267,7 @@ Phase 3 — Soft launch
 
 ## 10. 한 장짜리 결론
 
-**지금 부족한 것:** (1) `@faraday-academy/*` 4패키지 npm, (2) 올바른 marketplace URL, (3) 만져보는 데모 URL, (4) 콘텐츠→설치→프롬프트 한 줄 퍼널.
+**지금 부족한 것:** (1) `@faraday-academy/*` 4패키지 npm, (2) marketplace URL을 `ssota-labs/faraday-academy`로 통일, (3) 만져보는 데모 URL, (4) 콘텐츠→설치→프롬프트 한 줄 퍼널.
 
 **centralize 이후 핵심 변화:** CLI 단독 publish로는 부족하다. 레슨·voyage-log·콜드 세션이 모두 **runtime/three/tutor registry**에 달려 있다.
 
