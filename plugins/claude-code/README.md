@@ -47,6 +47,9 @@ validate .` from the repo root before publishing).
 - **Subagent `faraday-pack-author`** — builds AND vets a new module pack end-to-end:
   scaffold → fill both halves → validate on disk → install into a probe lesson →
   typecheck the example → self-grade against the pack's quality bar.
+- **Subagent `faraday-pack-eval`** — measures a pack's real quality: authors N lessons
+  from its guide (blind to the bar), grades each against its `quality.md`, and reports
+  a pass rate + per-rule failures + fixes. Re-run to gate a change to the guide.
 
 ## Prerequisites
 

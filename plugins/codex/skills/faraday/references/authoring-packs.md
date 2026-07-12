@@ -147,11 +147,16 @@ pack built and vetted end to end.
 
 ## The eval loop (quality gating)
 
-The bar isn't just documentation — it's a gate. The intended loop: an agent
-generates N lessons from the pack's guide → a *different* agent grades each against
-`quality.md` → the pack ships on its pass rate. When you author a pack, write
-`quality.md` so a grader can apply it mechanically, and keep `examples/` as honest
-fixtures (one idea each, the pack at its best).
+The bar isn't just documentation — it's a gate. The loop: an agent authors N lessons
+from the pack's guide **blind to the bar** → grades each against `quality.md` → the
+pack ships on its pass rate. When you author a pack, write `quality.md` so a grader
+can apply it mechanically, and keep `examples/` as honest fixtures (one idea each,
+the pack at its best).
+
+Run it with the **`faraday-pack-eval`** subagent: point it at a pack and it authors
+N lessons from the guide, grades them against `quality.md`, and reports a pass rate +
+per-rule failures + which fix (a weak guide instruction vs. a vague bar rule) would
+raise it. Re-run after editing a guide to check the change didn't lower quality.
 
 ## Distributing
 
