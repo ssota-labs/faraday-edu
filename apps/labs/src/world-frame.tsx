@@ -3,7 +3,8 @@
    mounted on its own via `?frame=world` (see main.tsx) and embedded in the labs
    preview through an <iframe>, which contains the fixed positioning. */
 import { LessonHost } from "@/faraday/runtime";
-import { CurriculumHost, map2dPack, useNode, type Curriculum } from "@/faraday/world";
+import { CurriculumHost, useNode, type Curriculum } from "@/faraday/world";
+import { map2dPack } from "./pack-map2d";
 import { Callout, Lesson, Prose, Quiz, Stat } from "@/faraday/blocks";
 
 function Stop({ title, body }: { title: string; body: string }) {

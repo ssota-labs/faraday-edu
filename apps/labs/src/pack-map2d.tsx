@@ -1,9 +1,8 @@
-// pack-map2d — a 2D node-map WorldPack rendered as a full-bleed GAME SCREEN
-// (immersive: the host overlays its game HUD on top). A tactical-map look:
-// grid floor, vignette, glowing status nodes, dashed locked paths. Uses
-// author-provided meta.{x,y} (0..100) or a prerequisite-depth layout. Driven
-// adapter: reads `world`, emits onEnter/onFocus; owns no progression.
-import type { WorldNode, WorldPack } from "../types";
+// Labs-local copy of the map2d presentation (which now ships as a copy-in pack —
+// `faraday pack add map2d`). Vendored here so the labs preview renders the 2D map
+// without depending on the out-of-tree pack source. Keep in rough sync with
+// packages/official-packs/map2d/runtime/map2d/map2d.tsx.
+import type { WorldNode, WorldPack } from "@/faraday/world";
 
 const W = 720;
 const H = 440;
@@ -25,7 +24,6 @@ function layout(nodes: WorldNode[]): Record<string, { x: number; y: number }> {
       nodes.map((n) => [n.id, { x: ((n.meta!.x as number) / 100) * W, y: ((n.meta!.y as number) / 100) * H }]),
     );
   }
-  // fallback: columns by prerequisite depth
   const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
   const depth: Record<string, number> = {};
   const compute = (id: string, seen: Set<string>): number => {
@@ -57,7 +55,6 @@ export const map2dPack: WorldPack = ({ world, onEnter, onFocus }) => {
   const byId = Object.fromEntries(world.nodes.map((n) => [n.id, n]));
   return (
     <div className="relative h-full min-h-[420px] w-full overflow-hidden bg-background">
-      {/* tactical grid floor + vignette (full-bleed, behind the map) */}
       <div
         aria-hidden
         className="absolute inset-0 opacity-[0.55]"
@@ -128,7 +125,6 @@ export const map2dPack: WorldPack = ({ world, onEnter, onFocus }) => {
                 if (!locked && (e.key === "Enter" || e.key === " ")) onEnter(n.id);
               }}
             >
-              {/* pulsing halo on the current objective */}
               {active ? (
                 <circle className="animate-pulse" cx={p.x} cy={p.y} r={R + 9} fill="none" stroke="var(--primary)" strokeOpacity={0.55} strokeWidth={2} />
               ) : null}

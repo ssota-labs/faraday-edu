@@ -1,0 +1,16 @@
+{
+  "name": "map2d",
+  "displayName": "2D map presentation",
+  "description": "Present a curriculum as a full-bleed 2D node map (a tactical game screen with unlock paths). One of the curriculum PRESENTATIONS — pass it to <CurriculumHost pack={map2dPack} />. Copies an author-editable map component into src/lesson/map2d — no new npm dependencies.",
+  "default": false,
+  "runtime": {
+    "copy": [
+      { "from": "runtime/map2d", "to": "src/lesson/map2d" }
+    ]
+  },
+  "skill": {
+    "reference": "skill/pack.md",
+    "loadWhen": "a curriculum should be shown as a 2D map / game screen with unlock progression (a <CurriculumHost>), rather than a linear document list"
+  },
+  "quality": "quality.md"
+}

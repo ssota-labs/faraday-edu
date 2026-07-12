@@ -32,7 +32,7 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "deck", "kids", "notes"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "deck", "kids", "notes", "map2d"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
   // every shipped pack must have a valid manifest
@@ -82,6 +82,19 @@ test("installPack(srs) copies the author-editable component, no new npm deps", a
 
   const after = JSON.parse(await read(target, "package.json"));
   assert.deepEqual(after.dependencies, before.dependencies, "srs adds no runtime deps");
+});
+
+test("installPack(map2d) copies the presentation component, no new npm deps", async () => {
+  const target = await scaffold("Map Host");
+  const before = JSON.parse(await read(target, "package.json"));
+  await installPack("map2d", { fromDir: target });
+
+  assert.ok(await exists(path.join(target, "src/lesson/map2d/map2d.tsx")), "presentation copied");
+  assert.ok(await exists(path.join(target, "src/lesson/map2d/index.ts")), "index copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/map2d/pack.md")), "skill installed");
+
+  const after = JSON.parse(await read(target, "package.json"));
+  assert.deepEqual(after.dependencies, before.dependencies, "map2d adds no runtime deps");
 });
 
 test("installPack(lecture-design) installs a skill FOLDER, no runtime", async () => {
@@ -202,10 +215,16 @@ test("resolvePack classifies official names and local paths", async () => {
   assert.equal(local.source, packDir);
 });
 
-test("default packs: every shipped pack is default, readPackSkill reads file & folder", async () => {
+// Opt-in packs: shipped but NOT default. Presentations are a pick-one choice you
+// add (`faraday pack add <name>`), unlike the batteries-included capability packs.
+const OPT_IN_PACKS = ["map2d"];
+
+test("default packs: every capability pack is default, presentations are opt-in", async () => {
   const defaults = await defaultPackNames();
   const all = (await listPacks()).map((p) => p.name);
-  assert.deepEqual([...defaults].sort(), [...all].sort(), "every shipped pack is a default pack");
+  const expectedDefaults = all.filter((n) => !OPT_IN_PACKS.includes(n));
+  assert.deepEqual([...defaults].sort(), [...expectedDefaults].sort(), "capability packs default; opt-in packs not");
+  for (const n of OPT_IN_PACKS) assert.ok(!defaults.includes(n), `${n} is opt-in, not default`);
 
   // folder skill (lecture-design) → multiple files
   const ld = await resolvePack("lecture-design");
@@ -272,8 +291,10 @@ test("faraday new auto-installs every default pack, --no-defaults opts out", asy
   const withBase = await tmp();
   await generateLesson({ targetDir: path.join(withBase, "l"), name: "Def On", uuid: () => "id" });
   const prov = JSON.parse(await read(path.join(withBase, "l"), ".faraday/provenance.json"));
-  const all = (await listPacks()).map((p) => p.name);
-  assert.deepEqual([...prov.packs].sort(), [...all].sort(), "every default pack recorded");
+  const defaults = await defaultPackNames();
+  assert.deepEqual([...prov.packs].sort(), [...defaults].sort(), "every default pack recorded");
+  // opt-in packs (e.g. the map2d presentation) are shipped but NOT auto-installed
+  assert.ok(!prov.packs.includes("map2d"), "opt-in map2d not auto-installed");
   assert.ok(await exists(path.join(withBase, "l", ".faraday/packs/audience/audience.md")), "audience skill installed");
   assert.ok(await exists(path.join(withBase, "l", ".faraday/packs/lecture-design/overview.md")), "lecture-design folder installed");
   // heavy runtime packs are defaults too now: three pins its R3F deps
