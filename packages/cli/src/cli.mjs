@@ -268,12 +268,12 @@ async function runPackAdd(argv, context) {
   const resolved = await resolvePack(opts.source, {
     log: opts.json ? undefined : (m) => context.stderr(`  ${m}\n`),
   });
-  // 2. validate its manifest before touching the lesson
-  const manifest = await readManifestAt(resolved.packDir);
-  const problems = validateManifest(manifest);
-  if (problems.length) {
-    for (const p of problems) context.stderr(`  invalid pack.json: ${p}\n`);
-    const e = new Error(`pack ${resolved.name} has an invalid manifest`);
+  // 2. validate the pack (manifest + on-disk) before touching the lesson
+  const { errors, warnings } = await validatePackDir(resolved.packDir);
+  if (!opts.json) for (const w of warnings) context.stderr(`  warning: ${w}\n`);
+  if (errors.length) {
+    for (const p of errors) context.stderr(`  invalid pack: ${p}\n`);
+    const e = new Error(`pack ${resolved.name} has ${errors.length} problem(s)`);
     e.exitCode = 2;
     throw e;
   }

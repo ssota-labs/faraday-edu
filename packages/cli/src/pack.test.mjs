@@ -453,3 +453,41 @@ test("every shipped official pack passes deep validation", async () => {
     assert.deepEqual(errors, [], `${p.name} has on-disk errors: ${errors.join("; ")}`);
   }
 });
+
+// CLI-path tests: drive runFaradayCli end-to-end so a missing import / broken wiring
+// in runPack* is caught (unit tests that call installPack/validatePackDir directly
+// would not have caught the `validateManifest is not defined` regression in pack add).
+test("CLI: faraday pack add installs an official pack into a lesson", async () => {
+  const lesson = await scaffold("Cli Add Host");
+  const r = await cli(["pack", "add", "srs", "--dir", lesson]);
+  assert.equal(r.code, 0, `pack add failed: ${r.err}`);
+  assert.ok(await exists(path.join(lesson, "src/lesson/srs/Flashcards.tsx")), "runtime half installed");
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/srs/pack.md")), "skill half installed");
+});
+
+test("CLI: faraday pack validate reports OK for an official pack, errors for a broken one", async () => {
+  const ok = await cli(["pack", "validate", "exam"]);
+  assert.equal(ok.code, 0);
+  assert.match(ok.out, /OK/);
+
+  const base = await tmp();
+  const { packDir } = await scaffoldPack("brk", { cwd: base });
+  await fs.rm(path.join(packDir, "quality.md")); // referenced but now missing
+  // expected failure: drive runFaradayCli directly (throwOnError off) to capture exit code + stderr
+  let code = 0, err = "";
+  await runFaradayCli(["pack", "validate", packDir], {
+    cwd: process.cwd(), stdout: () => {}, stderr: (s) => (err += s), setExitCode: (c) => (code = c),
+  });
+  assert.equal(code, 2, "a pack missing a referenced file must fail");
+  assert.match(err, /quality .*does not exist/);
+});
+
+test("CLI: faraday pack new then add round-trips through the CLI", async () => {
+  const base = await tmp();
+  const newRes = await cli(["pack", "new", "cli-cap", "--kind", "copy", "--at", path.join(base, "cli-cap"), "--json"]);
+  assert.equal(newRes.code, 0);
+  const lesson = await scaffold("Cli New Host");
+  const addRes = await cli(["pack", "add", path.join(base, "cli-cap"), "--dir", lesson]);
+  assert.equal(addRes.code, 0, `pack add failed: ${addRes.err}`);
+  assert.ok(await exists(path.join(lesson, ".faraday/packs/cli-cap/SKILL.md")), "folder skill installed via CLI");
+});
