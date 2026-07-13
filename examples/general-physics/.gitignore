@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local
+.DS_Store
+.primer/session.json
+.faraday/packs/
+pnpm-lock.yaml

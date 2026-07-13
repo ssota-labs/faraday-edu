@@ -73,7 +73,10 @@ feel (graded by quality-bar.md Surface 3). Rules of thumb:
    Placement hierarchy: object > canvas-overlay (Workbench `hud` takes buttons —
    Play/Pause, presets, mode toggles) > side panel (secondary/numerous
    parameters only). `<Workbench>` without `controls` renders the canvas
-   full-width — a panel is not mandatory.
+   full-width — a panel is not mandatory. **If the draggable object is itself in
+   motion** (a handle on a body that translates under `useRafLoop`), pause the
+   motion while the learner drags — grabbing a moving target is fiddly — and
+   resume on release.
 2. **Never teleport.** Route discrete changes (selection, step, mode, reset)
    through `useAnimatedValue(target)` — render from the animated value and the
    change eases instead of snapping. Continuous input (drag, slider) maps
@@ -81,7 +84,11 @@ feel (graded by quality-bar.md Surface 3). Rules of thumb:
 3. **Keep dynamic concepts moving.** If the concept has time in it (orbits,
    waves, populations, flows), drive it with `useRafLoop(dt => …, playing)` and
    give the learner Play/Pause in the `hud`. A dead still of a moving system
-   reads as a diagram, not a model.
+   reads as a diagram, not a model. **Always advance the simulation by the `dt`
+   the loop hands you (seconds) — `t + dt`, `v + a*dt` — never a fixed per-frame
+   constant like `t + 0.02`.** A constant step ties the motion to the frame rate:
+   it stutters under load and runs at different speeds on 60 Hz vs 120 Hz. (`dt`
+   is real elapsed seconds, clamped for tab-switch jumps.)
 4. **Emphasize the delta.** When something changes, foreground it — a highlight,
    a trail, a pulse on the readout that moved. The learner should never hunt
    for what their action did.

@@ -87,7 +87,7 @@ function main() {
 
   console.log("\n── Example demos (workspace) ──");
   run("pnpm", ["install"]);
-  for (const name of ["compound-interest", "voyage-log"]) {
+  for (const name of ["compound-interest", "voyage-log", "general-physics"]) {
     const dir = path.join(root, "examples", name);
     if (!existsSync(dir)) throw new Error(`missing ${name}`);
     run("pnpm", ["check"], dir);

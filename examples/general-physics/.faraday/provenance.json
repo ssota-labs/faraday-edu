@@ -1,0 +1,12 @@
+{
+  "lessonId": "8b3a6b6d-2820-4aca-b9c1-a97353996294",
+  "createdWith": "faraday@0.1.0",
+  "template": "starter@0.1.0",
+  "runtime": "@faraday-academy/runtime@0.1.0",
+  "packs": [
+    "audience",
+    "lecture-design",
+    "map2d"
+  ],
+  "name": "general-physics"
+}

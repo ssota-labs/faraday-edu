@@ -1,0 +1,5 @@
+/* App stylesheet entry. The runtime owns the Tailwind entry, style layers, and
+   its own content scan; here we pull its compiled stylesheet in and add the ONE
+   content source it can't know about: your lesson code. */
+@import "@faraday-academy/runtime/styles.css";
+@source "./lesson/**/*.{ts,tsx}";
