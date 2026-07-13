@@ -180,7 +180,7 @@ Final report (returned to an orchestrator — be precise, under 550 words):
 6. **"인터랙티브 애니메이션 퀄리티가 낮다. 컨트롤 패널 필수 아님, 슬라이더만
    조정 아님 — 캔버스 위 버튼, 플로팅 카드 패널도 좋다. 기준 같이 정하고
    만족까지 스킬 수정+서브에이전트(sonnet)+평가 루프."**
-   → quality-bar Surface 3; `runtime/motion.ts`(useAnimatedValue/useRafLoop/
+   → quality-bar Surface 3; `sim2d` pack (useAnimatedValue/useSimLoop/
    useSvgDrag); Workbench controls 옵션화 + hud 클릭 가능;
    interactive-design "Craft".
 7. **"공식이 결과만 띡 나온다 — 실제로 유도해주는 것처럼."**

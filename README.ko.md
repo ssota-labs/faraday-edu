@@ -163,7 +163,7 @@ flowchart LR
 | 미리보기 | 구성요소 | 하는 일 | 무엇으로 |
 |---|---|---|---|
 | ![커리큘럼 월드](docs/images/component-curriculum.png) | **📚 커리큘럼 / 월드** | 수업을 선형 교과서로, 또는 잠금 해제 진행이 있는 게임 같은 지도로 엮어 탐험합니다. | `<Course>` · `<CourseHost>` + 월드 팩 |
-| ![슬라이드 뷰](docs/images/component-lecture.png) | **🎬 슬라이드 뷰** | 슬라이드 뷰 프레젠테이션 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<SlideDeck>` · `runtime/motion` · `slide-view` 팩 |
+| ![슬라이드 뷰](docs/images/component-lecture.png) | **🎬 슬라이드 뷰** | 슬라이드 뷰 프레젠테이션 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<SlideDeck>` · `sim2d` 팩 · `slide-view` 팩 |
 | ![퀴즈/과제](docs/images/component-quiz.png) | **✅ 퀴즈 / 과제** | *가르치는* 확인 — 객관식, 숫자 입력, 스케치 예측, 시뮬레이션에서 클리어하는 미션. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
 | ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 수업 또는 커리큘럼 전체의 진도를 기록하고 대시보드로 보여줍니다 (LMS). | `runtime/lms` (기록기 + 대시보드) |
 | ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 |
@@ -311,7 +311,7 @@ faraday help
 
 **능력은 플래그가 아니라 팩입니다** — 그리고 `new`는 **배터리 포함(batteries-included)**:
 기본 팩(스킬 + 런타임)을 모두 자동 설치하므로 `three`(`--physics` variant), `tutor`,
-`srs`, `exam`, `slide-view`, `game2d`, `storybook-game2d`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
+`srs`, `exam`, `slide-view`, `sim2d`, `game2d`, `storybook-game2d`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
 있습니다 (`faraday pack list`로 라이브 카탈로그 확인). 최소 레슨은 `--no-defaults`,
 완성된 레슨에서 불필요한 팩(예: 무거운 `three`/`tutor` 런타임)은 `faraday pack remove
 <name>`로 덜어냅니다. `faraday pack add <name|source>`는 서드파티 팩을 설치하거나
