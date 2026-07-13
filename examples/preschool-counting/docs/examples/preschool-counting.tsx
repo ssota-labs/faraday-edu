@@ -1,37 +1,19 @@
 // Preschool game-view example — dialogue, movement, celebrate, and interaction API.
-// Mirrors examples/preschool-counting/src/lesson/lesson.tsx for pack docs.
 import { Challenge } from "@faraday-academy/runtime/blocks";
 import { Lecture } from "@faraday-academy/runtime/blocks";
-import { useState } from "react";
-import { Button } from "@faraday-academy/runtime/ui/button";
 import { GameView, useGameInteraction } from "./game-view";
 
-const TARGET = 3;
-
-function AppleCountMission() {
-  const { complete } = useGameInteraction();
-  const [apples, setApples] = useState(0);
-
+function CountMission() {
+  const { complete, celebrate } = useGameInteraction();
   return (
     <Challenge
-      goal={`Put ${TARGET} apples in the basket.`}
-      done={apples >= TARGET}
-      hint="Tap the big button once for each apple."
-      onDone={complete}
-    >
-      <div className="flex flex-col items-center gap-4 py-2">
-        <div className="flex min-h-16 flex-wrap justify-center gap-2">
-          {Array.from({ length: apples }, (_, i) => (
-            <span key={i} className="text-4xl">
-              🍎
-            </span>
-          ))}
-        </div>
-        <Button size="lg" className="min-h-14 min-w-[10rem] text-lg" onClick={() => setApples((n) => Math.min(TARGET, n + 1))}>
-          Add apple
-        </Button>
-      </div>
-    </Challenge>
+      prompt="Tap the apples until there are three!"
+      check={() => true}
+      onCorrect={() => {
+        celebrate();
+        complete();
+      }}
+    />
   );
 }
 
@@ -71,12 +53,12 @@ export default function PreschoolCounting() {
                     { type: "scene", backgroundColor: "oklch(0.75 0.14 145)" },
                     { type: "dialogue", speaker: "Bear", text: "Hi! Let's count together." },
                     { type: "move", characterId: "kid", x: 35, y: 78 },
-                    { type: "dialogue", speaker: "Bear", text: "Fill the basket with apples!" },
+                    { type: "dialogue", speaker: "Bear", text: "Walk over here. How many flowers?" },
                     {
                       type: "interaction",
-                      title: "Count the apples",
-                      celebrateOnComplete: false,
-                      content: <AppleCountMission />,
+                      title: "Count the flowers",
+                      hint: "Tap until you see three red flowers.",
+                      content: <CountMission />,
                     },
                     { type: "celebrate", message: "Great counting!" },
                     { type: "dialogue", speaker: "Bear", text: "You did it!" },

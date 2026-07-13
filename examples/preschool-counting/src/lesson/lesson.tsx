@@ -1,39 +1,8 @@
-// Preschool game-view example — dialogue, movement, celebrate, and interaction API.
-// Mirrors examples/preschool-counting/src/lesson/lesson.tsx for pack docs.
-import { Challenge } from "@faraday-academy/runtime/blocks";
+// Preschool counting — game-view demo (incremental beats).
+// v1: scene → dialogue → move → interaction → celebrate → dialogue
 import { Lecture } from "@faraday-academy/runtime/blocks";
-import { useState } from "react";
-import { Button } from "@faraday-academy/runtime/ui/button";
-import { GameView, useGameInteraction } from "./game-view";
-
-const TARGET = 3;
-
-function AppleCountMission() {
-  const { complete } = useGameInteraction();
-  const [apples, setApples] = useState(0);
-
-  return (
-    <Challenge
-      goal={`Put ${TARGET} apples in the basket.`}
-      done={apples >= TARGET}
-      hint="Tap the big button once for each apple."
-      onDone={complete}
-    >
-      <div className="flex flex-col items-center gap-4 py-2">
-        <div className="flex min-h-16 flex-wrap justify-center gap-2">
-          {Array.from({ length: apples }, (_, i) => (
-            <span key={i} className="text-4xl">
-              🍎
-            </span>
-          ))}
-        </div>
-        <Button size="lg" className="min-h-14 min-w-[10rem] text-lg" onClick={() => setApples((n) => Math.min(TARGET, n + 1))}>
-          Add apple
-        </Button>
-      </div>
-    </Challenge>
-  );
-}
+import { GameView } from "./game-view";
+import { AppleCountMission } from "./AppleCountMission";
 
 const kidSprite =
   "data:image/svg+xml," +
@@ -47,18 +16,18 @@ const bearSprite =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="#92400e"/><circle cx="28" cy="28" r="10" fill="#92400e"/><circle cx="52" cy="28" r="10" fill="#92400e"/><circle cx="32" cy="38" r="4" fill="#1c1917"/><circle cx="48" cy="38" r="4" fill="#1c1917"/></svg>',
   );
 
-export default function PreschoolCounting() {
+export default function PreschoolCountingLesson() {
   return (
     <Lecture
       title="Count with Bear"
-      lead="A short game scene — tap through dialogue, watch the character walk, celebrate wins."
+      lead="A short game scene for preschool — tap through dialogue, watch the kid walk, then count apples."
       views={[
         {
           id: "game",
           label: "Play",
           content: (
             <GameView
-              storageKey="preschool-count-demo"
+              storageKey="preschool-count-live"
               startSceneId="meadow"
               scenes={[
                 {
@@ -68,18 +37,23 @@ export default function PreschoolCounting() {
                     { id: "bear", sprite: bearSprite, x: 78, y: 76, width: "22%" },
                   ],
                   beats: [
+                    // Step 1 — scene + greet
                     { type: "scene", backgroundColor: "oklch(0.75 0.14 145)" },
                     { type: "dialogue", speaker: "Bear", text: "Hi! Let's count together." },
-                    { type: "move", characterId: "kid", x: 35, y: 78 },
-                    { type: "dialogue", speaker: "Bear", text: "Fill the basket with apples!" },
+                    // Step 2 — walk over
+                    { type: "move", characterId: "kid", x: 38, y: 78, durationMs: 900 },
+                    { type: "dialogue", speaker: "Bear", text: "Can you fill the basket?" },
+                    // Step 3 — CRA concrete: tap apples (Challenge celebrates; beat skips duplicate)
                     {
                       type: "interaction",
                       title: "Count the apples",
+                      hint: "One tap = one apple.",
                       celebrateOnComplete: false,
                       content: <AppleCountMission />,
                     },
-                    { type: "celebrate", message: "Great counting!" },
-                    { type: "dialogue", speaker: "Bear", text: "You did it!" },
+                    // Step 4 — celebrate beat + closing line
+                    { type: "celebrate", message: "Great counting!", advanceAfterMs: 1400 },
+                    { type: "dialogue", speaker: "Bear", text: "Three apples! Well done!" },
                   ],
                 },
               ]}

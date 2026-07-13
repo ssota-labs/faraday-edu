@@ -59,32 +59,12 @@ import { GameView } from "./game-view";
 
 | type | role |
 |---|---|
-| `scene` | Background image/color — screen transition; optional `bgm` |
+| `scene` | Background image/color — screen transition |
 | `move` | Animate character to x/y (0–100%) |
-| `dialogue` | Bottom text box — tap/Space to advance; optional `voice` sfx |
+| `dialogue` | Bottom text box — tap/Space to advance |
 | `wait` | Brief pause |
-| `playAudio` / `stopAudio` | BGM or SFX hooks (`public/assets/audio/`) |
-| `celebrate` | Confetti burst + optional message (uses runtime `celebrate()`) |
-| `interaction` | Embed `<Challenge>` etc.; use `useGameInteraction().complete()` |
+| `interaction` | Embed `<Challenge>`, `<SketchPad>`, etc. |
 | `choice` | Branching buttons |
-| `tilemap` | Canvas tile layer (v2 — no PixiJS dep) |
-| `tileWalk` | Grid path walk animation |
-
-### Incremental authoring (preschool-counting)
-
-Build beats one at a time in `examples/preschool-counting/`:
-
-1. `scene` + `dialogue` — greet
-2. `move` — character walks
-3. `interaction` + `<Challenge>` — tap-to-count mission (`celebrateOnComplete: false` when Challenge handles confetti)
-4. `celebrate` + closing `dialogue`
-
-Run: `pnpm --filter preschool-counting dev`
-
-### 3D template (v3)
-
-`GameView3D` is **not** copied into 2D lessons. After `faraday pack add three`, copy
-`docs/examples/game-view3d/GameView3D.template.tsx` → `src/lesson/game-view/GameView3D.tsx`.
 
 ## Assets
 

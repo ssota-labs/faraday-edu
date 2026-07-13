@@ -7,6 +7,7 @@ a self-contained Vite lesson app (its own `package.json` + lockfile).
 | Example | Concept | Flags | Vercel root | Live |
 |---|---|---|---|---|
 | [`compound-interest/`](compound-interest/) | **S1 복리의 폭주** — sliders → compound growth chart | 2D | `examples/compound-interest` | [Vercel setup](../docs/VERCEL-DEMOS.md) |
+| [`preschool-counting/`](preschool-counting/) | **유아 세기** — game-view: 대사 · 이동 · 사과 세기 미션 | 2D | `examples/preschool-counting` | local / Vercel |
 | [`voyage-log/`](voyage-log/) | **C-B 항해 일지** — relativity / gravity / time as a space voyage curriculum | `--3d` | `examples/voyage-log` | [Vercel setup](../docs/VERCEL-DEMOS.md) |
 
 ## Install Faraday (creator CTA)

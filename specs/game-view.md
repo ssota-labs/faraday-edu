@@ -115,7 +115,7 @@ lecture/
 
 | 단계 | 내용 |
 |---|---|
-| **v0** (이번) | `<GameView>` 2D, `game-view` / `assets-2d` / `assets-3d` 팩, 유아 audience 행, kids 스킬 갱신 |
-| v1 | GameView `interaction` 비트 + `celebrate()`, 오디오 훅 |
-| v2 | PixiJS 또는 타일맵 레이어 (선택) |
-| v3 | 3D game-view 씬 템플릿, AssetProvider 포트 |
+| **v0** (done) | `<GameView>` 2D, `game-view` / `assets-2d` / `assets-3d` 팩, 유아 audience |
+| **v1** (done) | `playAudio`/`stopAudio`, `celebrate` beat, `interaction` + `useGameInteraction()` |
+| **v2** (done) | `tilemap` / `tileWalk` canvas layer (PixiJS는 저자 opt-in) |
+| **v3** (template) | `GameView3D.template.tsx` — `three` 팩 설치 후 복사 |

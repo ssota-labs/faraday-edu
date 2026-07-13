@@ -1,0 +1,11 @@
+{
+  "lessonId": "e22a0976-e317-4d2d-aa1b-18b3b230e015",
+  "createdWith": "faraday@0.1.0",
+  "template": "starter@0.1.0",
+  "runtime": "@faraday-academy/runtime@0.1.0",
+  "packs": [
+    "assets-2d",
+    "game-view"
+  ],
+  "name": "preschool-counting"
+}
