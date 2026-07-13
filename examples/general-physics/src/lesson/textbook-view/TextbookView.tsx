@@ -3,14 +3,15 @@
 // with page thumbnails and ink drawn on the workspace.
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { GridFourIcon, SquaresFourIcon } from "@phosphor-icons/react";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { cn } from "@faraday-academy/runtime/lib/utils";
 import {
-  useLecture,
   PresentationCanvas,
-  PresentationToolbar,
+  PresentationTopBar,
+  PRESENTATION_TOP_PAD,
+  useLecture,
 } from "@faraday-academy/runtime/blocks";
-import { useCourseNav } from "@faraday-academy/runtime/world";
 
 export interface TextbookPage {
   id: string;
@@ -19,25 +20,6 @@ export interface TextbookPage {
 }
 
 type ViewMode = "normal" | "free";
-
-function ViewSwitcher() {
-  const lecture = useLecture();
-  if (!lecture || lecture.views.length < 2) return null;
-  return (
-    <>
-      {lecture.views.map((v) => (
-        <Button
-          key={v.id}
-          size="sm"
-          variant={v.id === lecture.viewId ? "default" : "outline"}
-          onClick={() => lecture.setViewId(v.id)}
-        >
-          {v.label}
-        </Button>
-      ))}
-    </>
-  );
-}
 
 export function TextbookView(props: {
   pages: TextbookPage[];
@@ -48,7 +30,6 @@ export function TextbookView(props: {
   className?: string;
 }) {
   const lecture = useLecture();
-  const course = useCourseNav();
   const title = props.title ?? lecture?.title ?? "";
   const lead = props.lead ?? lecture?.lead;
   const [mode, setMode] = useState<ViewMode>("normal");
@@ -65,9 +46,16 @@ export function TextbookView(props: {
         className={cn("flex h-full min-h-0 flex-col", props.className)}
         aria-roledescription="textbook overview"
       >
+        <PresentationTopBar>
+          <Button size="sm" variant="default" onClick={() => setMode("normal")}>
+            <SquaresFourIcon />
+            <span className="hidden sm:inline">Read</span>
+          </Button>
+        </PresentationTopBar>
         <PresentationCanvas
-          className="flex-1"
+          className={cn("flex-1", PRESENTATION_TOP_PAD)}
           inkKey={props.notesKey}
+          cardLayout="portrait-9-16"
           items={canvasItems}
           activeId={focusId}
           onSelectItem={(id) => {
@@ -78,24 +66,20 @@ export function TextbookView(props: {
             });
           }}
         />
-        <PresentationToolbar>
-          {course?.exit ? (
-            <Button size="sm" variant="outline" onClick={course.exit}>
-              Map
-            </Button>
-          ) : null}
-          <Button size="sm" variant="default" onClick={() => setMode("normal")}>
-            Read
-          </Button>
-          <ViewSwitcher />
-        </PresentationToolbar>
       </section>
     );
   }
 
   return (
     <section className={cn("relative h-full min-h-0", props.className)} aria-roledescription="textbook view">
-      <div className="h-full overflow-y-auto">
+      <PresentationTopBar>
+        <Button size="sm" variant="outline" onClick={() => setMode("free")}>
+          <GridFourIcon />
+          <span className="hidden sm:inline">Overview</span>
+        </Button>
+      </PresentationTopBar>
+
+      <div className={cn("h-full overflow-y-auto", PRESENTATION_TOP_PAD)}>
         <article className="mx-auto flex w-full max-w-[48rem] flex-col gap-10 px-6 py-10 sm:px-10 sm:py-14">
           {title ? (
             <header className="flex flex-col gap-3 border-b border-border/60 pb-8">
@@ -111,21 +95,6 @@ export function TextbookView(props: {
           ))}
         </article>
       </div>
-
-      <PresentationToolbar>
-        {course?.exit ? (
-          <Button size="sm" variant="outline" onClick={course.exit}>
-            Map
-          </Button>
-        ) : null}
-        <Button size="sm" variant="default" onClick={() => setMode("normal")}>
-          Read
-        </Button>
-        <Button size="sm" variant="outline" onClick={() => setMode("free")}>
-          Overview
-        </Button>
-        <ViewSwitcher />
-      </PresentationToolbar>
     </section>
   );
 }
