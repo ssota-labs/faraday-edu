@@ -50,7 +50,7 @@ locks secret editing when install/start are code-managed (see `.cursor/README.md
   (source = official name · `./path` · `owner/repo` · `npm:<spec>`) · `pack remove <name>` ·
   `pack show <name|source>` (print skill guide) · `pack validate <name|source>` ·
   `pack new <name> [--kind skill|copy|runtime]` (scaffold a new pack for authors). `new` is
-  batteries-included: all nine packs auto-install (`--no-defaults` to skip; `pack remove` to trim).
+  batteries-included: all default packs auto-install (`--no-defaults` to skip; `pack remove` to trim).
 - Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
 
 ### Labs dev app (`apps/labs`)
@@ -107,7 +107,7 @@ invisible to the agent, and vice versa.
 `AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
 into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
 reads `official-packs` directly. Default packs ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`, `slide-view`,
-`kids`, `notes` (+ opt-in `map2d` course shell). **Default packs** (`"default": true`) — `faraday new` is
+`game2d`, `storybook-game2d`, `notes` (+ opt-in `map2d` course shell). **Default packs** (`"default": true`) — `faraday new` is
 batteries-included and auto-installs every pack (skill + runtime), so each lesson carries all
 the capabilities and the pedagogy/audience knowledge in `.faraday/packs/`. Use `--no-defaults`
 for a minimal lesson, and `faraday pack remove <name>` to trim what a finished lesson doesn't

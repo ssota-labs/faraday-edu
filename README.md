@@ -308,8 +308,8 @@ faraday help
 ```
 
 **Capabilities are packs, not flags** — and `new` is **batteries-included**: it
-auto-installs all nine packs (skill + runtime), so `three` (`--physics` variant),
-`tutor`, `srs`, `exam`, `slide-view`, `kids`, `notes`, `textbook-view`, `lecture-design`, and `audience` are
+auto-installs all default packs (skill + runtime), so `three` (`--physics` variant),
+`tutor`, `srs`, `exam`, `slide-view`, `game2d`, `storybook-game2d`, `notes`, `textbook-view`, `lecture-design`, and `audience` are
 on hand from the start (`faraday pack list` shows the live catalog). Use `--no-defaults`
 for a minimal lesson, and `faraday pack remove <name>` to drop what a finished lesson
 doesn't need (e.g. the heavy `three`/`tutor` runtimes). `faraday pack add <name|source>`
@@ -337,7 +337,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
-│  ├─ official-packs/           # module packs by category: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
+│  ├─ official-packs/           # module packs by category: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·storybook-game2d) · runtime/ (three·tutor·game2d) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)
@@ -360,7 +360,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 ## What the scaffolder does
 
 Copy starter → target · restore `.gitignore` · pin `@faraday-academy/runtime` ·
-auto-install all nine packs (skill + runtime; `--no-defaults` to skip) · wire `app.css`
+auto-install all default packs (skill + runtime; `--no-defaults` to skip) · wire `app.css`
 to the runtime stylesheet · inject package name + HTML title · issue a `lessonId`
 provenance record · `pnpm install`. Trim unused packs with `faraday pack remove <name>`;
 `faraday check`/`doctor` verify the layout + exact pins.
@@ -413,7 +413,8 @@ flowchart LR
 | **Lecture design** | `lecture-design` — teaching methods & pedagogy | ✅ shipping · **default** | skill-only folder (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
 | **Audience** | `audience` — delivery methodology per learner | ✅ shipping · **default** | skill-only (CRA / 5E / Peer Instruction / Mayer / Merrill + layout) |
 | **Slide view** | `slide-view` — animated slide presentation | ✅ shipping | folder skill (slide-design → motion → pacing), composes `<SlideDeck>` + motion, zero deps |
-| **Kids** | `kids` — tablet game | ✅ shipping | preset skill (CRA + big targets + celebration), builds on the `audience` pack, zero deps |
+| **2D game** | `game2d` — PixiJS stage | ✅ shipping | Pixi v8 + Matter + Howler; author-editable glue in `src/lesson/game2d` |
+| **Storybook 2D** | `storybook-game2d` | ✅ shipping | page-turn story shell on `game2d` (absorbs former `kids`); CRA + big targets |
 | **Exam** | `exam` — practice / mock test | ✅ shipping | folder skill (blueprint → items → scoring → integrity), composes assessment blocks, zero deps |
 | **Notes** | `notes` — GoodNotes-style pen | ✅ shipping | author-editable `<Notebook>` ink canvas (Canvas + PointerEvents, pressure), zero deps |
 

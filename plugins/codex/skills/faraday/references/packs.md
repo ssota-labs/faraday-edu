@@ -16,7 +16,7 @@ mechanism — the skill's job is to know packs exist, use the right ones, then
 >   (`faraday pack add map2d`); built-in `linearPack` needs no pack; `world3d` rides with `three`.
 >   See [worlds.md](worlds.md).
 > - **lecture** — lecture presentations and tools (`slide-view`, `textbook-view`, `srs`,
->   `notes`, `exam`, `kids`).
+>   `notes`, `exam`, `game2d`, `storybook-game2d`).
 > - **runtime** — engines / durable services (`three`, `tutor`).
 > - **methodology** — pedagogy knowledge, skill-only (`audience`, `lecture-design`).
 >
@@ -50,7 +50,8 @@ faraday pack add ./path | owner/repo | npm:@scope/pack   # third-party sources
 | `exam` | a practice test / mock exam across a topic — blueprint → items → scoring. |
 | `textbook-view` | textbook view — A4 self-study column, scroll, free-mode margin notes. |
 | `slide-view` | slide view presentation — one idea per screen, prev/next, animation. (`deck` aliases here.) |
-| `kids` | a young-learner tablet lecture — CRA, big targets, celebration. |
+| `game2d` | PixiJS 2D educational stage — physics, tilemap, audio. |
+| `storybook-game2d` | page-turn story shell on game2d (absorbs former `kids`). |
 | `notes` | handwriting / sketch on a stylus — a full-page pen ink canvas. |
 | `lecture-design` · `audience` | **designing how it teaches** — pedagogy + per-audience methodology. |
 

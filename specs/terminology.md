@@ -93,7 +93,7 @@ official-packs/
 │   ├── notes/
 │   ├── srs/
 │   ├── exam/
-│   └── kids/
+│   └── storybook-game2d/
 ├── runtime/          # three, tutor
 └── methodology/      # audience, lecture-design
 ```

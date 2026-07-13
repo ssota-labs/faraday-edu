@@ -1,0 +1,19 @@
+{
+  "name": "storybook-game2d",
+  "displayName": "Storybook 2D game",
+  "description": "Page-turn story shell on top of game2d — fairy-tale pacing, one idea per page, big touch targets, CRA sequencing, visible celebration. Absorbs the former kids tablet preset. Requires game2d (Pixi stage, physics, audio).",
+  "default": true,
+  "requires": ["game2d"],
+  "runtime": {
+    "copy": [
+      { "from": "runtime/storybook-game2d", "to": "src/lesson/storybook-game2d" },
+      { "from": "examples", "to": "docs/examples" }
+    ]
+  },
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the lesson should feel like a storybook or fairy-tale game — paged scenes, young or story-led learners, CRA order, big touch targets"
+  },
+  "quality": "quality.md"
+}

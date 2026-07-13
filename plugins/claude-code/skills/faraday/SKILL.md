@@ -42,7 +42,7 @@ graph, generative interactions, spaced retrieval, feed-forward feedback — from
 methodology per learner population (CRA for children, 5E for secondary, Peer
 Instruction for undergrads, Mayer's principles for the general public, Merrill's
 First Principles for professionals) from the **`audience` pack**. Every pack is a
-**default pack** — `faraday new` is batteries-included and auto-installs all nine
+**default pack** — `faraday new` is batteries-included and auto-installs all default
 (read them at `.faraday/packs/<name>/`; `faraday pack show <name>` at design time).
 Drop the ones a finished lesson doesn't need with `faraday pack remove <name>`
 (e.g. the heavy `three`/`tutor` runtimes) before shipping.
@@ -72,7 +72,7 @@ dir, next steps). Exit codes: `0` ok · `1` check failed · `2` usage · `4` env
 
 ## The build loop
 
-1. **Scaffold.** `faraday new` is batteries-included — it auto-installs all nine
+1. **Scaffold.** `faraday new` is batteries-included — it auto-installs all default
    packs (skill + runtime), so every capability is already on hand; there are no
    capability flags: `npx @faraday-academy/cli@latest new <name> [--json]` (installs
    deps unless `--skip-install`), then `cd` in. Use the decision guide below to know
@@ -139,7 +139,7 @@ math in `<TeX>`). Grade each MUST pass/fail before reporting done.
 
 ## Decision guide — which packs a lesson uses
 
-`faraday new` pre-installs all nine packs (batteries-included), so you don't *add*
+`faraday new` pre-installs all default packs (batteries-included), so you don't *add*
 capabilities — you **use** the ones that fit and `faraday pack remove <name>` the
 rest (there are no flags). Run `faraday pack list` for the live catalog and see
 [references/packs.md](references/packs.md). Map the creator's intent to a pack:
@@ -153,8 +153,7 @@ rest (there are no flags). Run `faraday pack list` for the live catalog and see
   `faraday pack add three --physics`. For scripted motion (orbits) use the render loop.
 - **`tutor`** — the reader benefits from asking questions. A durable, grounded chat
   tutor. Needs `AI_GATEWAY_API_KEY` locally. See [references/tutor.md](references/tutor.md).
-- **other packs** — memorization (`srs`), exams (`exam`), slide view (`slide-view`), kids
-  (`kids`), pen notes (`notes`), pedagogy (`lecture-design`). All pre-installed;
+- **other packs** — memorization (`srs`), exams (`exam`), slide view (`slide-view`), 2D games (`game2d` / `storybook-game2d`), pen notes (`notes`), pedagogy (`lecture-design`). All pre-installed;
   `faraday pack remove <name>` what a lesson doesn't use.
 - **Single lesson vs. course vs. curriculum** — one idea → one `<Lesson>`; a sequence →
   `<Course>`; a graph with unlock progression / a roadmap map → `<CourseHost>` +

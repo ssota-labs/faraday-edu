@@ -310,8 +310,8 @@ faraday help
 ```
 
 **능력은 플래그가 아니라 팩입니다** — 그리고 `new`는 **배터리 포함(batteries-included)**:
-아홉 개 팩(스킬 + 런타임)을 모두 자동 설치하므로 `three`(`--physics` variant), `tutor`,
-`srs`, `exam`, `slide-view`, `kids`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
+기본 팩(스킬 + 런타임)을 모두 자동 설치하므로 `three`(`--physics` variant), `tutor`,
+`srs`, `exam`, `slide-view`, `game2d`, `storybook-game2d`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
 있습니다 (`faraday pack list`로 라이브 카탈로그 확인). 최소 레슨은 `--no-defaults`,
 완성된 레슨에서 불필요한 팩(예: 무거운 `three`/`tutor` 런타임)은 `faraday pack remove
 <name>`로 덜어냅니다. `faraday pack add <name|source>`는 서드파티 팩을 설치하거나
@@ -339,7 +339,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — `faraday` 스캐폴더 (bin + src)
 │  │  └─ templates/starter/     #   `faraday new`가 찍어내는 앱 셸 (팩은 빌드 시 번들)
-│  ├─ official-packs/           # 카테고리별 모듈 팩: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
+│  ├─ official-packs/           # 카테고리별 모듈 팩: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·storybook-game2d) · runtime/ (three·tutor·game2d) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
 │  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)
@@ -362,7 +362,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 ## 스캐폴더가 하는 일
 
 starter 복사 → 대상 · `.gitignore` 복원 · `@faraday-academy/runtime` pin
-아홉 개 팩(스킬 + 런타임) 모두 자동설치(`--no-defaults`로 생략) · `app.css`를 런타임
+기본 팩(스킬 + 런타임) 모두 자동설치(`--no-defaults`로 생략) · `app.css`를 런타임
 스타일시트에 연결 · 패키지명 + HTML 제목 주입 · `lessonId` 출처(provenance) 레코드
 발급 · `pnpm install`. 불필요한 팩은 `faraday pack remove <name>`로 덜어내고,
 `faraday check`/`doctor`가 레이아웃 + 정확한 pin을 검증합니다.
@@ -413,7 +413,8 @@ flowchart LR
 | **렉쳐 구성** | `lecture-design` — 교수법 & 교육학 | ✅ 제공 중 · **default** | 스킬-온리 폴더 (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
 | **대상(Audience)** | `audience` — 학습자별 전달 방법론 | ✅ 제공 중 · **default** | 스킬-온리 (CRA / 5E / Peer Instruction / Mayer / Merrill + 레이아웃) |
 | **슬라이드 뷰** | `slide-view` — 애니메이션 슬라이드 프레젠테이션 | ✅ 제공 중 | 폴더 스킬 (슬라이드 디자인 → 모션 → 페이싱), `<SlideDeck>` + 모션 조합, deps 0개 |
-| **아이들** | `kids` — 태블릿 게임 | ✅ 제공 중 | 프리셋 스킬 (CRA + 큰 타깃 + 축하), `audience` 팩 위에 얹힘, deps 0개 |
+| **2D 게임** | `game2d` — PixiJS 스테이지 | ✅ 제공 중 | Pixi v8 + Matter + Howler; `src/lesson/game2d`에 저자 편집 글루 |
+| **스토리북 2D** | `storybook-game2d` | ✅ 제공 중 | `game2d` 위 페이지형 동화 셸 (구 `kids` 흡수); CRA + 큰 타깃 |
 | **시험** | `exam` — 실전 / 모의고사 | ✅ 제공 중 | 폴더 스킬 (블루프린트 → 문항 → 채점 → 무결성), 평가 블록 조합, deps 0개 |
 | **노트** | `notes` — 굿노트식 펜 | ✅ 제공 중 | author-editable `<Notebook>` 잉크 캔버스 (Canvas + PointerEvents, 필압), deps 0개 |
 
