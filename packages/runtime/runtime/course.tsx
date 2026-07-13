@@ -1,7 +1,5 @@
-// <Course> — bundle several lessons into a navigable textbook. Give it ordered
-// chapters; it renders a chapter nav, the active chapter, prev/next, and syncs to
-// the URL hash (#slug) for deep links. Render it as your lesson's default export
-// (put the chapter components in src/lesson/chapters/).
+// <LinearCourse> — linear course without a prerequisite graph: chapter nav,
+// prev/next, #hash deep links. For graph courses with unlock, use <CourseHost>.
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
@@ -18,7 +16,7 @@ function resolveSlug(chapters: Chapter[]): string {
   return chapters.some((c) => c.slug === hash) ? hash : (chapters[0]?.slug ?? "");
 }
 
-export function Course(props: { title: string; chapters: Chapter[] }) {
+export function LinearCourse(props: { title: string; chapters: Chapter[] }) {
   const { title, chapters } = props;
   const [slug, setSlug] = useState(() => resolveSlug(chapters));
 
@@ -79,3 +77,6 @@ export function Course(props: { title: string; chapters: Chapter[] }) {
     </div>
   );
 }
+
+/** @deprecated Use LinearCourse */
+export const Course = LinearCourse;

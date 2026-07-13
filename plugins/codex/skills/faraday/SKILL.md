@@ -1,6 +1,6 @@
 ---
 name: faraday
-description: Help a creator turn their material or idea into interactive courseware with the Faraday CLI — design the curriculum and learning path, design and build concept-revealing interactives, add a grounded AI tutor, and polish the visuals. Use when someone wants to teach a topic interactively, make an interactive textbook/lesson/course, turn a PDF/PPT/notes into a lesson, build a curriculum or learning roadmap, add an AI tutor, or design/verify interactive teaching material. Triggers on "interactive lesson/textbook/course", "faraday", "teach X interactively", "turn my slides/notes into a lesson", "curriculum/roadmap", "AI tutor for my course".
+description: Help a creator turn their material or idea into interactive courseware with the Faraday CLI — design the course and learning path, design and build concept-revealing interactives, add a grounded AI tutor, and polish the visuals. Use when someone wants to teach a topic interactively, make an interactive textbook/lesson/course, turn a PDF/PPT/notes into a lesson, build a course or learning roadmap, add an AI tutor, or design/verify interactive teaching material. Triggers on "interactive lesson/textbook/course", "faraday", "teach X interactively", "turn my slides/notes into a lesson", "curriculum/roadmap", "AI tutor for my course".
 ---
 
 # Faraday — design & build interactive courseware
@@ -10,7 +10,7 @@ teacher, course author) wants to turn a topic — often with existing material �
 interactive lessons that actually teach. Help across the whole arc:
 
 1. **Discover** what they have and want (their material + a few questions).
-2. **Design** the curriculum, the learning path, each interactive, and the look.
+2. **Design** the course, the learning path, each interactive, and the look.
 3. **Build** it with the Faraday CLI (locked runtime + your authoring).
 4. **Verify** it teaches the right thing, then **ship**.
 
@@ -161,7 +161,7 @@ rest (there are no flags). Run `faraday pack list` for the live catalog and see
   (`kids`), pen notes (`notes`), pedagogy (`lecture-design`). All pre-installed;
   `faraday pack remove <name>` what a lesson doesn't use.
 - **Single lesson vs. course vs. curriculum** — one idea → one `<Lesson>`; a sequence →
-  `<Course>`; a graph with unlock progression / a roadmap map → `<CurriculumHost>` +
+  `<Course>`; a graph with unlock progression / a roadmap map → `<CourseHost>` +
   a **presentation**: built-in `linearPack`, or install one — `faraday pack add map2d`
   (2D map), or the `three` pack's `world3dPack` (3D). Design this in the Curriculum
   phase, build it per [references/worlds.md](references/worlds.md).
@@ -182,7 +182,7 @@ Design phase:
 - [references/assessment.md](references/assessment.md) — the five check forms (MCQ / numeric / sketch / mission / tutor-graded), matched to outcome verbs + audience.
 - **`lecture-design` pack** (default; `faraday pack show lecture-design` or `.faraday/packs/lecture-design/`) — the evidence-based default methodology + named methods (creator's own overrides).
 - [references/curriculum.md](references/curriculum.md) — decompose a subject → sequenced roadmap.
-- [references/orchestration.md](references/orchestration.md) — build a whole curriculum as a long-running task: persist the plan, one sub-agent per lesson, resume.
+- [references/orchestration.md](references/orchestration.md) — build a whole course as a long-running task: persist the plan, one sub-agent per lesson, resume.
 - [references/learning-design.md](references/learning-design.md) — levels, unlock gates, mastery, continuity.
 - [references/interactive-design.md](references/interactive-design.md) — design the interaction that reveals a concept.
 - [references/design.md](references/design.md) — visual/UX design within the theme system.
@@ -190,7 +190,7 @@ Design phase:
 Build API:
 - [references/packs.md](references/packs.md) — module packs: discover with `faraday pack list`, install with `faraday pack add`, read `.faraday/packs/<name>/`.
 - [references/blocks.md](references/blocks.md) — the full block API + canonical lesson shapes.
-- [references/worlds.md](references/worlds.md) — `<Course>`, `<CurriculumHost>`, **world packs** (presentation shapes), 3D moods, LMS.
+- [references/worlds.md](references/worlds.md) — `<Course>`, `<CourseHost>`, **world packs** (presentation shapes), 3D moods, LMS.
 - [references/tutor.md](references/tutor.md) — embed + ground the `tutor` pack AI, edit its persona/model.
 - [references/authoring-packs.md](references/authoring-packs.md) — **build a new pack**: the contract, the three archetypes, `faraday pack new`, the skill/quality skeleton, the eval loop.
 

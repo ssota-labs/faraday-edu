@@ -1,8 +1,8 @@
 // Example — a CURRICULUM: several lessons bundled into a navigable map with unlock
-// progression. `map2dPack` is one PRESENTATION of the curriculum (a 2D game-screen
+// progression. `map2dPack` is one PRESENTATION of the course (a 2D game-screen
 // map); swap `pack={map2dPack}` for `pack={linearPack}` (a document-style list) to
 // change the whole presentation without touching the content — the ports-and-adapters
-// seam. ("world" is just the immersive family of presentations, not the curriculum.)
+// seam. ("world" is just the immersive family of presentations, not the course.)
 //
 // This demo inlines every node's lesson in one file so it's copy-paste runnable. For
 // a REAL curriculum, put each node's lesson in its own file so lessons stay isolated
@@ -17,16 +17,16 @@
 //
 //     // in lesson.tsx:
 //     import Intro from "./nodes/intro";
-//     const curriculum: Curriculum = { title, nodes: [{ id: "intro", …, lesson: <Intro /> }] };
+//     const course: Course = { title, nodes: [{ id: "intro", …, lesson: <Intro /> }] };
 //
 // Only the `curriculum` OBJECT must live at module scope (progress is keyed on its
 // identity); the node components can be imported from anywhere. See examples/voyage-log
 // for the split in practice.
-import { CurriculumHost, useNode, type Curriculum } from "@faraday-academy/runtime/world";
+import { CourseHost, useNode, type Course } from "@faraday-academy/runtime/world";
 import { map2dPack } from "./map2d"; // first: faraday pack add map2d
 import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
 
-// A lesson rendered inside <CurriculumHost> can self-complete: pull `complete`
+// A lesson rendered inside <CourseHost> can self-complete: pull `complete`
 // from useNode() and fire it when the reader passes the quiz — that marks this
 // node done and unlocks whatever `requires` it. (The Finish button in the frame
 // stays as a manual fallback; `complete()` is idempotent.)
@@ -52,7 +52,7 @@ function Stop({ title, body }: { title: string; body: string }) {
 }
 
 // Module-level (stable identity — required by the progress store).
-const curriculum: Curriculum = {
+const course: Course = {
   title: "A tiny map course",
   nodes: [
     { id: "intro", title: "Start", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 },
@@ -72,8 +72,8 @@ const curriculum: Curriculum = {
 
 export default function MapCourse() {
   return (
-    <CurriculumHost
-      curriculum={curriculum}
+    <CourseHost
+      course={curriculum}
       pack={map2dPack}
       // LMS / Tutor AI subscribe here. v0: log the event stream.
       onEvent={(e) => console.debug("[curriculum]", e.type, "nodeId" in e ? e.nodeId : "", e.progress)}

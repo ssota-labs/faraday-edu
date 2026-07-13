@@ -13,7 +13,7 @@ import {
   Derivation,
   Lesson,
   NumericAnswer,
-  Paged,
+  SlideDeck,
   ParamSlider,
   ParamSwitch,
   Prose,
@@ -29,7 +29,7 @@ import {
   Workbench,
 } from "@/faraday/blocks";
 import { Course, useStepper } from "@/faraday/runtime";
-import { CurriculumHost, linearPack, type Curriculum } from "@/faraday/world";
+import { CourseHost, linearPack, type Course } from "@/faraday/world";
 import { ProgressDashboard, summarize, useLmsRecorder, type Learner } from "@/faraday/lms";
 
 export type Demo = { render: () => ReactNode; source: string; blurb?: string };
@@ -280,7 +280,7 @@ function CurriculumStop({ title, body }: { title: string; body: string }) {
 }
 
 // Module-level (stable identity — required by the progress store).
-const DEMO_CURRICULUM: Curriculum = {
+const DEMO_COURSE: Course = {
   title: "A tiny map course",
   nodes: [
     { id: "intro", title: "Start", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Start" body="The first stop." /> },
@@ -291,7 +291,7 @@ const DEMO_CURRICULUM: Curriculum = {
 };
 
 function CurriculumDemo() {
-  return <CurriculumHost curriculum={DEMO_CURRICULUM} pack={linearPack} onEvent={() => {}} />;
+  return <CourseHost course={DEMO_COURSE} pack={linearPack} onEvent={() => {}} />;
 }
 
 function DashboardDemo() {
@@ -302,7 +302,7 @@ function DashboardDemo() {
     { id: "m1", name: "Ada", summary: { events: 6, xp: 40, done: 3, startedAt: now - 9e5, lastActiveAt: now - 3e5, activeMs: 5.2e5, perNode: {} } },
     { id: "m2", name: "Grace", summary: { events: 3, xp: 20, done: 1, startedAt: now - 6e5, lastActiveAt: now - 12e4, activeMs: 1.8e5, perNode: {} } },
   ];
-  return <ProgressDashboard courseId="labs-demo" curriculum={DEMO_CURRICULUM} events={rec.events} learners={[you, ...roster]} />;
+  return <ProgressDashboard courseId="labs-demo" course={DEMO_COURSE} events={rec.events} learners={[you, ...roster]} />;
 }
 
 export const DEMOS: Record<string, Demo> = {
@@ -442,17 +442,17 @@ export const DEMOS: Record<string, Demo> = {
     render: () => <TeX block>{"\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}"}</TeX>,
     source: `<TeX block>{"\\\\oint \\\\vec{E}\\\\cdot d\\\\vec{A} = \\\\frac{Q}{\\\\varepsilon_0}"}</TeX>`,
   },
-  Paged: {
+  SlideDeck: {
     render: () => (
-      <Paged
-        pages={[
+      <SlideDeck
+        slides={[
           { id: "1", title: "Setup", content: <Prose>Two carts sit on a frictionless track.</Prose> },
           { id: "2", title: "Collision", content: <Prose>They collide and stick together.</Prose> },
           { id: "3", title: "Result", content: <Prose>Momentum before equals momentum after.</Prose> },
         ]}
       />
     ),
-    source: `<Paged pages={[{ id: "1", title: "Setup", content: <Prose>…</Prose> }, …]} />`,
+    source: `<SlideDeck slides={[{ id: "1", title: "Setup", content: <Prose>…</Prose> }, …]} />`,
   },
   NumericAnswer: {
     render: () => (
@@ -530,9 +530,9 @@ export const DEMOS: Record<string, Demo> = {
     source: `<Course title="…" chapters={[{ slug, title, element: <Chapter/> }, …]} />`,
   },
   host: {
-    blurb: "CurriculumHost — a graph of lessons with unlock progression + a swappable pack. Shown with linearPack; map2dPack / world3dPack render as an immersive full-screen game map (see hud).",
+    blurb: "CourseHost — a graph of lessons with unlock progression + a swappable pack. Shown with linearPack; map2dPack / world3dPack render as an immersive full-screen game map (see hud).",
     render: () => <CurriculumDemo />,
-    source: `<CurriculumHost curriculum={curriculum} pack={linearPack} onEvent={rec.onEvent} />`,
+    source: `<CourseHost course={curriculum} pack={linearPack} onEvent={rec.onEvent} />`,
   },
   hud: {
     render: () => (
@@ -542,13 +542,13 @@ export const DEMOS: Record<string, Demo> = {
         className="h-[480px] w-full rounded-lg border border-border bg-background"
       />
     ),
-    source: `<CurriculumHost curriculum={curriculum} pack={map2dPack} />
+    source: `<CourseHost course={curriculum} pack={map2dPack} />
 // map2dPack renders the immersive game screen; the host draws the HUD on top`,
   },
   ProgressDashboard: {
     render: () => <DashboardDemo />,
     source: `const rec = useLmsRecorder("id");
-<ProgressDashboard courseId="id" curriculum={c} events={rec.events} learners={[you, ...roster]} />`,
+<ProgressDashboard courseId="id" course={c} events={rec.events} learners={[you, ...roster]} />`,
   },
   "lesson-host": {
     blurb: "LessonHost — the shell every lesson mounts inside: the .style-faraday layer, a centered reading column, the light/dark toggle, and an error boundary. Shown in an isolated frame (it fills the viewport).",

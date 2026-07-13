@@ -5,7 +5,7 @@ import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Stat } from "../blocks";
-import type { Curriculum } from "../world";
+import type { Course } from "../world";
 import { summarize, type LmsEvent, type LmsSummary } from "./recorder";
 
 export interface Learner {
@@ -38,13 +38,13 @@ function Bar({ pct }: { pct: number }) {
 export function ProgressDashboard(props: {
   courseId: string;
   events: LmsEvent[];
-  curriculum?: Curriculum;
+  course?: Course;
   learners?: Learner[];
 }) {
   const me = summarize(props.events);
-  const total = props.curriculum?.nodes.length ?? me.done;
+  const total = props.course?.nodes.length ?? me.done;
   const pct = total ? Math.round((me.done / total) * 100) : 0;
-  const titleOf = (id: string) => props.curriculum?.nodes.find((n) => n.id === id)?.title ?? id;
+  const titleOf = (id: string) => props.course?.nodes.find((n) => n.id === id)?.title ?? id;
 
   const exportJson = () => {
     const blob = new Blob([JSON.stringify({ courseId: props.courseId, events: props.events }, null, 2)], {

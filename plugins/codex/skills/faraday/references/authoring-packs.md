@@ -41,15 +41,15 @@ every official pack:
 
 | `--kind` | deps | runtime does | use when | examples |
 |---|---|---|---|---|
-| **`skill`** | 0 | nothing but ships knowledge (composes blocks the runtime already has) | the capability is *how to teach/assess*, not new code | audience · lecture-design · exam · deck · kids |
+| **`skill`** | 0 | nothing but ships knowledge (composes blocks the runtime already has) | the capability is *how to teach/assess*, not new code | audience · lecture-design · exam · slide-view · kids |
 | **`copy`** | 0 | copies an **author-editable** component into `src/lesson/<name>/` | you ship source the author will edit, with no npm dep | srs · notes |
 | **`runtime`** | N | pins a published `@scope/pkg`, wires CSS, copies glue/config | the heavy code lives in a versioned package | three · tutor |
 
 Start at `skill` and only reach for `copy`/`runtime` when you genuinely ship code.
 
 **Read two built-ins before you start** — they carry conventions this guide only
-summarizes: `packages/official-packs/assessment/exam/` (a folder skill: an index
-routing to sub-guides, gradeable `quality.md`) and `packages/official-packs/component/srs/`
+summarizes: `packages/official-packs/lecture/exam/` (a folder skill: an index
+routing to sub-guides, gradeable `quality.md`) and `packages/official-packs/lecture/srs/`
 (a `copy` pack: a real author-editable component, token-only styling, a "when it
 doesn't fit" section). Match their tone and rigor and your pack drops in like the built-ins.
 

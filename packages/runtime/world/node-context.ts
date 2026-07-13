@@ -5,9 +5,9 @@ import type { NodeContextValue } from "./types";
 
 export const NodeContext = createContext<NodeContextValue | null>(null);
 
-/** A lesson rendered inside a curriculum can self-complete (e.g. after a Quiz). */
+/** A lesson rendered inside a course can self-complete (e.g. after a Quiz). */
 export function useNode(): NodeContextValue {
   const ctx = useContext(NodeContext);
-  if (!ctx) throw new Error("useNode() must be called inside a lesson rendered by <CurriculumHost>");
+  if (!ctx) throw new Error("useNode() must be called inside a lesson rendered by <CourseHost>");
   return ctx;
 }

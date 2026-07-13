@@ -1,10 +1,5 @@
-// Progress + pack-state persistence. Stage 1 = localStorage (per-browser resume).
-// The store is behind this hook so the platform phase can swap it for a tenant DB
-// without touching the core or packs (a driven-adapter seam). It persists two
-// slices: `progress` (owned by the core) and `packState` (opaque, owned by the
-// pack — avatar position, inventory, etc.).
 import { useCallback, useState } from "react";
-import type { Curriculum, Progress } from "./types";
+import type { Course, Progress } from "./types";
 import { initialProgress, markComplete } from "./progression";
 
 interface Saved {
@@ -12,7 +7,7 @@ interface Saved {
   packState: unknown;
 }
 
-function load(key: string, c: Curriculum): Saved {
+function load(key: string, c: Course): Saved {
   try {
     const raw = localStorage.getItem(key);
     if (raw) {
@@ -33,9 +28,9 @@ function save(key: string, s: Saved) {
   }
 }
 
-/** Pass a STABLE `curriculum` (module-level or useMemo'd) and a storage key. */
-export function useCurriculumState(curriculum: Curriculum, storageKey: string) {
-  const [state, setState] = useState<Saved>(() => load(storageKey, curriculum));
+/** Pass a STABLE `course` (module-level or useMemo'd) and a storage key. */
+export function useCourseState(course: Course, storageKey: string) {
+  const [state, setState] = useState<Saved>(() => load(storageKey, course));
 
   const commit = useCallback(
     (updater: (s: Saved) => Saved) =>
@@ -52,8 +47,8 @@ export function useCurriculumState(curriculum: Curriculum, storageKey: string) {
     [commit],
   );
   const complete = useCallback(
-    (nodeId: string) => commit((s) => ({ ...s, progress: markComplete(nodeId, curriculum, s.progress) })),
-    [commit, curriculum],
+    (nodeId: string) => commit((s) => ({ ...s, progress: markComplete(nodeId, course, s.progress) })),
+    [commit, course],
   );
   const addXp = useCallback(
     (xp: number) => commit((s) => ({ ...s, progress: { ...s.progress, xp: s.progress.xp + xp } })),
@@ -61,9 +56,12 @@ export function useCurriculumState(curriculum: Curriculum, storageKey: string) {
   );
   const setPackState = useCallback((packState: unknown) => commit((s) => ({ ...s, packState })), [commit]);
   const reset = useCallback(
-    () => commit(() => ({ progress: initialProgress(curriculum), packState: null })),
-    [commit, curriculum],
+    () => commit(() => ({ progress: initialProgress(course), packState: null })),
+    [commit, course],
   );
 
   return { progress: state.progress, packState: state.packState, focus, complete, addXp, setPackState, reset };
 }
+
+/** @deprecated Use useCourseState */
+export const useCurriculumState = useCourseState;

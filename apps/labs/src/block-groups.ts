@@ -11,7 +11,7 @@ export const BLOCK_GROUPS: BlockGroupDef[] = [
     title: "Structure · 구조",
     dot: "var(--chart-1)",
     blurb: "The page skeleton — the frame, text, and reading-surface layout everything else sits inside.",
-    members: ["Lesson", "Prose", "Stage", "Paged"],
+    members: ["Lesson", "Prose", "Stage", "SlideDeck"],
   },
   {
     id: "model",

@@ -1,0 +1,13 @@
+{
+  "name": "slide-view",
+  "displayName": "Slide view",
+  "description": "Deliver a lecture as a slide-view presentation — one idea per screen, prev/next, motion. Skill-only: composes the runtime's <SlideDeck> + motion, no new deps. Folder skill with an index that routes to sub-guides.",
+  "default": true,
+  "runtime": {},
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the lecture should use a slide view — one idea per screen, paced with prev/next, for a talk, a kiosk, or a tablet"
+  },
+  "quality": "quality.md"
+}

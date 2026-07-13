@@ -37,7 +37,7 @@ capabilities afterward with `faraday pack add <name>` (e.g. `three`, `three
 5. `pnpm dev` — read the Local URL, drive every control, fix console errors.
    **Never claim success from `check` alone.**
 
-## A whole curriculum (long-running)
+## A whole course (long-running)
 
 Building many lessons is a long-running task — don't hold it all in one context.
 

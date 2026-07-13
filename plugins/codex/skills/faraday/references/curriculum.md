@@ -32,7 +32,7 @@ the `lecture-design` pack for the evidence.
    these make a roadmap richer than a straight line.
 5. **Pick the shape:**
    - a **linear** sequence → `<Course>` (chapters, prev/next).
-   - a **graph** with prerequisites / a game-like map → `<CurriculumHost>` + a pack;
+   - a **graph** with prerequisites / a game-like map → `<CourseHost>` + a pack;
      the `requires: [...]` field on each node encodes the dependency edges.
 
 ## Visualize the roadmap and get sign-off — before building lessons
@@ -41,7 +41,7 @@ Don't silently build 12 lessons off an outline in your head. Make the roadmap
 **visible and confirmable** first, using whichever fits:
 
 - a **dependency outline / tree** (or a quick diagram) the creator can read and edit;
-- or **scaffold the `<CurriculumHost>` with stub lessons** (title + one line each) so
+- or **scaffold the `<CourseHost>` with stub lessons** (title + one line each) so
   they literally see the map/nodes and unlock order, then fill lessons in after they
   approve the structure.
 
@@ -67,7 +67,7 @@ order is itself a teaching aid. Omit `meta` for an auto layout while drafting.
 
 ## Then build it
 
-Implement the chosen shape with the world API — `<Course>`, `<CurriculumHost>`,
+Implement the chosen shape with the world API — `<Course>`, `<CourseHost>`,
 `linearPack`/`map2dPack`/`world3dPack`, `requires`, node `reward.xp` — see
 [worlds.md](worlds.md). Turn the roadmap into an actual *progression* (levels,
 mastery gates, continuity) with [learning-design.md](learning-design.md).

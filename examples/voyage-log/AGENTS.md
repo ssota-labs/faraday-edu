@@ -67,7 +67,7 @@ Import from `@faraday-academy/runtime/blocks`; raw shadcn primitives are in `@fa
   MCQ closing a compute/do/predict outcome under-tests it):
   - `<Quiz question options onCorrect?>` — recognition MCQ; distractors are
     documented misconceptions, hints are feed-forward. `onCorrect` →
-    `useNode().complete()` gates a curriculum node.
+    `useNode().complete()` gates a course node.
   - `<NumericAnswer question answer tolerance? unit? hint? onCorrect?>` — the
     learner computes and types the number (default tolerance 2%).
   - `<SketchPad prompt background? overlay onSelfAssess?>` — draw the
@@ -95,7 +95,7 @@ Import from `@faraday-academy/runtime/blocks`; raw shadcn primitives are in `@fa
 - `<Readout label value tone?>` — a compact label:value chip for live numbers.
   Put readouts in the Workbench `hud` slot (overlaid on the canvas), not as a
   row of `<Stat>` cards after the figure.
-- `<Paged pages height? onLastPage?>` — tablet-style screen-at-a-time layout:
+- `<SlideDeck pages height? onLastSlide?>` — tablet-style screen-at-a-time layout:
   each page (`{id, title?, content}`) fills the viewport height; prev/next, dot
   rail, arrow keys. Only the active page stays mounted. Use when the audience
   wants one idea per screen (young learners, kiosk/tablet); the default lesson

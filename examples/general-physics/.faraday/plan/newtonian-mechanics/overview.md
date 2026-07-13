@@ -11,7 +11,7 @@
   relationships and compute with the constant-acceleration equations; (b) apply Newton's
   three laws — inertia/equilibrium, F=ma, action-reaction — to force problems; and (c)
   combine them to analyze friction on an incline (find the critical slip angle).
-- **Scope:** one 6-node **unit** → `<CurriculumHost>` + `map2dPack` (immersive 2D map).
+- **Scope:** one 6-node **unit** → `<CourseHost>` + `map2dPack` (immersive 2D map).
 - **Source:** standard general-physics canon (no creator artefact supplied). Physics is
   well-established; every quantitative claim is derived here and spot-checked by hand —
   nothing left unverified.
@@ -21,7 +21,7 @@
 
 ## Pack decisions
 
-- **map2d** — used, as the curriculum presentation (`map2dPack`). Immersive game screen.
+- **map2d** — used, as the course presentation (`map2dPack`). Immersive game screen.
 - **audience**, **lecture-design** — design-time methodology packs (not runtime).
 - **three / physics / tutor** — NOT used. Newtonian mechanics at this level is fully
   served by 2D SVG + `useRafLoop` scripted motion; no genuine 3D or rigid-body engine is
@@ -68,5 +68,5 @@ friction (68,72) · incline (88,50).
 
 - Each node lesson lives in its own file `src/lesson/nodes/<id>.tsx` (export default).
 - Module-scope `curriculum` object assembled in `src/lesson/lesson.tsx`, rendered by
-  `<CurriculumHost curriculum={curriculum} pack={map2dPack} />` (import `map2dPack` from
+  `<CourseHost course={curriculum} pack={map2dPack} />` (import `map2dPack` from
   `./map2d`). Every node carries `summary`, `reward.xp`, `meta.{x,y}`, `requires`.

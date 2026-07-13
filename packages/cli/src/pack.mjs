@@ -22,6 +22,9 @@ const execFileP = (cmd, args, opts) =>
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/** Deprecated pack names → current official name. */
+const PACK_ALIASES = { deck: "slide-view" };
+
 // Where the CLI finds the OFFICIAL packs, in priority order:
 //   1. `<repo>/packages/official-packs` — the source of truth in the workspace (dev)
 //   2. `<cli>/packs`                    — bundled copy (published tarball)
@@ -89,6 +92,7 @@ export async function listPacks(root = PACKAGE_ROOT) {
  * if a bare name is ambiguous across categories.
  */
 export async function findOfficialPackDir(source, root = PACKAGE_ROOT) {
+  source = PACK_ALIASES[source] ?? source;
   const base = await packsRoot(root);
   if (source.includes("/")) {
     const packDir = path.join(base, source);
@@ -567,6 +571,9 @@ async function resolveNpm(spec, log) {
  */
 export async function resolvePack(source, opts = {}) {
   const { templateRoot, log } = opts;
+  const aliased = PACK_ALIASES[source];
+  if (aliased && log) log(`Note: pack "${source}" is now "${aliased}".\n`);
+  source = aliased ?? source;
   // Official packs live in a category-foldered tree. Both a bare name (`three`)
   // and a qualified `category/name` (`runtime/three`) resolve here — and the tree
   // is checked BEFORE a slashy source is treated as `owner/repo` (github), so a

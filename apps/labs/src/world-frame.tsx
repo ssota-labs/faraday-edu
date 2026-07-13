@@ -3,7 +3,7 @@
    mounted on its own via `?frame=world` (see main.tsx) and embedded in the labs
    preview through an <iframe>, which contains the fixed positioning. */
 import { LessonHost } from "@/faraday/runtime";
-import { CurriculumHost, useNode, type Curriculum } from "@/faraday/world";
+import { CourseHost, useNode, type Course } from "@/faraday/world";
 import { map2dPack } from "./pack-map2d";
 import { Callout, Lesson, Prose, Quiz, Stat } from "@/faraday/blocks";
 
@@ -30,7 +30,7 @@ function Stop({ title, body }: { title: string; body: string }) {
 }
 
 // Module-level (stable identity — required by the progress store).
-const CURRICULUM: Curriculum = {
+const CURRICULUM: Course = {
   title: "A voyage across the map",
   nodes: [
     { id: "intro", title: "Depart", summary: "Cast off — the journey begins.", meta: { x: 12, y: 50 }, reward: { xp: 10 }, lesson: <Stop title="Depart" body="Every voyage starts at the harbour." /> },
@@ -42,7 +42,7 @@ const CURRICULUM: Curriculum = {
 };
 
 export function WorldFrame() {
-  return <CurriculumHost curriculum={CURRICULUM} pack={map2dPack} onEvent={() => {}} />;
+  return <CourseHost course={CURRICULUM} pack={map2dPack} onEvent={() => {}} />;
 }
 
 // LessonHost fills the viewport (min-h-screen) and owns its own theme toggle, so

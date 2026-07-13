@@ -45,7 +45,7 @@ Still open — optional `refX`/`refY` or children slot.
 
 Now `Segmented<T extends string>` with shared `T` on value/onChange/options.
 
-## 8. `useNode()` requires a curriculum host (annoying, correct-but-surprising)
+## 8. `useNode()` requires a course host (annoying, correct-but-surprising)
 
 Still open — consider no-op + warn, or `<IsolatedNodePreview>`.
 
@@ -55,7 +55,7 @@ Still open — optional `footer` slot for Stats under the canvas.
 
 ## 10. Curriculum-object identity gotcha — ✅ soft-fixed
 
-`CurriculumHost` now warns in dev when identity flips with the same title.
+`CourseHost` now warns in dev when identity flips with the same title.
 Docs/skills stress module-scope. Defensive memoise still optional.
 
 ## 11. `mood="neutral"` silent default — ✅ soft-fixed

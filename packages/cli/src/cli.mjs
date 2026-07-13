@@ -153,7 +153,7 @@ each other; if they link, they link by URL.
 ## Working here
 
 - **Add an app:** \`faraday new <name>\` → scaffolds \`apps/<name>/\`.
-- **Design & build a curriculum** inside an app: read the app's \`AGENTS.md\`, pin the
+- **Design & build a course** inside an app: read the app's \`AGENTS.md\`, pin the
   audience, then plan in \`apps/<app>/.faraday/plan/<plan>/\` before authoring lessons.
   See \`references/orchestration.md\` in the faraday skill for the plan→build loop.
 - **One idea per lesson node**, one file per node under \`src/lesson/nodes/\`. Keep the
@@ -349,7 +349,7 @@ async function runPackList(argv, context) {
   }
   // Group by category for a readable catalog. Known categories lead in a sensible
   // order; anything else (incl. uncategorized) falls to the end.
-  const ORDER = ["curriculum", "component", "runtime", "assessment", "methodology"];
+  const ORDER = ["course", "lecture", "runtime", "methodology"];
   const groups = new Map();
   for (const p of packs) {
     const key = p.category ?? "other";

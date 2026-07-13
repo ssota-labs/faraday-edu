@@ -2,7 +2,7 @@
 
 Capabilities beyond a plain 2D lesson are **module packs**: self-contained units
 (a `pack.json` manifest + runtime code + a skill guide). `faraday new` is
-batteries-included — it auto-installs all nine (skill + runtime), so every
+batteries-included — it auto-installs all default packs (skill + runtime), so every
 capability is on hand from the start. `faraday pack add` installs one individually
 (a third-party pack, or re-adding a removed one). This is the CLI's extension
 mechanism — the skill's job is to know packs exist, use the right ones, then
@@ -10,17 +10,17 @@ mechanism — the skill's job is to know packs exist, use the right ones, then
 
 > **Packs are grouped by category** — official packs live in a category folder
 > (`packages/official-packs/<category>/<name>/`) and `faraday pack list` groups by it.
-> Add by bare name (`faraday pack add three`) or, if two categories ever share a name,
-> qualify it (`faraday pack add runtime/three`):
-> - **curriculum** — how a `<CurriculumHost>` is drawn (`map2d`). **Opt-in**
->   (`faraday pack add map2d`) — you pick one per curriculum; the built-in `linearPack`
->   needs no pack, and `world3d` rides with the `three` pack. See [worlds.md](worlds.md).
-> - **component** — UI you drop into a lesson (`srs`, `notes`, `deck`, `kids`).
+> Add by bare name (`faraday pack add three`) or qualify (`faraday pack add runtime/three`).
+> Terminology: [specs/terminology.md](../../../../specs/terminology.md).
+> - **course** — how a **course** is navigated (`map2d` course shell). **Opt-in**
+>   (`faraday pack add map2d`); built-in `linearPack` needs no pack; `world3d` rides with `three`.
+>   See [worlds.md](worlds.md).
+> - **lecture** — lecture presentations and tools (`slide-view`, `textbook-view`, `srs`,
+>   `notes`, `exam`, `kids`).
 > - **runtime** — engines / durable services (`three`, `tutor`).
-> - **assessment** — test builders (`exam`).
 > - **methodology** — pedagogy knowledge, skill-only (`audience`, `lecture-design`).
 >
-> All except the curriculum packs are default-installed (batteries-included).
+> All except opt-in course shells are default-installed (batteries-included).
 
 ## The loop
 
@@ -48,13 +48,14 @@ faraday pack add ./path | owner/repo | npm:@scope/pack   # third-party sources
 | `tutor` | the reader benefits from **asking questions** — a durable, grounded chat tutor beside the content. |
 | `srs` | the goal is **memorization/recall** (vocabulary, facts, formulas) — spaced-repetition flashcards. |
 | `exam` | a practice test / mock exam across a topic — blueprint → items → scoring. |
-| `deck` | slideshow delivery — one idea per screen, prev/next, animation. |
-| `kids` | a young-learner tablet lesson — CRA, big targets, celebration. |
+| `textbook-view` | textbook view — A4 self-study column, scroll, free-mode margin notes. |
+| `slide-view` | slide view presentation — one idea per screen, prev/next, animation. (`deck` aliases here.) |
+| `kids` | a young-learner tablet lecture — CRA, big targets, celebration. |
 | `notes` | handwriting / sketch on a stylus — a full-page pen ink canvas. |
 | `lecture-design` · `audience` | **designing how it teaches** — pedagogy + per-audience methodology. |
 
 There are **no capability flags** on `faraday new` — and no need for them: `new` is
-**batteries-included**, auto-installing all nine packs (skill + runtime). Use
+**batteries-included**, auto-installing default packs (skill + runtime). Use
 `--no-defaults` for a minimal lesson, and `faraday pack remove <name>` to drop what a
 finished lesson doesn't need (e.g. the heavy `three`/`tutor` runtimes) before shipping.
 

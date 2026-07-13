@@ -9,4 +9,4 @@ The formal basis for dependency-graph curricula is Knowledge Space Theory (Doign
 prerequisites are all mastered — is what they're ready for next.
 
 → **Faraday:** `requires: [...]` edges + `<Quiz onCorrect={complete}>` gates in
-`<CurriculumHost>`; the map's unlocked nodes *are* the frontier.
+`<CourseHost>`; the map's unlocked nodes *are* the frontier.

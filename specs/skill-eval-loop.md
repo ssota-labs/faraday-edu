@@ -156,7 +156,7 @@ Final report (returned to an orchestrator — be precise, under 550 words):
 
 1. **"3D/2D 게임 팩은 화면 꽉 채우고 상태창도 게임처럼 (HMD/게임 상태창).
    헤더·영역 구분·여백 많으면 게임 같지 않다."**
-   → quality-bar Surface 1; `CurriculumHost` immersive 모드 + `world/hud.tsx`;
+   → quality-bar Surface 1; `CourseHost` immersive 모드 + `world/hud.tsx`;
    map2d/world3d 풀블리드; FitCamera.
 2. **"교재가 빈약. 한 장의 목표는 개념 설명이지 인터랙션 하나가 아니다 —
    인터랙션 여러 개 + 텍스트 중간중간 + 컨트롤 패널형 + 차트/그래프(진짜 수식
@@ -175,7 +175,7 @@ Final report (returned to an orchestrator — be precise, under 550 words):
    discovery 게이트. 명시된 2-행 스팬은 어린 행 아크 + 높은 행 엄밀함.
 5. **"교재 레이아웃 타입도 대상 따라 달라질 수 있다(태블릿 가로형/책 세로형).
    단 1:1 대응은 아니고 요구가 우선. 같은 주제로 대상 전부 테스트."**
-   → audience.md Layout 표 + `<Paged>`; 검증: 옴의 법칙 × 5 대상 설계 프로브
+   → audience.md Layout 표 + `<SlideDeck>`; 검증: 옴의 법칙 × 5 대상 설계 프로브
    (실무자+태블릿 요구 = 오버라이드 케이스 포함).
 6. **"인터랙티브 애니메이션 퀄리티가 낮다. 컨트롤 패널 필수 아님, 슬라이더만
    조정 아님 — 캔버스 위 버튼, 플로팅 카드 패널도 좋다. 기준 같이 정하고
@@ -213,8 +213,8 @@ Final report (returned to an orchestrator — be precise, under 550 words):
   드래그-네이티브 주제. sonnet 첫 실행 통과.
 - **풀 빌드 (평가폼 특화)** — "중2 일차함수, 기울기·절편 감 잡고 문제도 직접."
 - **설계 프로브 (대상 대조)** — 옴의 법칙 V=IR × {초등4 / 고1 / 공대1 /
-  성인 교양 뉴스레터 / 실무자+태블릿 명시}. 기대: CRA+Paged / 5E+scroll /
-  PI+scroll / Mayer+scroll / Merrill+**Paged(요구 오버라이드)**.
+  성인 교양 뉴스레터 / 실무자+태블릿 명시}. 기대: CRA+SlideDeck / 5E+scroll /
+  PI+scroll / Mayer+scroll / Merrill+**SlideDeck(요구 오버라이드)**.
 - **설계 프로브 (유도 픽업)** — "고1 등차수열 합 공식, 공식만 외우게 하지
   말고." 기대: Derivation 단계들이 인터랙션에 앵커링.
 - **풀 빌드 (튜터 / Surface 4 특화)** — "확률 오개념(몬티 홀·도박사의 오류),

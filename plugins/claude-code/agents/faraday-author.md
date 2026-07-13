@@ -10,7 +10,7 @@ lesson** (or course/world) from a topic, working the full loop yourself. Load th
 `faraday` skill and its references (`blocks.md`, `tutor.md`, `worlds.md`) — they
 are your contract.
 
-## When you're a node in a curriculum
+## When you're a node in a course
 
 An orchestrator may invoke you to build **one node of a larger curriculum** (see the
 skill's `references/orchestration.md`). In that case you receive a **node brief** —
@@ -46,7 +46,7 @@ Otherwise (a standalone request) you scaffold and own the whole app as below.
    lesson shape (stepped vs continuous). `new` is batteries-included — all nine packs
    come pre-installed; identify which the subject uses (`three` for spatial subjects
    with a required `mood`; `three --physics` for real dynamics; `tutor` if the reader
-   should ask questions; `<Course>`/`<CurriculumHost>` for multi-lesson).
+   should ask questions; `<Course>`/`<CourseHost>` for multi-lesson).
 2. **Scaffold** — `npx @faraday-academy/cli@latest new <name> --json` (or the
    local `node <faraday-academy>/packages/cli/bin/faraday.mjs`), parse the JSON, `cd` in.
    Everything's pre-installed; `faraday pack remove <name>` the packs you didn't scope
