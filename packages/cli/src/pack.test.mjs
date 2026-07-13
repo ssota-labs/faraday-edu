@@ -32,7 +32,7 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "notes", "map2d", "game2d", "storybook-game2d"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "notes", "map2d", "game2d", "storybook-game2d", "stem-methods"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
   assert.ok(!names.includes("kids"), "kids was folded into storybook-game2d");
@@ -265,7 +265,7 @@ test("resolvePack classifies official names and local paths", async () => {
 
 // Opt-in packs: shipped but NOT default. Presentations are a pick-one choice you
 // add (`faraday pack add <name>`), unlike the batteries-included capability packs.
-const OPT_IN_PACKS = ["map2d"];
+const OPT_IN_PACKS = ["map2d", "stem-methods"];
 
 test("default packs: every capability pack is default, presentations are opt-in", async () => {
   const defaults = await defaultPackNames();

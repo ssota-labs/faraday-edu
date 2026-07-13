@@ -2,7 +2,7 @@
 // CourseHost — locked core shell for a course (lecture graph). Owns progress,
 // course-shell↔lecture toggle, HUD, completion, and LMS/tutor event stream.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowCounterClockwiseIcon, CaretLeftIcon, CheckIcon, MapTrifoldIcon } from "@phosphor-icons/react";
+import { ArrowCounterClockwiseIcon, CaretLeftIcon, CheckIcon } from "@phosphor-icons/react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import type { Course, CourseEvent, NodeContextValue, WorldPack } from "./types";
@@ -69,16 +69,27 @@ export function CourseHost(props: {
     const isDone = progress.completed.includes(node.id);
     const ctx: NodeContextValue = {
       nodeId: node.id,
+      nodeTitle: node.title,
+      exit: () => setEntered(null),
       complete: () => {
         finishNode(node.id);
         setEntered(null);
       },
     };
+    if (immersive) {
+      return (
+        <NodeContext.Provider value={ctx}>
+          <div className="fixed inset-0 z-40 bg-background">
+            {node.lesson ?? <p className="p-6 text-muted-foreground">This lecture has no content yet.</p>}
+          </div>
+        </NodeContext.Provider>
+      );
+    }
     return (
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between gap-2 border-b pb-3">
           <Button variant="ghost" size="sm" onClick={() => setEntered(null)}>
-            {immersive ? <MapTrifoldIcon /> : <CaretLeftIcon />} {immersive ? "Map" : "Back"}
+            <CaretLeftIcon /> Back
           </Button>
           <span className="truncate text-sm font-medium text-muted-foreground">{node.title}</span>
           <Button size="sm" disabled={isDone} onClick={() => { finishNode(node.id); setEntered(null); }}>

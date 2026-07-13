@@ -17,8 +17,8 @@ skeleton, the quality/eval discipline).
 ## Before you write anything
 
 Official packs live in category folders — `packages/official-packs/<category>/<name>/`
-(categories: `curriculum`, `component`, `runtime`, `assessment`, `methodology`). Read
-two built-ins as working models — do not skip this:
+(categories: `course`, `lecture`, `runtime`, `methodology`). Read two built-ins as
+working models — do not skip this:
 - `packages/official-packs/lecture/exam/` — a **folder skill**: `SKILL.md` index
   routing to focused sub-guides, a gradeable `quality.md`.
 - `packages/official-packs/lecture/srs/` — a **copy** pack: a real author-editable
@@ -83,9 +83,31 @@ published package). Default to a folder skill.
 6. **Self-grade against `quality.md`.** Read your own bar and honestly grade the
    example against each rule. If any rule fails, revise until it passes. This is the
    eval loop applied to your own fixture; don't grade yourself a pass you didn't earn.
-7. **Report.** What the pack is, where it lives, the archetype, and the results of
-   steps 3–6 (validate output, typecheck result, render/visual result, per-rule
-   quality grade). Name any limitation honestly — especially a skipped visual pass.
+7. **Labs wire-up (official packs in this monorepo only).** Skip if the pack lives
+   outside `packages/official-packs/` — third-party packs have no labs.
+   - **Catalog card — automatic.** Labs auto-discovers every
+     `packages/official-packs/**/pack.json` at build time. Ensure `displayName` and
+     `description` in `pack.json` are final, then verify the pack appears under
+     **Skills & Packs → Official packs** in
+     `pnpm --filter @faraday-academy/labs dev`.
+   - **Live preview — only when the pack ships renderable UI** (`copy` or `runtime`
+     archetype; `skill`-only packs need no preview):
+     | Situation | What to add |
+     |---|---|
+     | `copy` pack with a lesson component | A demo in `apps/labs/src/stories.tsx`
+     (or `apps/labs/src/pack-<name>.tsx` imported from stories). Import the component
+     from `packages/official-packs/<category>/<name>/runtime/<name>/` — labs can reach
+     the source tree directly. Pattern: existing block demos in `stories.tsx`. |
+     | World / course renderer (`map2d` style) | Vendored labs copy + wire into
+     `world-frame.tsx` / `LayoutsView` — see `apps/labs/src/pack-map2d.tsx`. |
+     | `runtime` pack (`three`, `tutor`) | Add the pinned deps to
+     `apps/labs/package.json` if missing, then add a story. Heavier — only when the
+     3D/tutor UI is worth previewing in the catalog. |
+   - Run `pnpm --filter @faraday-academy/labs typecheck` after any labs edits.
+8. **Report.** What the pack is, where it lives, the archetype, and the results of
+   steps 3–7 (validate output, typecheck result, render/visual result, per-rule
+   quality grade, labs wire-up status). Name any limitation honestly — especially a
+   skipped visual pass or a skill-only pack that has a catalog card but no live preview.
 
 ## Rules
 
