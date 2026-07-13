@@ -39,7 +39,8 @@ API (from `src/lesson/game2d`):
 
 ## Specialized packs
 
-- **`storybook-game2d`** — page-turn story shell (requires `game2d`)
+- **`storybook-game2d`** — page-turn story / fairy-tale shell (absorbs the old
+  `kids` tablet preset). Installs `game2d` via `requires`.
 - **`sim2d`** — formula SVG simulations in Workbench (requires neither `game2d` nor runtime motion hooks)
 
 ## Quality gate

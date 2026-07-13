@@ -413,6 +413,7 @@ flowchart LR
 | **렉쳐 구성** | `lecture-design` — 교수법 & 교육학 | ✅ 제공 중 · **default** | 스킬-온리 폴더 (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
 | **대상(Audience)** | `audience` — 학습자별 전달 방법론 | ✅ 제공 중 · **default** | 스킬-온리 (CRA / 5E / Peer Instruction / Mayer / Merrill + 레이아웃) |
 | **슬라이드 뷰** | `slide-view` — 애니메이션 슬라이드 프레젠테이션 | ✅ 제공 중 | 폴더 스킬 (슬라이드 디자인 → 모션 → 페이싱), `<SlideDeck>` + 모션 조합, deps 0개 |
+| **2D 시뮬** | `sim2d` — SVG + GSAP | ✅ 제공 중 | 공식 기반 시뮬레이션; runtime motion 훅 대체 |
 | **2D 게임** | `game2d` — PixiJS 스테이지 | ✅ 제공 중 | Pixi v8 + Matter + Howler; `src/lesson/game2d`에 저자 편집 글루 |
 | **스토리북 2D** | `storybook-game2d` | ✅ 제공 중 | `game2d` 위 페이지형 동화 셸 (구 `kids` 흡수); CRA + 큰 타깃 |
 | **시험** | `exam` — 실전 / 모의고사 | ✅ 제공 중 | 폴더 스킬 (블루프린트 → 문항 → 채점 → 무결성), 평가 블록 조합, deps 0개 |
