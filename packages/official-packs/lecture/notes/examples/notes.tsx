@@ -1,14 +1,14 @@
 // Example handwriting lesson using the `notes` pack — reference only, copied to
 // docs/examples/. A full-page pen notebook beside a prompt; import path assumes the
 // pack installed its component at src/lesson/notes/.
-import { Lesson, Paged, Prose } from "@faraday-academy/runtime/blocks";
+import { Lesson, SlideDeck, Prose } from "@faraday-academy/runtime/blocks";
 import { Notebook } from "./notes/Notebook";
 
 export default function KanjiWriting() {
   return (
     <Lesson title="Write the kanji: 水 (water)">
-      <Paged
-        pages={[
+      <SlideDeck
+        slides={[
           {
             id: "trace",
             title: "Trace it",

@@ -23,7 +23,7 @@ it **builds on the `audience` pack's CRA row** — load that first
 
 ## Build recipe (composes existing blocks)
 
-- **`<Paged>`** — one idea per screen (the spine).
+- **`<SlideDeck>`** — one idea per screen (the spine).
 - **`<SketchPad>`** — draw/trace to answer (predict-by-drawing); great for pre-writing
   learners.
 - **`<Challenge>`** — the "do it" mission cleared in a `<Workbench>`; the concrete

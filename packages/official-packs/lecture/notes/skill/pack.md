@@ -30,12 +30,12 @@ import { Notebook } from "./notes/Notebook";
   (`PointerEvent.pressure`), so Apple Pencil / stylus feels natural.
 - `touch-action: none` is set so a finger/stylus draws instead of scrolling —
   place the notebook where the page itself doesn't need to scroll under it (a
-  `<Paged>` screen is ideal).
+  `<SlideDeck>` screen is ideal).
 
 ## Composing
 
 - Put a `<Notebook>` beside a prompt/figure in a landscape split, or full-width on
-  its own `<Paged>` screen ("write the character three times").
+  its own `<SlideDeck>` screen ("write the character three times").
 - For a *checked* outcome, pair a `<Notebook>` (practice) with a `<Quiz>`/
   `<Challenge>` (the gate) — the notebook itself isn't auto-graded.
 - The component is yours: edit `Notebook.tsx` for lined/grid paper, export, etc.

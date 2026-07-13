@@ -1,14 +1,14 @@
 // Example mock exam using the `exam` pack — reference only, copied to docs/examples/.
 // It composes the runtime's existing assessment blocks into a blueprint-driven test:
-// one item per screen (`<Paged>`), sections by outcome, review revealed on submit.
-import { Lesson, Paged, Quiz, NumericAnswer, Challenge, Reveal, Prose } from "@faraday-academy/runtime/blocks";
+// one item per screen (`<SlideDeck>`), sections by outcome, review revealed on submit.
+import { Lesson, SlideDeck, Quiz, NumericAnswer, Challenge, Reveal, Prose } from "@faraday-academy/runtime/blocks";
 
 // Blueprint: read (20%, 1) · convert (40%, 2) · debug (40%, 1) — abbreviated for the demo.
 export default function BinaryMockExam() {
   return (
     <Lesson title="Binary numbers — mock exam">
-      <Paged
-        pages={[
+      <SlideDeck
+        slides={[
           {
             id: "intro",
             title: "Before you start",

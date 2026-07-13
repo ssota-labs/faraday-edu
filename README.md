@@ -181,7 +181,7 @@ lesson blocks, grouped by what they do:
 
 | Group | Blocks | For |
 |---|---|---|
-| **Layout & canvas** | `<Lesson>` `<Prose>` `<Stage>` `<Workbench>` `<ControlGroup>` `<Paged>` | Structure the page; `<Workbench>` is the live canvas + floating controls; `<Paged>` is a screen-at-a-time (tablet / slideshow) layout. |
+| **Layout & canvas** | `<Lesson>` `<Prose>` `<Stage>` `<Workbench>` `<ControlGroup>` `<SlideDeck>` | Structure the page; `<Workbench>` is the live canvas + floating controls; `<SlideDeck>` is a screen-at-a-time (tablet / slideshow) layout. |
 | **Live controls** | `<ParamSlider>` `<ParamSwitch>` `<Segmented>` `<Scrubber>` + `useStepper` `<Readout>` `<Chart>` `<Stat>` | The knobs the reader turns and the numbers / plots that react in real time. |
 | **Assessment** | `<Quiz>` `<NumericAnswer>` `<Challenge>` `<SketchPad>` | Recognize (MCQ), compute (typed answer), *do* (a mission you clear in the sim), predict (pen / Apple-Pencil sketch vs. a revealed answer). |
 | **Explanation** | `<Derivation>` `<TeX>` `<CodeCell>` `<Reveal>` `<Compare>` `<Callout>` | Formulas derived line-by-line, KaTeX math, a runnable JS cell, progressive reveals and side-by-sides. |

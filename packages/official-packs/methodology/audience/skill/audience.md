@@ -137,7 +137,7 @@ children's read-aloud storybook may scroll):
 | Layout | What it is | Build with |
 |---|---|---|
 | **Book scroll** (vertical) | The default reading column — long-form prose + embedded instruments, scrolled like a chapter. | `<Lesson>` as-is |
-| **Paged / tablet** (screen-at-a-time) | Each page fills the viewport, one idea per screen, prev/next + dots + arrow keys; landscape split (canvas ⇄ prose) inside a page. | `<Paged pages={…}>` inside `<Lesson>` |
+| **Slide deck / tablet** (screen-at-a-time) | Each slide fills the viewport, one idea per screen, prev/next + dots + arrow keys; landscape split (canvas ⇄ prose) inside a slide. | `<SlideDeck slides={…}>` inside `<Lesson>` |
 | **Chaptered course** | Several scroll lessons behind a chapter nav. | `<Course>` |
 | **Game world** | Full-viewport map/constellation with HUD; lessons open per node. | `<CurriculumHost>` + game pack |
 

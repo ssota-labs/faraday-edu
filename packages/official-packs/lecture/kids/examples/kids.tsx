@@ -1,13 +1,13 @@
 // Example tablet lesson for young learners using the `kids` pack — reference only,
 // copied to docs/examples/. CRA order (concrete → picture → symbol), one idea per
 // screen, big targets, a draw-to-answer check. Composes existing blocks, no deps.
-import { Lesson, Paged, Prose, Workbench, Challenge, SketchPad, Quiz } from "@faraday-academy/runtime/blocks";
+import { Lesson, SlideDeck, Prose, Workbench, Challenge, SketchPad, Quiz } from "@faraday-academy/runtime/blocks";
 
 export default function CountingByTens() {
   return (
     <Lesson title="Counting by tens 🖐️">
-      <Paged
-        pages={[
+      <SlideDeck
+        slides={[
           {
             id: "concrete",
             title: "Grab ten",

@@ -26,7 +26,7 @@ memorization use the `srs` pack.
 
 An exam is a sequence of the assessment blocks the runtime already ships —
 `<Quiz>` (MCQ), `<NumericAnswer>` (compute), `<Challenge>` (do-it missions) —
-grouped into sections per the blueprint, usually inside a `<Paged>` (one item per
+grouped into sections per the blueprint, usually inside a `<SlideDeck>` (one item per
 screen) or a `<Course>` (sections as chapters). No new dependencies. Gate the
 final "score" node on completion, and put the review after submission.
 

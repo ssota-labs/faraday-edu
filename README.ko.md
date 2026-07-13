@@ -185,7 +185,7 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
 
 | 그룹 | 블록 | 용도 |
 |---|---|---|
-| **레이아웃 & 캔버스** | `<Lesson>` `<Prose>` `<Stage>` `<Workbench>` `<ControlGroup>` `<Paged>` | 페이지 구성. `<Workbench>`는 살아있는 캔버스 + 떠 있는 컨트롤, `<Paged>`는 화면 단위(태블릿 / 슬라이드쇼) 레이아웃. |
+| **레이아웃 & 캔버스** | `<Lesson>` `<Prose>` `<Stage>` `<Workbench>` `<ControlGroup>` `<SlideDeck>` | 페이지 구성. `<Workbench>`는 살아있는 캔버스 + 떠 있는 컨트롤, `<SlideDeck>`는 화면 단위(태블릿 / 슬라이드쇼) 레이아웃. |
 | **실시간 컨트롤** | `<ParamSlider>` `<ParamSwitch>` `<Segmented>` `<Scrubber>` + `useStepper` `<Readout>` `<Chart>` `<Stat>` | 독자가 돌리는 노브와, 거기에 실시간으로 반응하는 숫자 / 그래프. |
 | **평가** | `<Quiz>` `<NumericAnswer>` `<Challenge>` `<SketchPad>` | 인식(객관식), 계산(직접 입력), *수행*(시뮬레이션에서 클리어하는 미션), 예측(펜 / Apple Pencil 스케치 vs 정답 공개). |
 | **설명** | `<Derivation>` `<TeX>` `<CodeCell>` `<Reveal>` `<Compare>` `<Callout>` | 한 줄씩 유도되는 수식, KaTeX 수학, 실행 가능한 JS 셀, 점진적 공개와 나란히 비교. |

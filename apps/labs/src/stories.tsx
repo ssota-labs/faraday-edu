@@ -13,7 +13,7 @@ import {
   Derivation,
   Lesson,
   NumericAnswer,
-  Paged,
+  SlideDeck,
   ParamSlider,
   ParamSwitch,
   Prose,
@@ -442,17 +442,17 @@ export const DEMOS: Record<string, Demo> = {
     render: () => <TeX block>{"\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}"}</TeX>,
     source: `<TeX block>{"\\\\oint \\\\vec{E}\\\\cdot d\\\\vec{A} = \\\\frac{Q}{\\\\varepsilon_0}"}</TeX>`,
   },
-  Paged: {
+  SlideDeck: {
     render: () => (
-      <Paged
-        pages={[
+      <SlideDeck
+        slides={[
           { id: "1", title: "Setup", content: <Prose>Two carts sit on a frictionless track.</Prose> },
           { id: "2", title: "Collision", content: <Prose>They collide and stick together.</Prose> },
           { id: "3", title: "Result", content: <Prose>Momentum before equals momentum after.</Prose> },
         ]}
       />
     ),
-    source: `<Paged pages={[{ id: "1", title: "Setup", content: <Prose>…</Prose> }, …]} />`,
+    source: `<SlideDeck slides={[{ id: "1", title: "Setup", content: <Prose>…</Prose> }, …]} />`,
   },
   NumericAnswer: {
     render: () => (

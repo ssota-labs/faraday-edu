@@ -18,7 +18,7 @@ type LayoutItem = {
 type LayoutGroup = { id: string; title: string; items: LayoutItem[] };
 
 const AUDIENCE_DEFAULTS: { audience: string; method: string; layout: string }[] = [
-  { audience: "Children / elementary (~6–12)", method: "CRA", layout: "Paged + game worlds (map2d / world3d)" },
+  { audience: "Children / elementary (~6–12)", method: "CRA", layout: "SlideDeck + game worlds (map2d / world3d)" },
   { audience: "Adolescents / secondary (~13–18)", method: "5E learning cycle", layout: "Scroll (chaptered); paged for younger" },
   { audience: "Undergraduates / STEM", method: "Peer Instruction", layout: "Scroll — dense reading + derivations" },
   { audience: "General adult public", method: "Multimedia principles", layout: "Scroll with short chapters (Course); paged for kiosk" },
@@ -53,12 +53,12 @@ const GROUPS: LayoutGroup[] = [
         preview: DEMOS["Lesson"]?.render(),
       },
       {
-        id: "paged",
-        name: "Paged / tablet",
-        what: "Each page fills the viewport — one idea per screen, prev/next + dots + arrow keys; landscape canvas ⇄ prose.",
-        build: "<Paged pages={…}> inside <Lesson>",
+        id: "slide-deck",
+        name: "Slide deck / tablet",
+        what: "Each slide fills the viewport — one idea per screen, prev/next + dots + arrow keys; landscape canvas ⇄ prose.",
+        build: "<SlideDeck slides={…}> inside <Lesson>",
         audiences: ["Children"],
-        preview: DEMOS["Paged"]?.render(),
+        preview: DEMOS["SlideDeck"]?.render(),
       },
     ],
   },

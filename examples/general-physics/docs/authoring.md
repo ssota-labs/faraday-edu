@@ -162,13 +162,13 @@ All hints are feed-forward (point back into the model, never just "wrong").
 
 The default lesson is a **book-like vertical scroll** (the reading column). For
 audiences/contexts that want **one idea per screen** — young learners, tablet or
-kiosk use — wrap the content in `<Paged>`: each page fills the viewport height,
+kiosk use — wrap the content in `<SlideDeck>`: each page fills the viewport height,
 one shows at a time (prev/next, dot rail, arrow keys), and only the active page
 stays mounted (per-page state resets on return, like `<Course>` chapters):
 
 ```tsx
 <Lesson title="…" lead="…">
-  <Paged pages={[
+  <SlideDeck slides={[
     { id: "push",    title: "Push",    content: <PushPage /> },     // one idea
     { id: "squeeze", title: "Squeeze", content: <SqueezePage /> },  // per page
     { id: "check",   title: "Check",   content: <CheckPage /> },

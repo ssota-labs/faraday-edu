@@ -60,7 +60,7 @@ invisible to the agent, and vice versa.
 
 **Runtime layer** — `packages/*`, pinned as `@faraday-academy/*` by generated lessons:
 - `runtime/blocks/` — ~24 lesson blocks: layout & canvas (`Lesson` `Prose` `Stage` `Workbench`
-  `ControlGroup` `Paged`), live controls (`ParamSlider` `ParamSwitch` `Segmented` `Scrubber`
+  `ControlGroup` `SlideDeck`), live controls (`ParamSlider` `ParamSwitch` `Segmented` `Scrubber`
   `Readout` `Chart` `Stat`), assessment (`Quiz` `NumericAnswer` `Challenge` `SketchPad`),
   explanation (`Derivation` `TeX` `CodeCell` `Reveal` `Compare` `Callout`).
 - `runtime/world/` — curriculum host + `progression`/`store`/`hud`; swappable `packs/`
