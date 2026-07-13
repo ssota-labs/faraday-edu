@@ -53,7 +53,7 @@ The generated lesson depends on the versioned @faraday-academy/runtime package
 (pinned exactly) instead of vendoring it. Author your lesson in src/lesson/.
 
 Capabilities (3D, physics, the AI tutor, flashcards, exams, …) are **module packs**,
-not flags. \`faraday new\` is batteries-included — it installs all nine, so every
+not flags. \`faraday new\` is batteries-included — it installs all default packs, so every
 capability is on hand; \`--no-defaults\` scaffolds a minimal lesson and \`pack remove\`
 trims what a lesson doesn't need. \`pack add\` installs a third-party pack or re-adds a
 removed one; \`pack new\` scaffolds a pack of your own.

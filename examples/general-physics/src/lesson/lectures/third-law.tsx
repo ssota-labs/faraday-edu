@@ -21,7 +21,7 @@ import {
   Reveal,
 } from "@faraday-academy/runtime/blocks";
 import type { Slide } from "@faraday-academy/runtime/blocks";
-import { useRafLoop } from "@faraday-academy/runtime/runtime";
+import { useSimLoop } from "../sim2d";
 import { useNode } from "@faraday-academy/runtime/world";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { TextbookView, type TextbookPage } from "../textbook-view";
@@ -109,7 +109,7 @@ function PushOffModel() {
     if (sim.phase === "done" || sim.phase === "ready") setPlaying(false);
   }, [sim.phase]);
 
-  useRafLoop((dt) => {
+  useSimLoop((dt) => {
     setSim((s) => {
       let { xA, xB, vA, vB, t, phase } = s;
 

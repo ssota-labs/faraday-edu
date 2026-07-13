@@ -2,7 +2,7 @@
 // One lecture, two presentation views (SlideView + TextbookView) built from the
 // SAME interactive parts:
 //   1. <ForceLab>   — direct-manipulation model: DRAG the force-vector tip on the
-//                     block (useSvgDrag); a = F/m drives live motion (useRafLoop).
+//                     block (useSvgDrag); a = F/m drives live motion (useSimLoop).
 //   2. <AccelChart> — a-vs-F line of slope 1/m, sampled from the real a = F/m.
 //   3. <SecondLawDerivation> / <ForceMassCompare> — a = F/m derived + compared.
 //   4. <SecondLawCheck> — NumericAnswer (12 N on 3.0 kg → 4 m/s²) wired to complete().
@@ -24,7 +24,7 @@ import {
   Workbench,
   Quiz,
 } from "@faraday-academy/runtime/blocks";
-import { useRafLoop, useSvgDrag, useAnimatedValue } from "@faraday-academy/runtime/runtime";
+import { useSimLoop, useSvgDrag, useAnimatedValue } from "../sim2d";
 import { useNode } from "@faraday-academy/runtime/world";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { TextbookView } from "../textbook-view";
@@ -73,7 +73,7 @@ function ForceLab() {
   const speed = Math.hypot(sim.vx, sim.vy);
 
   // live dynamics: a = F/m, integrate velocity then position, bounce off walls
-  useRafLoop(
+  useSimLoop(
     (dt) => {
       setSim((s) => {
         if (resetting) {

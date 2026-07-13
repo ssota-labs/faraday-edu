@@ -1,15 +1,16 @@
-import type { Agent, Command, Pack, Plugin, Skill } from "@/catalog";
+import type { Agent, Command, OfficialPack, Pack, Plugin, Skill } from "@/catalog";
 
 type Props = {
   skill: Skill | null;
   commands: Command[];
   agents: Agent[];
+  officialPacks: OfficialPack[];
   worldPacks: Pack[];
   featurePacks: Pack[];
   plugins: Plugin[];
 };
 
-export function SkillsView({ skill, commands, agents, worldPacks, featurePacks, plugins }: Props) {
+export function SkillsView({ skill, commands, agents, officialPacks, worldPacks, featurePacks, plugins }: Props) {
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-8">
       {skill && (
@@ -51,6 +52,22 @@ export function SkillsView({ skill, commands, agents, worldPacks, featurePacks, 
           <Grid>
             {agents.map((a) => (
               <Card key={a.name} name={a.name} desc={a.description} path={a.relPath} />
+            ))}
+          </Grid>
+        </Section>
+      )}
+
+      {officialPacks.length > 0 && (
+        <Section title="Official packs" color="var(--chart-5)" count="module packs">
+          <Grid>
+            {officialPacks.map((p) => (
+              <Card
+                key={p.id}
+                name={p.title}
+                desc={p.summary}
+                path={p.relPath}
+                tag={p.defaultInstall ? `${p.tag} · default` : p.tag}
+              />
             ))}
           </Grid>
         </Section>

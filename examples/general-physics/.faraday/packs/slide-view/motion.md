@@ -16,6 +16,6 @@ Rules:
   the pace with prev/next; motion shouldn't hold them hostage.
 - **Respect `prefers-reduced-motion`** — degrade to an instant state, never break.
 
-→ **Faraday:** use the runtime's `motion` helpers for slide/build transitions;
+→ **Faraday:** use `src/lesson/sim2d` helpers (`useSimLoop`, `useAnimatedValue`) for slide/build transitions;
 drive step-reveals with `<Scrubber>` + `useStepper` when the learner should scrub
 the build themselves.

@@ -1,11 +1,11 @@
 # Module Packs — 설계 스펙
 
-> 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 아홉 개 공식 팩
-> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`slide-view`·`kids`·`notes`).
+> 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 공식 팩
+> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`slide-view`·`game2d`·`storybook-game2d`·`notes` + …).
 > 팩은 CLI에서 분리돼
 > `packages/official-packs/`에 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는
 > 공식명·로컬경로·github(`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나
-> 팩을 배포**할 수 있다. **아홉 팩 모두 default**(`new`가 batteries-included로 전부 자동설치,
+> 팩을 배포**할 수 있다. **default 팩**은 `new`가 batteries-included로 전부 자동설치(
 > `--no-defaults`로 최소 레슨 · `pack remove`로 덜어냄),
 > `lecture-design`·`exam`은 **폴더 스킬 + entry** front-door. 능력은 `faraday pack add`로
 > 추가하며 `faraday new`엔 능력 플래그가 없다(`--3d`/`--tutor` 제거). 옛 `templates/addon-*`도 제거됐다.
@@ -97,7 +97,7 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 적용한다. `installPack`은 폴더 전체를 `.faraday/packs/<name>/`로 복사하므로, 빌드 타임엔
 에이전트가 entry를 읽고 필요한 하위 파일만 연다. `lecture-design`·`exam`이 이 형태.
 
-**Default 팩 (batteries-included)** — **아홉 팩 모두** `pack.json`에 `"default": true`라,
+**Default 팩 (batteries-included)** — `pack.json`에 `"default": true`인 팩은
 `faraday new`가 스킬 + 런타임을 전부 자동 설치한다(`--no-defaults`로 opt-out, 완성 레슨에서
 불필요한 팩은 `pack remove`로 덜어냄 — 특히 무거운 `three`/`tutor` 런타임). 유일 소스는
 팩이고, 설계 타임엔 `faraday pack show <name>`으로, 빌드 타임엔 레슨의 `.faraday/packs/<name>/`
@@ -163,7 +163,8 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 | 암기 | `srs` (플래시카드) | ✅ 구현 | **소스 copy**(`src/lesson/srs/`) + deps 0개 |
 | 렉쳐구성 | `lecture-design` (교수법) | ✅ 구현 | **스킬-온리** + 스킬 **폴더** 설치 |
 | 렉쳐 | `slide-view` (슬라이드 뷰) | ✅ 구현 | 폴더 스킬(slide-design→motion→pacing), `<SlideDeck>`+motion 조합, deps 0 |
-| 아이들 | `kids` (태블릿 게임) | ✅ 구현 | 프리셋 스킬(CRA+큰타깃+축하), `audience` 팩 위, deps 0 |
+| 2D 게임 | `game2d` (PixiJS) | ✅ 구현 | Pixi v8 + Matter + Howler, `src/lesson/game2d` |
+| 스토리북 2D | `storybook-game2d` | ✅ 구현 | `requires: [game2d]`, 구 `kids` 흡수 |
 | 시험 | `exam` | ✅ 구현 | **폴더 스킬 + entry**(blueprint→items→scoring→integrity), 평가 블록 조합, deps 0 |
 | 노트 | `notes` (펜 노트) | ✅ 구현 | **소스 copy** `<Notebook>` 펜 캔버스(Canvas+PointerEvents, 필압), deps 0 |
 
@@ -174,7 +175,7 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 
 ## 9. 구현 요약
 
-- `packages/official-packs/<category>/<name>/` — categories: `course` (map2d) · `lecture` (slide-view·textbook-view·srs·notes·exam·kids) · `runtime` (three·tutor) · `methodology` (audience·lecture-design)
+- `packages/official-packs/<category>/<name>/` — categories: `course` (map2d) · `lecture` (slide-view·textbook-view·srs·notes·exam·storybook-game2d) · `runtime` (three·tutor·game2d) · `methodology` (audience·lecture-design)
   — 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
   용어: [terminology.md](terminology.md).
 - `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`
@@ -188,7 +189,7 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
     외부=`{name, source}`.
   - `validateManifest()` — zero-dep 구조 검증 (ajv 없이).
 - `generate.mjs` — 능력 플래그(`--3d`/`--physics`/`--tutor`) 제거 → 스캐폴드 + 전체
-  default 팩(아홉 개) 자동설치. 개별 추가/재추가는 `faraday pack add`.
+  default 팩 자동설치. 개별 추가/재추가는 `faraday pack add`.
   - `removePack()` — un-register(항상) + 비공유 deps/css 되돌리기; 복사 파일은 보고만.
 - `cli.mjs` — `faraday pack list [--json]` / `add <name|source> [--physics] [--dir] [--json]`
   / `remove <name> [--dir] [--json]` / `validate <name|source> [--json]`.

@@ -9,7 +9,7 @@
 //   2. <MotionGraphs/> — a <Chart> of x(t) and v(t) sampled from the SAME model.
 //   3. DERIV_STEPS     — a <Derivation> ending at x = x0 + v0 t + ½ a t².
 //   4. <KinematicsCheck/> — a <NumericAnswer> wired to node completion.
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Lecture,
   SlideDeck,
@@ -26,7 +26,7 @@ import {
   NumericAnswer,
   type DerivationStep,
 } from "@faraday-academy/runtime/blocks";
-import { useRafLoop, useAnimatedValue } from "@faraday-academy/runtime/runtime";
+import { useAnimatedValue, setSvgTranslate, useSimTime } from "../sim2d";
 import { useNode } from "@faraday-academy/runtime/world";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { TextbookView } from "../textbook-view";
@@ -64,42 +64,60 @@ const PAD = 48;
 const GROUND = 150;
 const pxOf = (m: number) => PAD + (Math.min(Math.max(m, 0), TRACK_M) / TRACK_M) * (W - 2 * PAD);
 
+const PLAYBACK_RATE = 2.5;
+
 function CarLab() {
   const [v0, setV0] = useState(8);
   const [a, setA] = useState(3);
-  const [t, setT] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [hud, setHud] = useState({ t: 0, x: 0, v: 0 });
   const [trail, setTrail] = useState<number[]>([]);
-  const tRef = useRef(0);
+  const timeRef = useRef(0);
+  const carRef = useRef<SVGGElement>(null);
+  const hudTick = useRef(0);
 
   const tEnd = endTime(v0, a);
-  const x = posAt(v0, a, Math.min(t, tEnd));
-  const v = velAt(v0, a, Math.min(t, tEnd));
-  const atEnd = t >= tEnd - 1e-3;
+  const x = posAt(v0, a, Math.min(hud.t, tEnd));
+  const v = velAt(v0, a, Math.min(hud.t, tEnd));
+  const atEnd = hud.t >= tEnd - 1e-3;
 
-  // Render the car from an eased value so a reset (or a new launch setting)
-  // glides the car home instead of teleporting it.
-  const carPx = useAnimatedValue(pxOf(x), { stiffness: 120 });
+  // Ease the car home when paused / after a parameter change — not during playback.
+  const carPx = useAnimatedValue(pxOf(hud.x), { duration: 0.4 });
 
-  useRafLoop((dt) => {
-    const nt = tRef.current + dt;
-    if (nt >= tEnd) {
-      tRef.current = tEnd;
-      setT(tEnd);
-      setPlaying(false);
-      return;
-    }
-    tRef.current = nt;
-    setT(nt);
-    const here = posAt(v0, a, nt);
-    setTrail((tr) => (tr.length && Math.abs(tr[tr.length - 1] - here) < 1.2 ? tr : [...tr, here].slice(-28)));
-  }, playing);
+  const paint = useCallback(
+    (t: number) => {
+      const xM = posAt(v0, a, Math.min(t, tEnd));
+      const vNow = velAt(v0, a, Math.min(t, tEnd));
+      setSvgTranslate(carRef.current, pxOf(xM), 0);
+
+      hudTick.current += 1;
+      if (hudTick.current % 3 === 0 || !playing) {
+        setHud({ t, x: xM, v: vNow });
+      }
+      setTrail((tr) => (tr.length && Math.abs(tr[tr.length - 1] - xM) < 1.2 ? tr : [...tr, xM].slice(-28)));
+    },
+    [v0, a, tEnd, playing],
+  );
+
+  useSimTime({
+    playing,
+    timeRef,
+    until: tEnd,
+    rate: PLAYBACK_RATE,
+    onTick: paint,
+    onComplete: () => setPlaying(false),
+  });
+
+  useEffect(() => {
+    paint(timeRef.current);
+  }, [v0, a, paint]);
 
   function resetRun() {
-    tRef.current = 0;
-    setT(0);
+    timeRef.current = 0;
+    setHud({ t: 0, x: 0, v: 0 });
     setTrail([]);
     setPlaying(false);
+    hudTick.current = 0;
   }
   function onV0(n: number) {
     setV0(n);
@@ -115,9 +133,10 @@ function CarLab() {
       return;
     }
     if (atEnd) {
-      tRef.current = 0;
-      setT(0);
+      timeRef.current = 0;
+      setHud({ t: 0, x: 0, v: 0 });
       setTrail([]);
+      hudTick.current = 0;
     }
     setPlaying(true);
   }
@@ -129,7 +148,7 @@ function CarLab() {
       onReset={resetRun}
       hud={
         <>
-          <Readout label="t" value={`${t.toFixed(1)} s`} />
+          <Readout label="t" value={`${hud.t.toFixed(1)} s`} />
           <Readout label="x" value={`${x.toFixed(1)} m`} tone="primary" />
           <Readout label="v" value={`${v.toFixed(1)} m/s`} />
           <Button size="sm" onClick={togglePlay}>
@@ -182,7 +201,7 @@ function CarLab() {
         ))}
 
         {/* the car */}
-        <g transform={`translate(${carPx}, 0)`}>
+        <g ref={carRef} transform={playing ? undefined : `translate(${carPx}, 0)`}>
           <circle cx={-13} cy={GROUND} r={9} style={{ fill: "var(--muted-foreground)" }} />
           <circle cx={13} cy={GROUND} r={9} style={{ fill: "var(--muted-foreground)" }} />
           <rect x={-24} y={GROUND - 24} width={48} height={18} rx={5} style={{ fill: "var(--primary)" }} />
@@ -408,6 +427,18 @@ function textbookPages() {
 // ── Slide view — one beat per screen ─────────────────────────────────────────
 function slides() {
   return [
+    {
+      id: "title",
+      content: (
+        <div className="flex h-full flex-col justify-center gap-4 px-6 sm:px-12">
+          <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Motion</h1>
+          <p className="max-w-[52ch] text-lg text-muted-foreground text-pretty sm:text-xl">
+            Constant acceleration, one lecture — drive the model, read the graphs, then derive the position equation
+            yourself.
+          </p>
+        </div>
+      ),
+    },
     {
       id: "intro",
       title: "Three linked quantities",

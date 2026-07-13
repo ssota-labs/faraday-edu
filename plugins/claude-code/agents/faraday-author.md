@@ -43,7 +43,7 @@ Otherwise (a standalone request) you scaffold and own the whole app as below.
 ## Loop
 
 1. **Scope** — one idea and what the reader manipulates / sees change. Choose the
-   lesson shape (stepped vs continuous). `new` is batteries-included — all nine packs
+   lesson shape (stepped vs continuous). `new` is batteries-included — all default packs
    come pre-installed; identify which the subject uses (`three` for spatial subjects
    with a required `mood`; `three --physics` for real dynamics; `tutor` if the reader
    should ask questions; `<Course>`/`<CourseHost>` for multi-lesson).

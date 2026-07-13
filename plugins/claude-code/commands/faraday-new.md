@@ -9,7 +9,7 @@ The user wants to scaffold a new Faraday interactive lesson: **$ARGUMENTS**
 Follow the `faraday` skill. Steps:
 
 1. **Pick a name.** Derive a short kebab-case `<name>` from the topic. `faraday new`
-   is batteries-included — all nine packs come pre-installed. Decide which the topic
+   is batteries-included — all default packs come pre-installed. Decide which the topic
    actually uses (skill's decision guide), so you can trim the rest:
    - `three` if the subject is inherently spatial (astronomy, molecules, geometry, anatomy).
    - `three --physics` only for genuine dynamics (collisions, gravity, stacking).

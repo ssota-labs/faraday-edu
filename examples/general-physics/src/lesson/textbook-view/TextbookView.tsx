@@ -1,10 +1,17 @@
-// <TextbookView> — textbook-view presentation for a lecture. Normal mode: A4-style
-// reading column with vertical scroll. Free mode: scaled page overview + margin
-// notes (localStorage-persisted per `notesKey`).
-import { useEffect, useState } from "react";
+// <TextbookView> — textbook presentation: title + lead ARE the reading layout in
+// normal mode (not a card inside a lecture header). Free mode: pan/zoom canvas
+// with page thumbnails and ink drawn on the workspace.
+import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { GridFourIcon, SquaresFourIcon } from "@phosphor-icons/react";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { cn } from "@faraday-academy/runtime/lib/utils";
+import {
+  PresentationCanvas,
+  PresentationTopBar,
+  PRESENTATION_TOP_PAD,
+  useLecture,
+} from "@faraday-academy/runtime/blocks";
 
 export interface TextbookPage {
   id: string;
@@ -14,109 +21,80 @@ export interface TextbookPage {
 
 type ViewMode = "normal" | "free";
 
-function loadNotes(key: string): Record<string, string> {
-  try {
-    return JSON.parse(localStorage.getItem(`faraday.textbook-notes.${key}`) ?? "{}");
-  } catch {
-    return {};
-  }
-}
-
-function saveNotes(key: string, notes: Record<string, string>) {
-  try {
-    localStorage.setItem(`faraday.textbook-notes.${key}`, JSON.stringify(notes));
-  } catch {
-    /* session-only */
-  }
-}
-
 export function TextbookView(props: {
   pages: TextbookPage[];
-  /** Stable id for persisting margin notes in free mode. */
+  /** Stable id for overview ink persistence. */
   notesKey: string;
+  title?: string;
+  lead?: ReactNode;
   className?: string;
 }) {
-  const { pages, notesKey } = props;
+  const lecture = useLecture();
+  const title = props.title ?? lecture?.title ?? "";
+  const lead = props.lead ?? lecture?.lead;
   const [mode, setMode] = useState<ViewMode>("normal");
-  const [activeId, setActiveId] = useState(pages[0]?.id ?? "");
-  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [focusId, setFocusId] = useState(props.pages[0]?.id ?? "");
 
-  useEffect(() => {
-    setNotes(loadNotes(notesKey));
-  }, [notesKey]);
+  const canvasItems = useMemo(
+    () => props.pages.map((p) => ({ id: p.id, title: p.title, content: p.content })),
+    [props.pages],
+  );
 
-  const active = pages.find((p) => p.id === activeId) ?? pages[0];
-
-  function updateNote(pageId: string, text: string) {
-    setNotes((prev) => {
-      const next = { ...prev, [pageId]: text };
-      saveNotes(notesKey, next);
-      return next;
-    });
+  if (mode === "free") {
+    return (
+      <section
+        className={cn("flex h-full min-h-0 flex-col", props.className)}
+        aria-roledescription="textbook overview"
+      >
+        <PresentationTopBar>
+          <Button size="sm" variant="default" onClick={() => setMode("normal")}>
+            <SquaresFourIcon />
+            <span className="hidden sm:inline">Read</span>
+          </Button>
+        </PresentationTopBar>
+        <PresentationCanvas
+          className={cn("flex-1", PRESENTATION_TOP_PAD)}
+          inkKey={props.notesKey}
+          cardLayout="portrait-9-16"
+          items={canvasItems}
+          activeId={focusId}
+          onSelectItem={(id) => {
+            setFocusId(id);
+            setMode("normal");
+            requestAnimationFrame(() => {
+              document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+          }}
+        />
+      </section>
+    );
   }
 
   return (
-    <section className={cn("flex flex-col gap-3", props.className)} aria-roledescription="textbook view">
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          variant={mode === "normal" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setMode("normal")}
-        >
-          Read
+    <section className={cn("relative h-full min-h-0", props.className)} aria-roledescription="textbook view">
+      <PresentationTopBar>
+        <Button size="sm" variant="outline" onClick={() => setMode("free")}>
+          <GridFourIcon />
+          <span className="hidden sm:inline">Overview</span>
         </Button>
-        <Button
-          variant={mode === "free" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setMode("free")}
-        >
-          Free mode
-        </Button>
-      </div>
+      </PresentationTopBar>
 
-      {mode === "normal" ? (
-        <div className="mx-auto flex w-full max-w-[48rem] flex-col gap-8 rounded-xl border bg-card p-6 sm:p-10">
-          {pages.map((page) => (
-            <article key={page.id} id={page.id} className="flex flex-col gap-4">
+      <div className={cn("h-full overflow-y-auto", PRESENTATION_TOP_PAD)}>
+        <article className="mx-auto flex w-full max-w-[48rem] flex-col gap-10 px-6 py-10 sm:px-10 sm:py-14">
+          {title ? (
+            <header className="flex flex-col gap-3 border-b border-border/60 pb-8">
+              <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{title}</h1>
+              {lead ? <p className="max-w-[60ch] text-lg text-muted-foreground text-pretty">{lead}</p> : null}
+            </header>
+          ) : null}
+          {props.pages.map((page) => (
+            <section key={page.id} id={page.id} className="flex flex-col gap-4 scroll-mt-8">
               {page.title ? <h2 className="text-xl font-semibold tracking-tight">{page.title}</h2> : null}
               <div className="text-pretty">{page.content}</div>
-            </article>
+            </section>
           ))}
-        </div>
-      ) : (
-        <div className="grid min-h-[28rem] gap-4 lg:grid-cols-[3fr_2fr]">
-          <div className="min-h-0 overflow-auto rounded-xl border bg-muted/30 p-4">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {pages.map((page) => (
-                <button
-                  key={page.id}
-                  type="button"
-                  onClick={() => setActiveId(page.id)}
-                  className={cn(
-                    "origin-top-left scale-[0.72] rounded-lg border bg-card p-3 text-left shadow-sm transition ring-offset-background",
-                    active?.id === page.id ? "ring-2 ring-primary" : "hover:border-primary/40",
-                  )}
-                  style={{ width: "138%", height: "auto" }}
-                >
-                  {page.title ? (
-                    <p className="mb-2 text-xs font-medium text-muted-foreground">{page.title}</p>
-                  ) : null}
-                  <div className="pointer-events-none text-sm opacity-90">{page.content}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex min-h-0 flex-col gap-2 rounded-xl border bg-card p-4">
-            <p className="text-sm font-medium">Notes — {active?.title ?? active?.id}</p>
-            <textarea
-              className="min-h-[12rem] flex-1 resize-y rounded-md border bg-background p-3 text-sm"
-              placeholder="Margin notes for this page…"
-              value={notes[active?.id ?? ""] ?? ""}
-              onChange={(e) => active && updateNote(active.id, e.target.value)}
-            />
-          </div>
-        </div>
-      )}
+        </article>
+      </div>
     </section>
   );
 }

@@ -68,13 +68,13 @@ feel (graded by quality-bar.md Surface 3). Rules of thumb:
 
 1. **Put the control ON the thing.** If the variable has a natural home in the
    scene — a position, an angle, a vector, a boundary — the learner drags THAT
-   (`useSvgDrag` from `@faraday-academy/runtime/runtime` gives viewBox-coordinate dragging in
+   (`useSvgDrag` from `src/lesson/sim2d` gives viewBox-coordinate dragging in
    one line; add `cursor="grab"`, a visible handle, and a hover response).
    Placement hierarchy: object > canvas-overlay (Workbench `hud` takes buttons —
    Play/Pause, presets, mode toggles) > side panel (secondary/numerous
    parameters only). `<Workbench>` without `controls` renders the canvas
    full-width — a panel is not mandatory. **If the draggable object is itself in
-   motion** (a handle on a body that translates under `useRafLoop`), pause the
+   motion** (a handle on a body that translates under `useSimLoop`), pause the
    motion while the learner drags — grabbing a moving target is fiddly — and
    resume on release.
 2. **Never teleport.** Route discrete changes (selection, step, mode, reset)
@@ -82,7 +82,7 @@ feel (graded by quality-bar.md Surface 3). Rules of thumb:
    change eases instead of snapping. Continuous input (drag, slider) maps
    directly — no easing lag between hand and object.
 3. **Keep dynamic concepts moving.** If the concept has time in it (orbits,
-   waves, populations, flows), drive it with `useRafLoop(dt => …, playing)` and
+   waves, populations, flows), drive it with `useSimLoop(dt => …, playing)` and
    give the learner Play/Pause in the `hud`. A dead still of a moving system
    reads as a diagram, not a model. **Always advance the simulation by the `dt`
    the loop hands you (seconds) — `t + dt`, `v + a*dt` — never a fixed per-frame

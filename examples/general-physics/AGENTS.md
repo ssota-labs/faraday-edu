@@ -46,9 +46,8 @@ Import from `@faraday-academy/runtime/blocks`; raw shadcn primitives are in `@fa
   omit it when all interaction lives on the canvas (drag handles, overlay
   buttons) and the canvas takes full width; use it for secondary or numerous
   parameters. `onReset` adds a reset button.
-- **Motion hooks** (from `@faraday-academy/runtime/runtime`) — use these instead of hand-rolled
-  rAF so nothing snaps: `useAnimatedValue(target)` (render from it → discrete
-  changes ease, never teleport), `useRafLoop(cb, playing)` (keep dynamic systems
+- **Simulation hooks** (from `src/lesson/sim2d`, the `sim2d` pack) — use these instead of hand-rolled
+  rAF so nothing snaps: `useSimTime` / `useSimLoop` / `useAnimatedValue` (keep dynamic systems
   moving, Play/Pause in `hud`), `useSvgDrag(onDrag)` (drag objects in viewBox
   coords — prefer dragging the thing over a detached slider).
 - `<ControlGroup label defaultOpen? onReset?>` — a collapsible, labeled section for the

@@ -27,7 +27,7 @@ import {
   Readout,
   Quiz,
 } from "@faraday-academy/runtime/blocks";
-import { useRafLoop, useSvgDrag, useAnimatedValue } from "@faraday-academy/runtime/runtime";
+import { useSimLoop, useSvgDrag, useAnimatedValue } from "../sim2d";
 import { useNode } from "@faraday-academy/runtime/world";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { TextbookView } from "../textbook-view";
@@ -104,9 +104,9 @@ function FrictionLab() {
   // sliding it is the constant kinetic value. Ease it so the break-away DROP is
   // a legible transition, not a snap.
   const fTarget = moving ? fk : Math.min(fApp, fsMax);
-  const fEased = useAnimatedValue(fTarget, { stiffness: 210 });
+  const fEased = useAnimatedValue(fTarget, { duration: 0.25 });
 
-  useRafLoop(
+  useSimLoop(
     (dt) => {
       const p = phys.current;
       if (homing) {
