@@ -122,11 +122,16 @@ test("installPack(game2d) pins Pixi/Matter/Howler and copies glue", async () => 
   assert.ok(pkg.dependencies["@pixi/react"], "@pixi/react pinned");
   assert.ok(pkg.dependencies["matter-js"], "matter-js pinned");
   assert.ok(pkg.dependencies.howler, "howler pinned");
+  assert.ok(pkg.devDependencies["@assetvault/cli"], "@assetvault/cli pinned");
   assert.ok(await exists(path.join(target, "src/lesson/game2d/Game2D.tsx")), "Game2D copied");
+  assert.ok(await exists(path.join(target, "src/lesson/game2d/paths.ts")), "game2dAsset helper copied");
   assert.ok(await exists(path.join(target, "src/lesson/game2d/physics.tsx")), "physics copied");
   assert.ok(await exists(path.join(target, "src/lesson/game2d/tilemap.tsx")), "tilemap copied");
   assert.ok(await exists(path.join(target, "src/lesson/game2d/audio.ts")), "audio copied");
+  assert.ok(await exists(path.join(target, "scripts/game2d-assets.mjs")), "assetvault wrapper copied");
   assert.ok(await exists(path.join(target, "public/assets/game2d/README.md")), "asset README copied");
+  assert.ok(await exists(path.join(target, "public/assets/game2d/recommended.json")), "recommended packs copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/game2d/assetvault.md")), "assetvault skill installed");
   assert.ok(await exists(path.join(target, ".faraday/packs/game2d/SKILL.md")), "folder skill installed");
 });
 

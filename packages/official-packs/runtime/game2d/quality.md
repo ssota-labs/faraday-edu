@@ -6,8 +6,8 @@
   continuous motion via `useTick` + refs — never `setState` every frame.
 - **Touch + keyboard.** Hit targets are finger-sized when the audience is on a
   tablet; keyboard shortcuts never the only path.
-- **Assets are licensed.** Prefer Kenney CC0 under `public/assets/`. Record the
-  source + license in the lesson README when using anything other than CC0.
+- **Assets are licensed.** Install via **AssetVault** (`node scripts/game2d-assets.mjs starter`).
+  Prefer CC0 packs; commit `assetvault.lock.json` when shipping art with the lesson.
 - **Cleanup.** Unmount destroys the Pixi app, Matter engine, and Howler sounds —
   no leaked WebGL contexts between slides.
 - **Composable.** The stage sits inside a normal Faraday lesson (`Workbench`,

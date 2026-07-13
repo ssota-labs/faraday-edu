@@ -19,6 +19,8 @@ commercial game; keep the loop short and tied to a learning outcome.
 | `matter-js` | npm dep | 2D physics |
 | `howler` | npm dep | SFX / music |
 | `src/lesson/game2d/` | copy | author-editable glue |
+| `@assetvault/cli` | npm devDep | CC0 asset registry CLI |
+| `scripts/game2d-assets.mjs` | copy | wrapper → `public/assets/game2d/` |
 
 API (from `src/lesson/game2d`):
 
@@ -33,7 +35,7 @@ API (from `src/lesson/game2d`):
 2. **Physics** — [physics.md](physics.md)
 3. **Tilemaps** — [tilemap.md](tilemap.md)
 4. **Audio** — [audio.md](audio.md)
-5. **Assets & licenses** — [assets.md](assets.md) ← **download / CC0 rules**
+5. **Assets** — [assetvault.md](assetvault.md) ← **AssetVault CLI (primary)** · [assets.md](assets.md) licenses
 6. **Educational patterns** — [patterns.md](patterns.md)
 7. **Anti-patterns** — [anti-patterns.md](anti-patterns.md)
 

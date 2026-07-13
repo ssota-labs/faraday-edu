@@ -18,3 +18,4 @@ export {
   disposeAudioManager,
   type SoundId,
 } from "./audio";
+export { game2dAsset } from "./paths";

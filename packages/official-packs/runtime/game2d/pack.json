@@ -11,13 +11,16 @@
       "pixi.js": "^8.19.0"
     },
     "devDependencies": {
+      "@assetvault/cli": "^0.1.0",
       "@types/howler": "^2.2.12",
       "@types/matter-js": "^0.19.8"
     },
     "copy": [
       { "from": "runtime/game2d", "to": "src/lesson/game2d" },
       { "from": "examples", "to": "docs/examples" },
-      { "from": "assets/README.md", "to": "public/assets/game2d/README.md" }
+      { "from": "assets/README.md", "to": "public/assets/game2d/README.md" },
+      { "from": "assets/recommended.json", "to": "public/assets/game2d/recommended.json" },
+      { "from": "scripts/game2d-assets.mjs", "to": "scripts/game2d-assets.mjs" }
     ]
   },
   "skill": {
