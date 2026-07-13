@@ -1,0 +1,5 @@
+{
+  "_comment": "NOT committed by default — see README.md. Committing this file disables dashboard Runtime Secrets for this environment.",
+  "install": "pnpm install",
+  "start": "test -f scripts/setup-env-local.mjs && node scripts/setup-env-local.mjs || true"
+}
