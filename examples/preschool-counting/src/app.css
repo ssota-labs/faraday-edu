@@ -3,3 +3,11 @@
    content source it can't know about: your lesson code. */
 @import "@faraday-academy/runtime/styles.css";
 @source "./lesson/**/*.{ts,tsx}";
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}

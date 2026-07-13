@@ -1,6 +1,4 @@
-// Preschool counting — game-view demo (incremental beats).
-// v1: scene → dialogue → move → interaction → celebrate → dialogue
-import { Lecture } from "@faraday-academy/runtime/blocks";
+// Full-screen storybook lesson — no reading column, no page header.
 import { GameView } from "./game-view";
 import { AppleCountMission } from "./AppleCountMission";
 
@@ -18,47 +16,34 @@ const bearSprite =
 
 export default function PreschoolCountingLesson() {
   return (
-    <Lecture
+    <GameView
+      immersive
       title="Count with Bear"
-      lead="A short game scene for preschool — tap through dialogue, watch the kid walk, then count apples."
-      views={[
+      resume={false}
+      storageKey="preschool-count-live"
+      startSceneId="meadow"
+      scenes={[
         {
-          id: "game",
-          label: "Play",
-          content: (
-            <GameView
-              storageKey="preschool-count-live"
-              startSceneId="meadow"
-              scenes={[
-                {
-                  id: "meadow",
-                  characters: [
-                    { id: "kid", sprite: kidSprite, x: 12, y: 78 },
-                    { id: "bear", sprite: bearSprite, x: 78, y: 76, width: "22%" },
-                  ],
-                  beats: [
-                    // Step 1 — scene + greet
-                    { type: "scene", backgroundColor: "oklch(0.75 0.14 145)" },
-                    { type: "dialogue", speaker: "Bear", text: "Hi! Let's count together." },
-                    // Step 2 — walk over
-                    { type: "move", characterId: "kid", x: 38, y: 78, durationMs: 900 },
-                    { type: "dialogue", speaker: "Bear", text: "Can you fill the basket?" },
-                    // Step 3 — CRA concrete: tap apples (Challenge celebrates; beat skips duplicate)
-                    {
-                      type: "interaction",
-                      title: "Count the apples",
-                      hint: "One tap = one apple.",
-                      celebrateOnComplete: false,
-                      content: <AppleCountMission />,
-                    },
-                    // Step 4 — celebrate beat + closing line
-                    { type: "celebrate", message: "Great counting!", advanceAfterMs: 1400 },
-                    { type: "dialogue", speaker: "Bear", text: "Three apples! Well done!" },
-                  ],
-                },
-              ]}
-            />
-          ),
+          id: "meadow",
+          characters: [
+            { id: "kid", sprite: kidSprite, x: 12, y: 78 },
+            { id: "bear", sprite: bearSprite, x: 78, y: 76, width: "20%" },
+          ],
+          beats: [
+            { type: "scene", backgroundColor: "oklch(0.62 0.16 145)" },
+            { type: "dialogue", speaker: "Bear", text: "Hi! Let's count together." },
+            { type: "move", characterId: "kid", x: 38, y: 78, durationMs: 900 },
+            { type: "dialogue", speaker: "Bear", text: "Can you fill the basket?" },
+            {
+              type: "interaction",
+              title: "Count the apples",
+              hint: "One tap = one apple.",
+              celebrateOnComplete: false,
+              content: <AppleCountMission />,
+            },
+            { type: "celebrate", message: "Great counting!", advanceAfterMs: 1400 },
+            { type: "dialogue", speaker: "Bear", text: "Three apples! Well done!" },
+          ],
         },
       ]}
     />

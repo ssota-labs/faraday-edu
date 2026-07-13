@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from "react";
-import type { RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { celebrate } from "@faraday-academy/runtime/blocks";
+import { cn } from "@faraday-academy/runtime/lib/utils";
 import { GameInteractionProvider } from "./GameInteraction";
 import type { GameBeat, GameInteractionAPI, GameInteractionContent } from "./types";
 
@@ -16,8 +17,9 @@ export function GamePanel(props: {
   advance: () => void;
   setBeatIndex: (index: number) => void;
   onInteractionComplete: () => void;
+  immersive?: boolean;
 }) {
-  const { beat, blocked, stageRef, advance, setBeatIndex, onInteractionComplete } = props;
+  const { beat, blocked, stageRef, advance, setBeatIndex, onInteractionComplete, immersive } = props;
 
   const interactionApi = useMemo<GameInteractionAPI>(
     () => ({
@@ -27,13 +29,36 @@ export function GamePanel(props: {
     [onInteractionComplete, stageRef],
   );
 
+  const shell = (children: ReactNode) => (
+    <div
+      className={cn(
+        immersive
+          ? "pointer-events-auto flex flex-col gap-3 text-white"
+          : "flex flex-col gap-2",
+      )}
+    >
+      {children}
+    </div>
+  );
+
   if (beat.type === "dialogue") {
-    return (
-      <div className="flex flex-col gap-2">
-        {beat.speaker ? <span className="text-sm font-semibold text-primary">{beat.speaker}</span> : null}
-        <p className="text-lg leading-relaxed text-pretty sm:text-xl">{beat.text}</p>
-        <p className="text-xs text-muted-foreground">Tap or press Space for next</p>
-      </div>
+    return shell(
+      <>
+        {beat.speaker ? (
+          <span className={cn("font-semibold", immersive ? "text-base text-amber-200" : "text-sm text-primary")}>
+            {beat.speaker}
+          </span>
+        ) : null}
+        <p
+          className={cn(
+            "leading-relaxed text-pretty",
+            immersive ? "text-2xl font-medium sm:text-3xl" : "text-lg sm:text-xl",
+          )}
+        >
+          {beat.text}
+        </p>
+        {!immersive ? <p className="text-xs text-muted-foreground">Tap or press Space for next</p> : null}
+      </>,
     );
   }
 
@@ -41,9 +66,16 @@ export function GamePanel(props: {
     const showButton = typeof beat.content !== "function";
     return (
       <GameInteractionProvider value={interactionApi}>
-        <div className="flex flex-col gap-3">
-          {beat.title ? <p className="text-base font-semibold">{beat.title}</p> : null}
-          {beat.hint ? <p className="text-sm text-muted-foreground">{beat.hint}</p> : null}
+        <div
+          className={cn(
+            "pointer-events-auto flex flex-col gap-3",
+            immersive && "rounded-2xl bg-black/55 p-4 text-white backdrop-blur-sm",
+          )}
+        >
+          {beat.title ? <p className={cn("font-semibold", immersive ? "text-xl" : "text-base")}>{beat.title}</p> : null}
+          {beat.hint ? (
+            <p className={cn(immersive ? "text-sm text-white/75" : "text-sm text-muted-foreground")}>{beat.hint}</p>
+          ) : null}
           {renderInteractionContent(beat.content, interactionApi)}
           {showButton ? (
             <Button size="lg" className="min-h-12 self-end text-base" onClick={advance}>
@@ -56,9 +88,9 @@ export function GamePanel(props: {
   }
 
   if (beat.type === "choice") {
-    return (
-      <div className="flex flex-col gap-3">
-        <p className="font-medium">{beat.prompt}</p>
+    return shell(
+      <>
+        <p className={cn("font-medium", immersive && "text-xl")}>{beat.prompt}</p>
         <div className="flex flex-wrap gap-2">
           {beat.options.map((opt) => (
             <Button
@@ -71,16 +103,20 @@ export function GamePanel(props: {
             </Button>
           ))}
         </div>
-      </div>
+      </>,
     );
   }
 
   if (beat.type === "celebrate" && beat.message) {
-    return <p className="text-lg font-semibold text-primary">{beat.message}</p>;
+    return shell(<p className={cn("font-semibold", immersive ? "text-2xl text-amber-200" : "text-lg text-primary")}>{beat.message}</p>);
   }
 
   if ((beat.type === "scene" || beat.type === "move" || beat.type === "wait" || beat.type === "tileWalk") && blocked) {
-    return <p className="text-sm text-muted-foreground animate-pulse">…</p>;
+    return shell(<p className={cn("animate-pulse", immersive ? "text-white/70" : "text-sm text-muted-foreground")}>…</p>);
+  }
+
+  if (immersive && beat.type === "scene") {
+    return shell(<p className="text-lg text-white/80 animate-pulse">Tap anywhere to begin…</p>);
   }
 
   return null;

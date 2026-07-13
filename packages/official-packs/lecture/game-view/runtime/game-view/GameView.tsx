@@ -1,6 +1,5 @@
 // <GameView> — 2D game-style lecture presentation: scenes, character movement,
 // dialogue, audio, tilemaps, and screen transitions (not a slide deck).
-// Author-editable; installed by `faraday pack add game-view`. Canvas + CSS + React — no extra deps.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@faraday-academy/runtime/lib/utils";
 import { celebrate } from "@faraday-academy/runtime/blocks";
@@ -23,12 +22,20 @@ function initialPositions(characters?: GameCharacter[]): PercentPos {
 export function GameView(props: {
   scenes: GameScene[];
   startSceneId: string;
-  /** localStorage key for resume position */
   storageKey: string;
+  /** Full-viewport storybook layout — scene fills the screen, dialogue overlays at bottom. */
+  immersive?: boolean;
+  /** Shown as a subtle title card overlay (immersive only), not a page header. */
+  title?: string;
+  resume?: boolean;
   className?: string;
 }) {
+  const immersive = props.immersive ?? false;
+  const resume = props.resume ?? !immersive;
   const sceneMap = Object.fromEntries(props.scenes.map((s) => [s.id, s]));
+
   const load = (): { sceneId: string; beatIndex: number } => {
+    if (!resume) return { sceneId: props.startSceneId, beatIndex: 0 };
     try {
       const raw = localStorage.getItem(`faraday.game-view.${props.storageKey}`);
       if (raw) return JSON.parse(raw);
@@ -47,7 +54,9 @@ export function GameView(props: {
   const [backgroundColor, setBackgroundColor] = useState("oklch(0.55 0.12 220)");
   const [transition, setTransition] = useState(true);
   const [blocked, setBlocked] = useState(false);
+  const [titleVisible, setTitleVisible] = useState(Boolean(props.title && immersive));
   const beatIndexRef = useRef(beatIndex);
+  const blockedRef = useRef(blocked);
   const stageRef = useRef<HTMLDivElement>(null);
   const audio = useGameAudio();
 
@@ -57,11 +66,19 @@ export function GameView(props: {
 
   useEffect(() => {
     beatIndexRef.current = beatIndex;
+  }, [beatIndex]);
+
+  useEffect(() => {
+    blockedRef.current = blocked;
+  }, [blocked]);
+
+  useEffect(() => {
+    if (!resume) return;
     localStorage.setItem(
       `faraday.game-view.${props.storageKey}`,
       JSON.stringify({ sceneId, beatIndex }),
     );
-  }, [sceneId, beatIndex, props.storageKey]);
+  }, [sceneId, beatIndex, props.storageKey, resume]);
 
   useEffect(() => {
     if (!scene) return;
@@ -74,13 +91,23 @@ export function GameView(props: {
   }, [sceneId, scene]);
 
   const advance = useCallback(() => {
-    if (!scene || blocked) return;
-    if (beatIndex < scene.beats.length - 1) {
-      setBeatIndex((i) => i + 1);
-    }
-  }, [scene, beatIndex, blocked]);
+    if (!scene || blockedRef.current) return;
+    setBeatIndex((i) => {
+      if (i < scene.beats.length - 1) return i + 1;
+      return i;
+    });
+    if (titleVisible) setTitleVisible(false);
+  }, [scene, titleVisible]);
+
+  const advanceRef = useRef(advance);
+  advanceRef.current = advance;
 
   const onInteractionComplete = useInteractionCompleteHandler(beat, stageRef, advance);
+
+  const handleTap = useCallback(() => {
+    if (!beat || blockedRef.current) return;
+    if (beat.type === "dialogue" || beat.type === "scene") advanceRef.current();
+  }, [beat]);
 
   useEffect(() => {
     if (!beat) return;
@@ -93,8 +120,11 @@ export function GameView(props: {
         setTransition(true);
       });
       if (beat.bgm) audio.play(beat.bgm, "bgm", true);
-      const t = setTimeout(advance, 400);
-      return () => clearTimeout(t);
+      if (!immersive) {
+        const t = setTimeout(() => advanceRef.current(), 400);
+        return () => clearTimeout(t);
+      }
+      return;
     }
 
     if (beat.type === "move") {
@@ -102,7 +132,7 @@ export function GameView(props: {
       setPositions((p) => ({ ...p, [beat.characterId]: { x: beat.x, y: beat.y } }));
       const t = setTimeout(() => {
         setBlocked(false);
-        advance();
+        advanceRef.current();
       }, beat.durationMs ?? 700);
       return () => clearTimeout(t);
     }
@@ -111,27 +141,27 @@ export function GameView(props: {
       setBlocked(true);
       const t = setTimeout(() => {
         setBlocked(false);
-        advance();
+        advanceRef.current();
       }, beat.ms ?? 600);
       return () => clearTimeout(t);
     }
 
     if (beat.type === "playAudio") {
       audio.play(beat.src, beat.channel ?? "sfx", beat.loop ?? false, beat.volume ?? 1);
-      advance();
+      advanceRef.current();
       return;
     }
 
     if (beat.type === "stopAudio") {
       audio.stop(beat.channel ?? "all");
-      advance();
+      advanceRef.current();
       return;
     }
 
     if (beat.type === "celebrate") {
       celebrate(stageRef.current);
       const ms = beat.advanceAfterMs ?? 1200;
-      const t = setTimeout(advance, ms);
+      const t = setTimeout(() => advanceRef.current(), ms);
       return () => clearTimeout(t);
     }
 
@@ -143,7 +173,7 @@ export function GameView(props: {
 
     if (beat.type === "tilemap") {
       setTilemap(beat.config);
-      const t = setTimeout(advance, 300);
+      const t = setTimeout(() => advanceRef.current(), 300);
       return () => clearTimeout(t);
     }
 
@@ -154,7 +184,7 @@ export function GameView(props: {
       const tick = () => {
         if (step >= path.length) {
           setBlocked(false);
-          advance();
+          advanceRef.current();
           return;
         }
         const { col, row } = path[step];
@@ -169,50 +199,82 @@ export function GameView(props: {
     if (beat.type === "interaction" || beat.type === "choice") {
       setBlocked(false);
     }
-  }, [beat, advance, audio]);
+  }, [beat, audio, immersive]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === " " || e.key === "Enter") {
         const b = scene?.beats[beatIndexRef.current];
-        if (b?.type === "dialogue") advance();
+        if (b?.type === "dialogue" || b?.type === "scene") advanceRef.current();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [scene, advance]);
+  }, [scene]);
 
   if (!scene || !beat) {
     return (
-      <div className="rounded-xl border bg-card p-6 text-center text-muted-foreground">
-        Scene complete.
+      <div
+        className={cn(
+          "flex items-center justify-center text-muted-foreground",
+          immersive ? "fixed inset-0 bg-background" : "rounded-xl border bg-card p-6",
+        )}
+      >
+        The end.
       </div>
     );
   }
 
   const chars = scene.characters ?? [];
+  const panel = (
+    <GamePanel
+      beat={beat}
+      blocked={blocked}
+      stageRef={stageRef}
+      advance={advance}
+      setBeatIndex={setBeatIndex}
+      onInteractionComplete={onInteractionComplete}
+      immersive={immersive}
+    />
+  );
+  const showScrim =
+    beat.type === "dialogue" ||
+    beat.type === "scene" ||
+    beat.type === "celebrate" ||
+    beat.type === "interaction" ||
+    beat.type === "choice";
+
+  const stageStyle = tilemapMode
+    ? { backgroundColor: "#1a1a2e" }
+    : {
+        backgroundColor,
+        backgroundImage: background ? `url(${background})` : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        opacity: transition ? 1 : 0.3,
+        transition: "opacity 0.35s ease",
+      };
 
   return (
     <section
-      className={cn("flex flex-col gap-0 overflow-hidden rounded-xl border shadow-sm", props.className)}
+      className={cn(
+        immersive
+          ? "fixed inset-0 z-50 flex touch-manipulation select-none flex-col overflow-hidden"
+          : "flex flex-col gap-0 overflow-hidden rounded-xl border shadow-sm",
+        props.className,
+      )}
       aria-roledescription="game view"
+      onClick={immersive ? handleTap : undefined}
+      onKeyDown={undefined}
     >
       <div
         ref={stageRef}
-        className="relative aspect-[16/10] w-full touch-manipulation select-none"
-        style={
-          tilemapMode
-            ? { backgroundColor: "#1a1a2e" }
-            : {
-                backgroundColor,
-                backgroundImage: background ? `url(${background})` : undefined,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                opacity: transition ? 1 : 0.3,
-                transition: "opacity 0.35s ease",
-              }
-        }
-        onClick={() => beat.type === "dialogue" && advance()}
+        className={cn(
+          "relative w-full",
+          immersive ? "min-h-0 flex-1" : "aspect-[16/10] touch-manipulation select-none",
+        )}
+        style={stageStyle}
+        onClick={!immersive ? handleTap : undefined}
         role="presentation"
       >
         {tilemapMode && tilemap ? (
@@ -234,7 +296,7 @@ export function GameView(props: {
                 style={{
                   left: `${p.x}%`,
                   bottom: `${100 - p.y}%`,
-                  width: c.width ?? "26%",
+                  width: c.width ?? (immersive ? "22%" : "26%"),
                   transform: "translate(-50%, 0)",
                   transition: "left 0.65s ease, bottom 0.65s ease",
                 }}
@@ -242,18 +304,31 @@ export function GameView(props: {
             );
           })
         )}
+
+        {immersive && titleVisible && props.title ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
+            <h1 className="max-w-[16ch] text-center text-4xl font-semibold tracking-tight text-white text-balance drop-shadow-lg sm:text-5xl">
+              {props.title}
+            </h1>
+          </div>
+        ) : null}
+
+        {immersive ? (
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-x-0 bottom-0 flex flex-col justify-end px-5 pb-8 pt-24 sm:px-8 sm:pb-10",
+              showScrim && "bg-gradient-to-t from-black/85 via-black/55 to-transparent",
+            )}
+          >
+            {panel}
+            {beat.type === "dialogue" || beat.type === "scene" ? (
+              <p className="pointer-events-none mt-4 text-center text-xs text-white/50">Tap anywhere to continue</p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
-      <div className="min-h-[7rem] border-t bg-card p-4 sm:p-5">
-        <GamePanel
-          beat={beat}
-          blocked={blocked}
-          stageRef={stageRef}
-          advance={advance}
-          setBeatIndex={setBeatIndex}
-          onInteractionComplete={onInteractionComplete}
-        />
-      </div>
+      {!immersive ? <div className="min-h-[7rem] border-t bg-card p-4 sm:p-5">{panel}</div> : null}
     </section>
   );
 }

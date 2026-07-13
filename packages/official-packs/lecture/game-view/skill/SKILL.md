@@ -70,16 +70,23 @@ import { GameView } from "./game-view";
 | `tilemap` | Canvas tile layer (v2 — no PixiJS dep) |
 | `tileWalk` | Grid path walk animation |
 
-### Incremental authoring (preschool-counting)
+### Immersive storybook mode (preschool)
 
-Build beats one at a time in `examples/preschool-counting/`:
+```tsx
+<GameView
+  immersive
+  title="Count with Bear"
+  resume={false}
+  storageKey="apple-count-v1"
+  ...
+/>
+```
 
-1. `scene` + `dialogue` — greet
-2. `move` — character walks
-3. `interaction` + `<Challenge>` — tap-to-count mission (`celebrateOnComplete: false` when Challenge handles confetti)
-4. `celebrate` + closing `dialogue`
+- **Full viewport** — scene fills the screen; dialogue overlays at the bottom (no page header).
+- **Tap anywhere** to advance `scene` / `dialogue` beats.
+- `title` fades in as a storybook cover, then disappears on first tap.
 
-Run: `pnpm --filter preschool-counting dev`
+See `examples/preschool-counting/` for a runnable demo.
 
 ### 3D template (v3)
 
