@@ -1,6 +1,7 @@
 # 커리큘럼 워크스페이스 — 레포/앱/플랜 모델 + 오케스트레이션 (spec)
 
-> 짝 문서: [world-seed.md](world-seed.md)(커리큘럼 코어·프레젠테이션 어댑터) ·
+> 짝 문서: [terminology.md](terminology.md)(핵심 용어 SSOT) ·
+> [world-seed.md](world-seed.md)(코스 코어·셸 어댑터) ·
 > [module-packs.md](module-packs.md)(CLI 팩).
 > 목적: **큰 커리큘럼을 long-running task로 안전하게 제작**한다 — 계획을 파일로
 > 영속화하고, 렉쳐를 파일 단위로 격리해 서브에이전트가 병렬로 만들 수 있게 한다.
@@ -70,21 +71,17 @@ module-scope여야 하는 건 `curriculum` **객체 리터럴**뿐(진행 상태
 
 스킬 문서: [orchestration.md](../plugins/claude-code/skills/faraday/references/orchestration.md).
 
-## 5. 용어 & 프레젠테이션 모델 (단순 버전)
+## 5. 용어 & 코스 셸 모델
 
-- **개념은 하나: curriculum** (코어 API 이미 `Curriculum*`).
-- **프레젠테이션 = 설치하는 팩.** 커리큘럼을 어떤 형식으로 보여줄지(`linear`/`map2d`/
-  `world3d`)는 **팩**이다: 원하는 형식 팩을 깔면 그 형식으로 표시된다. batteries-included라
-  기본으로 다 깔려 있고, 안 쓰는 건 `faraday pack remove`. 작가 멘탈모델은 딱 이것 —
-  "커리큘럼 만들고 → 원하는 형식 팩 깔고 → 그걸로 표시". `port`/`어댑터`/`WorldPack` 같은
-  내부 용어는 **작가용 문서에서 걷어낸다.**
-- **팩에는 종류가 있다 — 전부 프레젠테이션은 아니다:**
-  - **프레젠테이션 팩** — `linear`, `map2d`, `world3d` (커리큘럼을 그리는 형식).
-  - **capability 팩** — `three`, `tutor`, `exam`, `srs`, `deck`, `kids`, `notes`.
-  - **지식 팩** — `audience`, `lecture-design`.
-- **내부 배관(작가 안 보임):** `CurriculumHost`(진행·언락·상태 소유)는 런타임에 남고, 프레젠테이션
-  팩이 "이렇게 그려라"를 거기에 꽂는다. "world"는 **몰입형 프레젠테이션 한 종류**일 뿐 umbrella 아님.
-- 두 의미의 "pack" 구분은 사라진다 — 프레젠테이션도 그냥 CLI 팩이 되므로(§7 마이그레이션).
+용어 SSOT: [terminology.md](terminology.md). 요약:
+
+- **Curriculum** (상위) → **Course** (렉쳐 모음) → **Lecture** (주제 단위) → **Presentation**
+  (슬라이드 뷰 / 텍스트북 뷰 / 게임 뷰).
+- **코스 셸** = 코스 안 렉쳐 간 탐색 (`course/` 팩: `map2d`, `linear`). 렉쳐 **안**의 슬라이드·
+  텍스트북 뷰와 혼동하지 않는다.
+- **팩 카테고리:** `course/` · `lecture/` · `runtime/` · `methodology/`.
+- **내부 배관(작가 안 보임):** `CourseHost`(구 `CurriculumHost`)가 진행·언락·상태를 소유하고,
+  코스 셸 팩이 탐색 UI를 꽂는다.
 
 ## 6. 두 스킬 세트 동일화
 
