@@ -160,7 +160,7 @@ teaching, and you compose them per lesson:
 | Preview | Component | What it does | Built from |
 |---|---|---|---|
 | ![Curriculum world](docs/images/component-curriculum.png) | **📚 Curriculum / world** | Order lessons into a linear textbook, or a game-like map with unlock progression you navigate. | `<Course>` · `<CurriculumHost>` + world packs |
-| ![Lecture deck](docs/images/component-lecture.png) | **🎬 Lecture / deck** | Slideshow-style delivery — one idea per screen, prev/next, animation. | `<Paged>` · `runtime/motion` · `deck` pack |
+| ![Slide view](docs/images/component-lecture.png) | **🎬 Slide view** | Slide-view presentation — one idea per screen, prev/next, animation. | `<SlideDeck>` · `runtime/motion` · `slide-view` pack |
 | ![Quiz and assignment](docs/images/component-quiz.png) | **✅ Quiz / assignment** | Checks that *teach* — MCQ, typed numeric, sketch-to-predict, and missions cleared in the sim. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
 | ![LMS dashboard](docs/images/component-lms.png) | **📊 Student management** | Record progress and show a dashboard across a lesson or a whole curriculum (LMS). | `runtime/lms` (recorder + dashboard) |
 | ![AI tutor](docs/images/component-tutor.png) | **🤖 AI tutor** | A grounded, Socratic chat that answers only from the lesson's own content. | `tutor` pack |
@@ -309,7 +309,7 @@ faraday help
 
 **Capabilities are packs, not flags** — and `new` is **batteries-included**: it
 auto-installs all nine packs (skill + runtime), so `three` (`--physics` variant),
-`tutor`, `srs`, `exam`, `deck`, `kids`, `notes`, `lecture-design`, and `audience` are
+`tutor`, `srs`, `exam`, `slide-view`, `kids`, `notes`, `lecture-design`, and `audience` are
 on hand from the start (`faraday pack list` shows the live catalog). Use `--no-defaults`
 for a minimal lesson, and `faraday pack remove <name>` to drop what a finished lesson
 doesn't need (e.g. the heavy `three`/`tutor` runtimes). `faraday pack add <name|source>`
@@ -337,7 +337,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
-│  ├─ official-packs/           # module packs by category: curriculum/ (map2d) · component/ (srs·notes·deck·kids) · runtime/ (three·tutor) · assessment/ (exam) · methodology/ (audience·lecture-design) + pack.schema.json
+│  ├─ official-packs/           # module packs by category: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)
@@ -412,7 +412,7 @@ flowchart LR
 | **Memorization** | `srs` — spaced-repetition flashcards | ✅ shipping | author-editable `<Flashcards>` (SM-2-lite), zero new deps |
 | **Lecture design** | `lecture-design` — teaching methods & pedagogy | ✅ shipping · **default** | skill-only folder (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
 | **Audience** | `audience` — delivery methodology per learner | ✅ shipping · **default** | skill-only (CRA / 5E / Peer Instruction / Mayer / Merrill + layout) |
-| **Lecture** | `deck` — animated slideshow | ✅ shipping | folder skill (slide-design → motion → pacing), composes `<Paged>` + motion, zero deps |
+| **Slide view** | `slide-view` — animated slide presentation | ✅ shipping | folder skill (slide-design → motion → pacing), composes `<SlideDeck>` + motion, zero deps |
 | **Kids** | `kids` — tablet game | ✅ shipping | preset skill (CRA + big targets + celebration), builds on the `audience` pack, zero deps |
 | **Exam** | `exam` — practice / mock test | ✅ shipping | folder skill (blueprint → items → scoring → integrity), composes assessment blocks, zero deps |
 | **Notes** | `notes` — GoodNotes-style pen | ✅ shipping | author-editable `<Notebook>` ink canvas (Canvas + PointerEvents, pressure), zero deps |

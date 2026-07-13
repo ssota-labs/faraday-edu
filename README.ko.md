@@ -163,7 +163,7 @@ flowchart LR
 | 미리보기 | 구성요소 | 하는 일 | 무엇으로 |
 |---|---|---|---|
 | ![커리큘럼 월드](docs/images/component-curriculum.png) | **📚 커리큘럼 / 월드** | 수업을 선형 교과서로, 또는 잠금 해제 진행이 있는 게임 같은 지도로 엮어 탐험합니다. | `<Course>` · `<CurriculumHost>` + 월드 팩 |
-| ![렉쳐 덱](docs/images/component-lecture.png) | **🎬 렉쳐 / 슬라이드** | 슬라이드쇼식 전달 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<Paged>` · `runtime/motion` · `deck` 팩 |
+| ![슬라이드 뷰](docs/images/component-lecture.png) | **🎬 슬라이드 뷰** | 슬라이드 뷰 프레젠테이션 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<SlideDeck>` · `runtime/motion` · `slide-view` 팩 |
 | ![퀴즈/과제](docs/images/component-quiz.png) | **✅ 퀴즈 / 과제** | *가르치는* 확인 — 객관식, 숫자 입력, 스케치 예측, 시뮬레이션에서 클리어하는 미션. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
 | ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 수업 또는 커리큘럼 전체의 진도를 기록하고 대시보드로 보여줍니다 (LMS). | `runtime/lms` (기록기 + 대시보드) |
 | ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 |
@@ -311,7 +311,7 @@ faraday help
 
 **능력은 플래그가 아니라 팩입니다** — 그리고 `new`는 **배터리 포함(batteries-included)**:
 아홉 개 팩(스킬 + 런타임)을 모두 자동 설치하므로 `three`(`--physics` variant), `tutor`,
-`srs`, `exam`, `deck`, `kids`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
+`srs`, `exam`, `slide-view`, `kids`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
 있습니다 (`faraday pack list`로 라이브 카탈로그 확인). 최소 레슨은 `--no-defaults`,
 완성된 레슨에서 불필요한 팩(예: 무거운 `three`/`tutor` 런타임)은 `faraday pack remove
 <name>`로 덜어냅니다. `faraday pack add <name|source>`는 서드파티 팩을 설치하거나
@@ -339,7 +339,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — `faraday` 스캐폴더 (bin + src)
 │  │  └─ templates/starter/     #   `faraday new`가 찍어내는 앱 셸 (팩은 빌드 시 번들)
-│  ├─ official-packs/           # 카테고리별 모듈 팩: curriculum/ (map2d) · component/ (srs·notes·deck·kids) · runtime/ (three·tutor) · assessment/ (exam) · methodology/ (audience·lecture-design) + pack.schema.json
+│  ├─ official-packs/           # 카테고리별 모듈 팩: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
 │  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)
@@ -412,7 +412,7 @@ flowchart LR
 | **암기** | `srs` — 간격 반복 플래시카드 | ✅ 제공 중 | author-editable `<Flashcards>`(SM-2), 신규 deps 0개 |
 | **렉쳐 구성** | `lecture-design` — 교수법 & 교육학 | ✅ 제공 중 · **default** | 스킬-온리 폴더 (5 moves + 5E/CRA/Peer Instruction/Mayer/Merrill) |
 | **대상(Audience)** | `audience` — 학습자별 전달 방법론 | ✅ 제공 중 · **default** | 스킬-온리 (CRA / 5E / Peer Instruction / Mayer / Merrill + 레이아웃) |
-| **렉쳐** | `deck` — 애니메이션 슬라이드쇼 | ✅ 제공 중 | 폴더 스킬 (슬라이드 디자인 → 모션 → 페이싱), `<Paged>` + 모션 조합, deps 0개 |
+| **슬라이드 뷰** | `slide-view` — 애니메이션 슬라이드 프레젠테이션 | ✅ 제공 중 | 폴더 스킬 (슬라이드 디자인 → 모션 → 페이싱), `<SlideDeck>` + 모션 조합, deps 0개 |
 | **아이들** | `kids` — 태블릿 게임 | ✅ 제공 중 | 프리셋 스킬 (CRA + 큰 타깃 + 축하), `audience` 팩 위에 얹힘, deps 0개 |
 | **시험** | `exam` — 실전 / 모의고사 | ✅ 제공 중 | 폴더 스킬 (블루프린트 → 문항 → 채점 → 무결성), 평가 블록 조합, deps 0개 |
 | **노트** | `notes` — 굿노트식 펜 | ✅ 제공 중 | author-editable `<Notebook>` 잉크 캔버스 (Canvas + PointerEvents, 필압), deps 0개 |

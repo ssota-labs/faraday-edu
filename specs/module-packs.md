@@ -1,7 +1,7 @@
 # Module Packs — 설계 스펙
 
 > 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 아홉 개 공식 팩
-> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`deck`·`kids`·`notes`).
+> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`slide-view`·`kids`·`notes`).
 > 팩은 CLI에서 분리돼
 > `packages/official-packs/`에 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는
 > 공식명·로컬경로·github(`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나
@@ -174,8 +174,9 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 
 ## 9. 구현 요약
 
-- `packages/official-packs/<category>/<name>/` — categories: `curriculum` (map2d) · `component` (srs·notes·deck·kids) · `runtime` (three·tutor) · `assessment` (exam) · `methodology` (audience·lecture-design)
-  — 아홉 개 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
+- `packages/official-packs/<category>/<name>/` — categories: `course` (map2d) · `lecture` (slide-view·textbook-view·srs·notes·exam·kids) · `runtime` (three·tutor) · `methodology` (audience·lecture-design)
+  — 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
+  용어: [terminology.md](terminology.md).
 - `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`
   번들. `cli/package.json` `files`에 `packs` 추가, `<cli>/packs`는 gitignore.
 - `packages/cli/src/pack.mjs`:

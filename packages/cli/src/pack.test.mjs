@@ -32,7 +32,7 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "deck", "kids", "notes", "map2d"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "kids", "notes", "map2d"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
   // every shipped pack must have a valid manifest
@@ -41,7 +41,7 @@ test("listPacks includes all shipped packs", async () => {
     assert.deepEqual(errs, [], `${p.name} manifest invalid: ${errs.join("; ")}`);
   }
   // every official pack declares a known category (drives `pack list` grouping)
-  const CATEGORIES = new Set(["curriculum", "component", "runtime", "assessment", "methodology"]);
+  const CATEGORIES = new Set(["course", "lecture", "runtime", "methodology"]);
   for (const p of packs) {
     assert.ok(CATEGORIES.has(p.category), `${p.name} must have a known category, got ${p.category}`);
   }
@@ -197,6 +197,12 @@ test("validateManifest catches shape errors and passes real packs", async () => 
   assert.ok(errs.some((e) => /runtime\.copy\[0\]/.test(e)));
   assert.ok(errs.some((e) => /runtime\.dependencies/.test(e)));
   assert.ok(errs.some((e) => /skill\.reference/.test(e)));
+});
+
+test("resolvePack(deck) aliases to slide-view", async () => {
+  const r = await resolvePack("deck");
+  assert.equal(r.name, "slide-view");
+  assert.ok(await exists(path.join(r.packDir, "pack.json")));
 });
 
 test("resolvePack classifies official names and local paths", async () => {

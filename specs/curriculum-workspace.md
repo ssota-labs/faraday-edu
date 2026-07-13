@@ -94,7 +94,7 @@ audience.md/pedagogy.md는 제거하고 팩으로 통일).
 ## 7. Phase 3 상태
 
 - **프레젠테이션 = 팩 (완료).** `map2d`를 base 런타임에서 빼고 **copy-in opt-in 팩**
-  (`packages/official-packs/curriculum/map2d/`)으로 분리했다. `faraday pack add map2d` →
+  (`packages/official-packs/course/map2d/`)으로 분리했다. `faraday pack add map2d` →
   `src/lesson/map2d/`로 복사, `import { map2dPack } from "./map2d"`. `linearPack`은
   런타임 내장 fallback으로 유지, `world3dPack`은 `three` 팩. 코어 `CurriculumHost` + port는
   런타임 유지(배관). map2d는 default:false — 프레젠테이션은 하나만 고르는 opt-in이라

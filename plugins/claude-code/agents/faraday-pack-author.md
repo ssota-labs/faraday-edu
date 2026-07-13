@@ -19,9 +19,9 @@ skeleton, the quality/eval discipline).
 Official packs live in category folders — `packages/official-packs/<category>/<name>/`
 (categories: `curriculum`, `component`, `runtime`, `assessment`, `methodology`). Read
 two built-ins as working models — do not skip this:
-- `packages/official-packs/assessment/exam/` — a **folder skill**: `SKILL.md` index
+- `packages/official-packs/lecture/exam/` — a **folder skill**: `SKILL.md` index
   routing to focused sub-guides, a gradeable `quality.md`.
-- `packages/official-packs/component/srs/` — a **copy** pack: a real author-editable
+- `packages/official-packs/lecture/srs/` — a **copy** pack: a real author-editable
   component, token-only styling, an honest "when it doesn't fit" section.
 
 Pick the archetype by how the runtime half installs: `skill` (compose existing

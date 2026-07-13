@@ -349,7 +349,7 @@ async function runPackList(argv, context) {
   }
   // Group by category for a readable catalog. Known categories lead in a sensible
   // order; anything else (incl. uncategorized) falls to the end.
-  const ORDER = ["curriculum", "component", "runtime", "assessment", "methodology"];
+  const ORDER = ["course", "lecture", "runtime", "methodology"];
   const groups = new Map();
   for (const p of packs) {
     const key = p.category ?? "other";

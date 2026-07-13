@@ -7,7 +7,7 @@ question, or an interaction. If two things are fighting for the screen, split th
 - **Landscape split**, not a wall: put the manipulable/visual on one side, the few
   words that frame it on the other (`grid h-full lg:grid-cols-[3fr_2fr]`). The
   canvas leads; prose supports.
-- **Cut everything decorative** (Mayer coherence) — a deck magnifies clutter
+- **Cut everything decorative** (Mayer coherence) — slide view magnifies clutter
   because each slide is full-viewport.
 - **Text is a caption, not a paragraph.** If a slide needs a paragraph, it's a
   scroll lesson, not a slide.
