@@ -1,12 +1,12 @@
-// LMS v0 — records the curriculum event stream (the CurriculumHost `onEvent`
+// LMS v0 — records the course event stream (the CourseHost `onEvent`
 // wiring point) to localStorage, and derives progress analytics. Stage 1 is
 // single-learner + local; a real roster is aggregated at the platform tier from
 // many learners' records. This hook is the seam the platform LMS plugs into.
 import { useCallback, useState } from "react";
-import type { CurriculumEvent } from "../world";
+import type { CourseEvent } from "../world";
 
 export interface LmsEvent {
-  type: CurriculumEvent["type"];
+  type: CourseEvent["type"];
   nodeId?: string;
   at: number; // epoch ms
   xp: number;
@@ -41,13 +41,13 @@ function loadEvents(key: string): LmsEvent[] {
   return [];
 }
 
-/** Wire the returned `onEvent` into <CurriculumHost onEvent={...} />. */
+/** Wire the returned `onEvent` into <CourseHost onEvent={...} />. */
 export function useLmsRecorder(courseId: string) {
   const key = `faraday:lms:${courseId}`;
   const [events, setEvents] = useState<LmsEvent[]>(() => loadEvents(key));
 
   const onEvent = useCallback(
-    (e: CurriculumEvent) => {
+    (e: CourseEvent) => {
       const entry: LmsEvent = {
         type: e.type,
         nodeId: "nodeId" in e ? e.nodeId : undefined,

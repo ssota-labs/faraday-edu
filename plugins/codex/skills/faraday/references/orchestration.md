@@ -1,4 +1,4 @@
-# Orchestration — build a whole curriculum as a long-running task
+# Orchestration — build a whole course as a long-running task
 
 Authoring one lesson fits in one context. Authoring a **curriculum** — a signed-off
 roadmap of many lessons — does not: build them all in a single session and the
@@ -13,7 +13,7 @@ lesson; the two meet only through files on disk.**
 ## Prerequisite — scaffold first, then design against real packs
 
 Design reads packs (`audience`, `lecture-design`), and packs only exist after a
-scaffold. So for a curriculum the order is:
+scaffold. So for a course the order is:
 
 1. `faraday init <app>` — first curriculum in a new repo (drops a root `AGENTS.md`,
    scaffolds `apps/<app>/`). Adding another curriculum/app later: `faraday new <app>`
@@ -39,7 +39,7 @@ before building anything. This survives context resets and lets you resume mid-b
           <id>.md              # ONE file per node — the build brief + status
 
 **`overview.md`** holds what every node shares: the audience brief, the chosen
-methodology, which packs the curriculum uses, the dependency sequence, and a node
+methodology, which packs the course uses, the dependency sequence, and a node
 table you scan for progress:
 
     | id | title | requires | check | packs | status |
@@ -94,7 +94,7 @@ orchestrator adds it.
 - **Resume:** on a new session or after a reset, read `.faraday/plan/<plan>/` and pick
   up from the first `todo`/`building` node. The plan is the memory; the chat is not.
 - **Tier checkpoints:** after finishing a tier (a group of nodes), run `pnpm check`
-  and actually **drive the curriculum screen** (`pnpm dev`) — the map/unlock view and
+  and actually **drive the course screen** (`pnpm dev`) — the map/unlock view and
   any 3D scene are visual-only and can't be graded by an HTTP 200 (see the quality
   bar in [quality-bar.md](quality-bar.md)). Confirm every node frames, including the
   current objective, at a narrow width too.

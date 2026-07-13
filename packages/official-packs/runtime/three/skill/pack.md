@@ -37,7 +37,7 @@ closed-form curve shows more clearly.
 - 3D is a block inside the normal lesson — wrap it in `<Workbench>` with live
   `<ControlGroup>` knobs so the reader manipulates the scene, not just watches it.
 - For a 3D *curriculum world* (nodes as a navigable constellation), use the
-  `world3dPack` from `@faraday-academy/three` with `<CurriculumHost>`.
+  `world3dPack` from `@faraday-academy/three` with `<CourseHost>`.
 
 ## Quality gate
 

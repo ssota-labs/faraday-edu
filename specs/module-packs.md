@@ -1,7 +1,7 @@
 # Module Packs — 설계 스펙
 
 > 상태: **구현됨**. `faraday pack list/add/remove/show/validate` + 아홉 개 공식 팩
-> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`deck`·`kids`·`notes`).
+> (`three`·`tutor`·`srs`·`lecture-design`·`audience`·`exam`·`slide-view`·`kids`·`notes`).
 > 팩은 CLI에서 분리돼
 > `packages/official-packs/`에 살고, `prepack` 빌드 스텝이 CLI에 번들한다. `pack add`는
 > 공식명·로컬경로·github(`owner/repo`)·npm(`npm:@scope/pack`) 소스를 해석하므로 **누구나
@@ -162,7 +162,7 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 | 튜터 | `tutor` (근거기반 AI) | ✅ 구현 | pin + author-editable 서버 copy + `appends`(pnpm) |
 | 암기 | `srs` (플래시카드) | ✅ 구현 | **소스 copy**(`src/lesson/srs/`) + deps 0개 |
 | 렉쳐구성 | `lecture-design` (교수법) | ✅ 구현 | **스킬-온리** + 스킬 **폴더** 설치 |
-| 렉쳐 | `deck` (슬라이드쇼) | ✅ 구현 | 폴더 스킬(slide-design→motion→pacing), `<Paged>`+motion 조합, deps 0 |
+| 렉쳐 | `slide-view` (슬라이드 뷰) | ✅ 구현 | 폴더 스킬(slide-design→motion→pacing), `<SlideDeck>`+motion 조합, deps 0 |
 | 아이들 | `kids` (태블릿 게임) | ✅ 구현 | 프리셋 스킬(CRA+큰타깃+축하), `audience` 팩 위, deps 0 |
 | 시험 | `exam` | ✅ 구현 | **폴더 스킬 + entry**(blueprint→items→scoring→integrity), 평가 블록 조합, deps 0 |
 | 노트 | `notes` (펜 노트) | ✅ 구현 | **소스 copy** `<Notebook>` 펜 캔버스(Canvas+PointerEvents, 필압), deps 0 |
@@ -174,8 +174,9 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 
 ## 9. 구현 요약
 
-- `packages/official-packs/<category>/<name>/` — categories: `curriculum` (map2d) · `component` (srs·notes·deck·kids) · `runtime` (three·tutor) · `assessment` (exam) · `methodology` (audience·lecture-design)
-  — 아홉 개 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
+- `packages/official-packs/<category>/<name>/` — categories: `course` (map2d) · `lecture` (slide-view·textbook-view·srs·notes·exam·kids) · `runtime` (three·tutor) · `methodology` (audience·lecture-design)
+  — 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
+  용어: [terminology.md](terminology.md).
 - `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`
   번들. `cli/package.json` `files`에 `packs` 추가, `<cli>/packs`는 gitignore.
 - `packages/cli/src/pack.mjs`:

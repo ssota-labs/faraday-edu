@@ -12,7 +12,7 @@
 | 기준 | 단편 데모 | 커리큘럼 데모 |
 |---|---|---|
 | **한 줄 훅** | 스크롤 없이 조작 3초 안에 “오” | 맵/월드 첫 화면만으로 세계관이 읽힘 |
-| **제품 증명** | 블록 1–2개 + 플래그 1개 | CurriculumHost + unlock + (선택) tutor/LMS |
+| **제품 증명** | 블록 1–2개 + 플래그 1개 | CourseHost + unlock + (선택) tutor/LMS |
 | **콘텐츠 재활용** | 30s 클립 / 쓰레드 1장 | 시리즈물·“클리어 영상” |
 | **제작 비용** | 반나절 이하 | 1–2일 (노드 5–8개) |
 | **타겟 공명** | 에이전트 유저 + 교육 관심자 | 과외생·수능·영화 덕후 겹침 |
@@ -237,7 +237,7 @@
 복붙 프롬프트 예 (커리큘럼):
 
 ```text
-Build a Faraday curriculum (CurriculumHost + map2dPack) titled
+Build a Faraday curriculum (CourseHost + map2dPack) titled
 「수능 물리: 시험장의 물리」with nodes: 등가속도, 포물선, 뉴턴, 원운동, 역학에너지.
 Each node = one interactive lesson + Quiz that calls useNode().complete().
 No copyrighted exam text — original CSAT-style situations only.

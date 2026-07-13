@@ -1,4 +1,4 @@
-// Assembly — the Newtonian mechanics unit as a curriculum graph, presented as an
+// Assembly — the Newtonian mechanics unit as a course graph, presented as an
 // immersive 2D map (map2dPack). Each node's lesson lives in its own file under
 // nodes/; only this module-scope `curriculum` object is the orchestrator's to own.
 // Plan of record: .faraday/plan/newtonian-mechanics/.
@@ -6,7 +6,7 @@
 // Prerequisite graph (a real branch + join):
 //   kinematics → first-law → second-law → third-law ┐
 //                                  └────→ friction  ┴→ incline
-import { CurriculumHost, type Curriculum } from "@faraday-academy/runtime/world";
+import { CourseHost, type Course } from "@faraday-academy/runtime/world";
 import { map2dPack } from "./map2d";
 
 import Kinematics from "./nodes/kinematics";
@@ -17,7 +17,7 @@ import Friction from "./nodes/friction";
 import Incline from "./nodes/incline";
 
 // Module scope — REQUIRED. Recreating this object inside the component resets progress.
-const curriculum: Curriculum = {
+const course: Course = {
   title: "Newtonian Mechanics",
   nodes: [
     {
@@ -78,8 +78,8 @@ const curriculum: Curriculum = {
 
 export default function NewtonianMechanics() {
   return (
-    <CurriculumHost
-      curriculum={curriculum}
+    <CourseHost
+      course={curriculum}
       pack={map2dPack}
       onEvent={(e) => console.debug("[curriculum]", e.type, "nodeId" in e ? e.nodeId : "", e.progress)}
     />

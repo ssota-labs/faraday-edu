@@ -5,7 +5,7 @@ Kepler orbits to gravitational time dilation and clock synchronisation. Film
 motif only — no titles, no dialogue, no score. Physics concept names only.
 
 - Scaffolded with `faraday new voyage-log --3d` from the Faraday CLI.
-- World: `<CurriculumHost>` + `world3dPack` (`mood="space"`).
+- World: `<CourseHost>` + `world3dPack` (`mood="space"`).
 - No `--tutor`: node 6 uses a `Quiz` mission so the whole demo stays
   static-deployable on Vercel.
 
@@ -35,7 +35,7 @@ answering correctly unlocks the next lab in the world.
 
 ```
 src/lesson/
-  lesson.tsx          # default export = <CurriculumHost curriculum pack={world3dPack} />
+  lesson.tsx          # default export = <CourseHost curriculum pack={world3dPack} />
   nodes/
     kepler.tsx        # 1  Kepler orbit
     slingshot.tsx     # 2  gravity assist
@@ -46,7 +46,7 @@ src/lesson/
 ```
 
 The `Curriculum` object lives at module scope in `lesson.tsx` (stable identity,
-so `CurriculumHost` can key progress on it). Only `src/lesson/**` is editable;
+so `CourseHost` can key progress on it). Only `src/lesson/**` is editable;
 the runtime is a pinned `@faraday-academy/*` dependency (move it with `faraday upgrade`).
 
 ## Working with it
@@ -59,7 +59,7 @@ pnpm build          # → dist/ for Vercel (root directory: examples/voyage-log)
 pnpm preview        # serves dist/ on 4173
 ```
 
-Testing tip: to walk the curriculum with headless Chrome (where WebGL doesn't
+Testing tip: to walk the course with headless Chrome (where WebGL doesn't
 paint), temporarily swap `pack={world3dPack}` → `pack={linearPack}` — the
 `linearPack` renders each node as an ordinary `<button>` you can drive from
 CDP. See `AUTHORING-GAPS.md` §5.

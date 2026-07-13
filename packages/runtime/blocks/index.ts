@@ -1,6 +1,7 @@
 // Public entry point for the Faraday lesson blocks (shadcn-composed).
 // Import from "./" in lesson code.
 export { Lesson } from "./Lesson";
+export { Lecture, type LectureView } from "./Lecture";
 export { Prose } from "./Prose";
 export { Stage } from "./Stage";
 export { Workbench } from "./Workbench";
@@ -16,7 +17,11 @@ export { Reveal } from "./Reveal";
 export { Compare } from "./Compare";
 export { Stat } from "./Stat";
 export { TeX } from "./TeX";
+export { SlideDeck } from "./SlideDeck";
+export type { Slide } from "./SlideDeck";
+/** @deprecated Use SlideDeck */
 export { Paged } from "./Paged";
+/** @deprecated Use Slide */
 export type { PagedPage } from "./Paged";
 export { NumericAnswer } from "./NumericAnswer";
 export { Derivation } from "./Derivation";

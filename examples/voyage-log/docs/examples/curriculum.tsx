@@ -2,11 +2,11 @@
 // map with unlock progression. Copy into src/lesson/lesson.tsx to try it.
 // Swap `pack={map2dPack}` for `pack={linearPack}` to change the whole world's
 // shape without touching the content — that's the ports-and-adapters seam.
-import { CurriculumHost, useNode, type Curriculum } from "@faraday-academy/runtime/world";
+import { CourseHost, useNode, type Course } from "@faraday-academy/runtime/world";
 import { map2dPack } from "./map2d"; // first: faraday pack add map2d
 import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
 
-// A lesson rendered inside <CurriculumHost> can self-complete: pull `complete`
+// A lesson rendered inside <CourseHost> can self-complete: pull `complete`
 // from useNode() and fire it when the reader passes the quiz — that marks this
 // node done and unlocks whatever `requires` it. (The Finish button in the frame
 // stays as a manual fallback; `complete()` is idempotent.)
@@ -32,7 +32,7 @@ function Stop({ title, body }: { title: string; body: string }) {
 }
 
 // Module-level (stable identity — required by the progress store).
-const curriculum: Curriculum = {
+const course: Course = {
   title: "A tiny map course",
   nodes: [
     { id: "intro", title: "Start", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 },
@@ -50,8 +50,8 @@ const curriculum: Curriculum = {
 
 export default function MapCourse() {
   return (
-    <CurriculumHost
-      curriculum={curriculum}
+    <CourseHost
+      course={curriculum}
       pack={map2dPack}
       // LMS / Tutor AI subscribe here. v0: log the event stream.
       onEvent={(e) => console.debug("[curriculum]", e.type, "nodeId" in e ? e.nodeId : "", e.progress)}

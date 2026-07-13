@@ -38,7 +38,7 @@ lessons file-isolated so they can be built independently (e.g. one sub-agent per
 
 See \`references/orchestration.md\` in the faraday skill for the build loop.
 
-_No plans yet — create one when you design a curriculum._
+_No plans yet — create one when you design a course._
 `;
 
 async function replaceInFile(file, from, to) {

@@ -144,7 +144,7 @@ const GROUP_DEFS = [
   { id: "ui", title: "UI primitives", importPath: "@/faraday/ui", blurb: "Vendored shadcn / Base UI primitives the blocks are built on." },
   { id: "runtime", title: "Runtime", importPath: "@/faraday/runtime", blurb: "Lesson & course hosts, the stepper, motion helpers, and theming." },
   { id: "world", title: "World", importPath: "@/faraday/world", blurb: "Curriculum-as-world: host, HUD, progression store, and swappable packs." },
-  { id: "lms", title: "LMS", importPath: "@/faraday/lms", blurb: "A progress recorder + dashboard for a lesson or a whole curriculum." },
+  { id: "lms", title: "LMS", importPath: "@/faraday/lms", blurb: "A progress recorder + dashboard for a lesson or a whole course." },
 ] as const;
 
 export function loadComponentGroups(): ComponentGroup[] {

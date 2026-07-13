@@ -57,7 +57,7 @@ MUST:
 
 - **Substantial explanation.** Prose does the teaching: motivation, the idea in
   words, worked reasoning, interpretation of what the interactive shows. Rough
-  floor for a curriculum-node lesson at secondary level and up: 4+ `<Prose>`
+  floor for a course-node lesson at secondary level and up: 4+ `<Prose>`
   sections / ~500+ words — a lesson whose text is a lead + two short paragraphs
   fails. For young children (the CRA row in audience.md) substance shifts from
   prose to interaction turns: prose is deliberately minimal, but the lesson must
@@ -93,7 +93,7 @@ MUST:
   moment is fine; a reflex row after each figure is not.)
 - **Ends with assessment that requires the interaction, in the RIGHT form.**
   The closing check is only answerable by having used the figures, wires to
-  `complete()` inside a curriculum, and its form matches the outcome verb:
+  `complete()` inside a course, and its form matches the outcome verb:
   recognize→`<Quiz>` (misconception distractors), compute→`<NumericAnswer>`,
   predict→`<SketchPad>`, do/achieve→`<Challenge>` mission. An MCQ closing a
   lesson whose outcome says compute/do/predict under-tests it and fails

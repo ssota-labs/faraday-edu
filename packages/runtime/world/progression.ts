@@ -1,18 +1,16 @@
-// Pure progression engine — no React, no I/O. The core's brain: given a
-// curriculum + progress, compute node statuses and the next progress state.
-import type { Curriculum, CurriculumEdge, NodeStatus, Progress, WorldNode, WorldView } from "./types";
+// Pure progression engine — no React, no I/O.
+import type { Course, CourseEdge, NodeStatus, Progress, WorldNode, WorldView } from "./types";
 
-/** Edges: explicit if given, else derived from each node's `requires`. */
-export function deriveEdges(c: Curriculum): CurriculumEdge[] {
+export function deriveEdges(c: Course): CourseEdge[] {
   if (c.edges && c.edges.length) return c.edges;
-  const out: CurriculumEdge[] = [];
+  const out: CourseEdge[] = [];
   for (const node of c.nodes) {
     for (const from of node.requires ?? []) out.push({ from, to: node.id });
   }
   return out;
 }
 
-export function statusOf(nodeId: string, c: Curriculum, progress: Progress): NodeStatus {
+export function statusOf(nodeId: string, c: Course, progress: Progress): NodeStatus {
   if (progress.completed.includes(nodeId)) return "complete";
   const node = c.nodes.find((n) => n.id === nodeId);
   const requires = node?.requires ?? [];
@@ -22,7 +20,7 @@ export function statusOf(nodeId: string, c: Curriculum, progress: Progress): Nod
   return "available";
 }
 
-export function buildWorldView(c: Curriculum, progress: Progress): WorldView {
+export function buildWorldView(c: Course, progress: Progress): WorldView {
   const nodes: WorldNode[] = c.nodes.map((n) => ({ ...n, status: statusOf(n.id, c, progress) }));
   return {
     title: c.title,
@@ -34,21 +32,17 @@ export function buildWorldView(c: Curriculum, progress: Progress): WorldView {
   };
 }
 
-export function initialProgress(c: Curriculum): Progress {
-  // focus the first node that is open from the start
+export function initialProgress(c: Course): Progress {
   const firstOpen = c.nodes.find((n) => (n.requires ?? []).length === 0);
   return { completed: [], current: firstOpen?.id, xp: 0 };
 }
 
-/** Mark a node complete (idempotent), award xp, and advance focus to the next
- *  newly-available node if any. Returns a new Progress (never mutates). */
-export function markComplete(nodeId: string, c: Curriculum, progress: Progress): Progress {
+export function markComplete(nodeId: string, c: Course, progress: Progress): Progress {
   if (progress.completed.includes(nodeId)) return progress;
   const node = c.nodes.find((n) => n.id === nodeId);
   const completed = [...progress.completed, nodeId];
   const xp = progress.xp + (node?.reward?.xp ?? 0);
   const next: Progress = { completed, current: progress.current, xp };
-  // advance focus to the first node that just became available
   const nextAvailable = c.nodes.find(
     (n) => !completed.includes(n.id) && (n.requires ?? []).every((r) => completed.includes(r)),
   );
@@ -56,6 +50,6 @@ export function markComplete(nodeId: string, c: Curriculum, progress: Progress):
   return next;
 }
 
-export function isFinished(c: Curriculum, progress: Progress): boolean {
+export function isFinished(c: Course, progress: Progress): boolean {
   return c.nodes.every((n) => progress.completed.includes(n.id));
 }

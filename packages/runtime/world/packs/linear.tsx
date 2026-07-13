@@ -1,4 +1,4 @@
-// pack-linear — the baseline WorldPack (non-game). Renders the curriculum as an
+// pack-linear — the baseline WorldPack (non-game). Renders the course as an
 // ordered list with lock/progress state. A driven adapter: reads `world`, emits
 // onEnter. No progression logic of its own.
 import { CheckIcon, LockSimpleIcon } from "@phosphor-icons/react";

@@ -162,13 +162,13 @@ All hints are feed-forward (point back into the model, never just "wrong").
 
 The default lesson is a **book-like vertical scroll** (the reading column). For
 audiences/contexts that want **one idea per screen** — young learners, tablet or
-kiosk use — wrap the content in `<Paged>`: each page fills the viewport height,
+kiosk use — wrap the content in `<SlideDeck>`: each page fills the viewport height,
 one shows at a time (prev/next, dot rail, arrow keys), and only the active page
 stays mounted (per-page state resets on return, like `<Course>` chapters):
 
 ```tsx
 <Lesson title="…" lead="…">
-  <Paged pages={[
+  <SlideDeck slides={[
     { id: "push",    title: "Push",    content: <PushPage /> },     // one idea
     { id: "squeeze", title: "Squeeze", content: <SqueezePage /> },  // per page
     { id: "check",   title: "Check",   content: <CheckPage /> },
@@ -350,7 +350,7 @@ Keep chapter components in `src/lesson/chapters/`. See `docs/examples/course.tsx
 ### Curricula & worlds (unlock progression, swappable packs)
 
 For a graph of lessons with **unlock progression** (not just linear chapters), use
-`<CurriculumHost>` from `@faraday-academy/runtime/world`. You declare a `Curriculum` (nodes with
+`<CourseHost>` from `@faraday-academy/runtime/world`. You declare a `Course` (nodes with
 `requires` + per-node `lesson`); the host owns progress, the world↔lesson toggle,
 the HUD, and an event stream for LMS/tutor hooks. The *shape* of the world is a
 swappable **pack** (ports-and-adapters) — change one prop, keep the content:
@@ -369,16 +369,16 @@ lesson view (the textbook); leaving returns to the world. Pass
 course page), or `hint="…"` to override the HUD hint.
 
 ```tsx
-import { CurriculumHost, map2dPack, type Curriculum } from "@faraday-academy/runtime/world";
-const curriculum: Curriculum = { title: "…", nodes: [
+import { CourseHost, map2dPack, type Course } from "@faraday-academy/runtime/world";
+const course: Course = { title: "…", nodes: [
   { id: "a", title: "A", meta: { x: 15, y: 50 }, lesson: <LessonA /> },
   { id: "b", title: "B", requires: ["a"], meta: { x: 55, y: 50 }, lesson: <LessonB /> },
 ]};
-export default () => <CurriculumHost curriculum={curriculum} pack={map2dPack} />;
+export default () => <CourseHost course={curriculum} pack={map2dPack} />;
 ```
 
 Keep `curriculum` at **module scope** (stable identity). Defining it inside the
-component recreates the object every render and wipes progress — `CurriculumHost`
+component recreates the object every render and wipes progress — `CourseHost`
 warns in dev when that happens.
 
 `meta.{x,y}` (0..100) place nodes on the map/world (percentages of the pack's
@@ -399,4 +399,4 @@ Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with the `three
 
 > **Pack `lecture-design`:** installed via `faraday pack add lecture-design`. Authoring guide at `.faraday/packs/lecture-design`. Load it when you are designing how a lesson or curriculum teaches — choosing a methodology, sequencing, assessment cadence, or feedback.
 
-> **Pack `map2d`:** installed via `faraday pack add map2d`. Authoring guide at `.faraday/packs/map2d/pack.md`. Load it when a curriculum should be shown as a 2D map / game screen with unlock progression (a <CurriculumHost>), rather than a linear document list.
+> **Pack `map2d`:** installed via `faraday pack add map2d`. Authoring guide at `.faraday/packs/map2d/pack.md`. Load it when a course should be shown as a 2D map / game screen with unlock progression (a <CourseHost>), rather than a linear document list.

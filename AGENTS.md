@@ -60,7 +60,7 @@ invisible to the agent, and vice versa.
 
 **Runtime layer** — `packages/*`, pinned as `@faraday-academy/*` by generated lessons:
 - `runtime/blocks/` — ~24 lesson blocks: layout & canvas (`Lesson` `Prose` `Stage` `Workbench`
-  `ControlGroup` `Paged`), live controls (`ParamSlider` `ParamSwitch` `Segmented` `Scrubber`
+  `ControlGroup` `SlideDeck`), live controls (`ParamSlider` `ParamSwitch` `Segmented` `Scrubber`
   `Readout` `Chart` `Stat`), assessment (`Quiz` `NumericAnswer` `Challenge` `SketchPad`),
   explanation (`Derivation` `TeX` `CodeCell` `Reveal` `Compare` `Callout`).
 - `runtime/world/` — curriculum host + `progression`/`store`/`hud`; swappable `packs/`
@@ -83,8 +83,8 @@ invisible to the agent, and vice versa.
 (`package.json`/`app.css`/copied files) **and** skill half (`.faraday/packs/<name>/` + an
 `AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
 into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
-reads `official-packs` directly. Nine ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`, `deck`,
-`kids`, `notes`. **All nine are default packs** (`"default": true`) — `faraday new` is
+reads `official-packs` directly. Default packs ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`, `slide-view`,
+`kids`, `notes` (+ opt-in `map2d` course shell). **Default packs** (`"default": true`) — `faraday new` is
 batteries-included and auto-installs every pack (skill + runtime), so each lesson carries all
 the capabilities and the pedagogy/audience knowledge in `.faraday/packs/`. Use `--no-defaults`
 for a minimal lesson, and `faraday pack remove <name>` to trim what a finished lesson doesn't

@@ -1,7 +1,7 @@
-// Example — LMS v0: a curriculum wired to the progress recorder, with a teacher
+// Example — LMS v0: a course wired to the progress recorder, with a teacher
 // dashboard (roster + this learner's analytics). The recorder subscribes to the
 // SAME core event stream (onEvent). Copy into src/lesson/lesson.tsx to try it.
-import { CurriculumHost, type Curriculum } from "@faraday-academy/runtime/world";
+import { CourseHost, type Course } from "@faraday-academy/runtime/world";
 import { map2dPack } from "./map2d"; // first: faraday pack add map2d
 import { useLmsRecorder, ProgressDashboard, summarize, type Learner } from "@faraday-academy/runtime/lms";
 import { Compare, Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
@@ -15,7 +15,7 @@ function Stop({ title, body }: { title: string; body: string }) {
   );
 }
 
-const curriculum: Curriculum = {
+const course: Course = {
   title: "A tracked course",
   nodes: [
     { id: "a", title: "Lesson 1", meta: { x: 18, y: 50 }, reward: { xp: 10 }, lesson: <Stop title="Lesson 1" body="The first tracked lesson." /> },
@@ -40,8 +40,8 @@ export default function LmsCourse() {
   return (
     <Compare
       items={[
-        { value: "learn", label: "Learn", content: <CurriculumHost curriculum={curriculum} pack={map2dPack} onEvent={rec.onEvent} /> },
-        { value: "teacher", label: "Teacher view", content: <ProgressDashboard courseId="lms-demo" curriculum={curriculum} events={rec.events} learners={[you, ...mockLearners]} /> },
+        { value: "learn", label: "Learn", content: <CourseHost course={curriculum} pack={map2dPack} onEvent={rec.onEvent} /> },
+        { value: "teacher", label: "Teacher view", content: <ProgressDashboard courseId="lms-demo" course={course} events={rec.events} learners={[you, ...mockLearners]} /> },
       ]}
     />
   );

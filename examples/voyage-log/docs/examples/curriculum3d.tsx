@@ -2,7 +2,7 @@
 // example, but rendered with world3dPack (needs --3d). Nodes are places in space;
 // click one to enter its lesson, hover to focus. Swap the pack (linear/map2d/
 // world3d) without touching content — that's the ports-and-adapters seam.
-import { CurriculumHost, type Curriculum } from "@faraday-academy/runtime/world";
+import { CourseHost, type Course } from "@faraday-academy/runtime/world";
 import { world3dPack } from "@faraday-academy/three";
 import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
 
@@ -28,7 +28,7 @@ function Stop({ title, body }: { title: string; body: string }) {
 }
 
 // Module-level (stable identity). meta.{x,y} (0..100) place nodes on the 3D ground.
-const curriculum: Curriculum = {
+const course: Course = {
   title: "A 3D world course",
   nodes: [
     { id: "intro", title: "Landing", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 },
@@ -46,8 +46,8 @@ const curriculum: Curriculum = {
 
 export default function World3dCourse() {
   return (
-    <CurriculumHost
-      curriculum={curriculum}
+    <CourseHost
+      course={curriculum}
       pack={world3dPack}
       onEvent={(e) => console.debug("[curriculum]", e.type, "nodeId" in e ? e.nodeId : "", e.progress)}
     />

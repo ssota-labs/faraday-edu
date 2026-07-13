@@ -50,7 +50,7 @@ A chapter is a chain of sections, and each section closes its own loop
    outcome supports: a `<Challenge>` or `<NumericAnswer>` gate over an MCQ
    when the verb allows it. Re-quiz one earlier idea while you're at it
    (spacing — the `lecture-design` pack move 4). In a standalone lesson
-   (no `<CurriculumHost>`) there is no gate to wire — the summative check
+   (no `<CourseHost>`) there is no gate to wire — the summative check
    still closes the chapter; just leave `onCorrect`/`onDone` off.
 
 Mixing forms within a lesson is the norm, not the exception: a typical solid

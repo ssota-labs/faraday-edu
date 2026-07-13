@@ -85,7 +85,7 @@
 **이미 있는 것:**
 - 레슨 CLI (2D / `--3d` / `--physics` / `--tutor`) + `doctor` / `upgrade`
 - Claude Code · Codex 플러그인
-- CurriculumHost / packs / LMS (runtime)
+- CourseHost / packs / LMS (runtime)
 - C-B `examples/voyage-log` (Vercel 설정 포함)
 - 공개 GitHub: `https://github.com/ssota-labs/faraday-academy` (구 `faraday-edu`)
 
@@ -159,7 +159,7 @@
 | S2 | 케플러 쓸기 | `--3d` | ❌ 미작성 (voyage 노드와 중복 가능) | static |
 | S3 | 갈톤 보드 | `--physics` | ❌ 미작성 | static |
 | S4 | 이진 탐색 + 튜터 | `--tutor` | ❌ 미작성 | Vercel |
-| C★ | **항해 일지 (C-B)** | CurriculumHost + `world3dPack` | ✅ 코드 준비 | `examples/voyage-log` → Vercel |
+| C★ | **항해 일지 (C-B)** | CourseHost + `world3dPack` | ✅ 코드 준비 | `examples/voyage-log` → Vercel |
 
 **최소 런칭 세트 제안:** C★ + S1 + (S2 **또는** S4). S2는 voyage 첫 노드로 대체 가능하면 단편 제작 비용 절감.
 

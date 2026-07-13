@@ -1,6 +1,6 @@
 // <Quiz> — a self-check multiple-choice question. Reveals correctness + hint
 // after the learner picks an option and presses Check. Optional callbacks let a
-// lesson react to a pass — e.g. inside a <CurriculumHost>, wire `onCorrect` to
+// lesson react to a pass — e.g. inside a <CourseHost>, wire `onCorrect` to
 // `useNode().complete()` so answering correctly unlocks the next node.
 import { useRef, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
@@ -18,7 +18,7 @@ export function Quiz(props: {
   question: string;
   options: QuizOption[];
   /** Fires when the learner checks a CORRECT answer. Wire to `useNode().complete()`
-   *  in a curriculum to unlock the next node, or trigger any "passed" side effect. */
+   *  in a course to unlock the next node, or trigger any "passed" side effect. */
   onCorrect?: () => void;
   /** Fires on every Check with the result — for analytics or custom UI. */
   onChecked?: (correct: boolean) => void;
