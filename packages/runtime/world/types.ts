@@ -83,6 +83,9 @@ export type CourseEvent =
 export interface NodeContextValue {
   nodeId: string;
   complete: () => void;
+  /** Return to the course shell (map/list) without marking complete. */
+  exit?: () => void;
+  nodeTitle?: string;
 }
 
 // ── Deprecated aliases (pre-terminology migration) ───────────────────────────

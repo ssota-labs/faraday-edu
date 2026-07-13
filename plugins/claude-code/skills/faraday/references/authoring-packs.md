@@ -172,7 +172,10 @@ raise it. Re-run after editing a guide to check the change didn't lower quality.
 
 Official packs live in a category folder under `packages/official-packs/<category>/<name>/`
 (the category drives `pack list` grouping and lets two categories hold a same-named
-pack) and are bundled into the CLI at `prepack`. Third parties need nothing official:
+pack) and are bundled into the CLI at `prepack`. In this monorepo, labs auto-catalogs
+every official `pack.json` under **Skills & Packs → Official packs**; UI-bearing packs
+(`copy`/`runtime`) also need a live preview wired in `apps/labs/` — see the
+`faraday-pack-author` agent's labs wire-up step. Third parties need nothing official:
 publish the folder anywhere a source resolves — a local path, a GitHub repo, or an npm
 package — declare a `category` in `pack.json` if you like, and `faraday pack add`
 installs it like any other.

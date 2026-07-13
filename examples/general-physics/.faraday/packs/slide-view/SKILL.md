@@ -23,11 +23,12 @@ wants the **textbook view** or the default scroll (`<Lesson>`).
 
 ## Build surface
 
-A slide view is a `<SlideDeck slides={[…]}>` inside a `<Lesson>` — each slide fills the
-viewport (one shows at a time; only the active slide is mounted, so per-slide state
-resets on return). Inside a slide, split landscape with a `grid h-full
-lg:grid-cols-[3fr_2fr]` (canvas ⇄ prose). Use the runtime's `motion` helpers for
-reveals. No new dependencies.
+A slide view is a `<SlideDeck slides={[…]}>` inside a `<Lecture>` view tab — each slide
+fills the viewport (one shows at a time; only the active slide is mounted, so per-slide
+state resets on return). **The runtime does not inject a title slide** — you author
+slide 1 yourself (see [slide-design.md](slide-design.md) § First slide). Inside a
+slide, split landscape with a `grid h-full lg:grid-cols-[3fr_2fr]` (canvas ⇄ prose).
+Use the runtime's `motion` helpers for reveals. No new dependencies.
 
 ## Quality gate
 

@@ -428,6 +428,18 @@ function textbookPages() {
 function slides() {
   return [
     {
+      id: "title",
+      content: (
+        <div className="flex h-full flex-col justify-center gap-4 px-6 sm:px-12">
+          <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Motion</h1>
+          <p className="max-w-[52ch] text-lg text-muted-foreground text-pretty sm:text-xl">
+            Constant acceleration, one lecture — drive the model, read the graphs, then derive the position equation
+            yourself.
+          </p>
+        </div>
+      ),
+    },
+    {
       id: "intro",
       title: "Three linked quantities",
       content: (

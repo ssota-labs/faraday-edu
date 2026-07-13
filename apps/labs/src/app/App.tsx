@@ -6,6 +6,7 @@ import {
   loadCommands,
   loadComponentGroups,
   loadFeaturePacks,
+  loadOfficialPacks,
   loadPlugins,
   loadSkill,
   loadWorldPacks,
@@ -59,6 +60,7 @@ export function App() {
   const commands = useMemo(loadCommands, []);
   const agents = useMemo(loadAgents, []);
   const worldPacks = useMemo(loadWorldPacks, []);
+  const officialPacks = useMemo(loadOfficialPacks, []);
   const featurePacks = useMemo(loadFeaturePacks, []);
   const plugins = useMemo(loadPlugins, []);
 
@@ -102,6 +104,7 @@ export function App() {
             skill={skill}
             commands={commands}
             agents={agents}
+            officialPacks={officialPacks}
             worldPacks={worldPacks}
             featurePacks={featurePacks}
             plugins={plugins}
