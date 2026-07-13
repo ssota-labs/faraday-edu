@@ -399,4 +399,8 @@ Finish. See `docs/examples/curriculum.tsx` (+ `curriculum3d.tsx` with the `three
 
 > **Pack `lecture-design`:** installed via `faraday pack add lecture-design`. Authoring guide at `.faraday/packs/lecture-design`. Load it when you are designing how a lesson or curriculum teaches — choosing a methodology, sequencing, assessment cadence, or feedback.
 
-> **Pack `map2d`:** installed via `faraday pack add map2d`. Authoring guide at `.faraday/packs/map2d/pack.md`. Load it when a course should be shown as a 2D map / game screen with unlock progression (a <CourseHost>), rather than a linear document list.
+> **Pack `map2d`:** installed via `faraday pack add map2d`. Authoring guide at `.faraday/packs/map2d/pack.md`. Load it when a course should be shown as a 2D map / game screen with unlock progression (a <CurriculumHost>), rather than a linear document list.
+
+> **Pack `slide-view`:** installed via `faraday pack add slide-view`. Authoring guide at `.faraday/packs/slide-view`. Load it when the lecture should use a slide view — one idea per screen, paced with prev/next, for a talk, a kiosk, or a tablet.
+
+> **Pack `textbook-view`:** installed via `faraday pack add textbook-view`. Authoring guide at `.faraday/packs/textbook-view/pack.md`. Load it when the lecture should use a textbook view — dense self-study prose, A4 reading column, scroll, and free-mode margin notes.

@@ -1,0 +1,13 @@
+{
+  "name": "stem-methods",
+  "displayName": "STEM discipline methods",
+  "description": "Fifteen evidence-based teaching methods for math, science, engineering, computing, and statistics — mapped to Faraday block families (not 1:1 blocks). Complements lecture-design (universal moves) and audience (learner population). Skill-only; opt-in via `faraday pack add stem-methods`.",
+  "default": false,
+  "runtime": {},
+  "skill": {
+    "reference": "skill",
+    "entry": "overview.md",
+    "loadWhen": "you are teaching math, science, engineering, computing, or statistics and need a discipline-appropriate unit arc beyond the audience default"
+  },
+  "quality": "quality.md"
+}

@@ -11,22 +11,42 @@
   relationships and compute with the constant-acceleration equations; (b) apply Newton's
   three laws — inertia/equilibrium, F=ma, action-reaction — to force problems; and (c)
   combine them to analyze friction on an incline (find the critical slip angle).
-- **Scope:** one 6-node **unit** → `<CourseHost>` + `map2dPack` (immersive 2D map).
+- **Scope:** one 6-lecture **Course** → `<CourseHost>` + `map2dPack` (immersive 2D map
+  course shell).
 - **Source:** standard general-physics canon (no creator artefact supplied). Physics is
   well-established; every quantitative claim is derived here and spot-checked by hand —
   nothing left unverified.
 - **Methodology:** `audience` pack → Peer Instruction (undergrad row). `lecture-design`
   five moves underneath: backward design, prerequisite-gated graph, generative
-  interaction, spaced retrieval (each node re-quizzes an earlier idea), feed-forward hints.
+  interaction, spaced retrieval (each lecture re-quizzes an earlier idea), feed-forward hints.
+
+## Terminology (v0.2 — this build showcases it)
+
+```
+Curriculum (this app)
+  └── Course  = "Newtonian Mechanics" (6 lectures + prereq graph)   ← map2d course shell
+        └── Lecture = one topic (e.g. "2nd Law · F = ma")
+              └── Presentation views (learner picks a tab):
+                    ├── SlideView    → <SlideDeck>     (class / one beat per screen)
+                    └── TextbookView → <TextbookView>  (self-study / dense scroll)
+```
+
+**Every lecture is authored as a `<Lecture views={[slide, textbook]}>`** — the headline
+demo of PR #18. The *course shell* (`map2dPack`, lecture-to-lecture navigation) and the
+*lecture presentation* (slide/textbook, within one lecture) are deliberately kept
+separate, matching `specs/terminology.md`.
 
 ## Pack decisions
 
-- **map2d** — used, as the course presentation (`map2dPack`). Immersive game screen.
-- **audience**, **lecture-design** — design-time methodology packs (not runtime).
+- **map2d** (`course/`) — the course shell (`map2dPack`). Immersive game screen.
+- **slide-view + textbook-view** (`lecture/`) — the two presentation views every
+  lecture offers. `<SlideDeck>` (runtime block) + `<TextbookView>` (copied to
+  `src/lesson/textbook-view/`).
+- **audience**, **lecture-design** (`methodology/`) — design-time only (not runtime).
 - **three / physics / tutor** — NOT used. Newtonian mechanics at this level is fully
-  served by 2D SVG + `useRafLoop` scripted motion; no genuine 3D or rigid-body engine is
-  needed, and the checks are all recognize/compute/do (no open-ended outcome), so a tutor
-  would be scope creep (quality-bar Surface 4). These packs are not installed in this app.
+  served by 2D SVG + `useRafLoop` scripted motion; the checks are all
+  recognize/compute/do (no open-ended outcome), so a tutor would be scope creep
+  (quality-bar Surface 4). These packs are not installed in this app.
 
 ## Prerequisite graph & sequence
 
@@ -44,16 +64,16 @@ Map layout (`meta.{x,y}`, 0..100) reads left→right, branch above/below the spi
 kinematics (10,50) · first-law (28,50) · second-law (46,50) · third-law (68,28) ·
 friction (68,72) · incline (88,50).
 
-## Node index
+## Lecture index
 
-| id | title | requires | check (form) | packs | status |
-|----|-------|----------|--------------|-------|--------|
-| kinematics  | Motion: position, velocity, acceleration | — | numeric (compute displacement) | map2d | verified |
-| first-law   | Newton's 1st law: inertia & equilibrium | kinematics | MCQ (ConcepTest) | map2d | verified |
-| second-law  | Newton's 2nd law: F = ma | first-law | numeric (compute a) | map2d | verified |
-| third-law   | Newton's 3rd law: action–reaction | second-law | MCQ (ConcepTest) | map2d | verified |
-| friction    | Friction: static & kinetic | second-law | numeric (compute max static) | map2d | verified |
-| incline     | Forces on an incline (application) | third-law, friction | mission (`<Challenge>` critical angle) | map2d | verified |
+| id | title | requires | check (form) | status |
+|----|-------|----------|--------------|--------|
+| kinematics  | Motion: position, velocity, acceleration | — | numeric (compute displacement) | planned |
+| first-law   | Newton's 1st law: inertia & equilibrium | kinematics | MCQ (ConcepTest) | planned |
+| second-law  | Newton's 2nd law: F = ma | first-law | numeric (compute a) | planned |
+| third-law   | Newton's 3rd law: action–reaction | second-law | MCQ (ConcepTest) | planned |
+| friction    | Friction: static & kinetic | second-law | numeric (compute max static) | planned |
+| incline     | Forces on an incline (application) | third-law, friction | mission (`<Challenge>` critical angle) | planned |
 
 ## Spot-checked values (truth checks)
 
@@ -66,7 +86,10 @@ friction (68,72) · incline (88,50).
 
 ## Assembly
 
-- Each node lesson lives in its own file `src/lesson/nodes/<id>.tsx` (export default).
-- Module-scope `curriculum` object assembled in `src/lesson/lesson.tsx`, rendered by
-  `<CourseHost course={curriculum} pack={map2dPack} />` (import `map2dPack` from
-  `./map2d`). Every node carries `summary`, `reward.xp`, `meta.{x,y}`, `requires`.
+- Each lecture lives in its own file `src/lesson/lectures/<id>.tsx` (export default a
+  `<Lecture>` component), file-isolated so lectures build independently.
+- Module-scope `course: Course` assembled in `src/lesson/lesson.tsx`, rendered by
+  `<CourseHost course={course} pack={map2dPack} />` (import `map2dPack` from `./map2d`).
+  Every node carries `summary`, `reward.xp`, `meta.{x,y}`, `requires`.
+- The graded check inside each lecture wires to `useNode().complete()` so answering it
+  completes the map node and unlocks dependents.
