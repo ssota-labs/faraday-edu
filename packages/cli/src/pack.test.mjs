@@ -32,9 +32,17 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "kids", "notes", "map2d"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "notes", "map2d", "game2d", "storybook-game2d"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
+  assert.ok(!names.includes("kids"), "kids was folded into storybook-game2d");
+  const game2d = packs.find((p) => p.name === "game2d");
+  assert.ok(game2d?.runtime?.dependencies?.["pixi.js"], "game2d pins pixi.js");
+  assert.ok(game2d?.runtime?.dependencies?.["matter-js"], "game2d pins matter-js");
+  assert.equal(game2d?.default, true, "game2d is a default pack");
+  const story = packs.find((p) => p.name === "storybook-game2d");
+  assert.deepEqual(story?.requires, ["game2d"], "storybook-game2d requires game2d");
+  assert.equal(story?.default, true, "storybook-game2d is a default pack");
   // every shipped pack must have a valid manifest
   for (const p of packs) {
     const errs = validateManifest(await readManifestAt((await resolvePack(p.name)).packDir));
@@ -51,10 +59,10 @@ test("listPacks includes all shipped packs", async () => {
   assert.ok(three.skill?.reference, "three ships a skill reference");
 });
 
-async function scaffold(name) {
+async function scaffold(name, { noDefaults = false } = {}) {
   const base = await tmp();
   const target = path.join(base, "lesson");
-  await generateLesson({ targetDir: target, name, uuid: () => "fixed-id" });
+  await generateLesson({ targetDir: target, name, uuid: () => "fixed-id", noDefaults });
   return target;
 }
 
@@ -100,6 +108,35 @@ test("installPack(map2d) copies the presentation component, no new npm deps", as
 
   const after = JSON.parse(await read(target, "package.json"));
   assert.deepEqual(after.dependencies, before.dependencies, "map2d adds no runtime deps");
+});
+
+test("installPack(game2d) pins Pixi/Matter/Howler and copies glue", async () => {
+  const target = await scaffold("Game2D Host", { noDefaults: true });
+  await installPack("game2d", { fromDir: target });
+
+  const pkg = JSON.parse(await read(target, "package.json"));
+  assert.ok(pkg.dependencies["pixi.js"], "pixi.js pinned");
+  assert.ok(pkg.dependencies["@pixi/react"], "@pixi/react pinned");
+  assert.ok(pkg.dependencies["matter-js"], "matter-js pinned");
+  assert.ok(pkg.dependencies.howler, "howler pinned");
+  assert.ok(await exists(path.join(target, "src/lesson/game2d/Game2D.tsx")), "Game2D copied");
+  assert.ok(await exists(path.join(target, "src/lesson/game2d/physics.tsx")), "physics copied");
+  assert.ok(await exists(path.join(target, "src/lesson/game2d/tilemap.tsx")), "tilemap copied");
+  assert.ok(await exists(path.join(target, "src/lesson/game2d/audio.ts")), "audio copied");
+  assert.ok(await exists(path.join(target, "public/assets/game2d/README.md")), "asset README copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/game2d/SKILL.md")), "folder skill installed");
+});
+
+test("installPack(storybook-game2d) requires game2d and copies the story shell", async () => {
+  const target = await scaffold("Story Host", { noDefaults: true });
+  await installPack("storybook-game2d", { fromDir: target });
+
+  assert.ok(await exists(path.join(target, "src/lesson/game2d/Game2D.tsx")), "game2d installed via requires");
+  assert.ok(await exists(path.join(target, "src/lesson/storybook-game2d/StorybookGame.tsx")), "story shell copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/storybook-game2d/SKILL.md")), "skill installed");
+  assert.ok(await exists(path.join(target, ".faraday/packs/storybook-game2d/pedagogy.md")), "kids pedagogy folded in");
+  const pkg = JSON.parse(await read(target, "package.json"));
+  assert.ok(pkg.dependencies["pixi.js"], "pixi arrives through game2d requires");
 });
 
 test("installPack(lecture-design) installs a skill FOLDER, no runtime", async () => {
