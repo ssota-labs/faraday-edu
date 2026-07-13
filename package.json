@@ -3,12 +3,13 @@
   "private": true,
   "description": "Faraday monorepo — the @faraday-academy/cli scaffolder, the runtime + addon packages lessons pin, and live example lessons.",
   "scripts": {
-    "test": "pnpm --filter @faraday-academy/cli test",
+    "test": "pnpm --filter @faraday-academy/cli test && node --test scripts/setup-env-local.test.mjs",
     "test:cli": "pnpm --filter @faraday-academy/cli test",
     "publish:packages": "node scripts/publish-packages.mjs",
     "publish:packages:dry": "node scripts/publish-packages.mjs --dry-run",
     "sync:skills": "node scripts/sync-skills.mjs",
     "sync:skills:check": "node scripts/sync-skills.mjs --check",
+    "setup:env": "node scripts/setup-env-local.mjs",
     "stage1:cold-e2e": "node scripts/stage1-cold-e2e.mjs"
   },
   "license": "SEE LICENSE IN LICENSE.md",
