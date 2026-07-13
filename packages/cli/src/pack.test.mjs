@@ -32,10 +32,13 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "notes", "map2d", "game2d", "storybook-game2d", "stem-methods"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "notes", "map2d", "game2d", "storybook-game2d", "sim2d", "stem-methods"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
   assert.ok(!names.includes("kids"), "kids was folded into storybook-game2d");
+  const sim2d = packs.find((p) => p.name === "sim2d");
+  assert.ok(sim2d?.runtime?.dependencies?.gsap, "sim2d pins gsap");
+  assert.equal(sim2d?.default, true, "sim2d is a default pack");
   const game2d = packs.find((p) => p.name === "game2d");
   assert.ok(game2d?.runtime?.dependencies?.["pixi.js"], "game2d pins pixi.js");
   assert.ok(game2d?.runtime?.dependencies?.["matter-js"], "game2d pins matter-js");
@@ -137,6 +140,17 @@ test("installPack(storybook-game2d) requires game2d and copies the story shell",
   assert.ok(await exists(path.join(target, ".faraday/packs/storybook-game2d/pedagogy.md")), "kids pedagogy folded in");
   const pkg = JSON.parse(await read(target, "package.json"));
   assert.ok(pkg.dependencies["pixi.js"], "pixi arrives through game2d requires");
+});
+
+test("installPack(sim2d) pins GSAP and copies simulation glue", async () => {
+  const target = await scaffold("Sim2D Host", { noDefaults: true });
+  await installPack("sim2d", { fromDir: target });
+
+  const pkg = JSON.parse(await read(target, "package.json"));
+  assert.ok(pkg.dependencies.gsap, "gsap pinned");
+  assert.ok(await exists(path.join(target, "src/lesson/sim2d/useSimTime.ts")), "useSimTime copied");
+  assert.ok(await exists(path.join(target, "src/lesson/sim2d/SvgStage.tsx")), "SvgStage copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/sim2d/SKILL.md")), "folder skill installed");
 });
 
 test("installPack(lecture-design) installs a skill FOLDER, no runtime", async () => {

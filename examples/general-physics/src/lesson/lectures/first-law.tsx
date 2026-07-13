@@ -18,7 +18,7 @@ import {
   Readout,
   Derivation,
 } from "@faraday-academy/runtime/blocks";
-import { useRafLoop } from "@faraday-academy/runtime/runtime";
+import { useSimLoop } from "../sim2d";
 import { useNode } from "@faraday-academy/runtime/world";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { TextbookView } from "../textbook-view";
@@ -60,7 +60,7 @@ function PuckModel() {
   const [playing, setPlaying] = useState(true);
   const [frame, setFrame] = useState({ v: 0, off: 0 });
 
-  useRafLoop((dt) => {
+  useSimLoop((dt) => {
     let a = 0;
     if (kick.current > 0) {
       a += KICK_ACCEL; // the brief push

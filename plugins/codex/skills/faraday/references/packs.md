@@ -50,6 +50,7 @@ faraday pack add ./path | owner/repo | npm:@scope/pack   # third-party sources
 | `exam` | a practice test / mock exam across a topic — blueprint → items → scoring. |
 | `textbook-view` | textbook view — A4 self-study column, scroll, free-mode margin notes. |
 | `slide-view` | slide view presentation — one idea per screen, prev/next, animation. (`deck` aliases here.) |
+| `sim2d` | SVG + GSAP formula simulations (replaces runtime motion hooks). |
 | `game2d` | PixiJS 2D educational stage — physics, tilemap, audio. |
 | `storybook-game2d` | page-turn story shell on game2d (absorbs former `kids`). |
 | `notes` | handwriting / sketch on a stylus — a full-page pen ink canvas. |

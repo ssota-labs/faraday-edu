@@ -21,7 +21,7 @@ import {
   ControlGroup,
   TeX,
 } from "@faraday-academy/runtime/blocks";
-import { useRafLoop, useSvgDrag } from "@faraday-academy/runtime/runtime";
+import { useSimLoop, useSvgDrag } from "../sim2d";
 import { useNode } from "@faraday-academy/runtime/world";
 import { Button } from "@faraday-academy/runtime/ui/button";
 import { TextbookView } from "../textbook-view";
@@ -136,7 +136,7 @@ function InclineLab(props: { showTarget?: boolean; onState?: (s: LabState) => vo
 
   // Drive the block: while stuck it eases home; once θ>θ_c it accelerates from
   // rest (a legible release — velocity builds from zero, nothing teleports).
-  useRafLoop((dt) => {
+  useSimLoop((dt) => {
     if (draggingRef.current) return; // pause motion while grabbing the ramp
     if (sliding) {
       const aPx = G * (sin - mu * cos) * PX_PER_M;

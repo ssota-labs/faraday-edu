@@ -75,7 +75,7 @@ of `<Workbench>`.
 - **Aim-then-run (hybrid)** — common third shape: continuous setup + a discrete
   timed run. The learner aims by direct manipulation (`useSvgDrag` on the object,
   a live dashed preview), then an on-canvas button (in the Workbench `hud`) fires
-  a `useRafLoop` simulation that flies/settles with a visible trail. Projectiles,
+  a `useSimLoop` simulation that flies/settles with a visible trail. Projectiles,
   reaction runs, races, launches — anything with a "set it up, let it go" beat.
 
 ## Block catalog
@@ -106,9 +106,10 @@ of `<Workbench>`.
 | `<Readout label value tone?>` | Compact label:value chip for live numbers — designed for the Workbench `hud` slot. |
 | `<SlideDeck pages height? onLastSlide?>` | Tablet-style screen-at-a-time layout: each page fills the viewport height, one shows at a time (prev/next, dot rail, arrow keys). `pages: {id, title?, content}[]`. Only the active page is mounted (per-page state resets on return). Use for "one idea per screen" audiences/contexts (see the audience pack "Layout"); default remains the book-like vertical scroll. Inside a page, landscape-split with `grid h-full lg:grid-cols-[3fr_2fr]`. |
 | `useStepper(total, { fps? })` | Cursor + autoplay over ordered frames. From `@faraday-academy/runtime/runtime`. |
-| `useAnimatedValue(target, {stiffness?})` | Returns a value that spring-chases `target` — render from it and discrete changes (selection, step, reset) EASE instead of teleporting. From `@faraday-academy/runtime/runtime`. |
-| `useRafLoop(cb, playing?)` | Simulation loop: `cb(dt, t)` each frame while playing. Keeps dynamic concepts moving on screen (orbit orbits, wave travels) with Play/Pause in the `hud`. From `@faraday-academy/runtime/runtime`. |
-| `useSvgDrag(onDrag)` | Direct manipulation: spread on any SVG element → drag positions in viewBox coords (`onDrag(x, y, phase)`), pointer-captured. Drag the object itself instead of a detached slider. From `@faraday-academy/runtime/runtime`. |
+| `useAnimatedValue(target, {duration?})` | GSAP-eases toward `target` — render from it and discrete changes (selection, step, reset) EASE instead of teleporting. From `src/lesson/sim2d`. |
+| `useSimLoop` / `useRafLoop` (alias) | Simulation loop: `cb(dt, t)` each frame while playing. Keeps dynamic concepts moving on screen (orbit orbits, wave travels) with Play/Pause in the `hud`. From `src/lesson/sim2d`. |
+| `useSimTime` | Linear sim-time playback (SUVAT). From `src/lesson/sim2d`. |
+| `useSvgDrag(onDrag)` | Direct manipulation: spread on any SVG element → drag positions in viewBox coords (`onDrag(x, y, phase)`), pointer-captured. Drag the object itself instead of a detached slider. From `src/lesson/sim2d`. |
 
 Light/dark toggle and the reading column come from the runtime — don't add them.
 
