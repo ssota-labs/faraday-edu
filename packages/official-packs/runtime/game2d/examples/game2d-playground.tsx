@@ -48,8 +48,9 @@ export default function Game2DPlayground() {
     <Lesson title="game2d playground">
       <Prose>
         <p>
-          A Matter.js ball on a static floor inside <code>&lt;Game2D&gt;</code>. Drop Kenney
-          sprites into <code>public/assets/game2d/</code> when you leave the grey-box phase.
+          A Matter.js ball on a static floor inside <code>&lt;Game2D&gt;</code>. Install
+          sprites with <code>node scripts/game2d-assets.mjs starter</code> when you leave
+          the grey-box phase (see <code>.faraday/packs/game2d/assetvault.md</code>).
         </p>
       </Prose>
       <Workbench>

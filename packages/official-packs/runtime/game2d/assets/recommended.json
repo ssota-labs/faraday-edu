@@ -1,0 +1,30 @@
+{
+  "description": "CC0 starter bundles for educational game2d lessons. Install with: pnpm run assets:starter",
+  "starter": [
+    {
+      "id": "kenney/ui-pack",
+      "use": "buttons, panels, HUD chrome",
+      "publicPrefix": "/assets/game2d/ui-pack"
+    },
+    {
+      "id": "kenney/platformer-characters",
+      "use": "player / NPC sprites",
+      "publicPrefix": "/assets/game2d/platformer-characters"
+    },
+    {
+      "id": "kenney/pixel-platformer",
+      "use": "tileset for platform levels",
+      "publicPrefix": "/assets/game2d/pixel-platformer"
+    },
+    {
+      "id": "kenney/digital-audio",
+      "use": "SFX blips and UI sounds",
+      "publicPrefix": "/assets/game2d/digital-audio"
+    },
+    {
+      "id": "kenney/tiny-dungeon",
+      "use": "top-down dungeon tiles (optional RPG-ish demos)",
+      "publicPrefix": "/assets/game2d/tiny-dungeon"
+    }
+  ]
+}
