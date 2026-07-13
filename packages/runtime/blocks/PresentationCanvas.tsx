@@ -224,7 +224,7 @@ export function PresentationCanvas(props: {
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
                 className={cn(
-                  "absolute overflow-hidden rounded-xl border bg-card text-left shadow-md transition ring-offset-background hover:border-primary/50",
+                  "absolute overflow-hidden rounded-none border bg-card text-left shadow-md transition ring-offset-background hover:border-primary/50",
                   props.activeId === item.id ? "ring-2 ring-primary" : "",
                 )}
                 style={{ left: pos.x, top: pos.y, width: cardW, height: cardH }}
