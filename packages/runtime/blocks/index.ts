@@ -2,6 +2,9 @@
 // Import from "./" in lesson code.
 export { Lesson } from "./Lesson";
 export { Lecture, type LectureView } from "./Lecture";
+export { useLecture, type LectureContextValue, type LectureViewMeta } from "./lecture-context";
+export { PresentationCanvas, type CanvasItem } from "./PresentationCanvas";
+export { PresentationToolbar } from "./PresentationToolbar";
 export { Prose } from "./Prose";
 export { Stage } from "./Stage";
 export { Workbench } from "./Workbench";

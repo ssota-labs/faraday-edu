@@ -1,6 +1,6 @@
 // Course core — public entry. Import from "./".
 export { CourseHost, CurriculumHost } from "./host";
-export { useNode } from "./node-context";
+export { useNode, useCourseNav } from "./node-context";
 export { linearPack } from "./packs/linear";
 export type {
   Course,

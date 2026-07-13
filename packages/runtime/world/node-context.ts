@@ -11,3 +11,8 @@ export function useNode(): NodeContextValue {
   if (!ctx) throw new Error("useNode() must be called inside a lesson rendered by <CourseHost>");
   return ctx;
 }
+
+/** Optional course navigation — safe outside <CourseHost>. */
+export function useCourseNav(): NodeContextValue | null {
+  return useContext(NodeContext);
+}

@@ -14,7 +14,6 @@ export function Paged(props: {
   return (
     <SlideDeck
       slides={props.pages}
-      height={props.height}
       onLastSlide={props.onLastPage}
     />
   );
