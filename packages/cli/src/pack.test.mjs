@@ -32,7 +32,7 @@ const exists = async (p) => !!(await fs.stat(p).catch(() => null));
 test("listPacks includes all shipped packs", async () => {
   const packs = await listPacks();
   const names = packs.map((p) => p.name);
-  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "kids", "notes", "map2d"]) {
+  for (const n of ["three", "tutor", "srs", "lecture-design", "audience", "exam", "slide-view", "textbook-view", "game-view", "assets-2d", "assets-3d", "kids", "notes", "map2d"]) {
     assert.ok(names.includes(n), `expected a \`${n}\` pack`);
   }
   // every shipped pack must have a valid manifest
@@ -259,6 +259,37 @@ test("installPack(textbook-view) copies TextbookView, no new deps", async () => 
   assert.ok(await exists(path.join(target, ".faraday/packs/textbook-view/pack.md")));
   const after = JSON.parse(await read(target, "package.json"));
   assert.deepEqual(after.dependencies, before.dependencies);
+});
+
+test("installPack(game-view) copies GameView and auto-installs assets-2d", async () => {
+  const target = await scaffold("Game Host");
+  const before = JSON.parse(await read(target, "package.json"));
+  await installPack("game-view", { fromDir: target });
+
+  assert.ok(await exists(path.join(target, "src/lesson/game-view/GameView.tsx")), "GameView copied");
+  assert.ok(await exists(path.join(target, ".faraday/packs/game-view/SKILL.md")), "game-view skill installed");
+  assert.ok(await exists(path.join(target, ".faraday/packs/assets-2d/SKILL.md")), "assets-2d required skill installed");
+  const after = JSON.parse(await read(target, "package.json"));
+  assert.deepEqual(after.dependencies, before.dependencies, "game-view adds no runtime deps");
+});
+
+test("installPack(assets-2d) installs skill folder only", async () => {
+  const target = await scaffold("Assets2d Host");
+  const before = JSON.parse(await read(target, "package.json"));
+  const result = await installPack("assets-2d", { fromDir: target });
+
+  assert.ok(await exists(path.join(target, ".faraday/packs/assets-2d/SKILL.md")), "skill installed");
+  assert.equal(result.addedDeps.length, 0, "skill-only pack adds no deps");
+  const after = JSON.parse(await read(target, "package.json"));
+  assert.deepEqual(after.dependencies, before.dependencies);
+});
+
+test("installPack(assets-3d) installs skill folder only", async () => {
+  const target = await scaffold("Assets3d Host");
+  const result = await installPack("assets-3d", { fromDir: target });
+
+  assert.ok(await exists(path.join(target, ".faraday/packs/assets-3d/SKILL.md")), "skill installed");
+  assert.equal(result.addedDeps.length, 0, "skill-only pack adds no deps");
 });
 
 test("installPack(notes) copies the author-editable pen component, no new deps", async () => {

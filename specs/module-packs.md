@@ -163,7 +163,10 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 | 암기 | `srs` (플래시카드) | ✅ 구현 | **소스 copy**(`src/lesson/srs/`) + deps 0개 |
 | 렉쳐구성 | `lecture-design` (교수법) | ✅ 구현 | **스킬-온리** + 스킬 **폴더** 설치 |
 | 렉쳐 | `slide-view` (슬라이드 뷰) | ✅ 구현 | 폴더 스킬(slide-design→motion→pacing), `<SlideDeck>`+motion 조합, deps 0 |
-| 아이들 | `kids` (태블릿 게임) | ✅ 구현 | 프리셋 스킬(CRA+큰타깃+축하), `audience` 팩 위, deps 0 |
+| 렉쳐 | `textbook-view` (텍스트북 뷰) | ✅ 구현 | `<TextbookView>` copy-in, deps 0 |
+| 렉쳐 | `game-view` (게임 뷰) | ✅ 구현 | `<GameView>` 2D beats + `assets-2d` requires |
+| 에셋 | `assets-2d` / `assets-3d` | ✅ 구현 | 스킬-온리, CC0 카탈로그 + AI 파이프라인 |
+| 아이들 | `kids` (태블릿 게임) | ✅ 구현 | 프리셋 스킬(CRA+큰타깃+축하), 유아→game-view |
 | 시험 | `exam` | ✅ 구현 | **폴더 스킬 + entry**(blueprint→items→scoring→integrity), 평가 블록 조합, deps 0 |
 | 노트 | `notes` (펜 노트) | ✅ 구현 | **소스 copy** `<Notebook>` 펜 캔버스(Canvas+PointerEvents, 필압), deps 0 |
 
@@ -174,7 +177,7 @@ faraday pack new <name> [--kind skill|copy|runtime] [--at <dir>]   # 새 팩 스
 
 ## 9. 구현 요약
 
-- `packages/official-packs/<category>/<name>/` — categories: `course` (map2d) · `lecture` (slide-view·textbook-view·srs·notes·exam·kids) · `runtime` (three·tutor) · `methodology` (audience·lecture-design)
+- `packages/official-packs/<category>/<name>/` — categories: `course` (map2d) · `lecture` (slide-view·textbook-view·game-view·assets-2d·assets-3d·srs·notes·exam·kids) · `runtime` (three·tutor) · `methodology` (audience·lecture-design)
   — 공식 팩 (pack.json + skill + examples/runtime + quality.md) + `pack.schema.json`(계약).
   용어: [terminology.md](terminology.md).
 - `packages/cli/scripts/bundle-packs.mjs` — `prepack` 빌드: official-packs → `<cli>/packs`

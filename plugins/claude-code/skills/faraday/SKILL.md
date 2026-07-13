@@ -153,7 +153,7 @@ rest (there are no flags). Run `faraday pack list` for the live catalog and see
   `faraday pack add three --physics`. For scripted motion (orbits) use the render loop.
 - **`tutor`** — the reader benefits from asking questions. A durable, grounded chat
   tutor. Needs `AI_GATEWAY_API_KEY` locally. See [references/tutor.md](references/tutor.md).
-- **other packs** — memorization (`srs`), exams (`exam`), slide view (`slide-view`), kids
+- **other packs** — memorization (`srs`), exams (`exam`), slide view (`slide-view`), game view (`game-view`), assets (`assets-2d`, `assets-3d`), kids
   (`kids`), pen notes (`notes`), pedagogy (`lecture-design`). All pre-installed;
   `faraday pack remove <name>` what a lesson doesn't use.
 - **Single lesson vs. course vs. curriculum** — one idea → one `<Lesson>`; a sequence →

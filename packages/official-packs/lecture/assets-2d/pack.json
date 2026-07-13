@@ -1,0 +1,13 @@
+{
+  "name": "assets-2d",
+  "displayName": "2D sprites & backgrounds",
+  "description": "Curated CC0 2D asset sources and AI sprite-sheet pipelines for game-view lectures. Skill-only — no runtime deps. Teaches where to find sprites, how to generate them, and lesson folder conventions (public/assets/sprites/, public/assets/backgrounds/).",
+  "default": true,
+  "runtime": {},
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the lesson needs 2D sprites, tilesets, or backgrounds for a game-view scene — sourcing CC0 art or generating sprite sheets"
+  },
+  "quality": "quality.md"
+}

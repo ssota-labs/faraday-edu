@@ -1,0 +1,19 @@
+{
+  "name": "game-view",
+  "displayName": "Game view (2D scenes + dialogue)",
+  "description": "Present a lecture as a 2D game scene — character movement, dialogue boxes, and screen transitions (not a slide deck). Ships author-editable <GameView> into src/lesson/game-view. Pair with assets-2d for sprites and backgrounds.",
+  "default": true,
+  "requires": ["assets-2d"],
+  "runtime": {
+    "copy": [
+      { "from": "runtime/game-view", "to": "src/lesson/game-view" },
+      { "from": "examples", "to": "docs/examples" }
+    ]
+  },
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the lecture should play like a preschool/elementary game — walking, dialogue, scene changes — not slides or scroll"
+  },
+  "quality": "quality.md"
+}

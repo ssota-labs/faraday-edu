@@ -1,0 +1,13 @@
+{
+  "name": "assets-3d",
+  "displayName": "3D models & glTF",
+  "description": "Curated CC0 3D model sources and text-to-GLB pipelines for three/world3d lectures. Skill-only — no runtime deps. Teaches procedural-first via the three pack, then CC0 libraries and AI generation.",
+  "default": true,
+  "runtime": {},
+  "skill": {
+    "reference": "skill",
+    "entry": "SKILL.md",
+    "loadWhen": "the lesson needs 3D models (GLB/glTF) for world3d or world3dRpg scenes — sourcing CC0 art or generating meshes"
+  },
+  "quality": "quality.md"
+}

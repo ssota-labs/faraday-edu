@@ -15,8 +15,8 @@ mechanism — the skill's job is to know packs exist, use the right ones, then
 > - **course** — how a **course** is navigated (`map2d` course shell). **Opt-in**
 >   (`faraday pack add map2d`); built-in `linearPack` needs no pack; `world3d` rides with `three`.
 >   See [worlds.md](worlds.md).
-> - **lecture** — lecture presentations and tools (`slide-view`, `textbook-view`, `srs`,
->   `notes`, `exam`, `kids`).
+> - **lecture** — lecture presentations and tools (`slide-view`, `textbook-view`, `game-view`,
+>   `assets-2d`, `assets-3d`, `srs`, `notes`, `exam`, `kids`).
 > - **runtime** — engines / durable services (`three`, `tutor`).
 > - **methodology** — pedagogy knowledge, skill-only (`audience`, `lecture-design`).
 >
@@ -49,8 +49,11 @@ faraday pack add ./path | owner/repo | npm:@scope/pack   # third-party sources
 | `srs` | the goal is **memorization/recall** (vocabulary, facts, formulas) — spaced-repetition flashcards. |
 | `exam` | a practice test / mock exam across a topic — blueprint → items → scoring. |
 | `textbook-view` | textbook view — A4 self-study column, scroll, free-mode margin notes. |
+| `game-view` | game presentation — 2D scenes, character movement, dialogue, screen transitions (not slides). Requires `assets-2d`. |
+| `assets-2d` | 2D sprites & backgrounds — CC0 catalog + AI sprite pipelines (skill-only). |
+| `assets-3d` | 3D models & glTF — CC0 catalog + text-to-GLB pipelines (skill-only). |
 | `slide-view` | slide view presentation — one idea per screen, prev/next, animation. (`deck` aliases here.) |
-| `kids` | a young-learner tablet lecture — CRA, big targets, celebration. |
+| `kids` | a young-learner tablet lecture — CRA, big targets, celebration; preschool → `game-view`. |
 | `notes` | handwriting / sketch on a stylus — a full-page pen ink canvas. |
 | `lecture-design` · `audience` | **designing how it teaches** — pedagogy + per-audience methodology. |
 

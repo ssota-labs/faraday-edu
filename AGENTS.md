@@ -84,7 +84,7 @@ invisible to the agent, and vice versa.
 `AGENTS.md` pointer), recorded in `.faraday/provenance.json`. Official packs are **bundled
 into the CLI at `prepack`** (`scripts/bundle-packs.mjs` → `<cli>/packs`, gitignored); dev
 reads `official-packs` directly. Default packs ship today: `three`, `tutor`, `srs`, `lecture-design`, `audience`, `exam`, `slide-view`,
-`kids`, `notes` (+ opt-in `map2d` course shell). **Default packs** (`"default": true`) — `faraday new` is
+`textbook-view`, `game-view`, `assets-2d`, `assets-3d`, `kids`, `notes` (+ opt-in `map2d` course shell). **Default packs** (`"default": true`) — `faraday new` is
 batteries-included and auto-installs every pack (skill + runtime), so each lesson carries all
 the capabilities and the pedagogy/audience knowledge in `.faraday/packs/`. Use `--no-defaults`
 for a minimal lesson, and `faraday pack remove <name>` to trim what a finished lesson doesn't

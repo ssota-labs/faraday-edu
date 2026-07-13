@@ -311,7 +311,7 @@ faraday help
 
 **능력은 플래그가 아니라 팩입니다** — 그리고 `new`는 **배터리 포함(batteries-included)**:
 아홉 개 팩(스킬 + 런타임)을 모두 자동 설치하므로 `three`(`--physics` variant), `tutor`,
-`srs`, `exam`, `slide-view`, `kids`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
+`three`, `srs`, `exam`, `slide-view`, `textbook-view`, `game-view`, `assets-2d`, `assets-3d`, `kids`, `notes`, `lecture-design`, `audience`가 처음부터 손안에
 있습니다 (`faraday pack list`로 라이브 카탈로그 확인). 최소 레슨은 `--no-defaults`,
 완성된 레슨에서 불필요한 팩(예: 무거운 `three`/`tutor` 런타임)은 `faraday pack remove
 <name>`로 덜어냅니다. `faraday pack add <name|source>`는 서드파티 팩을 설치하거나
@@ -339,7 +339,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — `faraday` 스캐폴더 (bin + src)
 │  │  └─ templates/starter/     #   `faraday new`가 찍어내는 앱 셸 (팩은 빌드 시 번들)
-│  ├─ official-packs/           # 카테고리별 모듈 팩: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
+│  ├─ official-packs/           # 카테고리별 모듈 팩: course/ (map2d) · lecture/ (slide-view·textbook-view·game-view·assets-2d·assets-3d·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
 │  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)

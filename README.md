@@ -309,7 +309,7 @@ faraday help
 
 **Capabilities are packs, not flags** — and `new` is **batteries-included**: it
 auto-installs all nine packs (skill + runtime), so `three` (`--physics` variant),
-`tutor`, `srs`, `exam`, `slide-view`, `kids`, `notes`, `textbook-view`, `lecture-design`, and `audience` are
+`three`, `tutor`, `srs`, `exam`, `slide-view`, `textbook-view`, `game-view`, `assets-2d`, `assets-3d`, `kids`, `notes`, `lecture-design`, and `audience` are
 on hand from the start (`faraday pack list` shows the live catalog). Use `--no-defaults`
 for a minimal lesson, and `faraday pack remove <name>` to drop what a finished lesson
 doesn't need (e.g. the heavy `three`/`tutor` runtimes). `faraday pack add <name|source>`
@@ -337,7 +337,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 ├─ packages/
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
-│  ├─ official-packs/           # module packs by category: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
+│  ├─ official-packs/           # module packs by category: course/ (map2d) · lecture/ (slide-view·textbook-view·game-view·assets-2d·assets-3d·srs·notes·exam·kids) · runtime/ (three·tutor) · methodology/ (audience·lecture-design) + pack.schema.json
 │  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)

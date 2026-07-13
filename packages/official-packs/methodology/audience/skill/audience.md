@@ -17,11 +17,28 @@ underneath.
 
 | Audience | Default methodology | Anchor |
 |---|---|---|
+| Preschool / 유아 (~3–6) | **CRA** — Concrete → Representational → Abstract, via **game scenes** | Bruner 1966; game-based early math (e.g. Sarama & Clements) |
 | Children / elementary (~6–12) | **CRA** — Concrete → Representational → Abstract | Bruner 1966; CRA math-intervention meta-analyses (e.g. Bouck et al. 2018) |
 | Adolescents / secondary (~13–18) | **5E learning cycle** — Engage, Explore, Explain, Elaborate, Evaluate | Atkin & Karplus 1962; BSCS 5E (Bybee et al. 2006) |
 | Undergraduates / formal STEM | **Peer Instruction** — predict → commit → resolve ConcepTests | Mazur 1997; Crouch & Mazur 2001 |
 | General adult public | **Multimedia learning principles** — segmented, coherent, conversational | Mayer, *Multimedia Learning* (2009/2021) |
 | Working professionals | **First Principles of Instruction** — problem-centered cycle | Merrill 2002 (background: Knowles' andragogy) |
+
+## Preschool / 유아 (~3–6) — CRA through game scenes
+
+The youngest learners need **characters that move, dialogue they can tap through, and
+scenes that change** — not slides and not scroll. CRA still applies: manipulate a
+concrete thing first, then a picture, then a tiny symbol.
+
+- **`<GameView>`** is the default presentation — `dialogue`, `move`, `choice` beats.
+- **One short line per beat** — read-aloud friendly; under ~12 words per dialogue.
+- **Big tap targets** — full-width stage tap, large `choice` buttons.
+- **Sprites before symbols** — count apples on screen before showing "3".
+- **Celebrate** — visible success on every `interaction` beat cleared.
+
+→ *Faraday:* `game-view` + `assets-2d` + `kids` preset; `<Challenge>` as
+`interaction` beats; optional `map2d` course shell for lecture-to-lecture unlocks.
+Avoid `<SlideDeck>` as the primary spine for this age.
 
 ## Children / elementary — CRA (Concrete → Representational → Abstract)
 
@@ -40,6 +57,7 @@ symbol is the *souvenir* of an experience they already had.
 → *Faraday:* `map2dPack`/`world3dPack` world; each node = one idea; `<Workbench>`
 first, a labeled `<Stage>` diagram second, at most one tiny `<TeX>` at the end;
 quizzes with picture-anchored options. Prose stays under ~50 words per block.
+For preschool, prefer `<GameView>` over `<SlideDeck>` (see preschool section above).
 
 ## Adolescents / secondary — the 5E learning cycle
 
@@ -138,11 +156,13 @@ children's read-aloud storybook may scroll):
 |---|---|---|
 | **Book scroll** (vertical) | The default reading column — long-form prose + embedded instruments, scrolled like a chapter. | `<Lesson>` as-is |
 | **Slide deck / tablet** (screen-at-a-time) | Each slide fills the viewport, one idea per screen, prev/next + dots + arrow keys; landscape split (canvas ⇄ prose) inside a slide. | `<SlideDeck slides={…}>` inside `<Lesson>` |
+| **Game view** (scene-at-a-time) | Characters move, dialogue advances on tap, backgrounds change — not prev/next slides. | `<GameView>` inside `<Lecture>` (`game-view` pack) |
 | **Chaptered course** | Several scroll lessons behind a chapter nav. | `<Course>` |
 | **Game world** | Full-viewport map/constellation with HUD; lessons open per node. | `<CourseHost>` + game pack |
 
-Defaults by audience: **children → paged** (CRA wants literally one idea per
-screen, big targets, no wall of text to scroll past); **secondary → scroll**
+Defaults by audience: **preschool → game view** (CRA + movement + dialogue, not slides);
+**children → paged or game** (CRA wants one idea per screen/beat, big targets);
+**secondary → scroll**
 (5E arcs read well as a chapter; paged works for younger/middle grades);
 **undergrad → scroll** (dense reading + derivations want a column);
 **general public → scroll with short chapters** (`<Course>`), paged for
