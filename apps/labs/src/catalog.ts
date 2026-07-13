@@ -22,6 +22,11 @@ export type ComponentGroup = {
   components: Component[];
 };
 export type Pack = { id: string; title: string; summary: string; relPath: string; tag: string };
+export type OfficialPack = Pack & {
+  category: string;
+  kind: "skill" | "copy" | "runtime";
+  defaultInstall: boolean;
+};
 export type SkillRef = { file: string; title: string };
 export type Skill = { name: string; description: string; relPath: string; references: SkillRef[] };
 export type Command = { name: string; description: string; relPath: string };
@@ -52,6 +57,12 @@ const commandSrc = import.meta.glob("../../../plugins/claude-code/commands/*.md"
   eager: true,
 }) as Record<string, string>;
 const agentSrc = import.meta.glob("../../../plugins/claude-code/agents/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+const officialPackManifests = import.meta.glob("../../../packages/official-packs/**/pack.json", {
   query: "?raw",
   import: "default",
   eager: true,
@@ -183,6 +194,43 @@ export function loadWorldPacks(): Pack[] {
 
 export function loadFeaturePacks(): Pack[] {
   return FEATURE_PACKS;
+}
+
+type PackManifest = {
+  name: string;
+  displayName?: string;
+  description?: string;
+  default?: boolean;
+  runtime?: { dependencies?: Record<string, string>; copy?: { from: string }[] };
+};
+
+function inferPackKind(m: PackManifest): OfficialPack["kind"] {
+  const rt = m.runtime ?? {};
+  if (rt.dependencies && Object.keys(rt.dependencies).length > 0) return "runtime";
+  if (rt.copy?.some((c) => c.from.startsWith("runtime/"))) return "copy";
+  return "skill";
+}
+
+/** Official module packs — auto-discovered from every pack.json under official-packs. */
+export function loadOfficialPacks(): OfficialPack[] {
+  return Object.entries(officialPackManifests)
+    .map(([p, text]) => {
+      const m = JSON.parse(text) as PackManifest;
+      const tail = p.split("/packages/official-packs/")[1] ?? "";
+      const [category, nameFromPath] = tail.split("/");
+      const name = m.name || nameFromPath || "";
+      return {
+        id: name,
+        title: m.displayName || name,
+        summary: m.description || "",
+        relPath: `packages/official-packs/${category}/${name}`,
+        tag: `${category} · ${inferPackKind(m)}`,
+        category: category || "uncategorized",
+        kind: inferPackKind(m),
+        defaultInstall: m.default === true,
+      };
+    })
+    .sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
 }
 
 // ── skills / commands / agents / plugins ─────────────────────────────────────
