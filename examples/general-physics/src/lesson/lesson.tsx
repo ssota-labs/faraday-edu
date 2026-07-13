@@ -1,6 +1,6 @@
-// Assembly — the Newtonian mechanics unit as a course graph, presented as an
-// immersive 2D map (map2dPack). Each node's lesson lives in its own file under
-// nodes/; only this module-scope `curriculum` object is the orchestrator's to own.
+// Assembly — the Newtonian Mechanics **Course** as a graph, presented through an
+// immersive 2D map course shell (map2dPack). Each node is a **Lecture** that lives in
+// its own file under lectures/ and offers both a SlideView and a TextbookView.
 // Plan of record: .faraday/plan/newtonian-mechanics/.
 //
 // Prerequisite graph (a real branch + join):
@@ -9,12 +9,12 @@
 import { CourseHost, type Course } from "@faraday-academy/runtime/world";
 import { map2dPack } from "./map2d";
 
-import Kinematics from "./nodes/kinematics";
-import FirstLaw from "./nodes/first-law";
-import SecondLaw from "./nodes/second-law";
-import ThirdLaw from "./nodes/third-law";
-import Friction from "./nodes/friction";
-import Incline from "./nodes/incline";
+import Kinematics from "./lectures/kinematics";
+import FirstLaw from "./lectures/first-law";
+import SecondLaw from "./lectures/second-law";
+import ThirdLaw from "./lectures/third-law";
+import Friction from "./lectures/friction";
+import Incline from "./lectures/incline";
 
 // Module scope — REQUIRED. Recreating this object inside the component resets progress.
 const course: Course = {
@@ -79,9 +79,9 @@ const course: Course = {
 export default function NewtonianMechanics() {
   return (
     <CourseHost
-      course={curriculum}
+      course={course}
       pack={map2dPack}
-      onEvent={(e) => console.debug("[curriculum]", e.type, "nodeId" in e ? e.nodeId : "", e.progress)}
+      onEvent={(e) => console.debug("[course]", e.type, "nodeId" in e ? e.nodeId : "", e.progress)}
     />
   );
 }

@@ -1,20 +1,19 @@
-# Build plans
+# Plan of record — General Physics
 
-This app's curriculum build plans live here — **one folder per plan** (an app can
-hold several, e.g. different tracks or audiences):
+This app (a **Curriculum**) currently holds one **Course**:
 
-    <plan-id>/
-      overview.md      # brief · audience · methodology · pack decisions · node index
+- [`newtonian-mechanics/`](newtonian-mechanics/overview.md) — Newton's laws of motion, a
+  6-lecture course shown as an immersive **map2d** course shell. Each lecture offers both a
+  **SlideView** and a **TextbookView** presentation (`<Lecture views={…}>`).
+
+## Layout
+
+    newtonian-mechanics/
+      overview.md      # brief · audience · methodology · pack decisions · lecture index
       nodes/
-        <id>.md        # one file per lesson node: brief + status (todo→building→verified)
+        <id>.md        # one file per lecture: outcome · interactions · check · view split
 
-Each lesson node is authored as its own file at `src/lesson/nodes/<id>.tsx` and
-assembled into the module-scope `curriculum` in `src/lesson/lesson.tsx`. This keeps
-lessons file-isolated so they can be built independently (e.g. one sub-agent per node).
-
-See `references/orchestration.md` in the faraday skill for the build loop.
-
-## Plans
-
-- [`newtonian-mechanics/`](newtonian-mechanics/overview.md) — 6-node intro-undergrad unit
-  (kinematics → Newton's three laws → friction on an incline). Presentation: `map2dPack`.
+Each lecture is authored as its own file at `src/lesson/lectures/<id>.tsx` (export default a
+`<Lecture>`) and assembled into the module-scope `course: Course` in `src/lesson/lesson.tsx`,
+rendered by `<CourseHost course={course} pack={map2dPack} />`. Lectures are file-isolated so
+they can be built independently (one sub-agent per lecture).
