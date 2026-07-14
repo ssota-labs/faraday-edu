@@ -1,0 +1,204 @@
+#!/usr/bin/env bash
+# Cursor Cloud VM bootstrap — Faraday (ssota-parity).
+# Brings up Docker (legacy iptables + vfs), Supabase, DB seed, Playwright.
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+INSTALL_DEPS=1
+INSTALL_PLAYWRIGHT=1
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/cloud-bootstrap.sh [options]
+
+Options:
+  --skip-install       Skip pnpm install when node_modules exists
+  --skip-playwright    Skip Playwright Chromium install
+  -h, --help           Show this help
+EOF
+}
+
+log() {
+  printf '[cloud-bootstrap] %s\n' "$*"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --skip-install)
+      INSTALL_DEPS=0
+      shift
+      ;;
+    --skip-playwright)
+      INSTALL_PLAYWRIGHT=0
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+ensure_dependencies() {
+  if [[ "$INSTALL_DEPS" == "0" ]]; then
+    log "Skipping pnpm install (--skip-install)"
+    return
+  fi
+
+  if [[ ! -d node_modules ]]; then
+    log "Installing workspace dependencies…"
+    pnpm install
+    return
+  fi
+
+  log "node_modules present — skipping pnpm install"
+}
+
+ensure_env_files() {
+  local env_file="apps/platform/.env.local"
+  local example="apps/platform/.env.example"
+  if [[ ! -f "$env_file" && -f "$example" ]]; then
+    cp "$example" "$env_file"
+    log "Created $env_file from .env.example"
+  fi
+}
+
+sync_supabase_env() {
+  log "Syncing .env.local from local Supabase status…"
+  bash "$ROOT_DIR/scripts/sync-supabase-env.sh"
+}
+
+ensure_docker_binaries() {
+  if command -v docker >/dev/null 2>&1 && command -v dockerd >/dev/null 2>&1; then
+    log "Docker binaries present"
+    return
+  fi
+
+  if ! command -v apt-get >/dev/null 2>&1; then
+    echo "Docker is not installed and apt-get is unavailable" >&2
+    exit 1
+  fi
+
+  log "Installing Docker engine package (docker.io)…"
+  sudo apt-get update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io
+}
+
+ensure_iptables_legacy() {
+  if ! command -v update-alternatives >/dev/null 2>&1; then
+    log "update-alternatives not found — skipping iptables switch"
+    return
+  fi
+
+  if ! sudo update-alternatives --query iptables >/dev/null 2>&1; then
+    log "iptables alternatives not registered — skipping iptables switch"
+    return
+  fi
+
+  sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+  sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy 2>/dev/null || true
+  log "iptables backend set to legacy"
+}
+
+docker_ready() {
+  sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
+  docker info >/dev/null 2>&1 \
+    && [[ "$(docker info --format '{{.Driver}}' 2>/dev/null || echo '')" == "vfs" ]]
+}
+
+faraday_docker_config() {
+  local cfg="/tmp/faraday-docker-daemon.json"
+  printf '%s\n' '{"storage-driver":"vfs"}' >"$cfg"
+  echo "$cfg"
+}
+
+ensure_docker() {
+  if docker_ready; then
+    log "Docker daemon already running (storage driver: vfs)"
+    return
+  fi
+
+  log "Starting Docker daemon (vfs storage + legacy iptables)…"
+  sudo pkill dockerd 2>/dev/null || true
+  sudo pkill containerd 2>/dev/null || true
+  sleep 2
+
+  local docker_config
+  docker_config="$(faraday_docker_config)"
+  if [[ -f /etc/docker/daemon.json ]]; then
+    log "Using isolated Docker config ($docker_config) — system /etc/docker/daemon.json ignored"
+  fi
+
+  sudo mkdir -p /tmp/docker-vfs /tmp/docker-exec
+  sudo dockerd \
+    --config-file="$docker_config" \
+    --data-root=/tmp/docker-vfs \
+    --exec-root=/tmp/docker-exec \
+    --host=unix:///var/run/docker.sock \
+    >/tmp/dockerd-vfs.log 2>&1 &
+  sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
+
+  local attempt
+  for attempt in $(seq 1 30); do
+    if docker_ready; then
+      sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
+      log "Docker daemon ready"
+      return
+    fi
+    sleep 1
+  done
+
+  log "Docker failed to start — see /tmp/dockerd-vfs.log"
+  exit 1
+}
+
+ensure_supabase() {
+  if pnpm exec supabase status >/dev/null 2>&1; then
+    log "Supabase already running"
+    return
+  fi
+
+  log "Starting Supabase local stack…"
+  pnpm exec supabase start
+}
+
+ensure_database() {
+  log "Applying migrations and seed…"
+  pnpm db:migrate
+  pnpm db:seed
+}
+
+ensure_playwright() {
+  if [[ "$INSTALL_PLAYWRIGHT" == "0" ]]; then
+    log "Skipping Playwright install (--skip-playwright)"
+    return
+  fi
+
+  log "Ensuring Playwright Chromium…"
+  pnpm --filter @faraday-academy/platform-e2e exec playwright install chromium
+}
+
+main() {
+  log "Faraday Cloud bootstrap (ssota-parity session runtime)"
+  ensure_dependencies
+  ensure_env_files
+  ensure_docker_binaries
+  ensure_iptables_legacy
+  ensure_docker
+  ensure_supabase
+  sync_supabase_env
+  ensure_database
+  ensure_playwright
+  log "Ready."
+  log "Smoke: smoke@faraday.academy / 1234"
+  log "Next: pnpm e2e:ci"
+}
+
+main "$@"
