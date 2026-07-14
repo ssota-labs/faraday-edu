@@ -13,9 +13,6 @@ docs/generated/
 
 .env.local
 apps/*/.env.local
-
-.env.local
-apps/*/.env.local
 e2e/report/
 supabase/.temp/
 supabase/.branches/
