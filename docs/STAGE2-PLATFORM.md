@@ -6,10 +6,13 @@
 > 공개·유료 코스, 코스 커뮤니티.
 >
 > 상위 문서: [VISION.md](VISION.md) · [GTM.md](GTM.md) · 구현 정본 참조: [ssota](https://github.com/ssota-labs/ssota)
+<<<<<<< HEAD
 >
 > 권한 표: [PLATFORM-API-PERMISSIONS.md](PLATFORM-API-PERMISSIONS.md) ·
 > 위협 모델: [PLATFORM-THREAT-MODEL.md](PLATFORM-THREAT-MODEL.md) ·
 > 코드: `apps/platform`, `packages/platform-*`
+=======
+>>>>>>> origin/main
 
 ---
 
