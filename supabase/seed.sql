@@ -1,0 +1,1 @@
+-- optional seed.sql (primary seed is pnpm db:seed)

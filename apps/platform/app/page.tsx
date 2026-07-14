@@ -31,13 +31,25 @@ export default function HomePage() {
         </p>
         <div style={{ display: "flex", gap: "0.75rem", marginTop: "2rem" }}>
           <Link
-            href="/studio"
+            href="/login"
             style={{
               background: "#0b6e4f",
               color: "#fff",
               padding: "0.7rem 1.1rem",
               borderRadius: 8,
               textDecoration: "none",
+            }}
+          >
+            Sign in
+          </Link>
+          <Link
+            href="/studio"
+            style={{
+              padding: "0.7rem 1.1rem",
+              borderRadius: 8,
+              textDecoration: "none",
+              border: "1px solid #c9c2b5",
+              color: "inherit",
             }}
           >
             Open Studio
