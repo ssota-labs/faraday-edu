@@ -80,7 +80,7 @@ const { messages, sendMessage, status, stop } = useChat({ id, messages, transpor
 | | 로컬 | Vercel (플랫폼) |
 |---|---|---|
 | 실행 | `workflow/vite` + 로컬 dev가 `api/` 라우트+workflow 런타임 구동 (세부: `node_modules/workflow/docs/getting-started/`의 vite 가이드 — 빌드 시 확인) | Fluid Compute Functions + WDK durable run |
-| AI 키 | **BYO AI Gateway 키**(`AI_GATEWAY_API_KEY`) | **우리 키**(AI Gateway), 사용량 미터링 → **튜터가 지불** |
+| AI 키 | **BYO AI Gateway 키**(`AI_GATEWAY_API_KEY`) | **우리 키**(AI Gateway), 사용량 미터링; 부담 주체는 플랫폼 상업 정책에서 확정 |
 | durable | WDK 로컬 durable run + `[runId]/stream` 재연결 | WDK + Observability(`npx workflow web <runId>`) |
 
 durable의 의미: 새로고침/타임아웃/네트워크 단절이 나도 `WorkflowChatTransport`가
@@ -139,7 +139,8 @@ durable의 의미: 새로고침/타임아웃/네트워크 단절이 나도 `Work
   벤더·잠금된 챗 UI + `<Tutor>`(useChat+WorkflowChatTransport), 로컬 BYO Gateway 키로 durable 동작.
   정적 2D/3D 레슨은 서버 없이 그대로. **후속**: compaction/롤링 캐시 브레이크포인트, RAG 툴(`'use step'`),
   그라운딩·리허설 게이트, reasoning/tool 파트 렌더, 세션 영속(리로드 복원).
-- **platform**: 멀티테넌트 Vercel, 우리 Gateway 키(튜터 지불), Connect 결제, 학생 인증 = VISION Phase 2~3.
+- **platform**: 단일 Vercel Artifact Router + 중앙 Tutor API, 우리 Gateway 키와 사용량 계측,
+  Connect 결제, 학생 인증 = VISION Phase 2~3. 상세: [STAGE2-PLATFORM.md](../docs/STAGE2-PLATFORM.md).
 
 ---
 
