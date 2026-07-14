@@ -3,7 +3,7 @@
 > 상태: draft · 이 문서는 지금까지의 개발 정리 + 플랫폼 방향 설계다.
 > 뿌리: `../ssota` 문서의 "외부 Studio Seed → 플랫폼" 명제를 **교육(인터랙티브 텍스트북)**
 > 도메인으로 realize한 것. 플랫폼 페이즈는 `../mirror-dimension`의 교육판이다.
-> 플랫폼 구현 정본: [STAGE2-PLATFORM.md](STAGE2-PLATFORM.md)
+> 플랫폼 구현 정본: [STAGE2-PLATFORM.md](STAGE2-PLATFORM.md) (§4 SSOTA 정렬 포함)
 
 ---
 
