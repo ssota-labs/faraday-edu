@@ -43,3 +43,20 @@ supposed to drive Discover → Design → Build → Verify on its own.
 5. **Visual quality-bar ungraded** — agent verified HTTP 200 + static physics, not browser Play/charts. Skill Verify still weak on “drive the UI” in headless cloud.
 
 **Orchestrator review:** Structure matches request (TOC, topics, mock exam). Chapters ~220–300 lines with Workbench/Chart/Derivation — acceptable first pass. `circular` thinner than peers — candidate for a later user-like “원운동만 좀 더 살집 있게” follow-up. Deploy `vercel.json` added by orchestrator (packaging, not authoring).
+
+### 2026-07-15 — `star-chart`
+
+**User prompt (natural):**  
+상대성·중력·시간… 「스타 차트」… 케플러→슬링샷→등가→시간지연→렌즈→시계 맞추기… 목차… 우주 3D… 영화명/대사 금지…
+
+**Outcome:** 6-chapter LinearCourse at `examples/star-chart` with `three` + `sim2d`.  
+`check` / `typecheck` / `build` ok.
+
+**Sub-agent reported gaps:**
+
+1. **`useSimTime` vs continuous clocks** — segment API (`timeRef`/`until`/`onTick`); continuous dual clocks needed `useSimLoop` + setState. Skill/sim2d docs should make the two clocks obvious.
+2. **`pack remove tutor` leftovers again** — same Nitro/vite/workspace mess as exam-hall.
+3. **Registry cold install** — standalone `pnpm install` 404 on `@faraday-academy/*` until publish; monorepo link only. Matches Stage1 npm blocker.
+4. **Visual 3D quality-bar ungraded** — compile + HTTP + invariants only.
+
+**Orchestrator review:** Matches Phase A brief (TOC + space 3D + relativity arc). Packaging `vercel.json` added by orchestrator.
