@@ -1,7 +1,6 @@
 /**
- * GET /v1/tutor/runs/[runId]/stream — durable reconnect.
- * `runId` is the WDK workflow run id (x-workflow-run-id), not the TutorRun row id.
- * Clients using WorkflowChatTransport reconnect here automatically.
+ * GET /api/studio/chat/[runId]/stream — reconnect to an in-progress Studio run
+ * (WorkflowChatTransport durable resume; same as ssota / mirror-dimension).
  */
 import { getRun } from "workflow/api";
 import { createUIMessageStreamResponse } from "ai";

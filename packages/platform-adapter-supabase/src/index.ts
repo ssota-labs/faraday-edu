@@ -1,4 +1,8 @@
-import { createMemoryStore, type PlatformStore } from "@faraday-academy/platform-core";
+import {
+  createMemoryStore,
+  type PlatformStore,
+} from "@faraday-academy/platform-core";
+import { createPostgresStore } from "./postgres-store";
 
 export type AdapterMode = "memory" | "supabase";
 
@@ -10,21 +14,25 @@ export {
 } from "./constants";
 
 /**
- * Creates a PlatformStore. Without SUPABASE_URL + SERVICE_ROLE, uses memory
- * (local/dev without Docker). Schema + smoke seed live under /supabase and
- * `pnpm db:seed` (ssota parity).
+ * Creates a PlatformStore.
+ * - With SUPABASE_URL + SERVICE_ROLE + DATABASE_URL → Postgres store
+ * - With SUPABASE credentials but no DATABASE_URL → memory (Auth-only)
+ * - Otherwise → memory
  */
 export function createPlatformAdapter(
   env: NodeJS.ProcessEnv = process.env,
 ): { mode: AdapterMode; store: PlatformStore } {
   const url = env.SUPABASE_URL ?? env.NEXT_PUBLIC_SUPABASE_URL;
   const key = env.SUPABASE_SERVICE_ROLE_KEY;
+  const databaseUrl = env.DATABASE_URL;
+
+  if (url && key && databaseUrl) {
+    return { mode: "supabase", store: createPostgresStore(databaseUrl) };
+  }
   if (url && key) {
-    // Domain store still memory for this milestone; Auth/DB are exercised via
-    // Supabase Auth + SQL migrations in e2e. Full SQL-backed PlatformStore is next.
     return { mode: "supabase", store: createMemoryStore() };
   }
   return { mode: "memory", store: createMemoryStore() };
 }
 
-export { createMemoryStore };
+export { createMemoryStore, createPostgresStore };

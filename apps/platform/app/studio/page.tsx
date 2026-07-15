@@ -1,139 +1,85 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { StudioSession } from "@/components/studio/studio-session";
+
+const USER_ID = "creator_demo";
 
 export default function StudioPage() {
-  const [messages, setMessages] = useState<
-    Array<{ role: string; content: string }>
-  >([]);
-  const [input, setInput] = useState("");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [courseId, setCourseId] = useState<string | null>(null);
   const [draftId, setDraftId] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [sessionId, setSessionId] = useState(() => `sess_${Date.now().toString(36)}`);
+  const [bootError, setBootError] = useState<string | null>(null);
+  const [booting, setBooting] = useState(true);
 
-  async function ensureProject() {
-    if (courseId && draftId) return { courseId, draftId };
-    const res = await fetch("/api/studio/projects", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-faraday-user-id": "creator_demo",
-      },
-      body: JSON.stringify({
-        slug: `draft-${Date.now().toString(36)}`,
-        title: "Untitled course",
-      }),
-    });
-    const data = await res.json();
-    setCourseId(data.courseId);
-    setDraftId(data.draftId);
-    return { courseId: data.courseId as string, draftId: data.draftId as string };
-  }
-
-  async function send() {
-    if (!input.trim() || busy) return;
-    setBusy(true);
-    const text = input.trim();
-    setInput("");
-    setMessages((m) => [...m, { role: "user", content: text }]);
+  const ensureProject = useCallback(async () => {
+    setBooting(true);
+    setBootError(null);
     try {
-      const proj = await ensureProject();
-      const res = await fetch("/api/studio/chat", {
+      const res = await fetch("/api/studio/projects", {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-faraday-user-id": "creator_demo",
+          "x-faraday-user-id": USER_ID,
         },
         body: JSON.stringify({
-          courseId: proj.courseId,
-          draftId: proj.draftId,
-          messages: [{ role: "user", content: text }],
+          slug: `draft-${Date.now().toString(36)}`,
+          title: "Untitled course",
         }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error?.message ?? `HTTP ${res.status}`);
+      }
       const data = await res.json();
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: data.reply ?? data.error?.message ?? "…" },
-      ]);
-      if (data.previewUrl) setPreviewUrl(data.previewUrl);
+      setCourseId(data.courseId);
+      setDraftId(data.draftId);
+      setSessionId(`sess_${Date.now().toString(36)}`);
+    } catch (err) {
+      setBootError(err instanceof Error ? err.message : "boot failed");
     } finally {
-      setBusy(false);
+      setBooting(false);
     }
+  }, []);
+
+  useEffect(() => {
+    void ensureProject();
+  }, [ensureProject]);
+
+  if (booting) {
+    return (
+      <div className="flex h-svh items-center justify-center bg-background text-sm text-muted-foreground">
+        Studio 준비 중…
+      </div>
+    );
+  }
+
+  if (bootError || !courseId || !draftId) {
+    return (
+      <div className="flex h-svh flex-col items-center justify-center gap-3 bg-background px-6 text-center">
+        <p className="text-sm text-destructive">{bootError ?? "프로젝트를 만들지 못했습니다"}</p>
+        <button
+          type="button"
+          className="rounded-md border px-3 py-1.5 text-sm hover:bg-muted"
+          onClick={() => void ensureProject()}
+        >
+          다시 시도
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(280px, 1fr) minmax(320px, 1.2fr)",
-        height: "100vh",
-        background: "#f3efe6",
-      }}
-    >
-      <section
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          borderRight: "1px solid #d9d1c3",
-          padding: "1rem",
-        }}
-      >
-        <h1 style={{ fontFamily: "Fraunces, Georgia, serif", margin: "0 0 1rem" }}>
-          Faraday Studio
-        </h1>
-        <div style={{ flex: 1, overflow: "auto", display: "grid", gap: "0.75rem" }}>
-          {messages.map((m, i) => (
-            <div
-              key={i}
-              style={{
-                background: m.role === "user" ? "#fff" : "#e4f2eb",
-                padding: "0.75rem",
-                borderRadius: 8,
-              }}
-            >
-              <strong style={{ fontSize: 12 }}>{m.role}</strong>
-              <div>{m.content}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && send()}
-            placeholder="Describe a lesson…"
-            style={{ flex: 1, padding: "0.65rem", borderRadius: 8, border: "1px solid #cbbfae" }}
-          />
-          <button
-            type="button"
-            onClick={send}
-            disabled={busy}
-            style={{
-              background: "#0b6e4f",
-              color: "#fff",
-              border: 0,
-              borderRadius: 8,
-              padding: "0.65rem 1rem",
-            }}
-          >
-            Send
-          </button>
-        </div>
-      </section>
-      <section style={{ background: "#1a1f2e", color: "#f7f4ef", padding: "1rem" }}>
-        <div style={{ opacity: 0.7, marginBottom: 8 }}>Preview</div>
-        {previewUrl ? (
-          <iframe
-            title="preview"
-            src={previewUrl}
-            style={{ width: "100%", height: "calc(100% - 2rem)", border: 0, background: "#fff" }}
-            sandbox="allow-scripts"
-          />
-        ) : (
-          <p style={{ opacity: 0.6 }}>Preview appears after the agent has an index.html.</p>
-        )}
-      </section>
+    <div className="h-svh">
+      <StudioSession
+        key={sessionId}
+        courseId={courseId}
+        draftId={draftId}
+        courseTitle="Untitled course"
+        sessionId={sessionId}
+        userId={USER_ID}
+        onNewChat={() => setSessionId(`sess_${Date.now().toString(36)}`)}
+      />
     </div>
   );
 }

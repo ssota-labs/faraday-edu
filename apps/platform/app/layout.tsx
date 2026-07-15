@@ -1,19 +1,25 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Faraday Academy",
+  description: "Open interactive course platform",
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body style={{ margin: 0, fontFamily: '"IBM Plex Sans", sans-serif' }}>
-        {children}
-      </body>
+      <body className="min-h-svh antialiased">{children}</body>
     </html>
   );
 }

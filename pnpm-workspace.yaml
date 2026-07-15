@@ -8,6 +8,8 @@ packages:
   - examples/*
 allowBuilds:
   # Vite/labs bundles with esbuild — allow its native binary to build.
+  '@swc/core': true
+  cbor-extract: true
   esbuild: true
   # Next.js image optimization (apps/platform)
   sharp: true
