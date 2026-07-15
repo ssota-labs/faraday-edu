@@ -1,7 +1,7 @@
 # README images — capture checklist
 
 Drop images here with these exact filenames and the READMEs will pick them up
-(both `README.md` and `README.ko.md` reference the same paths). Until a file
+(both `README.md` (한국어) and `README.en.md` reference the same paths). Until a file
 exists, GitHub shows the alt text with a broken-image icon — that's the
 placeholder. **GIF > PNG** wherever motion tells the story.
 
