@@ -10,7 +10,7 @@ import {
   Chart,
   NumericAnswer,
   TeX,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 import { velAt, sampleMotion } from "../_shared/uam";
 

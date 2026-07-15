@@ -5,7 +5,7 @@ import {
   Callout,
   Chart,
   TeX,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 import { velAt } from "../_shared/uam";
 

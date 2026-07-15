@@ -19,11 +19,11 @@ import {
   Derivation,
   Callout,
   Reveal,
-} from "@faraday-academy/runtime/blocks";
-import type { Slide } from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
+import type { Slide } from "@faraday-academy/kit/blocks";
 import { useSimLoop } from "../sim2d";
-import { useNode } from "@faraday-academy/runtime/world";
-import { Button } from "@faraday-academy/runtime/ui/button";
+import { useNode } from "@faraday-academy/kit/world";
+import { Button } from "@faraday-academy/kit/ui/button";
 import { TextbookView, type TextbookPage } from "../textbook-view";
 
 // ── The true model ─────────────────────────────────────────────────────────

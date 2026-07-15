@@ -17,10 +17,10 @@ import {
   Reveal,
   Readout,
   Derivation,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { useSimLoop } from "../sim2d";
-import { useNode } from "@faraday-academy/runtime/world";
-import { Button } from "@faraday-academy/runtime/ui/button";
+import { useNode } from "@faraday-academy/kit/world";
+import { Button } from "@faraday-academy/kit/ui/button";
 import { TextbookView } from "../textbook-view";
 
 // ─────────────────────────────────────────────────────────────────────────────

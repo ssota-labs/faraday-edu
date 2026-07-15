@@ -25,7 +25,7 @@ function run(cmd, args, cwd = root) {
 function linkAcademy(lessonDir) {
   const nm = path.join(lessonDir, "node_modules", "@faraday-academy");
   mkdirSync(nm, { recursive: true });
-  for (const pkg of ["runtime", "three", "tutor"]) {
+  for (const pkg of ["ui", "kit", "three", "tutor"]) {
     const link = path.join(nm, pkg);
     try {
       rmSync(link, { recursive: true, force: true });
@@ -77,7 +77,7 @@ function main() {
 
   for (const dir of [s1, s2]) {
     const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8"));
-    if (pkg.dependencies?.["@faraday-academy/runtime"] !== "0.1.0") {
+    if (pkg.dependencies?.["@faraday-academy/kit"] !== "0.2.0") {
       throw new Error(`${dir}: runtime pin missing`);
     }
     linkAcademy(dir);

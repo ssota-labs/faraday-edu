@@ -13,9 +13,9 @@ import { useFrame } from "@react-three/fiber";
 import { Line } from "@react-three/drei";
 import { useRef } from "react";
 import type { Mesh } from "three";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/kit/blocks";
 import { Scene3D, Body, OrbitPath, Label3D } from "@faraday-academy/three";
-import { useNode } from "@faraday-academy/runtime/world";
+import { useNode } from "@faraday-academy/kit/world";
 
 const A = 5; // semi-major axis (fixed; eccentricity is the interesting knob)
 

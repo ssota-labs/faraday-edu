@@ -6,7 +6,7 @@ import {
   Workbench,
   Readout,
   TeX,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 import { posAt, velAt } from "../_shared/uam";
 

@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 // "@" -> ./src for local lesson imports ("@/lesson/…"); the runtime comes from
-// the pinned @faraday-academy/runtime dep. Tailwind v4 runs through its Vite plugin.
+// the pinned @faraday-academy/kit dep. Tailwind v4 runs through its Vite plugin.
 export default defineConfig({
   base: "./",
   plugins: [react(), tailwindcss()],

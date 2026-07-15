@@ -2,7 +2,7 @@
 
 ```tsx
 import { useState } from "react";
-import { Lesson } from "@faraday-academy/runtime/blocks";
+import { Lesson } from "@faraday-academy/kit/blocks";
 import { StorybookGame } from "../../src/lesson/storybook-game2d";
 
 export default function ApplesStory() {

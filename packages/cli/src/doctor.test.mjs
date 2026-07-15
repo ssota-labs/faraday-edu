@@ -73,18 +73,18 @@ test("doctor fails (exit 3) when a required file is missing", async () => {
   await fs.rm(base, { recursive: true, force: true });
 });
 
-test("upgrade moves the runtime pin exactly, then passes doctor", async () => {
+test("upgrade moves the kit pin exactly, then passes doctor", async () => {
   const base = await tmp();
   const dir = await scaffold(base, "bumpable");
-  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-academy/runtime"], "0.1.0");
+  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-academy/kit"], "0.2.0");
 
   let out = "";
   await runFaradayCli(
-    ["upgrade", "--to", "0.2.0", "--dir", dir],
+    ["upgrade", "--to", "0.3.0", "--dir", dir],
     { cwd: base, stdout: (s) => (out += s), stderr: () => {}, runCommand: fakePnpm(dir), throwOnError: true },
   );
-  assert.match(out, /@faraday-academy\/runtime@0\.2\.0/);
-  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-academy/runtime"], "0.2.0");
+  assert.match(out, /@faraday-academy\/kit@0\.3\.0/);
+  assert.equal(JSON.parse(await read(dir, "package.json")).dependencies["@faraday-academy/kit"], "0.3.0");
   assert.ok(await exists(path.join(dir, "pnpm-lock.yaml")), "install should have produced a lockfile");
   await fs.rm(base, { recursive: true, force: true });
 });
@@ -96,7 +96,7 @@ test("upgrade rolls back package.json (exit 3) when doctor fails afterward", asy
 
   let code = 0;
   await runFaradayCli(
-    ["upgrade", "--to", "0.2.0", "--dir", dir],
+    ["upgrade", "--to", "0.3.0", "--dir", dir],
     { cwd: base, stdout: () => {}, stderr: () => {}, runCommand: fakePnpm(dir, { lockOnInstall: false }), setExitCode: (c) => (code = c) },
   );
   assert.equal(code, 3);

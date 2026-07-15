@@ -13,11 +13,11 @@
   "iconLibrary": "phosphor",
   "rtl": false,
   "aliases": {
-    "components": "@faraday-academy/runtime",
-    "utils": "@faraday-academy/runtime/lib/utils",
-    "ui": "@faraday-academy/runtime/ui",
-    "lib": "@faraday-academy/runtime/lib",
-    "hooks": "@faraday-academy/runtime/hooks"
+    "components": "@faraday-academy/kit",
+    "utils": "@faraday-academy/kit/lib/utils",
+    "ui": "@faraday-academy/kit/ui",
+    "lib": "@faraday-academy/kit/lib",
+    "hooks": "@faraday-academy/kit/hooks"
   },
   "registries": {}
 }

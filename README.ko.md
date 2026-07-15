@@ -340,7 +340,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 │  ├─ cli/                      # @faraday-academy/cli — `faraday` 스캐폴더 (bin + src)
 │  │  └─ templates/starter/     #   `faraday new`가 찍어내는 앱 셸 (팩은 빌드 시 번들)
 │  ├─ official-packs/           # 카테고리별 모듈 팩: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·storybook-game2d) · runtime/ (three·tutor·game2d) · methodology/ (audience·lecture-design) + pack.schema.json
-│  ├─ runtime/                  # @faraday-academy/runtime — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
+│  ├─ runtime/                  # @faraday-academy/kit — UI, 블록, 런타임, 스타일, 월드, lms (수업이 이걸 pin)
 │  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)
 ├─ examples/                    # 독립 실행형 데모 (자체 lockfile; Vercel root = examples/<name>)
@@ -361,7 +361,7 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 
 ## 스캐폴더가 하는 일
 
-starter 복사 → 대상 · `.gitignore` 복원 · `@faraday-academy/runtime` pin
+starter 복사 → 대상 · `.gitignore` 복원 · `@faraday-academy/kit` pin
 기본 팩(스킬 + 런타임) 모두 자동설치(`--no-defaults`로 생략) · `app.css`를 런타임
 스타일시트에 연결 · 패키지명 + HTML 제목 주입 · `lessonId` 출처(provenance) 레코드
 발급 · `pnpm install`. 불필요한 팩은 `faraday pack remove <name>`로 덜어내고,

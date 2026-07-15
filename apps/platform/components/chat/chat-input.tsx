@@ -3,8 +3,8 @@
 import { useRef, useState } from 'react';
 import { ArrowUpIcon, ImageIcon, StopIcon, XIcon } from '@phosphor-icons/react';
 import type { FileUIPart } from 'ai';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@faraday-academy/ui/components/ui/button';
+import { Spinner } from '@faraday-academy/ui/components/ui/spinner';
 import { ModelSelector } from './model-selector';
 import { DEFAULT_MODEL_ID } from '@/lib/chat/models';
 import { uploadChatImage } from '@/lib/chat/upload-attachment';

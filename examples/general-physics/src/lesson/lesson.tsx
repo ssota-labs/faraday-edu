@@ -6,7 +6,7 @@
 // Prerequisite graph (a real branch + join):
 //   kinematics → first-law → second-law → third-law ┐
 //                                  └────→ friction  ┴→ incline
-import { CourseHost, type Course } from "@faraday-academy/runtime/world";
+import { CourseHost, type Course } from "@faraday-academy/kit/world";
 import { map2dPack } from "./map2d";
 
 import Kinematics from "./lectures/kinematics";

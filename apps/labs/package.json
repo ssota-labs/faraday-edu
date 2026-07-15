@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Faraday Labs — a Vite lab that renders the @faraday-academy/runtime blocks live (via demo stories) and catalogs the skills/packs the CLI + plugins ship. Mirrors a generated lesson's environment so previews match production.",
+  "description": "Faraday Labs — a Vite lab that renders the @faraday-academy/kit blocks live (via demo stories) and catalogs the skills/packs the CLI + plugins ship. Mirrors a generated lesson's environment so previews match production.",
   "scripts": {
     "dev": "vite --port 4200 --host",
     "build": "vite build",
@@ -11,6 +11,8 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
+    "@faraday-academy/kit": "workspace:*",
+    "@faraday-academy/ui": "workspace:*",
     "@base-ui/react": "^1.5.0",
     "@phosphor-icons/react": "^2.1.10",
     "class-variance-authority": "^0.7.1",

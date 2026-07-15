@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     "@faraday-academy/platform-artifact-router",
     "@faraday-academy/platform-studio-build",
     "@faraday-academy/platform-studio-sandbox",
+    "@faraday-academy/ui",
   ],
   // Workflow step bundles: keep CJS-only deps external so esbuild/Turbopack do
   // not emit broken dynamic-require stubs (same list as ssota / mirror-dimension).

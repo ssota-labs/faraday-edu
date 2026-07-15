@@ -11,11 +11,21 @@ import {
   XCircleIcon,
 } from '@phosphor-icons/react';
 import { getToolName, isToolUIPart } from 'ai';
-import { Marker, MarkerContent, MarkerIcon } from '@/components/ui/marker';
-import { Message, MessageContent } from '@/components/ui/message';
-import { Bubble, BubbleContent } from '@/components/ui/bubble';
+import {
+  Marker,
+  MarkerContent,
+  MarkerIcon,
+} from '@faraday-academy/ui/components/ui/marker';
+import {
+  Message,
+  MessageContent,
+} from '@faraday-academy/ui/components/ui/message';
+import {
+  Bubble,
+  BubbleContent,
+} from '@faraday-academy/ui/components/ui/bubble';
 import type { StudioUIMessage } from '@/lib/bridge/session-events';
-import { cn } from '@/lib/utils';
+import { cn } from '@faraday-academy/ui/lib/utils';
 import { ToolGroup, type ToolInfo } from './tool-group';
 import { AssistantMarkdown } from './assistant-markdown';
 

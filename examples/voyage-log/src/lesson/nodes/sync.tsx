@@ -8,8 +8,8 @@
 // (within 1% tolerance). This anchors the abstract time-dilation formula from
 // node 4 into a concrete "how much drift did the trip cost?" question.
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/runtime/blocks";
-import { useNode } from "@faraday-academy/runtime/world";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/kit/blocks";
+import { useNode } from "@faraday-academy/kit/world";
 
 function fmtHours(hours: number): string {
   const h = Math.floor(Math.abs(hours));

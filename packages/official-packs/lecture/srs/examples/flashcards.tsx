@@ -1,7 +1,7 @@
 // Example memorization lesson using the `srs` pack. Reference only — copied to
 // docs/examples/ by `faraday pack add srs`. Import path assumes the pack installed
 // its component at src/lesson/srs/.
-import { Lesson, Prose } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose } from "@faraday-academy/kit/blocks";
 import { Flashcards } from "./srs/Flashcards";
 
 export default function KanjiN5Lesson() {

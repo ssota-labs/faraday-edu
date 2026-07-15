@@ -9,7 +9,7 @@ import {
   ControlGroup,
   ParamSlider,
   Readout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 // Simulated signal strength: higher AP count + better placement → stronger signal

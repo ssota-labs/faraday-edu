@@ -34,7 +34,7 @@ import { TextbookView } from "./textbook-view";
 ## With `<Lecture>` (view tabs)
 
 ```tsx
-import { Lecture, SlideDeck, Prose } from "@faraday-academy/runtime/blocks";
+import { Lecture, SlideDeck, Prose } from "@faraday-academy/kit/blocks";
 import { TextbookView } from "./textbook-view";
 
 <Lecture

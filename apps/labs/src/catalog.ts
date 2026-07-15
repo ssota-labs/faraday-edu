@@ -35,7 +35,13 @@ export type Plugin = { name: string; displayName: string; description: string; k
 
 // ── raw source (eager, as strings) ───────────────────────────────────────────
 
-const runtimeSrc = import.meta.glob("../../../packages/runtime/**/*.{ts,tsx}", {
+const runtimeSrc = import.meta.glob("../../../packages/kit/**/*.{ts,tsx}", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+const uiSrc = import.meta.glob("../../../packages/ui/src/components/ui/*.{ts,tsx}", {
   query: "?raw",
   import: "default",
   eager: true,
@@ -143,16 +149,17 @@ function firstH1(text: string): string {
 }
 
 const base = (p: string) => p.split("/").pop() ?? p;
-const runtimeRel = (p: string) => "packages/runtime/" + p.split("/packages/runtime/")[1];
+const kitRel = (p: string) => "packages/kit/" + p.split("/packages/kit/")[1];
+const uiRel = (p: string) => "packages/ui/" + p.split("/packages/ui/")[1];
 const pluginRel = (p: string) => "plugins/" + p.split("/plugins/")[1];
-/** group segment after packages/runtime/, e.g. ".../runtime/blocks/Quiz.tsx" -> "blocks" */
-const groupOf = (p: string) => p.split("/packages/runtime/")[1]?.split("/")[0] ?? "";
+/** group segment after packages/kit/, e.g. ".../kit/blocks/Quiz.tsx" -> "blocks" */
+const groupOf = (p: string) => p.split("/packages/kit/")[1]?.split("/")[0] ?? "";
 
 // ── component groups ─────────────────────────────────────────────────────────
 
 const GROUP_DEFS = [
   { id: "blocks", title: "Blocks", importPath: "@/faraday/blocks", blurb: "The authoring API — lesson building blocks composed from shadcn UI. What lesson code writes against." },
-  { id: "ui", title: "UI primitives", importPath: "@/faraday/ui", blurb: "Vendored shadcn / Base UI primitives the blocks are built on." },
+  { id: "ui", title: "UI primitives", importPath: "@/faraday/ui", blurb: "Shared shadcn / Base UI primitives (@faraday-academy/ui) the blocks and platform are built on." },
   { id: "runtime", title: "Runtime", importPath: "@/faraday/runtime", blurb: "Lesson & course hosts, the stepper, motion helpers, and theming." },
   { id: "world", title: "World", importPath: "@/faraday/world", blurb: "Curriculum-as-world: host, HUD, progression store, and swappable packs." },
   { id: "lms", title: "LMS", importPath: "@/faraday/lms", blurb: "A progress recorder + dashboard for a lesson or a whole course." },
@@ -160,13 +167,26 @@ const GROUP_DEFS = [
 
 export function loadComponentGroups(): ComponentGroup[] {
   return GROUP_DEFS.map((g) => {
-    const components: Component[] = Object.entries(runtimeSrc)
-      .filter(([p]) => groupOf(p) === g.id && base(p) !== "index.ts" && !p.includes("/packs/"))
+    const entries =
+      g.id === "ui"
+        ? Object.entries(uiSrc)
+        : Object.entries(runtimeSrc).filter(
+            ([p]) => groupOf(p) === g.id && base(p) !== "index.ts" && !p.includes("/packs/"),
+          );
+    const components: Component[] = entries
       .map(([p, text]) => {
         const doc = headerDoc(text);
         const fileBase = base(p).replace(/\.(tsx|ts)$/, "");
         const { name, isUtil } = displayName(doc, fileBase);
-        return { name, file: base(p), relPath: runtimeRel(p), group: g.id, summary: cleanSummary(doc), exports: exportsOf(text), isUtil };
+        return {
+          name,
+          file: base(p),
+          relPath: g.id === "ui" ? uiRel(p) : kitRel(p),
+          group: g.id,
+          summary: cleanSummary(doc),
+          exports: exportsOf(text),
+          isUtil,
+        };
       })
       .sort((a, b) => Number(a.isUtil) - Number(b.isUtil) || a.name.localeCompare(b.name));
     return { id: g.id, title: g.title, blurb: g.blurb, importPath: g.importPath, components };
@@ -187,7 +207,7 @@ export function loadWorldPacks(): Pack[] {
     .map(([p, text]) => {
       const doc = headerDoc(text);
       const fileBase = base(p).replace(/\.tsx$/, "");
-      return { id: fileBase, title: displayName(doc, fileBase).name, summary: cleanSummary(doc), relPath: runtimeRel(p), tag: "world pack" };
+      return { id: fileBase, title: displayName(doc, fileBase).name, summary: cleanSummary(doc), relPath: kitRel(p), tag: "world pack" };
     })
     .sort((a, b) => a.title.localeCompare(b.title));
 }

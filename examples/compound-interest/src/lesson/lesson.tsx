@@ -14,7 +14,7 @@ import {
   TeX,
   Derivation,
   Reveal,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 
 function futureValue(principal: number, ratePct: number, years: number, compoundsPerYear: number) {
   const r = ratePct / 100;

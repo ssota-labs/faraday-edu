@@ -1,8 +1,13 @@
 'use client';
 
 import { CaretUpDownIcon, CheckIcon } from '@phosphor-icons/react';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@faraday-academy/ui/components/ui/button';
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from '@faraday-academy/ui/components/ui/popover';
 import { MODEL_OPTIONS, modelsByProvider } from '@/lib/chat/models';
 import { ProviderIcon } from './provider-icon';
 

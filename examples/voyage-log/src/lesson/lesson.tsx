@@ -6,7 +6,7 @@
 // The curriculum object is intentionally at module scope: <CourseHost>
 // keys progress on stable identity, so recreating this object per render
 // would wipe progress. See docs/authoring.md "Curricula & worlds".
-import { CourseHost, type Course } from "@faraday-academy/runtime/world";
+import { CourseHost, type Course } from "@faraday-academy/kit/world";
 import { world3dPack } from "@faraday-academy/three";
 
 import KeplerLesson from "./nodes/kepler";

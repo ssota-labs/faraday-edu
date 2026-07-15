@@ -1,7 +1,7 @@
 'use client';
 
 import { Streamdown } from 'streamdown';
-import { cn } from '@/lib/utils';
+import { cn } from '@faraday-academy/ui/lib/utils';
 
 /**
  * 어시스턴트 텍스트의 마크다운 렌더링 (streamdown — 스트리밍 중 미완성 마크다운 안전 처리).

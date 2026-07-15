@@ -909,7 +909,7 @@ justify reaching for this pack over a plain block.
       content: `# \`${name}\` — extending
 
 Where the author can go further — swap the algorithm, wire to the
-\`@faraday-academy/runtime/lms\` recorder, theme it. Point at the author-editable
+\`@faraday-academy/kit/lms\` recorder, theme it. Point at the author-editable
 files this pack copies (if any); make clear what is safe to edit vs. a pinned dep.
 `,
     },
@@ -933,8 +933,8 @@ function packExampleTemplate(name, kind) {
   const C = pascalCase(name);
   const usesComponent = kind === "copy";
   const importLine = usesComponent
-    ? `import { Lesson, Prose } from "@faraday-academy/runtime/blocks";\nimport { ${C} } from "./${name}";`
-    : `import { Lesson, Prose } from "@faraday-academy/runtime/blocks";`;
+    ? `import { Lesson, Prose } from "@faraday-academy/kit/blocks";\nimport { ${C} } from "./${name}";`
+    : `import { Lesson, Prose } from "@faraday-academy/kit/blocks";`;
   const body = usesComponent
     ? `      <${C} items={[/* TODO: the smallest set that shows the point */]} />`
     : `        <p>Show the capability this pack adds, in the smallest complete lesson.</p>`;

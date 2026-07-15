@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@faraday-academy/ui/lib/utils';
 import type { ProviderKey } from '@/lib/chat/models';
 
 /**

@@ -28,7 +28,7 @@ every lesson layout. A right-edge tab opens it; on narrow screens it's a drawer.
 Do **not** drop `<Tutor>` inline in the content flow — the dock is the placement.
 
 ```tsx
-import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Quiz } from "@faraday-academy/kit/blocks";
 import { TutorDock } from "@faraday-academy/tutor";
 
 <TutorDock

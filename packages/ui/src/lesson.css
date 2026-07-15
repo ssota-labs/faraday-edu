@@ -1,0 +1,24 @@
+/* Faraday lesson stylesheet entry.
+   Layers: Tailwind + animation + shadcn base → cn-components → lesson theme → design tokens. */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./styles/cn-components.css";
+@import "./styles/theme-lesson.css";
+@import "./styles/design-tokens.css";
+
+@source "./**/*.{ts,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

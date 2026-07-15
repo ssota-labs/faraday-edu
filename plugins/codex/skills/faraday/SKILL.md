@@ -55,10 +55,10 @@ Drop the ones a finished lesson doesn't need with `faraday pack remove <name>`
 | Zone | Path | Rule |
 |---|---|---|
 | **Author area** | `src/lesson/**` | You write here. `src/lesson/lesson.tsx` is the fixed entry; it must `export default` a React component. Add sibling files freely (`src/lesson/chapters/`, helpers, models). |
-| **Runtime (dependency)** | `@faraday-academy/*` | The UI, blocks, runtime, styles, and world code — **pinned npm packages**, not vendored. Consume them via `@faraday-academy/runtime/*` (and `/three`, `/tutor`); you can't edit them. `faraday check` verifies the pins, and so will CI/deploy. |
+| **Runtime (dependency)** | `@faraday-academy/*` | The UI, blocks, runtime, styles, and world code — **pinned npm packages**, not vendored. Consume them via `@faraday-academy/kit/*` (and `/three`, `/tutor`); you can't edit them. `faraday check` verifies the pins, and so will CI/deploy. |
 
 If a primitive seems missing, **note it — don't try to fork the runtime**. The UI lives in
-the pinned `@faraday-academy/runtime` package, not your lesson, so `shadcn add` won't help.
+the pinned `@faraday-academy/kit` package, not your lesson, so `shadcn add` won't help.
 
 ## Invoking the CLI
 
@@ -90,7 +90,7 @@ dir, next steps). Exit codes: `0` ok · `1` check failed · `2` usage · `4` env
    `docs/authoring.md`; the block API also lives in [references/blocks.md](references/blocks.md).
    Start from a `docs/examples/*.tsx` when one fits (stepped, continuous, course,
    curriculum, lms, tutor) — copy it to `src/lesson/lesson.tsx` and adapt.
-3. **Author** `src/lesson/**` from `@faraday-academy/runtime/blocks` + `@faraday-academy/runtime/runtime`.
+3. **Author** `src/lesson/**` from `@faraday-academy/kit/blocks` + `@faraday-academy/kit/runtime`.
 4. **Gate:** `pnpm check` — structure + integrity must exit 0.
 5. **Verify live:** `pnpm dev`, drive it (see below), end lessons with a `<Quiz>`.
 6. **Ship (optional):** `pnpm build` → static `dist/`, or deploy (static host, or

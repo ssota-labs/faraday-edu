@@ -1,0 +1,65 @@
+{
+  "name": "@faraday-academy/kit",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "The Faraday lesson kit (blocks, runtime host, world, lms) \u2014 generated lessons pin @faraday-academy/kit. UI primitives live in @faraday-academy/ui and are re-exported here for authoring.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./blocks": "./blocks/index.ts",
+    "./runtime": "./runtime/index.ts",
+    "./world": "./world/index.ts",
+    "./lms": "./lms/index.ts",
+    "./lib/utils": "./lib/utils.ts",
+    "./ui/*": "./ui/*.tsx",
+    "./styles.css": "./faraday.css",
+    "./faraday.css": "./faraday.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "blocks",
+    "runtime",
+    "world",
+    "lms",
+    "lib",
+    "ui",
+    "faraday.css",
+    "vite-env.d.ts",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "prepack": "cp ../../LICENSE.md ./LICENSE.md 2>/dev/null || true"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssota-labs/faraday-academy.git",
+    "directory": "packages/kit"
+  },
+  "homepage": "https://github.com/ssota-labs/faraday-academy#readme",
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "dependencies": {
+    "@faraday-academy/ui": "0.2.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "katex": "^0.16.11",
+    "recharts": "^3.8.0"
+  },
+  "devDependencies": {
+    "@faraday-academy/ui": "workspace:*",
+    "@types/katex": "^0.16.7",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vite": "^7.0.0",
+    "typescript": "~5.9.0"
+  },
+  "license": "SEE LICENSE IN LICENSE.md"
+}

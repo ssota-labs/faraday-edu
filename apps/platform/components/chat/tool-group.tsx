@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { CaretRightIcon } from '@phosphor-icons/react';
-import { cn } from '@/lib/utils';
-import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@faraday-academy/ui/lib/utils';
+import { Spinner } from '@faraday-academy/ui/components/ui/spinner';
 
 export interface ToolInfo {
   name: string;

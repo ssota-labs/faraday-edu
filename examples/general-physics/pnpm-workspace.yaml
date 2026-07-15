@@ -4,4 +4,4 @@
 # toolchain), so we let build scripts run. Keep the dependency set small and pinned.
 dangerouslyAllowAllBuilds: true
 minimumReleaseAgeExclude:
-  - '@faraday-academy/runtime@0.1.0'
+  - '@faraday-academy/kit@0.1.0'

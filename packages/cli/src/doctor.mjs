@@ -84,9 +84,9 @@ export async function collectFindings(root, { deep = false } = {}) {
   }
 
   const managed = managedDeps(pkg);
-  const runtime = managed.find((d) => d.name === "@faraday-academy/runtime");
+  const runtime = managed.find((d) => d.name === "@faraday-academy/kit");
   if (!runtime) {
-    problems.push("@faraday-academy/runtime is not a dependency");
+    problems.push("@faraday-academy/kit is not a dependency");
   }
   for (const d of managed) {
     if (!isExactPin(d.spec)) {

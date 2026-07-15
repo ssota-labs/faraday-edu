@@ -1,7 +1,7 @@
 // Example mock exam using the `exam` pack — reference only, copied to docs/examples/.
 // It composes the runtime's existing assessment blocks into a blueprint-driven test:
 // one item per screen (`<SlideDeck>`), sections by outcome, review revealed on submit.
-import { Lesson, SlideDeck, Quiz, NumericAnswer, Challenge, Reveal, Prose } from "@faraday-academy/runtime/blocks";
+import { Lesson, SlideDeck, Quiz, NumericAnswer, Challenge, Reveal, Prose } from "@faraday-academy/kit/blocks";
 
 // Blueprint: read (20%, 1) · convert (40%, 2) · debug (40%, 1) — abbreviated for the demo.
 export default function BinaryMockExam() {

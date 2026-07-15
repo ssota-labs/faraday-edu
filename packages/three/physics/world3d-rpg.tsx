@@ -9,7 +9,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { Html, Line } from "@react-three/drei";
 import { Vector3 } from "three";
-import type { WorldNode, WorldPack } from "@faraday-academy/runtime/world";
+import type { WorldNode, WorldPack } from "@faraday-academy/kit/world";
 import { Scene3D } from "../scene";
 import type { Mood } from "../moods";
 

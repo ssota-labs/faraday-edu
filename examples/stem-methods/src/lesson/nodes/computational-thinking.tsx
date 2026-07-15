@@ -4,7 +4,7 @@ import {
   Compare,
   Chart,
   CodeCell,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 const linearData = Array.from({ length: 10 }, (_, i) => ({

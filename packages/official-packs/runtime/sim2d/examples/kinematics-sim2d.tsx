@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Lesson, Prose, Workbench, ControlGroup, ParamSlider, Chart,
   Callout, Derivation, Readout, NumericAnswer, TeX,
-} from "@faraday-academy/runtime/blocks";
-import { Button } from "@faraday-academy/runtime/ui/button";
-import { useNode } from "@faraday-academy/runtime/world";
+} from "@faraday-academy/kit/blocks";
+import { Button } from "@faraday-academy/kit/ui/button";
+import { useNode } from "@faraday-academy/kit/world";
 import { SvgStage, setSvgTranslate, useSimTime } from "../../src/lesson/sim2d";
 
 const TRACK_M = 100;

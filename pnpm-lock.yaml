@@ -5,7 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@faraday-academy/runtime': workspace:*
+  '@faraday-academy/kit': workspace:*
+  '@faraday-academy/ui': workspace:*
   '@faraday-academy/three': workspace:*
   '@faraday-academy/tutor': workspace:*
 
@@ -22,6 +23,12 @@ importers:
       '@base-ui/react':
         specifier: ^1.5.0
         version: 1.6.0(@types/react@19.2.17)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@faraday-academy/kit':
+        specifier: workspace:*
+        version: link:../../packages/kit
+      '@faraday-academy/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -89,9 +96,6 @@ importers:
       '@ai-sdk/workflow':
         specifier: ^1.0.11
         version: 1.0.19(zod@3.25.76)
-      '@base-ui/react':
-        specifier: ^1.5.0
-        version: 1.6.0(@types/react@19.2.17)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@faraday-academy/platform-adapter-supabase':
         specifier: workspace:*
         version: link:../../packages/platform-adapter-supabase
@@ -110,12 +114,12 @@ importers:
       '@faraday-academy/platform-studio-sandbox':
         specifier: workspace:*
         version: link:../../packages/platform-studio-sandbox
+      '@faraday-academy/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@shadcn/react':
-        specifier: ^0.2.1
-        version: 0.2.1(@types/react@19.2.17)(react@19.2.7)
       '@supabase/ssr':
         specifier: ^0.6.1
         version: 0.6.1(@supabase/supabase-js@2.110.2)
@@ -131,12 +135,6 @@ importers:
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       next:
         specifier: ^15.5.0
         version: 15.5.20(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -146,18 +144,9 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.7(react@19.2.7)
-      react-resizable-panels:
-        specifier: ^4.12.1
-        version: 4.12.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      shadcn:
-        specifier: ^4.13.0
-        version: 4.13.0(typescript@5.9.3)
       streamdown:
         specifier: ^2.5.0
         version: 2.5.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      tailwind-merge:
-        specifier: ^3.3.0
-        version: 3.6.0
       tailwindcss:
         specifier: ^4.1.8
         version: 4.3.2
@@ -201,9 +190,9 @@ importers:
 
   examples/compound-interest:
     dependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/kit
       react:
         specifier: ^19.2.0
         version: 19.2.7
@@ -238,9 +227,9 @@ importers:
 
   examples/game2d-collect:
     dependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/kit
       '@pixi/react':
         specifier: ^8.0.5
         version: 8.0.5(@types/react@19.2.17)(pixi.js@8.19.0)(react@19.2.7)
@@ -284,9 +273,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6
         version: 6.0.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1))
-      shadcn:
-        specifier: ^4.13.0
-        version: 4.13.0(typescript@6.0.3)
       tailwindcss:
         specifier: ^4
         version: 4.3.2
@@ -302,9 +288,9 @@ importers:
 
   examples/general-physics:
     dependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/kit
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
@@ -330,9 +316,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6
         version: 6.0.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1))
-      shadcn:
-        specifier: ^4.13.0
-        version: 4.13.0(typescript@6.0.3)
       tailwindcss:
         specifier: ^4
         version: 4.3.2
@@ -348,9 +331,9 @@ importers:
 
   examples/stem-methods:
     dependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/kit
       react:
         specifier: ^19.2.0
         version: 19.2.7
@@ -373,9 +356,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6
         version: 6.0.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1))
-      shadcn:
-        specifier: ^4.13.0
-        version: 4.13.0(typescript@6.0.3)
       tailwindcss:
         specifier: ^4
         version: 4.3.2
@@ -391,9 +371,9 @@ importers:
 
   examples/voyage-log:
     dependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/kit
       '@faraday-academy/three':
         specifier: workspace:*
         version: link:../../packages/three
@@ -442,6 +422,43 @@ importers:
         version: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)
 
   packages/cli: {}
+
+  packages/kit:
+    dependencies:
+      '@faraday-academy/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@phosphor-icons/react':
+        specifier: ^2.1.10
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      katex:
+        specifier: ^0.16.11
+        version: 0.16.47
+      recharts:
+        specifier: ^3.8.0
+        version: 3.9.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1)
+    devDependencies:
+      '@types/katex':
+        specifier: ^0.16.7
+        version: 0.16.8
+      '@types/react':
+        specifier: ^19
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.2.3(@types/react@19.2.17)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.7(react@19.2.7)
+      typescript:
+        specifier: ~5.9.0
+        version: 5.9.3
+      vite:
+        specifier: ^7.0.0
+        version: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.1)
 
   packages/platform-adapter-supabase:
     dependencies:
@@ -554,61 +571,15 @@ importers:
         specifier: ~5.9.0
         version: 5.9.3
 
-  packages/runtime:
-    dependencies:
-      '@base-ui/react':
-        specifier: ^1.5.0
-        version: 1.6.0(@types/react@19.2.17)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@phosphor-icons/react':
-        specifier: ^2.1.10
-        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      katex:
-        specifier: ^0.16.11
-        version: 0.16.47
-      recharts:
-        specifier: ^3.8.0
-        version: 3.9.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1)
-      tailwind-merge:
-        specifier: ^3.6.0
-        version: 3.6.0
-    devDependencies:
-      '@types/katex':
-        specifier: ^0.16.7
-        version: 0.16.8
-      '@types/react':
-        specifier: ^19
-        version: 19.2.17
-      '@types/react-dom':
-        specifier: ^19
-        version: 19.2.3(@types/react@19.2.17)
-      react:
-        specifier: ^19.2.0
-        version: 19.2.7
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.7(react@19.2.7)
-      typescript:
-        specifier: ~5.9.0
-        version: 5.9.3
-      vite:
-        specifier: ^7.0.0
-        version: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.1)
-
   packages/three:
     dependencies:
       three:
         specifier: ^0.171.0
         version: 0.171.0
     devDependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../runtime
+        version: link:../kit
       '@react-three/drei':
         specifier: ^10.0.0
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.2.17)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.171.0))(@types/react@19.2.17)(@types/three@0.171.0)(immer@11.1.11)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.171.0)
@@ -673,9 +644,12 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
-      '@faraday-academy/runtime':
+      '@faraday-academy/kit':
         specifier: workspace:*
-        version: link:../runtime
+        version: link:../kit
+      '@faraday-academy/ui':
+        specifier: workspace:*
+        version: link:../ui
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.17
@@ -694,6 +668,61 @@ importers:
       vite:
         specifier: ^7.0.0
         version: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.1)
+
+  packages/ui:
+    dependencies:
+      '@base-ui/react':
+        specifier: ^1.5.0
+        version: 1.6.0(@types/react@19.2.17)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@phosphor-icons/react':
+        specifier: ^2.1.10
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@shadcn/react':
+        specifier: ^0.2.1
+        version: 0.2.1(@types/react@19.2.17)(react@19.2.7)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      react-resizable-panels:
+        specifier: ^4.11.2
+        version: 4.12.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      recharts:
+        specifier: ^3.8.0
+        version: 3.9.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(redux@5.0.1)
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
+    devDependencies:
+      '@types/react':
+        specifier: ^19
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.2.3(@types/react@19.2.17)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.7(react@19.2.7)
+      shadcn:
+        specifier: ^4.13.0
+        version: 4.13.0(typescript@5.9.3)
+      tailwindcss:
+        specifier: ^4
+        version: 4.3.2
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+      typescript:
+        specifier: ~5.9.0
+        version: 5.9.3
 
 packages:
 
@@ -5007,6 +5036,12 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
+  sonner@2.0.7:
+    resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
   sort-keys-length@1.0.1:
     resolution: {integrity: sha512-GRbEOUqCxemTAk/b32F2xa8wDTs+Z1QHOkbhJDQTvv/6G3ZkbJ+frYWsTcc7cBB3Fu4wy4XlLCuNtJuMn7Gsvw==}
     engines: {node: '>=0.10.0'}
@@ -8093,15 +8128,6 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  cosmiconfig@9.0.2(typescript@6.0.3):
-    dependencies:
-      env-paths: 2.2.1
-      import-fresh: 3.3.1
-      js-yaml: 4.3.0
-      parse-json: 5.2.0
-    optionalDependencies:
-      typescript: 6.0.3
-
   cross-env@7.0.3:
     dependencies:
       cross-spawn: 7.0.6
@@ -10395,46 +10421,6 @@ snapshots:
       - supports-color
       - typescript
 
-  shadcn@4.13.0(typescript@6.0.3):
-    dependencies:
-      '@babel/core': 7.29.7
-      '@babel/parser': 7.29.7
-      '@babel/plugin-transform-typescript': 7.29.7(@babel/core@7.29.7)
-      '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
-      '@dotenvx/dotenvx': 1.75.1
-      '@modelcontextprotocol/sdk': 1.29.0(supports-color@8.1.1)(zod@3.25.76)
-      '@types/validate-npm-package-name': 4.0.2
-      browserslist: 4.28.5
-      commander: 14.0.3
-      cosmiconfig: 9.0.2(typescript@6.0.3)
-      dedent: 1.7.2
-      deepmerge: 4.3.1
-      diff: 8.0.4
-      execa: 9.6.1
-      fast-glob: 3.3.3
-      fs-extra: 11.3.6
-      fuzzysort: 3.1.0
-      kleur: 4.1.5
-      open: 11.0.0
-      ora: 8.2.0
-      postcss: 8.5.16
-      postcss-selector-parser: 7.1.4
-      prompts: 2.4.2
-      recast: 0.23.12
-      stringify-object: 5.0.0
-      tailwind-merge: 3.6.0
-      ts-morph: 26.0.0
-      tsconfig-paths: 4.2.0
-      undici: 7.28.0
-      validate-npm-package-name: 7.0.2
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
-    transitivePeerDependencies:
-      - '@cfworker/json-schema'
-      - babel-plugin-macros
-      - supports-color
-      - typescript
-
   sharp@0.34.5:
     dependencies:
       '@img/colour': 1.1.0
@@ -10508,6 +10494,11 @@ snapshots:
   sisteransi@1.0.5: {}
 
   slash@3.0.0: {}
+
+  sonner@2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   sort-keys-length@1.0.1:
     dependencies:

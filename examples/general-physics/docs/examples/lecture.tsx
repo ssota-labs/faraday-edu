@@ -1,5 +1,5 @@
 // Example lecture with slide + textbook views — reference only, copied to docs/examples/.
-import { Lecture, SlideDeck, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { Lecture, SlideDeck, Prose, Quiz } from "@faraday-academy/kit/blocks";
 import { TextbookView } from "./textbook-view";
 
 export default function NewtonSecondLawLecture() {

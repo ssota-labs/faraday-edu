@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-mira",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/lesson.css",
+    "baseColor": "zinc",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "phosphor",
+  "rtl": false,
+  "aliases": {
+    "components": "@faraday-academy/ui/src/components",
+    "utils": "@faraday-academy/ui/lib/utils",
+    "ui": "@faraday-academy/ui/components/ui",
+    "lib": "@faraday-academy/ui/lib",
+    "hooks": "@faraday-academy/ui/src/hooks"
+  },
+  "registries": {}
+}

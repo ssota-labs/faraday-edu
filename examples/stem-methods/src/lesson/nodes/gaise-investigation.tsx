@@ -5,7 +5,7 @@ import {
   CodeCell,
   Callout,
   TeX,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 // Static dataset: study hours per week vs exam score (0–100).

@@ -7,7 +7,7 @@ import {
   ParamSlider,
   Readout,
   Callout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 // Stability model: wider base → more stable; steeper angle beyond 60° tips the stand forward.

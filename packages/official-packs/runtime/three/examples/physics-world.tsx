@@ -4,8 +4,8 @@
 // AREA — rewrite it. The 3D block is a locked dependency.
 import { useState } from "react";
 import { Physics, RigidBody } from "@react-three/rapier";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz } from "@faraday-academy/runtime/blocks";
-import { Button } from "@faraday-academy/runtime/ui/button";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz } from "@faraday-academy/kit/blocks";
+import { Button } from "@faraday-academy/kit/ui/button";
 import { Scene3D } from "@faraday-academy/three";
 
 const COLORS = ["#8b9cf6", "#5eead4", "#fbbf24", "#fb7185", "#a78bfa", "#38bdf8"];

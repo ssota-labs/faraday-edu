@@ -74,7 +74,7 @@ export async function generateLesson(opts) {
   const packageName = sanitizePackageName(name);
   const title = normalizeTitle(name);
 
-  // 1. app shell -> project root (already consumes @faraday-academy/runtime)
+  // 1. app shell -> project root (already consumes @faraday-academy/kit)
   await copyDirectory(starter, targetDir);
 
   // 2. npm strips .gitignore from published packages, so the template ships it
@@ -102,7 +102,7 @@ export async function generateLesson(opts) {
   await fs.writeFile(
     path.join(targetDir, ".faraday", "provenance.json"),
     JSON.stringify(
-      { lessonId: uuid(), createdWith: "faraday@0.1.0", template: "starter@0.1.0", runtime: "@faraday-academy/runtime@0.1.0", packs: [], name: packageName },
+      { lessonId: uuid(), createdWith: "faraday@0.1.0", template: "starter@0.1.0", runtime: "@faraday-academy/kit@0.2.0", packs: [], name: packageName },
       null,
       2,
     ) + "\n",

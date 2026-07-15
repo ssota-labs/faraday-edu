@@ -6,8 +6,8 @@
 // static observer in a static spherical spacetime — see the Callout. It's the
 // right shape (rate → 0 as r → r_s, rate → 1 as r → ∞) for building intuition.
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Chart, Callout, Quiz, Stat } from "@faraday-academy/runtime/blocks";
-import { useNode } from "@faraday-academy/runtime/world";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Chart, Callout, Quiz, Stat } from "@faraday-academy/kit/blocks";
+import { useNode } from "@faraday-academy/kit/world";
 
 const RS_MIN = 1.05; // r/r_s can't be ≤ 1 (event horizon), so start just above.
 

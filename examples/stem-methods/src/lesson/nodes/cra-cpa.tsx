@@ -9,7 +9,7 @@ import {
   Readout,
   Stage,
   Callout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 const W = 480;

@@ -12,15 +12,19 @@ import {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "@/components/ui/message-scroller";
-import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
+} from "@faraday-academy/ui/components/ui/message-scroller";
+import {
+  Marker,
+  MarkerContent,
+  MarkerIcon,
+} from "@faraday-academy/ui/components/ui/marker";
+import { Spinner } from "@faraday-academy/ui/components/ui/spinner";
+import { Button } from "@faraday-academy/ui/components/ui/button";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable";
+} from "@faraday-academy/ui/components/ui/resizable";
 import { ChatMessage } from "@/components/chat/chat-message";
 import { ChatInput } from "@/components/chat/chat-input";
 import type { StudioUIMessage } from "@/lib/bridge/session-events";
