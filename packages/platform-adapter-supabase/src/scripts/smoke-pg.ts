@@ -1,4 +1,4 @@
-import { createPostgresStore } from "../postgres-store.ts";
+import { createPostgresStore } from "../postgres-store";
 
 async function main() {
   const url =
