@@ -16,7 +16,8 @@
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/faraday/*": ["../../packages/runtime/*"],
+      "@/faraday/ui/*": ["../../packages/ui/src/components/ui/*"],
+      "@/faraday/*": ["../../packages/kit/*"],
       "@/*": ["./src/*"]
     }
   },

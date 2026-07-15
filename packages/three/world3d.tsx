@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html, Line } from "@react-three/drei";
 import type { Mesh, PerspectiveCamera } from "three";
-import type { WorldNode, WorldPack } from "@faraday-academy/runtime/world";
+import type { WorldNode, WorldPack } from "@faraday-academy/kit/world";
 import { Scene3D } from "./scene";
 import type { Mood } from "./moods";
 

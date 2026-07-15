@@ -28,7 +28,7 @@ import {
   TeX,
   Workbench,
 } from "@/faraday/blocks";
-import { Course, useStepper } from "@/faraday/runtime";
+import { Course as CourseShell, useStepper } from "@/faraday/runtime";
 import { CourseHost, linearPack, type Course } from "@/faraday/world";
 import { ProgressDashboard, summarize, useLmsRecorder, type Learner } from "@/faraday/lms";
 
@@ -259,7 +259,7 @@ function CourseChapterB() {
 
 function CourseDemo() {
   return (
-    <Course
+    <CourseShell
       title="A tiny numbers course"
       chapters={[
         { slug: "counting", title: "Counting", element: <CourseChapterA /> },

@@ -2,7 +2,7 @@
 // resizable panel primitive. react-resizable-panels + shadcn styling. Locked.
 import * as ResizablePrimitive from "react-resizable-panels";
 
-import { cn } from "@faraday-academy/runtime/lib/utils";
+import { cn } from "@faraday-academy/ui/lib/utils";
 
 function ResizablePanelGroup({ className, ...props }: ResizablePrimitive.GroupProps) {
   return (

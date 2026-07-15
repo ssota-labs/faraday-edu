@@ -16,7 +16,8 @@ allowBuilds:
 preferWorkspacePackages: true
 linkWorkspacePackages: true
 overrides:
-  "@faraday-academy/runtime": "workspace:*"
+  "@faraday-academy/kit": "workspace:*"
+  "@faraday-academy/ui": "workspace:*"
   "@faraday-academy/three": "workspace:*"
   "@faraday-academy/tutor": "workspace:*"
 minimumReleaseAgeExclude:

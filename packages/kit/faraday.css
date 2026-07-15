@@ -1,0 +1,2 @@
+/* Re-export lesson stylesheet from @faraday-academy/ui */
+@import "@faraday-academy/ui/lesson.css";

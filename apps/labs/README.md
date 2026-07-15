@@ -2,7 +2,7 @@
 
 An **internal** Vite lab for the dev team that does two things:
 
-- **Components** — renders the `@faraday-academy/runtime` blocks **live** from demo stories, grouped
+- **Components** — renders the `@faraday-academy/kit` blocks **live** from demo stories, grouped
   (Blocks, UI, Runtime, World, LMS), with each block's header doc, exported symbols, source path,
   and a usage snippet. Click a block in the sidebar to preview it.
 - **Skills & Packs** — catalogs what the agent plugins expose: the `faraday` skill + its phase
@@ -14,7 +14,7 @@ An **internal** Vite lab for the dev team that does two things:
 
 Previews must match production. A generated lesson is a **Vite + React 19** app where components
 import via the `@/faraday/*` alias and are themed by `faraday.css`. This lab recreates exactly that
-environment — same alias (pointed at `packages/runtime`), same stylesheet, wrapped in
+environment — same alias (pointed at `packages/kit`), same stylesheet, wrapped in
 `ThemeProvider` + `.style-faraday` like `LessonHost` — so a block renders here identically to how it
 renders in a real lesson.
 
@@ -29,7 +29,7 @@ pnpm --filter @faraday-academy/labs dev    # → http://localhost:4200
 
 - **Live previews** — `src/stories.tsx` holds one demo per block (real components, real props). The
   preview canvas renders them inside the same theme + style wrapper a lesson uses. Stories live in
-  the labs app, **not** in `packages/runtime`, so the vendored runtime stays clean + SHA-lockable.
+  the labs app, **not** in `packages/kit`, so the vendored runtime stays clean + SHA-lockable.
 - **Catalog metadata** — `src/catalog.ts` parses raw source via Vite `import.meta.glob`: runtime
   component groups (header docs + exports), the skill/commands/agents/plugins under `plugins/`,
   official module packs (`packages/official-packs/**/pack.json`), and the world/legacy feature

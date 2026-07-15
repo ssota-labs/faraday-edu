@@ -3,17 +3,17 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// Recreate a generated lesson's environment so previews render EXACTLY like
-// production: "@/faraday/*" resolves to the runtime package (the same alias a
-// lesson's tsconfig/vite provide, where it points at the vendored src/faraday),
-// and Tailwind v4 runs through its Vite plugin. "@" -> ./src for labs app code.
-const runtime = path.resolve(import.meta.dirname, "../../packages/runtime");
+// Mirror a generated lesson: kit hosts blocks/runtime/world/lms; ui holds
+// primitives. Specific `@/faraday/ui` alias must come before the kit catch-all.
+const kit = path.resolve(import.meta.dirname, "../../packages/kit");
+const ui = path.resolve(import.meta.dirname, "../../packages/ui/src/components/ui");
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@/faraday": runtime,
+      "@/faraday/ui": ui,
+      "@/faraday": kit,
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
