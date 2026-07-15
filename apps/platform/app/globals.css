@@ -1,0 +1,3 @@
+@import "@faraday-academy/ui/platform.css";
+@source "../**/*.{ts,tsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx}";

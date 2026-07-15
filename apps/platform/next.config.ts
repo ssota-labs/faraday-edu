@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     "@faraday-academy/platform-artifact-router",
     "@faraday-academy/platform-studio-build",
     "@faraday-academy/platform-studio-sandbox",
+    "@faraday-academy/ui",
   ],
   // withWorkflow(nextConfig) will wrap this in P2/P4 when WDK is wired.
 };

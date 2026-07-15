@@ -1,6 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@faraday-academy/ui/components/ui/button";
+import { Card, CardContent } from "@faraday-academy/ui/components/ui/card";
+import { Textarea } from "@faraday-academy/ui/components/ui/textarea";
+import { ScrollArea } from "@faraday-academy/ui/components/ui/scroll-area";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@faraday-academy/ui/components/ui/empty";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@faraday-academy/ui/components/ui/resizable";
+import { toast } from "@faraday-academy/ui/components/ui/sonner";
 
 export default function StudioPage() {
   const [messages, setMessages] = useState<
@@ -26,6 +42,9 @@ export default function StudioPage() {
       }),
     });
     const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error?.message ?? "Could not create project");
+    }
     setCourseId(data.courseId);
     setDraftId(data.draftId);
     return { courseId: data.courseId as string, draftId: data.draftId as string };
@@ -52,88 +71,112 @@ export default function StudioPage() {
         }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error?.message ?? "Studio chat failed");
+        return;
+      }
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: data.reply ?? data.error?.message ?? "…" },
+        { role: "assistant", content: data.reply ?? "…" },
       ]);
       if (data.previewUrl) setPreviewUrl(data.previewUrl);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Studio chat failed");
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(280px, 1fr) minmax(320px, 1.2fr)",
-        height: "100vh",
-        background: "#f3efe6",
-      }}
+    <ResizablePanelGroup
+      orientation="horizontal"
+      className="h-svh bg-background"
     >
-      <section
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          borderRight: "1px solid #d9d1c3",
-          padding: "1rem",
-        }}
-      >
-        <h1 style={{ fontFamily: "Fraunces, Georgia, serif", margin: "0 0 1rem" }}>
-          Faraday Studio
-        </h1>
-        <div style={{ flex: 1, overflow: "auto", display: "grid", gap: "0.75rem" }}>
-          {messages.map((m, i) => (
-            <div
-              key={i}
-              style={{
-                background: m.role === "user" ? "#fff" : "#e4f2eb",
-                padding: "0.75rem",
-                borderRadius: 8,
-              }}
-            >
-              <strong style={{ fontSize: 12 }}>{m.role}</strong>
-              <div>{m.content}</div>
+      <ResizablePanel defaultSize={42} minSize={28}>
+        <section className="flex h-full flex-col border-r border-border p-4">
+          <h1 className="mb-4 font-[family-name:var(--font-heading-family,Fraunces,Georgia,serif)] text-2xl tracking-tight">
+            Faraday Studio
+          </h1>
+          <ScrollArea className="min-h-0 flex-1 pr-2">
+            <div className="grid gap-3 pb-4">
+              {messages.length === 0 ? (
+                <Empty className="border border-dashed border-border py-10">
+                  <EmptyHeader>
+                    <EmptyTitle>Start a course</EmptyTitle>
+                    <EmptyDescription>
+                      Describe a lesson and the agent will draft a preview.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+              ) : (
+                messages.map((m, i) => (
+                  <Card
+                    key={i}
+                    size="sm"
+                    className={
+                      m.role === "user"
+                        ? "bg-card"
+                        : "bg-accent text-accent-foreground"
+                    }
+                  >
+                    <CardContent className="pt-3">
+                      <div className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {m.role}
+                      </div>
+                      <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {m.content}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && send()}
-            placeholder="Describe a lesson…"
-            style={{ flex: 1, padding: "0.65rem", borderRadius: 8, border: "1px solid #cbbfae" }}
-          />
-          <button
-            type="button"
-            onClick={send}
-            disabled={busy}
-            style={{
-              background: "#0b6e4f",
-              color: "#fff",
-              border: 0,
-              borderRadius: 8,
-              padding: "0.65rem 1rem",
-            }}
-          >
-            Send
-          </button>
-        </div>
-      </section>
-      <section style={{ background: "#1a1f2e", color: "#f7f4ef", padding: "1rem" }}>
-        <div style={{ opacity: 0.7, marginBottom: 8 }}>Preview</div>
-        {previewUrl ? (
-          <iframe
-            title="preview"
-            src={previewUrl}
-            style={{ width: "100%", height: "calc(100% - 2rem)", border: 0, background: "#fff" }}
-            sandbox="allow-scripts"
-          />
-        ) : (
-          <p style={{ opacity: 0.6 }}>Preview appears after the agent has an index.html.</p>
-        )}
-      </section>
-    </div>
+          </ScrollArea>
+          <div className="mt-3 flex gap-2">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void send();
+                }
+              }}
+              placeholder="Describe a lesson…"
+              className="min-h-12 flex-1 resize-none"
+              rows={2}
+            />
+            <Button type="button" onClick={() => void send()} disabled={busy}>
+              Send
+            </Button>
+          </div>
+        </section>
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={58} minSize={30}>
+        <section className="flex h-full flex-col bg-foreground/95 p-4 text-background">
+          <div className="mb-2 text-xs uppercase tracking-wide opacity-70">
+            Preview
+          </div>
+          {previewUrl ? (
+            <iframe
+              title="preview"
+              src={previewUrl}
+              className="h-full w-full flex-1 rounded-md border-0 bg-background"
+              sandbox="allow-scripts"
+            />
+          ) : (
+            <Empty className="flex-1 text-background/70">
+              <EmptyHeader>
+                <EmptyTitle className="text-background">No preview yet</EmptyTitle>
+                <EmptyDescription className="text-background/60">
+                  Preview appears after the agent has an index.html.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          )}
+        </section>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 }
