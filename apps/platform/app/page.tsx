@@ -16,11 +16,21 @@ export default function HomePage() {
           payments, and community APIs.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Button render={<Link href="/login" />}>Sign in</Button>
-          <Button variant="outline" render={<Link href="/studio" />}>
+          <Button render={<Link href="/login" />} nativeButton={false}>
+            Sign in
+          </Button>
+          <Button
+            variant="outline"
+            render={<Link href="/studio" />}
+            nativeButton={false}
+          >
             Open Studio
           </Button>
-          <Button variant="ghost" render={<Link href="/legal/terms" />}>
+          <Button
+            variant="ghost"
+            render={<Link href="/legal/terms" />}
+            nativeButton={false}
+          >
             Terms (draft)
           </Button>
         </div>
