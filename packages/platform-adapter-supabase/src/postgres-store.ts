@@ -570,6 +570,22 @@ export function createPostgresStore(connectionString: string): PlatformStore {
         files: (row.files ?? {}) as Record<string, string>,
       };
     },
+    async getDraftByCourseId(courseId) {
+      const rows = await sql`
+        select * from studio_drafts
+        where course_id = ${courseId}
+        order by updated_at desc
+        limit 1
+      `;
+      if (!rows[0]) return null;
+      const row = rows[0] as Record<string, unknown>;
+      return {
+        draftId: String(row.id),
+        courseId: String(row.course_id),
+        ownerId: String(row.owner_id),
+        files: (row.files ?? {}) as Record<string, string>,
+      };
+    },
 
     async saveThread(t) {
       await sql`

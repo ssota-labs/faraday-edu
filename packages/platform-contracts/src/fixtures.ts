@@ -5,6 +5,20 @@ export const sampleCourseDefinition: CourseDefinition = {
   schemaVersion: 1,
   courseId: "course_sample_physics",
   title: "Sample Physics",
+  lectures: [
+    {
+      id: "lecture_intro",
+      title: "Introduction",
+      order: 0,
+      nodeIds: ["node_intro"],
+    },
+    {
+      id: "lecture_forces",
+      title: "Forces",
+      order: 1,
+      nodeIds: ["node_forces"],
+    },
+  ],
   nodes: [
     {
       id: "node_intro",

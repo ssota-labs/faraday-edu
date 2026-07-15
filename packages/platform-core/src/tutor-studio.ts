@@ -137,6 +137,20 @@ export function createStudioService(store: PlatformStore) {
       return draft;
     },
 
+    async getDraftByCourseId(courseId: string, ownerId: string) {
+      const draft = await store.getDraftByCourseId(courseId);
+      if (!draft) throw new Error("DRAFT_NOT_FOUND");
+      if (draft.ownerId !== ownerId) throw new Error("FORBIDDEN");
+      return draft;
+    },
+
+    async listOwnerCourses(ownerId: string) {
+      const all = await store.listCourses();
+      return all
+        .filter((c) => c.ownerId === ownerId)
+        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    },
+
     /** Stub agent turn — records intent; real WDK wired in P2 host. */
     async agentTurn(input: {
       ownerId: string;

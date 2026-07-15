@@ -2,7 +2,7 @@
   "name": "@faraday-academy/ui",
   "version": "0.2.0",
   "type": "module",
-  "description": "Faraday shared design system \u2014 shadcn/Base UI primitives (.cn-* + CSS style layer). Lessons consume via @faraday-academy/kit re-exports; the platform app imports this package directly with platform.css.",
+  "description": "Faraday shared design system — shadcn/Base UI primitives (.cn-* + CSS style layer). Lessons consume via @faraday-academy/kit re-exports; the platform app imports this package directly with platform.css.",
   "sideEffects": [
     "*.css"
   ],
@@ -12,7 +12,8 @@
     "./lesson.css": "./src/lesson.css",
     "./platform.css": "./src/platform.css",
     "./styles/*": "./src/styles/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./hooks/*": "./src/hooks/*.ts"
   },
   "files": [
     "src",

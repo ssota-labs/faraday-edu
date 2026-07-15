@@ -93,6 +93,13 @@ export interface PlatformStore {
     ownerId: string;
     files: Record<string, string>;
   } | null>;
+  /** Latest draft for a course (Studio open-by-courseId). */
+  getDraftByCourseId(courseId: string): Promise<{
+    draftId: string;
+    courseId: string;
+    ownerId: string;
+    files: Record<string, string>;
+  } | null>;
 
   // community
   saveThread(t: CommunityThread): Promise<void>;

@@ -179,6 +179,14 @@ export function createMemoryStore(): PlatformStore {
     async getDraft(draftId) {
       return drafts.get(draftId) ?? null;
     },
+    async getDraftByCourseId(courseId) {
+      for (const [draftId, data] of drafts) {
+        if (data.courseId === courseId) {
+          return { draftId, ...data };
+        }
+      }
+      return null;
+    },
     async saveThread(t) {
       threads.set(t.id, t);
     },

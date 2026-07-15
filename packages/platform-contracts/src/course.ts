@@ -14,10 +14,23 @@ export const CourseNodeSchema = z.object({
 });
 export type CourseNode = z.infer<typeof CourseNodeSchema>;
 
+/** Authoring unit inside a course — maps to a Faraday `<Lecture>` / lesson file. */
+export const CourseLectureSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  summary: z.string().optional(),
+  order: z.number().int().nonnegative(),
+  /** Node ids that belong to this lecture (subset of `nodes`). */
+  nodeIds: z.array(z.string().min(1)).default([]),
+});
+export type CourseLecture = z.infer<typeof CourseLectureSchema>;
+
 export const CourseDefinitionSchema = z.object({
   schemaVersion: z.literal(1),
   courseId: z.string().min(1),
   title: z.string().min(1).optional(),
+  /** Course → lecture hierarchy (mirror-dimension project shell adaptation). */
+  lectures: z.array(CourseLectureSchema).default([]),
   nodes: z.array(CourseNodeSchema),
   outcomes: z.array(z.unknown()).default([]),
   assessments: z.array(z.unknown()).default([]),
@@ -42,3 +55,38 @@ export const CourseRecordSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 export type CourseRecord = z.infer<typeof CourseRecordSchema>;
+
+/** Build a starter definition with one empty lecture (Studio project bootstrap). */
+export function createStarterCourseDefinition(input: {
+  courseId: string;
+  title: string;
+  lectureTitle?: string;
+}): CourseDefinition {
+  const lectureId = `lecture_${input.courseId.replace(/^course_/, "").slice(0, 12) || "intro"}`;
+  const nodeId = `node_${lectureId}`;
+  return CourseDefinitionSchema.parse({
+    schemaVersion: 1,
+    courseId: input.courseId,
+    title: input.title,
+    lectures: [
+      {
+        id: lectureId,
+        title: input.lectureTitle ?? "Lecture 1",
+        summary: "Opening lecture",
+        order: 0,
+        nodeIds: [nodeId],
+      },
+    ],
+    nodes: [
+      {
+        id: nodeId,
+        lessonComponentId: `lesson.${lectureId}`,
+      },
+    ],
+    outcomes: [],
+    assessments: [],
+    completionRules: [],
+    gradingPolicy: {},
+    customMetadata: {},
+  });
+}
