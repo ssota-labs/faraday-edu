@@ -5,7 +5,7 @@
   "default": true,
   "runtime": {
     "dependencies": {
-      "@faraday-academy/three": "0.1.0",
+      "@faraday-academy/three": "0.2.0",
       "@react-three/drei": "^10.0.0",
       "@react-three/fiber": "^9.0.0",
       "three": "^0.171.0"
@@ -20,8 +20,15 @@
         }
       }
     },
-    "cssImports": ["@faraday-academy/three/styles.css"],
-    "copy": [{ "from": "examples", "to": "docs/examples" }]
+    "cssImports": [
+      "@faraday-academy/three/styles.css"
+    ],
+    "copy": [
+      {
+        "from": "examples",
+        "to": "docs/examples"
+      }
+    ]
   },
   "skill": {
     "reference": "skill/pack.md",

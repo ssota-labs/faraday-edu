@@ -67,7 +67,12 @@ for (const name of ORDER) {
   }
   let tarFiles = [];
   try {
-    tarFiles = (JSON.parse(packRes.stdout)[0]?.files ?? []).map((f) => f.path);
+    // prepack scripts may print to stdout; extract the trailing JSON array.
+    const raw = packRes.stdout.trim();
+    const start = raw.indexOf("[");
+    const end = raw.lastIndexOf("]");
+    const json = start >= 0 && end > start ? raw.slice(start, end + 1) : raw;
+    tarFiles = (JSON.parse(json)[0]?.files ?? []).map((f) => f.path);
   } catch {
     console.error(`could not parse \`npm pack --dry-run --json\` for ${pkg.name}`);
     process.exit(1);

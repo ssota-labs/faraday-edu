@@ -1,7 +1,7 @@
 {
   "name": "@faraday-academy/tutor",
-  "version": "0.1.0",
-  "description": "Faraday Academy tutor addon \u2014 the durable <Tutor> chat widget (client), docked beside the lesson with Markdown/math rendering. Pairs with the author-editable Nitro + Workflow server that `faraday new --tutor` drops into the lesson.",
+  "version": "0.2.0",
+  "description": "Faraday Academy tutor addon — the durable <Tutor> chat widget (client), docked beside the lesson with Markdown/math rendering. Pairs with the author-editable Nitro + Workflow server that `faraday new --tutor` drops into the lesson.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
   "sideEffects": [

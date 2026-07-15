@@ -74,7 +74,7 @@ test("installPack(tutor) drops the durable server + wiring", async () => {
   await installPack("tutor", { fromDir: target });
 
   const pkg = JSON.parse(await read(target, "package.json"));
-  assert.equal(pkg.dependencies["@faraday-academy/tutor"], "0.1.0");
+  assert.equal(pkg.dependencies["@faraday-academy/tutor"], "0.2.0");
   for (const dep of ["ai", "@ai-sdk/workflow", "workflow", "nitro", "zod"]) {
     assert.ok(pkg.dependencies[dep], `server dep ${dep} missing`);
   }
@@ -181,7 +181,7 @@ test("installPack(three) wires the runtime half AND the skill half", async () =>
 
   // runtime half: deps pinned + sorted
   const pkg = JSON.parse(await read(target, "package.json"));
-  assert.equal(pkg.dependencies["@faraday-academy/three"], "0.1.0");
+  assert.equal(pkg.dependencies["@faraday-academy/three"], "0.2.0");
   assert.ok(pkg.dependencies["@react-three/fiber"]);
   assert.ok(pkg.devDependencies["@types/three"]);
   const keys = Object.keys(pkg.dependencies);

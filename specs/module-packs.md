@@ -54,7 +54,7 @@ packs/<name>/
   "displayName": "3D scenes (React Three Fiber)",
   "description": "...",
   "runtime": {
-    "dependencies": { "@faraday-academy/three": "0.1.0", "@react-three/fiber": "^9.0.0" },
+    "dependencies": { "@faraday-academy/three": "0.2.0", "@react-three/fiber": "^9.0.0" },
     "devDependencies": { "@types/three": "^0.171.0" },
     "variants": { "physics": { "dependencies": { "@react-three/rapier": "^2.1.0" } } },
     "cssImports": ["@faraday-academy/three/styles.css"],

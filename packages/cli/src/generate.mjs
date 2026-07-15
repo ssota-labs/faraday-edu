@@ -102,7 +102,7 @@ export async function generateLesson(opts) {
   await fs.writeFile(
     path.join(targetDir, ".faraday", "provenance.json"),
     JSON.stringify(
-      { lessonId: uuid(), createdWith: "faraday@0.1.0", template: "starter@0.1.0", runtime: "@faraday-academy/kit@0.2.0", packs: [], name: packageName },
+      { lessonId: uuid(), createdWith: "faraday@0.2.0", template: "starter@0.2.0", runtime: "@faraday-academy/kit@0.2.0", packs: [], name: packageName },
       null,
       2,
     ) + "\n",

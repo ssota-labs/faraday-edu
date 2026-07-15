@@ -46,7 +46,8 @@ async function main() {
       bundled.push(`${entry.name}/${child.name}`);
     }
   }
-  process.stdout.write(`bundle-packs: copied ${bundled.length} pack(s) -> packs/ (${bundled.sort().join(", ")})\n`);
+  // Log to stderr so `npm pack --json` stdout stays pure JSON (publish gate).
+  process.stderr.write(`bundle-packs: copied ${bundled.length} pack(s) -> packs/ (${bundled.sort().join(", ")})\n`);
 }
 
 main().catch((err) => {

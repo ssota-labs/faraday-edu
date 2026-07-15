@@ -1,7 +1,7 @@
 {
   "name": "@faraday-academy/three",
-  "version": "0.1.0",
-  "description": "Faraday Academy 3D addon \u2014 R3F/three.js block (Scene3D, Body, Model, world packs) that 3D lessons pin. R3F is a peer the lesson provides; optional @react-three/rapier unlocks the physics pack.",
+  "version": "0.2.0",
+  "description": "Faraday Academy 3D addon — R3F/three.js block (Scene3D, Body, Model, world packs) that 3D lessons pin. R3F is a peer the lesson provides; optional @react-three/rapier unlocks the physics pack.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
   "sideEffects": [
