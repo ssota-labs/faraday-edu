@@ -30,7 +30,7 @@ capabilities afterward with `faraday pack add <name>` (e.g. `three`, `three
    add three --physics` if you need the rapier variant.
 2. Read the scaffold's `AGENTS.md` + `docs/authoring.md`; start from a
    `docs/examples/*.tsx` when one fits.
-3. Author `src/lesson/lesson.tsx` from `@faraday-academy/runtime/blocks` + `@faraday-academy/runtime/runtime`:
+3. Author `src/lesson/lesson.tsx` from `@faraday-academy/kit/blocks` + `@faraday-academy/kit/runtime`:
    a `<Lesson>` frame, a `<Workbench>` (or `<Stage>`) interactive centerpiece, a
    `<Callout>` key idea, a closing `<Quiz>`.
 4. `pnpm check` must exit 0 (fix drift by reverting locked-tree edits).

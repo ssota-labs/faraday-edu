@@ -4,14 +4,14 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { GridFourIcon, SquaresFourIcon } from "@phosphor-icons/react";
-import { Button } from "@faraday-academy/runtime/ui/button";
-import { cn } from "@faraday-academy/runtime/lib/utils";
+import { Button } from "@faraday-academy/kit/ui/button";
+import { cn } from "@faraday-academy/kit/lib/utils";
 import {
   PresentationCanvas,
   PresentationTopBar,
   PRESENTATION_TOP_PAD,
   useLecture,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 
 export interface TextbookPage {
   id: string;

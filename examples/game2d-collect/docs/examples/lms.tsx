@@ -1,10 +1,10 @@
 // Example — LMS v0: a course wired to the progress recorder, with a teacher
 // dashboard (roster + this learner's analytics). The recorder subscribes to the
 // SAME core event stream (onEvent). Copy into src/lesson/lesson.tsx to try it.
-import { CourseHost, type Course } from "@faraday-academy/runtime/world";
+import { CourseHost, type Course } from "@faraday-academy/kit/world";
 import { map2dPack } from "./map2d"; // first: faraday pack add map2d
-import { useLmsRecorder, ProgressDashboard, summarize, type Learner } from "@faraday-academy/runtime/lms";
-import { Compare, Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { useLmsRecorder, ProgressDashboard, summarize, type Learner } from "@faraday-academy/kit/lms";
+import { Compare, Lesson, Prose, Quiz } from "@faraday-academy/kit/blocks";
 
 function Stop({ title, body }: { title: string; body: string }) {
   return (
@@ -34,7 +34,7 @@ const mockLearners: Learner[] = [
 
 export default function LmsCourse() {
   const rec = useLmsRecorder("lms-demo");
-  // summarize() (exported from @faraday-academy/runtime/lms) derives the whole LmsSummary — no
+  // summarize() (exported from @faraday-academy/kit/lms) derives the whole LmsSummary — no
   // need to hand-build it.
   const you: Learner = { id: "you", name: "You", summary: summarize(rec.events) };
   return (

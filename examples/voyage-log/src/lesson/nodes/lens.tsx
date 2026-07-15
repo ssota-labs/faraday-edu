@@ -11,9 +11,9 @@
 // the source reveals a symmetric "ring" made of a ring of impact points.
 import { useMemo, useState } from "react";
 import { Line } from "@react-three/drei";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Callout, Quiz, Stat } from "@faraday-academy/kit/blocks";
 import { Scene3D, Body, Label3D } from "@faraday-academy/three";
-import { useNode } from "@faraday-academy/runtime/world";
+import { useNode } from "@faraday-academy/kit/world";
 
 type Vec3 = [number, number, number];
 

@@ -2,7 +2,7 @@
 
 Load when the lesson needs a **formula-driven 2D simulation** or explanatory
 **SVG animation** inside a `<Workbench>` — kinematics, vectors, waves. This
-pack **replaces** the old `@faraday-academy/runtime` motion hooks
+pack **replaces** the old `@faraday-academy/kit` motion hooks
 (`useRafLoop`, `useSvgDrag`, `useAnimatedValue`). Install copies
 `src/lesson/sim2d/`.
 

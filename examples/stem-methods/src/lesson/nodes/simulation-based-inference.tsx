@@ -6,7 +6,7 @@ import {
   Callout,
   TeX,
   Stat,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 const OBSERVED_HEADS = 8;

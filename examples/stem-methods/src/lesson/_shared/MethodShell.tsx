@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Lesson, Callout } from "@faraday-academy/runtime/blocks";
+import { Lesson, Callout } from "@faraday-academy/kit/blocks";
 
 export function MethodShell(props: {
   method: string;

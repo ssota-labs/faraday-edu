@@ -7,8 +7,8 @@
 // principle. The visualisation is the same in both modes; only the caption
 // and reference frame changes.
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Segmented, Callout, Quiz } from "@faraday-academy/runtime/blocks";
-import { useNode } from "@faraday-academy/runtime/world";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, Segmented, Callout, Quiz } from "@faraday-academy/kit/blocks";
+import { useNode } from "@faraday-academy/kit/world";
 
 export default function ElevatorLesson() {
   const { complete } = useNode();

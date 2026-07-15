@@ -3,8 +3,8 @@
 // <Lesson> + blocks); <Course> adds the chapter nav, prev/next, and #hash routing.
 // Keep chapter components in src/lesson/chapters/ in a real course.
 import { useMemo, useState } from "react";
-import { Course } from "@faraday-academy/runtime/runtime";
-import { Lesson, Prose, Stage, Chart, ParamSlider, Callout, Quiz } from "@faraday-academy/runtime/blocks";
+import { Course } from "@faraday-academy/kit/runtime";
+import { Lesson, Prose, Stage, Chart, ParamSlider, Callout, Quiz } from "@faraday-academy/kit/blocks";
 
 function CountingChapter() {
   const [n, setN] = useState(6);

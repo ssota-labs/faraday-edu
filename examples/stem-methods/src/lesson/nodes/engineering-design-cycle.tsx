@@ -10,7 +10,7 @@ import {
   Readout,
   Challenge,
   Callout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 // Physics: terminal velocity under parachute.

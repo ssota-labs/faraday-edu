@@ -5,7 +5,7 @@ import {
   Reveal,
   TeX,
   Callout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 // Train A: 40 mph, leaves 8:00 AM. Train B: 60 mph, leaves 9:00 AM same route.

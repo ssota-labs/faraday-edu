@@ -23,10 +23,10 @@ import {
   Readout,
   Workbench,
   Quiz,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { useSimLoop, useSvgDrag, useAnimatedValue } from "../sim2d";
-import { useNode } from "@faraday-academy/runtime/world";
-import { Button } from "@faraday-academy/runtime/ui/button";
+import { useNode } from "@faraday-academy/kit/world";
+import { Button } from "@faraday-academy/kit/ui/button";
 import { TextbookView } from "../textbook-view";
 
 // ── model constants (viewBox space) ──────────────────────────────────────────

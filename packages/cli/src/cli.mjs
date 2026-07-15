@@ -49,7 +49,7 @@ Usage:
                                         makes a single-file skill for tiny packs.
   faraday help
 
-The generated lesson depends on the versioned @faraday-academy/runtime package
+The generated lesson depends on the versioned @faraday-academy/kit package
 (pinned exactly) instead of vendoring it. Author your lesson in src/lesson/.
 
 Capabilities (3D, physics, the AI tutor, flashcards, exams, …) are **module packs**,
@@ -269,7 +269,7 @@ async function runNew(argv, context) {
       `\n  Created ${result.title} in ${rel}/\n\n` +
       `  Next:\n    cd ${rel}\n${installed ? "" : "    pnpm install\n"}    pnpm dev\n\n` +
       `  Author your lesson in src/lesson/lesson.tsx — the UI, blocks, and runtime come\n` +
-      `  from the pinned @faraday-academy/runtime dependency.\n`,
+      `  from the pinned @faraday-academy/kit dependency.\n`,
     );
   }
 }
@@ -278,7 +278,7 @@ async function resolveLessonRoot(dir, context) {
   const start = dir ? path.resolve(context.cwd, dir) : context.cwd;
   const root = await findLessonRoot(start);
   if (!root) {
-    const e = new Error("no @faraday-academy/runtime lesson found here — run inside a generated lesson");
+    const e = new Error("no @faraday-academy/kit lesson found here — run inside a generated lesson");
     e.exitCode = 2;
     throw e;
   }
@@ -299,7 +299,7 @@ async function runCheck(argv, context) {
   const root = await resolveLessonRoot(dir, context);
   const problems = await collectFindings(root, { deep: false });
   if (problems.length === 0) {
-    context.stdout("faraday check: lesson layout intact, runtime pinned\n");
+    context.stdout("faraday check: lesson layout intact, kit pinned\n");
     return;
   }
   for (const p of problems) context.stderr(`  ${p}\n`);
@@ -613,7 +613,7 @@ async function runDoctor(argv, context) {
   const root = await resolveLessonRoot(dir, context);
   const problems = await collectFindings(root, { deep: true });
   if (problems.length === 0) {
-    context.stdout("faraday doctor: healthy — layout intact, runtime pinned, lockfile present\n");
+    context.stdout("faraday doctor: healthy — layout intact, kit pinned, lockfile present\n");
     return;
   }
   for (const p of problems) context.stderr(`  ${p}\n`);

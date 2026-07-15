@@ -29,7 +29,7 @@ a drawer on mobile) — the same dock across every lesson layout. Don't drop `<T
 inline in the content flow.
 
 ```tsx
-import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Quiz } from "@faraday-academy/kit/blocks";
 import { TutorDock } from "@faraday-academy/tutor";
 
 <TutorDock

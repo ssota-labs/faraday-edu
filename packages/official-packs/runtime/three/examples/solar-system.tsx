@@ -3,7 +3,7 @@
 // that has the `three` pack. This is the AUTHOR AREA; rewrite it. The 3D block
 // under @faraday-academy/three is a locked dependency.
 import { useMemo, useState } from "react";
-import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, ParamSwitch, Callout, Quiz } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Workbench, ControlGroup, ParamSlider, ParamSwitch, Callout, Quiz } from "@faraday-academy/kit/blocks";
 import { Scene3D, Body, OrbitPath, Planet, Label3D } from "@faraday-academy/three";
 
 const PALETTE = ["#8b9cf6", "#5eead4", "#fbbf24", "#fb7185", "#a78bfa"];

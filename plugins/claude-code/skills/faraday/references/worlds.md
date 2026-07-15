@@ -12,7 +12,7 @@ Bundle several lectures into a navigable sequence (chapter nav, prev/next, `#has
 deep links). Put chapter components in `src/lesson/chapters/`.
 
 ```tsx
-import { LinearCourse } from "@faraday-academy/runtime/runtime";
+import { LinearCourse } from "@faraday-academy/kit/runtime";
 export default function MyCourse() {
   return <LinearCourse title="…" chapters={[
     { slug: "intro", title: "Intro", element: <IntroChapter /> },
@@ -29,12 +29,12 @@ For a **course** (lecture graph with `requires` + per-lecture `lesson`). The hos
 owns progress, course-shell↔lecture toggle, HUD, and LMS/tutor events. The *shell*
 is a swappable **pack**:
 
-- `linearPack` — status list (built-in: `@faraday-academy/runtime/world`)
+- `linearPack` — status list (built-in: `@faraday-academy/kit/world`)
 - `map2dPack` — 2D map (**game screen**). `faraday pack add map2d`
 - `world3dPack` — 3D constellation. From the `three` pack
 
 ```tsx
-import { CourseHost, useNode, type Course } from "@faraday-academy/runtime/world";
+import { CourseHost, useNode, type Course } from "@faraday-academy/kit/world";
 import { map2dPack } from "./map2d";
 
 const course: Course = { title: "…", nodes: [
@@ -55,8 +55,8 @@ Import from `@faraday-academy/three`. See the `three` pack skill for moods, help
 ## LMS — progress tracking
 
 ```tsx
-import { CourseHost } from "@faraday-academy/runtime/world";
-import { useLmsRecorder, ProgressDashboard } from "@faraday-academy/runtime/lms";
+import { CourseHost } from "@faraday-academy/kit/world";
+import { useLmsRecorder, ProgressDashboard } from "@faraday-academy/kit/lms";
 const rec = useLmsRecorder("my-course");
 <CourseHost course={c} pack={map2dPack} onEvent={rec.onEvent} />
 <ProgressDashboard courseId="my-course" course={c} events={rec.events} />

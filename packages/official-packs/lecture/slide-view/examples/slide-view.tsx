@@ -1,7 +1,7 @@
 // Example slide-view lecture using the `slide-view` pack — reference only, copied to
 // docs/examples/. One idea per slide via <SlideDeck> (→ <SlideDeck> in Phase 2); canvas ⇄ prose split; a
 // prediction slide before the reveal. Composes existing blocks, no new deps.
-import { Lesson, SlideDeck, Prose, Workbench, ParamSlider, Chart, Quiz, Stat } from "@faraday-academy/runtime/blocks";
+import { Lesson, SlideDeck, Prose, Workbench, ParamSlider, Chart, Quiz, Stat } from "@faraday-academy/kit/blocks";
 
 export default function DoublingDeck() {
   return (

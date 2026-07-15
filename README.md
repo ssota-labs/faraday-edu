@@ -338,7 +338,8 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 │  ├─ cli/                      # @faraday-academy/cli — the `faraday` scaffolder (bin + src)
 │  │  └─ templates/starter/     #   the app shell stamped by `faraday new` (packs bundled at build)
 │  ├─ official-packs/           # module packs by category: course/ (map2d) · lecture/ (slide-view·srs·notes·exam·storybook-game2d) · runtime/ (three·tutor·game2d) · methodology/ (audience·lecture-design) + pack.schema.json
-│  ├─ runtime/                  # @faraday-academy/runtime — UI, blocks, runtime, styles, world, lms (lessons pin this)
+│  ├─ ui/                       # @faraday-academy/ui — shared shadcn primitives + lesson/platform CSS
+│  ├─ kit/                      # @faraday-academy/kit — blocks, runtime host, world, lms (lessons pin this; re-exports ui)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)
 ├─ examples/                    # Standalone demos (own lockfile; Vercel root = examples/<name>)
@@ -359,7 +360,7 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 
 ## What the scaffolder does
 
-Copy starter → target · restore `.gitignore` · pin `@faraday-academy/runtime` ·
+Copy starter → target · restore `.gitignore` · pin `@faraday-academy/kit` ·
 auto-install all default packs (skill + runtime; `--no-defaults` to skip) · wire `app.css`
 to the runtime stylesheet · inject package name + HTML title · issue a `lessonId`
 provenance record · `pnpm install`. Trim unused packs with `faraday pack remove <name>`;

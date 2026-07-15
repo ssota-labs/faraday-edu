@@ -184,7 +184,7 @@ Stage 2 플랫폼 앱(`apps/platform` 예정)은 ssota와 동일한 Vercel-nativ
 | durable agent | `workflow` + `@ai-sdk/workflow` + `withWorkflow(nextConfig)` | Studio 에이전트(P2) + Tutor(P4) |
 | 격리 빌드 | `packages/studio-sandbox` | P2 agent sandbox |
 | artifact 빌드 | `packages/studio-build` | P1/P2 build pipeline |
-| UI | `@ssota/ui` (Base UI + shadcn) | `@faraday-academy/runtime` UI + platform DS |
+| UI | `@ssota/ui` (Base UI + shadcn) | `@faraday-academy/ui` (shared primitives + `platform.css`); lesson shell via `@faraday-academy/kit` |
 | 계약 | `packages/contracts` (Zod) | `packages/platform-contracts` (Zod) |
 | 테스트 | Vitest + Playwright | 동일 |
 
@@ -352,7 +352,7 @@ e2e/
   faraday-platform/         # Faraday 플랫폼 전용
 ```
 
-기존 `packages/cli`, `packages/runtime`, `packages/tutor`, `packages/official-packs`는 Stage 1
+기존 `packages/cli`, `packages/kit`, `packages/tutor`, `packages/official-packs`는 Stage 1
 경로로 유지한다. Stage 2는 **새 앱/패키지 트리**로 추가하고 lesson toolchain과 경계를 분리한다.
 
 ### 4.7 페이즈별 ssota 정렬 체크리스트

@@ -10,7 +10,7 @@
 // resizable, collapsible right-side panel (a right-edge tab opens it; a drawer on
 // mobile), the same dockable model across every lesson layout. Do NOT drop <Tutor>
 // inline in the content flow.
-import { Lesson, Prose, Quiz } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Quiz } from "@faraday-academy/kit/blocks";
 import { TutorDock } from "@faraday-academy/tutor";
 
 const LESSON_TEXT = `

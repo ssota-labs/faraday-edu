@@ -10,7 +10,7 @@ import {
   Workbench,
   ControlGroup,
   Callout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { MethodShell } from "../_shared/MethodShell";
 
 const XS = [0, 1, 2, 3, 4, 5];

@@ -2,7 +2,7 @@
 // Graphics-only (no external sprites) so it runs before Kenney assets land in public/.
 // After install, import from the copied module: `../../src/lesson/game2d`.
 import { useCallback } from "react";
-import { Lesson, Prose, Workbench } from "@faraday-academy/runtime/blocks";
+import { Lesson, Prose, Workbench } from "@faraday-academy/kit/blocks";
 import { Game2D, PhysicsWorld, PhysicsBody } from "../../src/lesson/game2d";
 
 function Ground() {

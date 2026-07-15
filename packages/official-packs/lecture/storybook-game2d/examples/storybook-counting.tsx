@@ -8,7 +8,7 @@ import {
   Challenge,
   SketchPad,
   Quiz,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import { StorybookGame } from "../../src/lesson/storybook-game2d";
 
 function OrchardStage() {

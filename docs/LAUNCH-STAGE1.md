@@ -99,7 +99,7 @@
 
 | 패키지 | 역할 | publish 전 체크 |
 |---|---|---|
-| `@faraday-academy/runtime` | 모든 레슨 필수 pin | `private` 해제 · `files`에 blocks/runtime/world/lms/ui/styles/lib · 라이선스 |
+| `@faraday-academy/kit` | 모든 레슨 필수 pin | `private` 해제 · `files`에 blocks/runtime/world/lms/ui/styles/lib · 라이선스 |
 | `@faraday-academy/three` | `--3d` / `--physics` | peer `workspace:^` → `0.1.0` · `files` |
 | `@faraday-academy/tutor` | `--tutor` | peer `workspace:^` → `0.1.0` · `files` |
 | `@faraday-academy/cli` | `npx` 엔트리 | `private` 해제 · templates 포함 · 핀 버전이 위 패키지와 일치 |

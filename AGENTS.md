@@ -20,7 +20,7 @@ See `README.md` for the command reference; notes below cover non-obvious caveats
   script** and secrets in [Cloud Agents → your environment](https://cursor.com/dashboard?tab=cloud-agents)
   instead; see [`.cursor/README.md`](.cursor/README.md).
 - There is **no ESLint/Prettier**; the lint-equivalent gate is `typecheck` (tsc). Run per package,
-  e.g. `pnpm --filter @faraday-academy/runtime typecheck` (also `three`, `tutor`, and
+  e.g. `pnpm --filter @faraday-academy/kit typecheck` (also `three`, `tutor`, and
   `@faraday-academy/labs`). The CLI is plain `.mjs` — no typecheck, covered by its unit tests.
 
 ### Secrets → `.env.local` on startup
@@ -57,7 +57,7 @@ locks secret editing when install/start are code-managed (see `.cursor/README.md
 - The one long-running service in this repo. Run `pnpm --filter @faraday-academy/labs dev`
   (Vite, fixed port **4200**, `--host`) to preview every runtime block live, then open
   `http://localhost:4200/`. `build`/`preview`/`typecheck` scripts exist too. It previews the
-  `packages/runtime` source directly via the `@/faraday` alias, so runtime edits hot-reload here.
+  `packages/kit` source directly via the `@/faraday` alias, so runtime edits hot-reload here.
 
 ### Working inside a generated lesson
 - `pnpm check` (structure + SHA-256 integrity gates), `pnpm typecheck`, `pnpm build`,

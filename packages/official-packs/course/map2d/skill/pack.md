@@ -17,7 +17,7 @@ to tweak — node radius, colors (theme tokens only), the layout.
 ## Use
 
 ```tsx
-import { CourseHost, useNode, type Course } from "@faraday-academy/runtime/world";
+import { CourseHost, useNode, type Course } from "@faraday-academy/kit/world";
 import { map2dPack } from "./map2d";
 
 const course: Course = { title: "…", nodes: [ /* … */ ] };

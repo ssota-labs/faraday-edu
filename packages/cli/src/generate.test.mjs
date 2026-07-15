@@ -42,19 +42,19 @@ test("generateLesson produces the expected tree + injections", async () => {
   const pkg = JSON.parse(await read(target, "package.json"));
   assert.equal(pkg.name, "my-cool-lesson");
   assert.equal(pkg.private, true);
-  const pin = pkg.dependencies["@faraday-academy/runtime"];
+  const pin = pkg.dependencies["@faraday-academy/kit"];
   assert.ok(pin && /^\d+\.\d+\.\d+/.test(pin), `runtime must be pinned exactly, got ${pin}`);
   assert.match(await read(target, "index.html"), /<title>My Cool Lesson<\/title>/);
 
   const css = await read(target, "src/app.css");
-  assert.match(css, /@import "@faraday-academy\/runtime\/styles\.css"/);
+  assert.match(css, /@import "@faraday-academy\/kit\/styles\.css"/);
   assert.match(css, /@source "\.\/lesson/);
 
   assert.equal(await exists(path.join(target, "gitignore")), false);
 
   const prov = JSON.parse(await read(target, ".faraday/provenance.json"));
   assert.equal(prov.lessonId, "fixed-id");
-  assert.match(prov.runtime, /@faraday-academy\/runtime@/);
+  assert.match(prov.runtime, /@faraday-academy\/kit@/);
 
   await fs.rm(base, { recursive: true, force: true });
 });
@@ -143,7 +143,7 @@ test("faraday check passes on a freshly-generated lesson", async () => {
     ["check", "--dir", path.join(base, "checkable")],
     { cwd: base, stdout: (s) => (out += s), stderr: () => {}, throwOnError: true },
   );
-  assert.match(out, /lesson layout intact, runtime pinned/);
+  assert.match(out, /lesson layout intact, kit pinned/);
   await fs.rm(base, { recursive: true, force: true });
 });
 
@@ -156,7 +156,7 @@ test("faraday check fails when the runtime pin is a range, not exact (exit 1)", 
   );
   const pkgPath = path.join(dir, "package.json");
   const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
-  pkg.dependencies["@faraday-academy/runtime"] = "^0.1.0";
+  pkg.dependencies["@faraday-academy/kit"] = "^0.2.0";
   await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2));
   let code = 0;
   await runFaradayCli(

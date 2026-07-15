@@ -14,9 +14,9 @@ import {
   Quiz,
   Reveal,
   Stat,
-} from "@faraday-academy/runtime/blocks";
-import { Button } from "@faraday-academy/runtime/ui/button";
-import { useStepper } from "@faraday-academy/runtime/runtime";
+} from "@faraday-academy/kit/blocks";
+import { Button } from "@faraday-academy/kit/ui/button";
+import { useStepper } from "@faraday-academy/kit/runtime";
 
 interface Frame {
   array: number[];

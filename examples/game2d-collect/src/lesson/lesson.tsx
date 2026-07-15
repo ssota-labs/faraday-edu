@@ -12,7 +12,7 @@ import {
   Challenge,
   Readout,
   Callout,
-} from "@faraday-academy/runtime/blocks";
+} from "@faraday-academy/kit/blocks";
 import {
   Game2D,
   PhysicsWorld,

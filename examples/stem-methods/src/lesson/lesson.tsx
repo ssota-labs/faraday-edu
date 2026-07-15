@@ -1,4 +1,4 @@
-import { LinearCourse } from "@faraday-academy/runtime/runtime";
+import { LinearCourse } from "@faraday-academy/kit/runtime";
 import CraCpa from "./nodes/cra-cpa";
 import PolyaProblemSolving from "./nodes/polya-problem-solving";
 import VariationTheory from "./nodes/variation-theory";

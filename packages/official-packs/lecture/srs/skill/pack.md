@@ -45,7 +45,7 @@ import { Flashcards } from "./srs/Flashcards";
 ## Extending
 
 - Progress persists to `localStorage` per `deckId`. To record mastery centrally,
-  wire the deck's grade callback to the lesson's `@faraday-academy/runtime/lms`
+  wire the deck's grade callback to the lesson's `@faraday-academy/kit/lms`
   recorder.
 - Edit `scheduler.ts` to change the algorithm — it's yours.
 

@@ -15,7 +15,7 @@ against it before calling anything done.
 | Zone | Path | Rule |
 |---|---|---|
 | **Author area** | `src/lesson/**` | Write your lesson here. `src/lesson/lesson.tsx` is the fixed entry and must `export default` a React component. Add sibling files freely. For a **multi-lesson curriculum**, put each node's lesson in its own file under `src/lesson/nodes/<id>.tsx` and import them into the module-scope `curriculum` in `lesson.tsx` — this keeps lessons file-isolated so they can be built independently (see `docs/examples/curriculum.tsx`). |
-| **Runtime (dependency)** | `@faraday-academy/*` | The shadcn UI, lesson blocks, runtime, and styles — **pinned npm packages**, not vendored. You consume them via `@faraday-academy/runtime/*`; you don't edit them. `pnpm check` verifies the pin. |
+| **Runtime (dependency)** | `@faraday-academy/*` | The shadcn UI, lesson blocks, runtime, and styles — **pinned npm packages**, not vendored. You consume them via `@faraday-academy/kit/*`; you don't edit them. `pnpm check` verifies the pin. |
 
 `src/main.tsx`, `index.html`, and the config files are the app shell — you rarely touch them.
 
@@ -23,18 +23,17 @@ against it before calling anything done.
 
 This uses the shadcn **CSS-style** convention, not inline utility soup:
 
-- Components carry semantic `.cn-*` class names; all their styling lives in
-  `-academy/runtime/styles/style-faraday.css` (shipped in the runtime package).
-- **Theme tokens** (semantic colors, light/dark) → `-academy/runtime/styles/theme.css`.
-- **Design tokens** (Tailwind namespace mapping + radius/density) → `-academy/runtime/styles/design-tokens.css`.
-  You reference these tokens; the runtime owns them.
+- **Theme tokens** (semantic colors, light/dark) → `@faraday-academy/ui` (`theme-lesson.css`).
+- **Component styles** → `@faraday-academy/ui` (`cn-components.css`, activated by `.style-faraday`).
+- **Design tokens** (Tailwind namespace mapping + radius/density) → `@faraday-academy/ui` (`design-tokens.css`).
+  You reference these tokens; the kit owns the lesson shell that activates them.
 - In your lesson, use **semantic Tailwind classes** (`text-muted-foreground`,
   `bg-card`, `text-primary`) and the blocks below. Never hardcode colors like
   `text-blue-500`. In SVG, pull theme colors with `style={{ fill: "var(--primary)" }}`.
 
 ## Blocks you assemble
 
-Import from `@faraday-academy/runtime/blocks`; raw shadcn primitives are in `@faraday-academy/runtime/ui/*`.
+Import from `@faraday-academy/kit/blocks`; raw shadcn primitives are in `@faraday-academy/kit/ui/*`.
 
 - `<Lesson title lead topic?>` — page frame. Put everything inside it.
 - `<Prose heading?>` — a text section.
@@ -46,7 +45,7 @@ Import from `@faraday-academy/runtime/blocks`; raw shadcn primitives are in `@fa
   omit it when all interaction lives on the canvas (drag handles, overlay
   buttons) and the canvas takes full width; use it for secondary or numerous
   parameters. `onReset` adds a reset button.
-- **Motion hooks** (from `@faraday-academy/runtime/runtime`) — use these instead of hand-rolled
+- **Motion hooks** (from `@faraday-academy/kit/runtime`) — use these instead of hand-rolled
   rAF so nothing snaps: `useAnimatedValue(target)` (render from it → discrete
   changes ease, never teleport), `useRafLoop(cb, playing)` (keep dynamic systems
   moving, Play/Pause in `hud`), `useSvgDrag(onDrag)` (drag objects in viewBox
@@ -101,7 +100,7 @@ Import from `@faraday-academy/runtime/blocks`; raw shadcn primitives are in `@fa
   wants one idea per screen (young learners, kiosk/tablet); the default lesson
   layout remains the book-like vertical scroll.
 - `useStepper(total, { fps? })` — cursor + autoplay over an ordered list of frames.
-- `<Course title chapters>` (from `@faraday-academy/runtime/runtime`) — bundle several lessons into a
+- `<Course title chapters>` (from `@faraday-academy/kit/runtime`) — bundle several lessons into a
   navigable textbook (chapter nav, prev/next, #hash routing). Use it as the default export.
 
 Light/dark toggle and the reading column come from the runtime — you don't add them.
@@ -141,7 +140,7 @@ domain 3D scene that ships with `neutral` mood is a defect.
 
 - One lesson / one idea. No routing, no backend, no network calls.
 - Don't add dependencies unless the lesson genuinely needs them.
-- Don't try to fork the runtime. `@faraday-academy/runtime` is a pinned dependency —
+- Don't try to fork the runtime. `@faraday-academy/kit` is a pinned dependency —
   if a primitive seems missing, note it in your summary instead of working around it.
 
 > **Pack `stem-methods`:** installed via `faraday pack add stem-methods`. Authoring guide at `.faraday/packs/stem-methods`. Load it when you are teaching math, science, engineering, computing, or statistics and need a discipline-appropriate unit arc beyond the audience default.
