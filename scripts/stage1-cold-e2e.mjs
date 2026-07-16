@@ -73,8 +73,8 @@ async function main() {
   run("node", [cli, "new", "s1", "--at", s1, "--skip-install", "--overwrite"]);
   const pkg = JSON.parse(readFileSync(path.join(s1, "package.json"), "utf8"));
   if (
-    pkg.dependencies?.["@faraday-academy/kit"] !== "0.2.0" ||
-    pkg.dependencies?.["@faraday-academy/ui"] !== "0.2.0"
+    pkg.dependencies?.["@faraday-academy/kit"] !== "0.3.0" ||
+    pkg.dependencies?.["@faraday-academy/ui"] !== "0.3.0"
   ) {
     throw new Error(`${s1}: kit/ui pins missing`);
   }
