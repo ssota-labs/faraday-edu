@@ -15,9 +15,6 @@ You are theming an existing, reset shadcn/Base-UI layer — not styling from scr
   Data series use `var(--chart-1..5)`.
 - **Design tokens** — radius/density live in the token layer; the reading column and
   the light/dark toggle come from the runtime. You don't rebuild chrome.
-- **3D `mood`** — `space`/`cell`/`lab`/`physics`/`abstract` set a whole scene's
-  background, light, and decor to match the subject. A domain scene must carry its
-  mood (see [worlds.md](worlds.md)).
 
 To restyle, adjust token *values* / pick a mood — don't fight the reset or add ad-hoc
 CSS. Deep bespoke visual work can borrow general frontend-design judgement, but stay
@@ -25,14 +22,10 @@ inside this token contract or `pnpm check` / theming will fight you.
 
 ## Two design registers
 
-Faraday output lives in two registers — don't blend them:
-
-- **World / roadmap screens are game screens.** Full-bleed viewport, game HUD
-  plates (the host provides them), node glow states, mood-matched scene. No
-  document headings, no reading column, no card borders around the world. If a
-  roadmap looks like a webpage section with a diagram in it, it's wrong.
-- **Lesson pages are textbook chapters.** Reading column, prose-led sections,
-  instruments (Workbench/Chart/CodeCell) embedded in the flow, math as `<TeX>`.
+Faraday output is a **textbook chapter**: reading column, prose-led sections,
+instruments (Workbench/Chart/CodeCell) embedded in the flow, math as `<TeX>`.
+Game-style full-bleed shells are out of scope for Phase 1 — use `<SlideDeck>` or
+`game2d` packs when you need a different surface.
 
 ## Principles
 
@@ -62,7 +55,6 @@ and (within the token palette) accent choices — without breaking the theme.
 
 ## Verify the design
 
-Drive it at a **real, non-zero viewport** (charts/3D won't paint at 0px — see
-[worlds.md](worlds.md)), and check **both light and dark**. Confirm the focal
-interaction is the first thing the eye lands on, labels are legible, and nothing
-relies on a color that vanishes in one theme.
+Drive it at a **real, non-zero viewport** (charts won't paint at 0px), and check
+**both light and dark**. Confirm the focal interaction is the first thing the eye
+lands on, labels are legible, and nothing relies on a color that vanishes in one theme.

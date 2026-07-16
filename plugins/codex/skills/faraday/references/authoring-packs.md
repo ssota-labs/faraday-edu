@@ -43,7 +43,7 @@ every official pack:
 |---|---|---|---|---|
 | **`skill`** | 0 | nothing but ships knowledge (composes blocks the runtime already has) | the capability is *how to teach/assess*, not new code | audience · lecture-design · exam · slide-view |
 | **`copy`** | 0 | copies an **author-editable** component into `src/lesson/<name>/` | you ship source the author will edit, with no npm dep | srs · notes |
-| **`runtime`** | N | pins a published `@scope/pkg`, wires CSS, copies glue/config | the heavy code lives in a versioned package | three · tutor |
+| **`runtime`** | N | pins a published `@scope/pkg`, wires CSS, copies glue/config | the heavy code lives in a versioned package | sim2d · game2d |
 
 Start at `skill` and only reach for `copy`/`runtime` when you genuinely ship code.
 
@@ -62,7 +62,6 @@ The full contract is `packages/official-packs/pack.schema.json`. The fields:
   "name": "my-pack",                    // kebab-case; CLI derives it from the folder anyway
   "displayName": "Short human label",   // required — shown by `faraday pack list`
   "description": "One sentence: what it adds, and when to use it.",
-  "default": true,                      // faraday new auto-installs it (all official packs are)
   "runtime": {                          // the runtime half (omit / {} for skill-only)
     "dependencies":    { "@scope/pkg": "1.2.3" },   // pin EXACT for @faraday-academy/*
     "devDependencies": { "@types/x": "^1.0.0" },
@@ -82,8 +81,8 @@ The full contract is `packages/official-packs/pack.schema.json`. The fields:
 
 - **`requires`** — other packs this one builds on, installed first. Each entry is a
   pack source (official name · `./path` · `owner/repo` · `npm:<spec>`). Use it when a
-  pack composes another instead of re-declaring its deps — e.g. a village-map game
-  curriculum pack `requires: ["three"]` to stand on the 3D engine. Cycle-guarded and
+  pack composes another instead of re-declaring its deps — e.g. `storybook-game2d`
+  `requires: ["game2d"]` to stand on the 2D engine. Cycle-guarded and
   idempotent; the dependency's runtime + skill + provenance all come along.
 - **`variants`** — optional bundles selected with `faraday pack add <name> --<variant>`
   (e.g. `--physics`). They are *not* in the base install.

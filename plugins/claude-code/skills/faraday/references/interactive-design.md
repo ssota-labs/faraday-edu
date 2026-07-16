@@ -122,5 +122,5 @@ interactive design meets "verify it teaches the right thing" in SKILL.md.
 
 ## Then build
 
-Assemble it from [blocks.md](blocks.md) (single lesson) / [worlds.md](worlds.md)
-(3D, course, world). Make it look clear with [design.md](design.md).
+Assemble it from [blocks.md](blocks.md) and `<Course>` when bundling chapters.
+Make it look clear with [design.md](design.md).

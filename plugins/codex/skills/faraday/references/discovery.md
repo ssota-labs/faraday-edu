@@ -55,7 +55,7 @@ Ask only what you can't infer from their material, and keep it to a handful:
   creator can't say, state the assumption you're making in the brief and let them
   veto it — never design with the audience silently unpinned.
 - **Goal** — what should the learner be able to *do* after? (an outcome, not "know about X")
-- **Scope** — one concept, a unit, or a whole course? (sets lesson vs. course vs. world)
+- **Scope** — one concept, a unit, or a whole course? (sets lesson vs. multi-chapter `<Course>`)
 - **Assessment** — self-check only, or graded/mastery-gated progression?
 - **Their methodology** — do they already teach this with a method (their sequence,
   their assessment style, a framework their school uses)? **If yes, their method
@@ -71,7 +71,7 @@ what should they be able to do after?"* Match the depth to the request.
 
 Before building, restate what you heard as a short brief and confirm it:
 
-> **Audience:** … · **Goal:** … · **Scope:** … (→ lesson / course / world) ·
+> **Audience:** … · **Goal:** … · **Scope:** … (→ lesson / course) ·
 > **Source:** … · **Proposed shape:** …
 
 One or two lines. A 10-second confirmation here prevents building the wrong thing.

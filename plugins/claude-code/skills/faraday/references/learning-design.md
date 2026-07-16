@@ -21,8 +21,8 @@ assessment style overrides them.
   tier.
 - **Continuity (coming back)** — the biggest risk is drop-off. Reduce it with: a
   visible roadmap that always shows a clear "next"; **LMS progress**
-  (`useLmsRecorder` → `<ProgressDashboard>`, see [worlds.md](worlds.md)) so returning
-  learners see where they are; node `reward.xp` for momentum.
+  (`@faraday-academy/lms` recorder + dashboard when installed) so returning
+  learners see where they are.
 
 ## Design method
 
@@ -43,12 +43,11 @@ raise the bar deliberately.
 
 - A gate that's trivial to pass teaches nothing; a gate that's a wall frustrates.
   Aim for a check the target learner passes *after* engaging, not before and not never.
-- **Assessment integrity:** if the lesson has a tutor, it must not leak quiz/exercise
-  answers (the tutor is scaffolded Socratic and grounded — keep it that way; see
-  [tutor.md](tutor.md)). A mastery gate the learner can talk their way past isn't a gate.
+- **Assessment integrity:** checks must be diagnostic — a mastery gate the learner
+  can guess-pass isn't a gate.
 
 ## Build it
 
-`requires`, `useNode().complete()`, `<Quiz onCorrect>`, node `reward`, and the LMS
-recorder/dashboard are all in [worlds.md](worlds.md). Design the individual
-checks/interactions with [interactive-design.md](interactive-design.md).
+Wire `requires`, `useNode().complete()`, `<Quiz onCorrect>`, and node rewards in
+`<Course>` from `@faraday-academy/kit/runtime`. Design the individual checks and
+interactions with [interactive-design.md](interactive-design.md).

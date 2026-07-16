@@ -45,7 +45,7 @@ table you scan for progress:
     | id | title | requires | check | packs | status |
     |----|-------|----------|-------|-------|--------|
     | intro   | …   | -        | MCQ     | 2d    | verified  |
-    | forces  | …   | intro    | numeric | three | building  |
+    | forces  | …   | intro    | numeric | sim2d | building  |
     | energy  | …   | forces   | mission | 2d    | todo      |
 
 **`nodes/<id>.md`** is the **brief contract** handed to a sub-agent — one node, one
@@ -53,11 +53,11 @@ file. Keep these fields:
 
 - **outcome** — what the learner can *do* after (one "aha"; backward-design verb).
 - **interaction** — what they manipulate and what must visibly change.
-- **check** — the FORM (MCQ / numeric / sketch / mission / tutor-graded, per
+- **check** — the FORM (MCQ / numeric / sketch / mission, per
   [assessment.md](assessment.md)) and the pass bar (diagnostic, not guess-passable).
 - **source** — the material excerpt or researched facts this node teaches (see the
   research policy in [discovery.md](discovery.md); flag unverified claims here).
-- **packs** — runtime packs this node needs (e.g. `three` with a `mood`).
+- **packs** — runtime packs this node needs (e.g. `sim2d`, `game2d`).
 - **requires** — prerequisite node ids (the unlock edges).
 - **file** — `src/lesson/nodes/<id>.tsx` (this node's isolated author file).
 - **status** — `todo → building → built → verified` (or `blocked`).
@@ -85,7 +85,7 @@ confirmable, then fill lessons in. Then loop the nodes:
 | **Orchestrator** | the assembly `src/lesson/lesson.tsx` (the module-scope `curriculum` + node array), `overview.md`, `plan/index.md` |
 
 Only the `curriculum` **object** must stay at module scope (progress is keyed on its
-identity — see [worlds.md](worlds.md)); node components are imported from their files.
+identity); node components are imported from their files.
 Never let two sub-agents write the same file. If a node needs a shared helper, the
 orchestrator adds it.
 
@@ -94,10 +94,8 @@ orchestrator adds it.
 - **Resume:** on a new session or after a reset, read `.faraday/plan/<plan>/` and pick
   up from the first `todo`/`building` node. The plan is the memory; the chat is not.
 - **Tier checkpoints:** after finishing a tier (a group of nodes), run `pnpm check`
-  and actually **drive the course screen** (`pnpm dev`) — the map/unlock view and
-  any 3D scene are visual-only and can't be graded by an HTTP 200 (see the quality
-  bar in [quality-bar.md](quality-bar.md)). Confirm every node frames, including the
-  current objective, at a narrow width too.
+  and actually **drive the course** (`pnpm dev`) — confirm chapter nav and each
+  lesson renders. See the quality bar in [quality-bar.md](quality-bar.md).
 
 ## Match the effort to the request
 
