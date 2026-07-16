@@ -405,39 +405,5 @@
       "sourcePath": "packages/kit/blocks/Workbench.tsx"
     }
   ],
-  "examples": [
-    {
-      "slug": "compound-interest",
-      "title": "compound-interest",
-      "description": "Interactive Faraday lesson example.",
-      "packs": []
-    },
-    {
-      "slug": "exam-hall-physics",
-      "title": "exam-hall-physics",
-      "description": "Interactive Faraday lesson example.",
-      "packs": [
-        "audience",
-        "exam",
-        "lecture-design",
-        "sim2d"
-      ]
-    },
-    {
-      "slug": "game2d-collect",
-      "title": "game2d-collect",
-      "description": "Interactive Faraday lesson example.",
-      "packs": [
-        "game2d"
-      ]
-    },
-    {
-      "slug": "stem-methods",
-      "title": "stem-methods",
-      "description": "Interactive Faraday lesson example.",
-      "packs": [
-        "stem-methods"
-      ]
-    }
-  ]
+  "examples": []
 }

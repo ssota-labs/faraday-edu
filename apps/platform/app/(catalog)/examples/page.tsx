@@ -1,8 +1,36 @@
 import Link from "next/link";
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { catalog } from "@/lib/catalog";
 
 export default function ExamplesPage() {
+  if (!catalog.examples.length) {
+    return (
+      <main className="px-5 py-8 md:px-7">
+        <header className="max-w-3xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">Reference builds</p>
+          <h1 className="mt-3 font-[family-name:var(--font-heading-family,Fraunces,Georgia,serif)] text-4xl tracking-[-0.03em]">
+            Interactive examples
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Full lesson projects will appear here as the catalog grows. For now, scaffold a fresh
+            lesson with <code className="font-mono text-xs">faraday new</code> and browse blocks and
+            packs in the registry.
+          </p>
+        </header>
+        <div className="mt-8 border border-border bg-card p-6">
+          <p className="text-sm text-muted-foreground">No workspace examples are published yet.</p>
+          <Link
+            href="/blocks"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium hover:text-primary"
+          >
+            Browse blocks
+            <ArrowRight className="size-4" />
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="px-5 py-8 md:px-7">
       <header className="max-w-3xl">
@@ -33,7 +61,8 @@ export default function ExamplesPage() {
                   href={`https://github.com/ssota-labs/faraday-academy/tree/main/examples/${example.slug}`}
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  <ArrowSquareOut className="size-5" />
+                  <span className="sr-only">View source</span>
+                  →
                 </Link>
               </div>
               {example.packs.length ? (

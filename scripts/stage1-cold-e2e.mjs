@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // Stage 1 cold-path smoke (local CLI stand-in for Claude/Codex agent E2E).
-// Covers: marketplace URL · minimal vinext scaffold · attach-style init · examples.
+// Covers: marketplace URL · minimal vinext scaffold · attach-style init · cold build.
 // Exit 0 on pass. Real marketplace install in Claude/Codex remains a human gate.
 
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, existsSync, readFileSync, rmSync, mkdirSync, symlinkSync } from "node:fs";
+import { mkdtempSync, existsSync, readFileSync, rmSync, mkdirSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,6 +20,32 @@ function run(cmd, args, cwd = root) {
     env: { ...process.env, FARADAY_SKIP_INSTALL: "1" },
   });
   if ((r.status ?? 1) !== 0) throw new Error(`failed: ${cmd} ${args.join(" ")}`);
+}
+
+function runInstall(cmd, args, cwd = root) {
+  console.log(`\n$ ${cmd} ${args.join(" ")}`);
+  const r = spawnSync(cmd, args, { cwd, stdio: "inherit", env: process.env });
+  if ((r.status ?? 1) !== 0) throw new Error(`failed: ${cmd} ${args.join(" ")}`);
+}
+
+function patchAcademyPins(lessonDir) {
+  const pkgPath = path.join(lessonDir, "package.json");
+  const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  pkg.dependencies = pkg.dependencies ?? {};
+  for (const name of ["ui", "kit"]) {
+    pkg.dependencies[`@faraday-academy/${name}`] = `file:${path.join(root, "packages", name)}`;
+  }
+  writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+}
+
+function restoreAcademyPins(lessonDir, version = "0.3.0") {
+  const pkgPath = path.join(lessonDir, "package.json");
+  const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  pkg.dependencies = pkg.dependencies ?? {};
+  for (const name of ["ui", "kit"]) {
+    pkg.dependencies[`@faraday-academy/${name}`] = version;
+  }
+  writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 }
 
 function linkAcademy(lessonDir) {
@@ -78,8 +104,13 @@ async function main() {
   ) {
     throw new Error(`${s1}: kit/ui pins missing`);
   }
+  patchAcademyPins(s1);
   linkAcademy(s1);
-  run("node", ["scripts/check-structure.mjs"], s1);
+  runInstall("pnpm", ["install"], s1);
+  restoreAcademyPins(s1);
+  run("pnpm", ["check"], s1);
+  run("pnpm", ["typecheck"], s1);
+  run("pnpm", ["build"], s1);
 
   const attached = path.join(work, "attached");
   mkdirSync(attached, { recursive: true });
@@ -92,17 +123,7 @@ async function main() {
   run("node", [cli, "init", "--dir", attached, "--skip-install"]);
   console.log("scaffold + attach checks OK");
 
-  console.log("\n── Example demos (workspace) ──");
-  run("pnpm", ["install"]);
-  for (const name of ["compound-interest", "exam-hall-physics", "game2d-collect", "stem-methods"]) {
-    const dir = path.join(root, "examples", name);
-    if (!existsSync(dir)) throw new Error(`missing ${name}`);
-    run("pnpm", ["check"], dir);
-    run("pnpm", ["typecheck"], dir);
-    run("pnpm", ["build"], dir);
-  }
-
-  console.log("\nCold E2E passed (CLI + marketplace URL + demo builds).");
+  console.log("\nCold E2E passed (CLI + marketplace URL + vinext scaffold build).");
   console.log("Human gate remaining: Claude Code / Codex `/plugin marketplace add ssota-labs/faraday-academy`.");
 }
 

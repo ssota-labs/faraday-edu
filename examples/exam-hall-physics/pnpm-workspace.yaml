@@ -1,5 +1,0 @@
-# Single-package project. pnpm 10/11 gate dependency build scripts and (in v11)
-# return a non-zero exit when any are unapproved, which would block non-interactive
-# scaffolding. The only build-script dependency here is esbuild (via the Vite
-# toolchain), so we let build scripts run. Keep the dependency set small and pinned.
-dangerouslyAllowAllBuilds: true

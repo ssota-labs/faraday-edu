@@ -4,7 +4,7 @@
 
 This repo is the **Faraday Academy** monorepo (`@faraday-academy/*`): the `@faraday-academy/cli`
 scaffolder that stamps out minimal vinext + React interactive lessons, plus the runtime packages
-those lessons pin. It is a **pnpm workspace** (`apps/*`, `packages/*`, `examples/*`; see
+those lessons pin. It is a **pnpm workspace** (`apps/*`, `packages/*`; see
 `pnpm-workspace.yaml`). The workspace ships `apps/platform` (Next.js pack/block catalog) and
 `apps/labs` (internal Vite block dev surface). See `README.md` for the command reference.
 

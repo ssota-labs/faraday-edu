@@ -368,8 +368,6 @@ faraday-academy/                # repo root = the pnpm workspace (apps/* + packa
 │  ├─ kit/                      # @faraday-academy/kit — blocks, runtime host, world, lms (lessons pin this; re-exports ui)
 │  ├─ three/                    # @faraday-academy/three — opt-in R3F/three.js 3D block (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — opt-in docked <Tutor> chat widget (pack add tutor)
-├─ examples/                    # Standalone demos (own lockfile; Vercel root = examples/<name>)
-│  └─ voyage-log/               #   sample curriculum (three pack)
 ├─ plugins/
 │  ├─ claude-code/              # Claude Code plugin + marketplace (install & drive Faraday)
 │  └─ codex/                    # Codex AGENTS.md + custom prompts

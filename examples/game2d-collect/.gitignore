@@ -1,8 +1,0 @@
-node_modules
-dist
-*.local
-.DS_Store
-.primer/session.json
-public/assets/game2d/platformer-characters/
-public/assets/game2d/ui-pack/
-public/assets/game2d/assetvault.lock.json

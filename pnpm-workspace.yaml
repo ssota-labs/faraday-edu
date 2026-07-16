@@ -2,10 +2,6 @@ packages:
   - apps/*
   - packages/*
   - e2e
-  # Stage 1: include examples so monorepo installs can link @faraday-academy/*
-  # before/while registry publish. Independent Vercel deploys still work once
-  # packages are on npm (Root Directory = examples/<name> → registry install).
-  - examples/*
 allowBuilds:
   # Vite/labs bundles with esbuild — allow its native binary to build.
   '@swc/core': true
@@ -14,7 +10,6 @@ allowBuilds:
   # Next.js image optimization (apps/platform)
   sharp: true
 
-# Until @faraday-academy/* is on npm, force examples to the workspace packages.
 preferWorkspacePackages: true
 linkWorkspacePackages: true
 overrides:

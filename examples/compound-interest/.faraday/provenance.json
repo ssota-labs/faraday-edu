@@ -1,8 +1,0 @@
-{
-  "lessonId": "5266b360-fa80-4151-b36e-11fbe3c9aa7b",
-  "createdWith": "faraday@0.1.0",
-  "template": "starter@0.1.0",
-  "runtime": "@faraday-academy/kit@0.1.0",
-  "addons": [],
-  "name": "compound-interest"
-}

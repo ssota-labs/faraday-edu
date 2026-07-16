@@ -367,8 +367,6 @@ faraday-academy/                # 저장소 루트 = pnpm 워크스페이스 (ap
 │  ├─ kit/                      # @faraday-academy/kit — 블록, 런타임 호스트, 월드, lms (수업이 pin; ui 재export)
 │  ├─ three/                    # @faraday-academy/three — 옵트인 R3F/three.js 3D 블록 (pack add three [--physics])
 │  └─ tutor/                    # @faraday-academy/tutor — 옵트인 도킹형 <Tutor> 채팅 위젯 (pack add tutor)
-├─ examples/                    # 독립 실행형 데모 (자체 lockfile; Vercel root = examples/<name>)
-│  └─ voyage-log/               #   예시 커리큘럼 (three 팩)
 ├─ plugins/
 │  ├─ claude-code/              # Claude Code 플러그인 + 마켓플레이스 (Faraday 설치 & 구동)
 │  └─ codex/                    # Codex AGENTS.md + 커스텀 프롬프트
