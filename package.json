@@ -5,7 +5,7 @@
   "scripts": {
     "test": "pnpm --filter @faraday-academy/cli test && node --test scripts/setup-env-local.test.mjs",
     "test:cli": "pnpm --filter @faraday-academy/cli test",
-    "typecheck": "pnpm --filter @faraday-academy/ui typecheck && pnpm --filter @faraday-academy/kit typecheck && pnpm --filter @faraday-academy/labs typecheck && pnpm --filter @faraday-academy/platform typecheck",
+    "typecheck": "pnpm --filter @faraday-academy/ui typecheck && pnpm --filter @faraday-academy/kit typecheck && pnpm --filter @faraday-academy/lms typecheck && pnpm --filter @faraday-academy/labs typecheck && pnpm --filter @faraday-academy/platform typecheck",
     "harness:docs": "node scripts/harness/check-docs.mjs",
     "harness:boundaries": "node scripts/harness/check-boundaries.mjs",
     "verify:quick": "pnpm harness:docs && pnpm harness:boundaries && pnpm typecheck && pnpm test",

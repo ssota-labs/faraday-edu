@@ -186,7 +186,7 @@ flowchart LR
 | ![커리큘럼 월드](docs/images/component-curriculum.png) | **📚 커리큘럼 / 월드** | 수업을 선형 교과서로, 또는 잠금 해제 진행이 있는 게임 같은 지도로 엮어 탐험합니다. | `<Course>` · `<CourseHost>` + 월드 팩 |
 | ![슬라이드 뷰](docs/images/component-lecture.png) | **🎬 슬라이드 뷰** | 슬라이드 뷰 프레젠테이션 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<SlideDeck>` · `sim2d` 팩 · `slide-view` 팩 |
 | ![퀴즈/과제](docs/images/component-quiz.png) | **✅ 퀴즈 / 과제** | *가르치는* 확인 — 객관식, 숫자 입력, 스케치 예측, 시뮬레이션에서 클리어하는 미션. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
-| ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 현재는 수업 안에서 진도를 기록하고 보여줍니다. 이후 공통 schema와 SDK가 여러 Site·기기의 진도를 중앙 LMS에 연결합니다. | `@faraday-academy/kit/lms` → 관리형 LMS 로드맵 |
+| ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 현재는 수업 안에서 진도를 기록하고 보여줍니다. 이후 공통 schema와 SDK가 여러 Site·기기의 진도를 중앙 LMS에 연결합니다. | `@faraday-academy/lms` → 관리형 LMS 로드맵 |
 | ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 |
 
 <!-- 📸 component-*.png 썸네일 — docs/images/README.md 참고. 위 깨진 아이콘은 파일을 넣기 전까지의 placeholder 입니다. -->
@@ -223,7 +223,7 @@ LMS·BYOK Tutor가 셀프 배포 환경에서 동작합니다. 이후 단계는 
   해제 진행(unlock progression)**과 교체 가능한 **팩**을 가진 `<CourseHost>`
   — `linearPack`(상태 목록), `map2dPack`(2D 노드 맵), `world3dPack`(3D 오픈월드 /
   RPG). 팩이 곧 세계 전체를 갈아끼우는 이음새입니다.
-- **LMS** (`@faraday-academy/kit/lms`) — 현재는 수업이나 커리큘럼에 붙는 로컬
+- **LMS** (`@faraday-academy/lms`) — 현재는 수업이나 커리큘럼에 붙는 로컬
   진도 기록기 + 대시보드. 다음 단계에서는 Sites와 self-host가 같은 학습 정본을
   쓰도록 공통 schema, MCP, browser SDK와 중앙 서비스를 제공합니다.
 - **Tutor AI** (`@faraday-academy/tutor`, `pack add tutor`) — 콘텐츠 옆에 임베드되는

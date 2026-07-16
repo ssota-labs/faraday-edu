@@ -29,11 +29,11 @@ for (const rel of required) {
   }
 }
 
-// UI primitives live in @faraday-academy/ui (via kit re-exports). Never vendor
+// UI primitives live in the pinned @faraday-academy/ui package. Never vendor
 // a local shadcn tree or run `shadcn add` in a lesson.
 try {
   await fs.stat(path.join(root, "src/components/ui"));
-  problems.push("src/components/ui/ must not exist — import from @faraday-academy/kit/ui/* (never shadcn add)");
+  problems.push("src/components/ui/ must not exist — import from @faraday-academy/ui/components/ui/* (never shadcn add)");
 } catch {
   /* expected missing */
 }
@@ -46,8 +46,14 @@ try {
   } else if (!/^\d+\.\d+\.\d+/.test(pin)) {
     problems.push(`@faraday-academy/kit must be pinned to an exact version, found "${pin}"`);
   }
+  const uiPin = pkg.dependencies?.["@faraday-academy/ui"];
+  if (!uiPin) {
+    problems.push("@faraday-academy/ui is not a dependency in package.json");
+  } else if (!/^\d+\.\d+\.\d+/.test(uiPin)) {
+    problems.push(`@faraday-academy/ui must be pinned to an exact version, found "${uiPin}"`);
+  }
   if (pkg.devDependencies?.shadcn || pkg.dependencies?.shadcn) {
-    problems.push("shadcn must not be a lesson dependency — UI is provided by @faraday-academy/kit");
+    problems.push("shadcn must not be a lesson dependency — UI is provided by @faraday-academy/ui");
   }
 } catch {
   problems.push("package.json is missing or unreadable");

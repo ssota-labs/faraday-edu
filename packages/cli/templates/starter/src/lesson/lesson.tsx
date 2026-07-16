@@ -15,7 +15,7 @@ import {
   Reveal,
   Stat,
 } from "@faraday-academy/kit/blocks";
-import { Button } from "@faraday-academy/kit/ui/button";
+import { Button } from "@faraday-academy/ui/components/ui/button";
 import { useStepper } from "@faraday-academy/kit/runtime";
 
 interface Frame {

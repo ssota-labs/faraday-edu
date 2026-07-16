@@ -19,8 +19,7 @@ preferWorkspacePackages: true
 linkWorkspacePackages: true
 overrides:
   "@faraday-academy/kit": "workspace:*"
+  "@faraday-academy/lms": "workspace:*"
   "@faraday-academy/ui": "workspace:*"
-  "@faraday-academy/three": "workspace:*"
-  "@faraday-academy/tutor": "workspace:*"
 minimumReleaseAgeExclude:
   - '@assetvault/cli@0.1.0'

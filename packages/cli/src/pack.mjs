@@ -909,7 +909,7 @@ justify reaching for this pack over a plain block.
       content: `# \`${name}\` — extending
 
 Where the author can go further — swap the algorithm, wire to the
-\`@faraday-academy/kit/lms\` recorder, theme it. Point at the author-editable
+\`@faraday-academy/lms\` recorder, theme it. Point at the author-editable
 files this pack copies (if any); make clear what is safe to edit vs. a pinned dep.
 `,
     },

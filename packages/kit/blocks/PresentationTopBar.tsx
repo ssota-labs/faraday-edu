@@ -1,17 +1,14 @@
-// Fixed top bar — Map + presentation view tabs (Slides / Textbook) + mode actions.
+// Fixed top bar — presentation view tabs (Slides / Textbook) + mode actions.
 import type { ReactNode } from "react";
-import { MapTrifoldIcon } from "@phosphor-icons/react";
 import { Button } from "@faraday-academy/ui/components/ui/button";
 import { cn } from "@faraday-academy/ui/lib/utils";
 import { useLecture } from "./lecture-context";
-import { useCourseNav } from "../world/node-context";
 
 export function PresentationTopBar(props: {
   children?: ReactNode;
   className?: string;
 }) {
   const lecture = useLecture();
-  const course = useCourseNav();
 
   return (
     <header
@@ -21,12 +18,6 @@ export function PresentationTopBar(props: {
       )}
     >
       <div className="flex min-w-0 items-center gap-1">
-        {course?.exit ? (
-          <Button size="sm" variant="outline" onClick={course.exit} aria-label="Back to map">
-            <MapTrifoldIcon />
-            <span className="hidden sm:inline">Map</span>
-          </Button>
-        ) : null}
         {lecture && lecture.views.length > 1 ? (
           <nav className="flex items-center gap-1" role="tablist" aria-label="Presentation views">
             {lecture.views.map((v) => (

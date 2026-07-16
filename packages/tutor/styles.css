@@ -1,4 +1,0 @@
-/* Scan the tutor chat widget's own components so their utility classes are
-   emitted. Tailwind is imported once via the runtime stylesheet; this file only
-   adds this package as a content source. */
-@source "./**/*.{ts,tsx}";

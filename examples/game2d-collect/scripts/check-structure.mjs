@@ -33,7 +33,7 @@ for (const rel of required) {
 // a local shadcn tree or run `shadcn add` in a lesson.
 try {
   await fs.stat(path.join(root, "src/components/ui"));
-  problems.push("src/components/ui/ must not exist — import from @faraday-academy/kit/ui/* (never shadcn add)");
+  problems.push("src/components/ui/ must not exist — import from @faraday-academy/ui/components/ui/* (never shadcn add)");
 } catch {
   /* expected missing */
 }

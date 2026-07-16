@@ -161,8 +161,6 @@ const GROUP_DEFS = [
   { id: "blocks", title: "Blocks", importPath: "@/faraday/blocks", blurb: "The authoring API — lesson building blocks composed from shadcn UI. What lesson code writes against." },
   { id: "ui", title: "UI primitives", importPath: "@/faraday/ui", blurb: "Shared shadcn / Base UI primitives (@faraday-academy/ui) the blocks and platform are built on." },
   { id: "runtime", title: "Runtime", importPath: "@/faraday/runtime", blurb: "Lesson & course hosts, the stepper, motion helpers, and theming." },
-  { id: "world", title: "World", importPath: "@/faraday/world", blurb: "Curriculum-as-world: host, HUD, progression store, and swappable packs." },
-  { id: "lms", title: "LMS", importPath: "@/faraday/lms", blurb: "A progress recorder + dashboard for a lesson or a whole course." },
 ] as const;
 
 export function loadComponentGroups(): ComponentGroup[] {
@@ -196,9 +194,7 @@ export function loadComponentGroups(): ComponentGroup[] {
 // ── packs ────────────────────────────────────────────────────────────────────
 
 const FEATURE_PACKS: Pack[] = [
-  { id: "starter", title: "starter", tag: "base", relPath: "packages/cli/templates/starter", summary: "The app shell every lesson starts from — Vite + React, the two-zone layout, a demo lesson, AGENTS.md, docs." },
-  { id: "addon-3d", title: "addon-3d", tag: "--3d / --physics", relPath: "packages/cli/templates/addon-3d", summary: "Three.js / React Three Fiber scene block + demo lessons and model assets. With --physics, the Rapier walkable-world extras." },
-  { id: "addon-tutor", title: "addon-tutor", tag: "--tutor", relPath: "packages/cli/templates/addon-tutor", summary: "The durable grounded AI tutor: chat UI vendored into the locked tree, Nitro api routes, a Workflow agent, and the Vite+Nitro config." },
+  { id: "starter", title: "starter", tag: "base", relPath: "packages/cli/templates/starter", summary: "The minimal vinext app shell every standalone lesson starts from." },
 ];
 
 export function loadWorldPacks(): Pack[] {

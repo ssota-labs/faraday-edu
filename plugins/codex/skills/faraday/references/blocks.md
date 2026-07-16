@@ -1,7 +1,7 @@
 # Faraday blocks — API reference
 
 Import blocks from `@faraday-academy/kit/blocks`, runtime helpers from `@faraday-academy/kit/runtime`,
-raw shadcn primitives from `@faraday-academy/kit/ui/*`. The scaffolded project's
+raw shadcn primitives from `@faraday-academy/ui/components/ui/*`. The scaffolded project's
 `docs/authoring.md` is the source of truth; this is the working summary.
 
 **A lesson is a chapter, not a gadget.** A substantial concept gets several
@@ -140,7 +140,7 @@ fight the layer with utilities.
 
 ## Adding a shadcn primitive
 
-The runtime ships these shadcn primitives at `@faraday-academy/kit/ui/*`: button, card, slider, tabs, accordion,
+The runtime ships these shadcn primitives at `@faraday-academy/ui/components/ui/*`: button, card, slider, tabs, accordion,
 alert, badge, radio-group, toggle-group, switch, progress, separator, label,
 tooltip, collapsible, chart. Compose those. Do **not** run `shadcn add` (writes
 — the UI is in the pinned runtime, not your lesson). Truly missing primitive → note it in your

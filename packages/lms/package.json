@@ -1,23 +1,14 @@
 {
-  "name": "@faraday-academy/kit",
+  "name": "@faraday-academy/lms",
   "version": "0.2.0",
   "type": "module",
-  "description": "The minimal Faraday lesson kit: portable blocks and runtime helpers for agent-built courseware.",
-  "sideEffects": [
-    "*.css"
-  ],
+  "description": "Optional local learning progress recorder and dashboard for Faraday lessons.",
   "exports": {
-    "./blocks": "./blocks/index.ts",
-    "./runtime": "./runtime/index.ts",
-    "./styles.css": "./faraday.css",
-    "./faraday.css": "./faraday.css",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "files": [
-    "blocks",
-    "runtime",
-    "faraday.css",
-    "vite-env.d.ts",
+    "src",
     "LICENSE.md"
   ],
   "scripts": {
@@ -30,27 +21,21 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ssota-labs/faraday-academy.git",
-    "directory": "packages/kit"
+    "directory": "packages/lms"
   },
-  "homepage": "https://github.com/ssota-labs/faraday-academy#readme",
   "peerDependencies": {
+    "@faraday-academy/kit": "0.2.0",
+    "@faraday-academy/ui": "0.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
-  "dependencies": {
-    "@faraday-academy/ui": "0.2.0",
-    "@phosphor-icons/react": "^2.1.10",
-    "katex": "^0.16.11",
-    "recharts": "^3.8.0"
-  },
   "devDependencies": {
+    "@faraday-academy/kit": "workspace:*",
     "@faraday-academy/ui": "workspace:*",
-    "@types/katex": "^0.16.7",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "vite": "^7.0.0",
     "typescript": "~5.9.0"
   },
   "license": "SEE LICENSE IN LICENSE.md"

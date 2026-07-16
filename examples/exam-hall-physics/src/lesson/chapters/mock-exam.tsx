@@ -12,7 +12,7 @@ import {
   Callout,
   TeX,
 } from "@faraday-academy/kit/blocks";
-import { Button } from "@faraday-academy/kit/ui/button";
+import { Button } from "@faraday-academy/ui/components/ui/button";
 
 const G = 9.8;
 

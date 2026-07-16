@@ -5,8 +5,7 @@ import {
   Lesson, Prose, Workbench, ControlGroup, ParamSlider, Chart,
   Callout, Derivation, Readout, NumericAnswer, TeX,
 } from "@faraday-academy/kit/blocks";
-import { Button } from "@faraday-academy/kit/ui/button";
-import { useNode } from "@faraday-academy/kit/world";
+import { Button } from "@faraday-academy/ui/components/ui/button";
 import { SvgStage, setSvgTranslate, useSimTime } from "../../src/lesson/sim2d";
 
 const TRACK_M = 100;
@@ -109,7 +108,6 @@ function KinematicsTrack({ v0, a, playing, onPlayingChange, onHud }: TrackProps)
 }
 
 export default function KinematicsSim2d() {
-  const { complete } = useNode();
   const [v0, setV0] = useState(0);
   const [a, setA] = useState(3);
   const [playing, setPlaying] = useState(false);
@@ -237,7 +235,6 @@ export default function KinematicsSim2d() {
         answer={37.5}
         unit="m"
         tolerance={0.5}
-        onCorrect={complete}
       />
     </Lesson>
   );

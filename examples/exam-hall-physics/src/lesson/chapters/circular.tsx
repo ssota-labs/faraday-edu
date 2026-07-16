@@ -15,7 +15,7 @@ import {
   TeX,
   Readout,
 } from "@faraday-academy/kit/blocks";
-import { Button } from "@faraday-academy/kit/ui/button";
+import { Button } from "@faraday-academy/ui/components/ui/button";
 import { useSimTime } from "../sim2d";
 
 const CX = 320;

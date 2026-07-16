@@ -1,6 +1,0 @@
-/* App stylesheet entry. The runtime + three addon each self-scan their own
-   components; here we pull both compiled stylesheets in and add the ONE content
-   source they can't know about: this lesson's code. */
-@import "@faraday-academy/kit/styles.css";
-@import "@faraday-academy/three/styles.css";
-@source "./lesson/**/*.{ts,tsx}";

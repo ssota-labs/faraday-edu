@@ -29,8 +29,6 @@ import {
   Workbench,
 } from "@/faraday/blocks";
 import { Course as CourseShell, useStepper } from "@/faraday/runtime";
-import { CourseHost, linearPack, type Course } from "@/faraday/world";
-import { ProgressDashboard, summarize, useLmsRecorder, type Learner } from "@/faraday/lms";
 
 export type Demo = { render: () => ReactNode; source: string; blurb?: string };
 
@@ -212,7 +210,7 @@ function ChartGallery() {
   );
 }
 
-// ── runtime / world / lms demos ───────────────────────────────────────────────
+// ── runtime demos ─────────────────────────────────────────────────────────────
 
 function CourseChapterA() {
   const [n, setN] = useState(6);
@@ -267,42 +265,6 @@ function CourseDemo() {
       ]}
     />
   );
-}
-
-function CurriculumStop({ title, body }: { title: string; body: string }) {
-  return (
-    <Lesson topic="Map course" title={title} lead={body}>
-      <Prose>
-        <p>{body}</p>
-      </Prose>
-    </Lesson>
-  );
-}
-
-// Module-level (stable identity — required by the progress store).
-const DEMO_COURSE: Course = {
-  title: "A tiny map course",
-  nodes: [
-    { id: "intro", title: "Start", summary: "Begin here", meta: { x: 12, y: 50 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Start" body="The first stop." /> },
-    { id: "a", title: "Path A", summary: "One of two branches", requires: ["intro"], meta: { x: 45, y: 30 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Path A" body="One of two branches." /> },
-    { id: "b", title: "Path B", summary: "The other branch", requires: ["intro"], meta: { x: 45, y: 70 }, reward: { xp: 10 }, lesson: <CurriculumStop title="Path B" body="The other branch." /> },
-    { id: "final", title: "Summit", summary: "The finale", requires: ["a", "b"], meta: { x: 82, y: 50 }, reward: { xp: 20 }, lesson: <CurriculumStop title="Summit" body="Clear this to finish the course." /> },
-  ],
-};
-
-function CurriculumDemo() {
-  return <CourseHost course={DEMO_COURSE} pack={linearPack} onEvent={() => {}} />;
-}
-
-function DashboardDemo() {
-  const rec = useLmsRecorder("labs-demo");
-  const now = Date.now();
-  const you: Learner = { id: "you", name: "You", summary: summarize(rec.events) };
-  const roster: Learner[] = [
-    { id: "m1", name: "Ada", summary: { events: 6, xp: 40, done: 3, startedAt: now - 9e5, lastActiveAt: now - 3e5, activeMs: 5.2e5, perNode: {} } },
-    { id: "m2", name: "Grace", summary: { events: 3, xp: 20, done: 1, startedAt: now - 6e5, lastActiveAt: now - 12e4, activeMs: 1.8e5, perNode: {} } },
-  ];
-  return <ProgressDashboard courseId="labs-demo" course={DEMO_COURSE} events={rec.events} learners={[you, ...roster]} />;
 }
 
 export const DEMOS: Record<string, Demo> = {
@@ -524,31 +486,10 @@ export const DEMOS: Record<string, Demo> = {
     source: `<Readout label="Kinetic energy" value="18 J" tone="primary" />`,
   },
 
-  // ── runtime / world / lms ─────────────────────────────────────────────────
+  // ── runtime ────────────────────────────────────────────────────────────────
   Course: {
     render: () => <CourseDemo />,
     source: `<Course title="…" chapters={[{ slug, title, element: <Chapter/> }, …]} />`,
-  },
-  host: {
-    blurb: "CourseHost — a graph of lessons with unlock progression + a swappable pack. Shown with linearPack; map2dPack / world3dPack render as an immersive full-screen game map (see hud).",
-    render: () => <CurriculumDemo />,
-    source: `<CourseHost course={curriculum} pack={linearPack} onEvent={rec.onEvent} />`,
-  },
-  hud: {
-    render: () => (
-      <iframe
-        title="Immersive world (map2dPack) + HUD"
-        src="/?frame=world"
-        className="h-[480px] w-full rounded-lg border border-border bg-background"
-      />
-    ),
-    source: `<CourseHost course={curriculum} pack={map2dPack} />
-// map2dPack renders the immersive game screen; the host draws the HUD on top`,
-  },
-  ProgressDashboard: {
-    render: () => <DashboardDemo />,
-    source: `const rec = useLmsRecorder("id");
-<ProgressDashboard courseId="id" course={c} events={rec.events} learners={[you, ...roster]} />`,
   },
   "lesson-host": {
     blurb: "LessonHost — the shell every lesson mounts inside: the .style-faraday layer, a centered reading column, the light/dark toggle, and an error boundary. Shown in an isolated frame (it fills the viewport).",

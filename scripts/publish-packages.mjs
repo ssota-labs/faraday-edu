@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Publish @faraday-academy/{ui,kit,three,tutor,cli} to npm in dependency order.
+// Publish @faraday-academy/{ui,kit,lms,cli} to npm in dependency order.
 // Requires NPM_TOKEN (or an existing `npm whoami` session) with publish rights
 // on the @faraday-academy org. Exit 4 on auth/environment failure; 1 on publish failure.
 
@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ORDER = ["ui", "kit", "three", "tutor", "cli"];
+const ORDER = ["ui", "kit", "lms", "cli"];
 
 function run(cmd, args, opts = {}) {
   const r = spawnSync(cmd, args, { stdio: "inherit", cwd: opts.cwd ?? root, env: opts.env ?? process.env });

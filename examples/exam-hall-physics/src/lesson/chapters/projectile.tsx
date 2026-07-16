@@ -16,7 +16,7 @@ import {
   Readout,
   Challenge,
 } from "@faraday-academy/kit/blocks";
-import { Button } from "@faraday-academy/kit/ui/button";
+import { Button } from "@faraday-academy/ui/components/ui/button";
 import { setSvgTranslate, useSimTime } from "../sim2d";
 
 const G = 9.8;

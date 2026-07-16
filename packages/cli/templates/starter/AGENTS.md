@@ -33,7 +33,7 @@ This uses the shadcn **CSS-style** convention, not inline utility soup:
 
 ## Blocks you assemble
 
-Import from `@faraday-academy/kit/blocks`; raw shadcn primitives are in `@faraday-academy/kit/ui/*`.
+Import from `@faraday-academy/kit/blocks`; raw shadcn primitives are in `@faraday-academy/ui/components/ui/*`.
 
 - `<Lesson title lead topic?>` — page frame. Put everything inside it.
 - `<Prose heading?>` — a text section.

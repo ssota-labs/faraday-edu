@@ -250,7 +250,7 @@ In SVG: `style={{ fill: "var(--primary)" }}`. In HTML: semantic Tailwind classes
 
 ## Adding a shadcn component you need
 
-The runtime ships these shadcn primitives at `@faraday-academy/kit/ui/*` (button, card, slider,
+The runtime ships these shadcn primitives at `@faraday-academy/ui/components/ui/*` (button, card, slider,
 tabs, accordion, alert, badge, radio-group, toggle-group, switch, progress,
 separator, label, tooltip). Compose those. Do **not** run `shadcn add` — it writes
 — the UI lives in the pinned `@faraday-academy/kit` package, not your lesson. If you truly need a

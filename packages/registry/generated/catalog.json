@@ -63,17 +63,6 @@
       "installCommand": "faraday pack add lecture-design"
     },
     {
-      "name": "map2d",
-      "displayName": "2D map course shell",
-      "description": "Navigate a course as a full-bleed 2D lecture map (a tactical game screen with unlock paths). A course shell — pass it to <CurriculumHost pack={map2dPack} />. Copies an author-editable map component into src/lesson/map2d — no new npm dependencies.",
-      "category": "course",
-      "requires": [],
-      "variants": [],
-      "dependencies": [],
-      "quality": "# map2d quality bar\n\nAn immersive presentation is only correct if it reads as a **game screen**, not a\ndocument with a widget in it:\n\n- **Full-bleed.** The map fills the viewport — no page header, no reading column\n  around it. The host mounts it immersive; don't wrap it in a `<Lesson>`.\n- **Every node frames.** All nodes — especially the current objective (the pulsing\n  active node) — are on screen at laptop AND narrow/portrait aspect ratios. A node\n  clipped off-canvas is a defect.\n- **HUD reads.** Give each node a `summary` + `reward.xp` so the briefing panel isn't\n  empty. Status is legible: locked/available/active/complete visibly differ.\n- **Theme tokens only.** Colors come from `var(--primary)`, `var(--chart-3)`, etc.\n  — never hardcoded hex, so light/dark both work.\n\nGrade by screenshotting a real, non-zero viewport — an HTTP 200 can't see any of this.",
-      "installCommand": "faraday pack add map2d"
-    },
-    {
       "name": "notes",
       "displayName": "Pen notebook (GoodNotes-style)",
       "description": "Add a full-page, pressure-sensitive ink canvas for handwriting / sketching lessons on a stylus device. Ships an author-editable <Notebook> component (Canvas + PointerEvents, localStorage-persisted) into src/lesson/notes — no new npm dependencies.",
@@ -156,72 +145,6 @@
       "dependencies": [],
       "quality": "# Pack `textbook-view` — quality bar\n\n- **Denser than slide view.** Pages carry paragraphs and worked steps — not\n  one-line captions.\n- **Still interactive.** Charts, quizzes, and manipulables belong inside pages;\n  textbook view is not a static PDF.\n- **Paired intent.** When slide view exists for the same lecture, textbook pages\n  expand the same beats — don't fork into a different topic.\n- **Free mode notes.** `notesKey` is stable; margin notes persist per page id.",
       "installCommand": "faraday pack add textbook-view"
-    },
-    {
-      "name": "three",
-      "displayName": "3D scenes (React Three Fiber)",
-      "description": "Add @faraday-academy/three — R3F 3D blocks, procedural helpers (Body/Planet/OrbitPath/Label3D), a glTF <Model> loader, and a mood-per-scene system — to an existing lesson. Pass --physics for Rapier gravity/collision.",
-      "category": "runtime",
-      "requires": [],
-      "variants": [
-        "physics"
-      ],
-      "dependencies": [
-        {
-          "packageName": "@faraday-academy/three",
-          "version": "0.2.0"
-        },
-        {
-          "packageName": "@react-three/drei",
-          "version": "^10.0.0"
-        },
-        {
-          "packageName": "@react-three/fiber",
-          "version": "^9.0.0"
-        },
-        {
-          "packageName": "three",
-          "version": "^0.171.0"
-        }
-      ],
-      "quality": "# Pack `three` — quality bar\n\nAdditional acceptance rules for lessons that use the `three` pack. These layer on\ntop of the base `docs/quality-bar.md`.\n\n- **Spatial justification.** 3D is used because the idea is spatial (orbit, field,\n  molecule, force, geometry-in-space). A scene that would read as well or better\n  as a 2D diagram is a fail.\n- **Mood set.** Every `<Scene3D>` carries an explicit `mood`\n  (`space`/`cell`/`lab`/`physics`/`abstract`). No default/omitted mood.\n- **Manipulable.** The learner can change the scene — at least one live control\n  (`<ParamSlider>`/`<Segmented>`/`<Scrubber>`) drives a visible change in the 3D\n  view. A watch-only render fails.\n- **Procedural-first.** Procedural helpers (`<Body>`/`<Planet>`/`<OrbitPath>`)\n  are used unless the shape genuinely needs a `.glb`. A `<Model>` with no\n  justification is a smell.\n- **Physics honesty** (if `--physics`): the physics reveals something a\n  closed-form curve wouldn't. No physics-as-decoration.",
-      "installCommand": "faraday pack add three"
-    },
-    {
-      "name": "tutor",
-      "displayName": "Grounded AI tutor (durable)",
-      "description": "Embed <Tutor> from @faraday-academy/tutor and a durable Vite + Nitro + Workflow server (author-editable api/ + workflows/). Grounded, Socratic, survives refreshes/timeouts. Needs AI_GATEWAY_API_KEY in .env.local locally; OIDC on Vercel.",
-      "category": "runtime",
-      "requires": [],
-      "variants": [],
-      "dependencies": [
-        {
-          "packageName": "@ai-sdk/workflow",
-          "version": "^1.0.11"
-        },
-        {
-          "packageName": "@faraday-academy/tutor",
-          "version": "0.2.0"
-        },
-        {
-          "packageName": "ai",
-          "version": "^7.0.11"
-        },
-        {
-          "packageName": "nitro",
-          "version": "3.0.260610-beta"
-        },
-        {
-          "packageName": "workflow",
-          "version": "^4.5.0"
-        },
-        {
-          "packageName": "zod",
-          "version": "^4.0.0"
-        }
-      ],
-      "quality": "# Pack `tutor` — quality bar\n\nAdditional acceptance rules for lessons that use the `tutor` pack.\n\n- **Real grounding.** `<Tutor context={…} />` is passed the lesson's actual text,\n  not an empty string or a placeholder. An ungrounded tutor fails.\n- **No answer leaks.** The tutor never reveals quiz/exercise solutions outright;\n  the persona in `workflows/tutor-agent.ts` enforces Socratic hinting.\n- **Earned, not reflexive.** The tutor is added because the lesson benefits from\n  learner Q&A — not bolted onto every lesson by default.\n- **Boots without a key.** The app compiles and runs without `AI_GATEWAY_API_KEY`\n  (live responses need it, but the build must not depend on it).\n- **Key stays out of git.** No real key is committed; `.env.local` is git-ignored\n  and `env.example` documents the name only.",
-      "installCommand": "faraday pack add tutor"
     }
   ],
   "blocks": [
@@ -365,7 +288,7 @@
       "name": "PresentationTopBar",
       "slug": "presentationtopbar",
       "group": "More",
-      "summary": "Fixed top bar — Map + presentation view tabs (Slides / Textbook) + mode actions.",
+      "summary": "Fixed top bar — presentation view tabs (Slides / Textbook) + mode actions.",
       "importPath": "@faraday-academy/kit/blocks",
       "sourcePath": "packages/kit/blocks/PresentationTopBar.tsx"
     },
@@ -509,41 +432,12 @@
       ]
     },
     {
-      "slug": "general-physics",
-      "title": "general-physics",
-      "description": "Interactive Faraday lesson example.",
-      "packs": [
-        "audience",
-        "lecture-design",
-        "map2d",
-        "slide-view",
-        "textbook-view"
-      ]
-    },
-    {
-      "slug": "star-chart",
-      "title": "star-chart",
-      "description": "Interactive Faraday lesson example.",
-      "packs": [
-        "audience",
-        "lecture-design",
-        "three",
-        "sim2d"
-      ]
-    },
-    {
       "slug": "stem-methods",
       "title": "stem-methods",
       "description": "Interactive Faraday lesson example.",
       "packs": [
         "stem-methods"
       ]
-    },
-    {
-      "slug": "voyage-log",
-      "title": "voyage-log",
-      "description": "Interactive Faraday lesson example.",
-      "packs": []
     }
   ]
 }
