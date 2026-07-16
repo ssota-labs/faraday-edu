@@ -1,9 +1,6 @@
 import { execSync } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
-import {
-  SMOKE_EMAIL,
-  SMOKE_PASSWORD,
-} from "@faraday-academy/platform-adapter-supabase/constants";
+import { SMOKE_EMAIL, SMOKE_PASSWORD } from "./constants";
 
 const workspaceRoot = process.env.WORKSPACE_ROOT ?? `${process.cwd()}/..`;
 const supabaseUrl =

@@ -3,8 +3,8 @@ import { Toaster } from "@faraday-academy/ui/components/ui/sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Faraday Academy",
-  description: "Open interactive course platform",
+  title: "Faraday Catalog",
+  description: "Explore Faraday blocks, packs, and interactive lesson examples.",
 };
 
 export default function RootLayout({

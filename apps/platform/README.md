@@ -1,14 +1,14 @@
 # @faraday-academy/platform
 
-Stage 2 web platform (Next.js) — Studio, Course Shell, central API.
+Public Faraday catalog (Next.js) — blocks, packs, examples, quality, and
+compatibility. Catalog content is read-only; the app retains only the basic
+Supabase authentication foundation for later phases.
 
 ```bash
 pnpm --filter @faraday-academy/platform dev   # http://localhost:3100
-pnpm verify:quick                             # contracts + typecheck + unit tests
+pnpm --filter @faraday-academy/platform typecheck
+pnpm --filter @faraday-academy/platform build
 ```
 
-See [docs/STAGE2-PLATFORM.md](../../docs/STAGE2-PLATFORM.md),
-[PLATFORM-API-PERMISSIONS.md](../../docs/PLATFORM-API-PERMISSIONS.md),
-[PLATFORM-THREAT-MODEL.md](../../docs/PLATFORM-THREAT-MODEL.md).
-
-Identity for local API calls: header `x-faraday-user-id`.
+The Vite-based [`apps/labs`](../labs) remains the internal component-fidelity
+environment. Both apps consume the same generated catalog metadata.

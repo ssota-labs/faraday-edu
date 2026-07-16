@@ -36,7 +36,7 @@ export default function LoginPage() {
         setError(err.message);
         return;
       }
-      router.push("/studio");
+      router.push("/");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "login failed");

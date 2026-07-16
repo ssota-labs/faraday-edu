@@ -1,9 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
-import {
-  SMOKE_EMAIL,
-  SMOKE_PASSWORD,
-} from "@faraday-academy/platform-adapter-supabase/constants";
+import { SMOKE_EMAIL, SMOKE_PASSWORD } from "../constants";
 import { loginAsSmoke } from "../helpers/auth";
 
 const supabaseUrl =
@@ -15,17 +12,15 @@ const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0";
 
-test.describe("Faraday platform", () => {
+test.describe("Faraday catalog", () => {
   test("smoke: home renders Faraday brand", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByText("Faraday", { exact: true }).first()).toBeVisible();
   });
 
-  test("smoke: login → Studio", async ({ page }) => {
+  test("smoke: login returns to catalog", async ({ page }) => {
     await loginAsSmoke(page);
-    await expect(
-      page.getByRole("heading", { name: "Faraday Studio" }),
-    ).toBeVisible();
+    await expect(page.getByText("Faraday", { exact: true }).first()).toBeVisible();
   });
 });
 
