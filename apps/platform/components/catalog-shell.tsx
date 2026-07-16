@@ -5,17 +5,17 @@ import { usePathname } from "next/navigation";
 import {
   ArrowSquareOut,
   BookOpen,
-  Boxes,
   Cube,
   Flask,
   MagnifyingGlass,
   ShieldCheck,
   SignIn,
+  SquaresFour,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
 const primary = [
-  { href: "/", label: "Explore", icon: Boxes },
+  { href: "/", label: "Explore", icon: SquaresFour },
   { href: "/packs", label: "Packs", icon: Cube },
   { href: "/blocks", label: "Blocks", icon: Flask },
   { href: "/examples", label: "Examples", icon: BookOpen },
