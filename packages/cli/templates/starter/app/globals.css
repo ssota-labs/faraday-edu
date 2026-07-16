@@ -1,0 +1,4 @@
+@import "@faraday-academy/kit/styles.css";
+@source "../src/**/*.{ts,tsx}";
+@source "../node_modules/@faraday-academy/kit/**/*.{ts,tsx}";
+@source "../node_modules/@faraday-academy/ui/**/*.{ts,tsx}";

@@ -19,10 +19,6 @@
       "description": "What kind of pack this is — `faraday pack list` groups by it. Official packs derive their category from their parent folder (packages/official-packs/<category>/<name>/), so this field is only needed for a flat/third-party pack that isn't in a category folder. Known values below; third parties may use their own label.",
       "enum": ["course", "lecture", "runtime", "methodology"]
     },
-    "default": {
-      "type": "boolean",
-      "description": "When true, `faraday new` auto-installs this pack (batteries-included). All official packs are default; `--no-defaults` skips them."
-    },
     "requires": {
       "type": "array",
       "description": "Other packs this pack depends on, installed first (a pack building on an engine/base pack). Each entry is a pack source: official name, ./path, owner/repo, or npm:<spec>.",
@@ -37,7 +33,7 @@
         "devDependencies": { "$ref": "#/$defs/depMap" },
         "variants": {
           "type": "object",
-          "description": "Named optional bundles, selected via `faraday pack add <name> --<variant>`.",
+          "description": "Named optional bundles, selected via `faraday pack add <name> --variant <variant>`.",
           "additionalProperties": { "$ref": "#/$defs/variantRuntime" }
         },
         "cssImports": {

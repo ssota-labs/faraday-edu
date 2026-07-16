@@ -11,6 +11,8 @@ import { copyDirectory } from "../src/copy.mjs";
 const CLI_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE = path.resolve(CLI_ROOT, "..", "official-packs");
 const DEST = path.join(CLI_ROOT, "packs");
+const CATALOG_SOURCE = path.resolve(CLI_ROOT, "..", "registry", "generated", "catalog.json");
+const CATALOG_DEST = path.join(CLI_ROOT, "catalog.json");
 
 // Files at the official-packs root that are NOT packs (schema, docs).
 const NON_PACK_ENTRIES = new Set(["pack.schema.json", "README.md"]);
@@ -46,8 +48,9 @@ async function main() {
       bundled.push(`${entry.name}/${child.name}`);
     }
   }
+  await fs.copyFile(CATALOG_SOURCE, CATALOG_DEST);
   // Log to stderr so `npm pack --json` stdout stays pure JSON (publish gate).
-  process.stderr.write(`bundle-packs: copied ${bundled.length} pack(s) -> packs/ (${bundled.sort().join(", ")})\n`);
+  process.stderr.write(`bundle-packs: copied ${bundled.length} pack(s) + catalog.json (${bundled.sort().join(", ")})\n`);
 }
 
 main().catch((err) => {

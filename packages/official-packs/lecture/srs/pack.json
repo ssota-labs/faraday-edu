@@ -2,11 +2,16 @@
   "name": "srs",
   "displayName": "Spaced-repetition flashcards",
   "description": "Add a spaced-repetition flashcard deck (SM-2-lite scheduling, localStorage-persisted) for memorization lessons. Ships an author-editable <Flashcards> component into src/lesson/srs — no new npm dependencies.",
-  "default": true,
   "runtime": {
     "copy": [
-      { "from": "runtime/srs", "to": "src/lesson/srs" },
-      { "from": "examples", "to": "docs/examples" }
+      {
+        "from": "runtime/srs",
+        "to": "src/lesson/srs"
+      },
+      {
+        "from": "examples",
+        "to": "docs/examples"
+      }
     ]
   },
   "skill": {

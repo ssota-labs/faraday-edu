@@ -3,19 +3,14 @@
 // packages and pins them exactly, so the runtime updates centrally via
 // `faraday upgrade` instead of being copied + hash-locked into every lesson.
 //
-// This file only stamps the *plain* starter (app shell + name/title + provenance)
-// plus the default packs. Every *capability* — 3D, physics, the AI tutor, and the
-// rest — is a **module pack** you add with `faraday pack add <name>` when the
-// lesson needs it. There are no capability flags on `faraday new`: the agent maps
-// the creator's intent ("a 3D orbit lesson") to the right pack, uniformly, for all
-// packs — three/tutor aren't special-cased.
+// This file stamps a minimal vinext starter (app shell + name/title +
+// provenance). Packs are always explicit: `faraday pack add <name>`.
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { copyDirectory, assertDirectory, isEffectivelyEmpty } from "./copy.mjs";
 import { sanitizePackageName, normalizeTitle } from "./pkg.mjs";
-import { installPack, defaultPackNames } from "./pack.mjs";
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TITLE_PLACEHOLDER = "Faraday Lesson";
@@ -53,7 +48,6 @@ async function replaceInFile(file, from, to) {
  * @param {string} opts.targetDir  absolute path to create the lesson in
  * @param {string} opts.name       raw user name (for package name + title)
  * @param {boolean} [opts.force]   allow a non-empty target
- * @param {boolean} [opts.noDefaults] skip auto-installing the default packs
  * @param {string} [opts.templateRoot] override package root (tests)
  * @param {() => string} [opts.uuid]   injectable id generator (tests)
  */
@@ -93,8 +87,8 @@ export async function generateLesson(opts) {
   pkg.private = true;
   await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 
-  // 4. inject display title into the HTML shell
-  await replaceInFile(path.join(targetDir, "index.html"), TITLE_PLACEHOLDER, title);
+  // 4. inject display title into the App Router shell
+  await replaceInFile(path.join(targetDir, "app", "layout.tsx"), TITLE_PLACEHOLDER, title);
 
   // 5. provenance (VCS-tracked identity). installPack (step 6) appends the
   //    resolved pack tags to `packs` as capabilities are added.
@@ -102,7 +96,18 @@ export async function generateLesson(opts) {
   await fs.writeFile(
     path.join(targetDir, ".faraday", "provenance.json"),
     JSON.stringify(
-      { lessonId: uuid(), createdWith: "faraday@0.2.0", template: "starter@0.2.0", runtime: "@faraday-academy/kit@0.2.0", packs: [], name: packageName },
+      {
+        lessonId: uuid(),
+        createdWith: "faraday@0.2.0",
+        template: "vinext-starter@0.2.0",
+        runtime: "@faraday-academy/kit@0.2.0",
+        packages: {
+          "@faraday-academy/kit": "0.2.0",
+          "@faraday-academy/ui": "0.2.0",
+        },
+        packs: [],
+        name: packageName,
+      },
       null,
       2,
     ) + "\n",
@@ -114,15 +119,6 @@ export async function generateLesson(opts) {
   //     See references/orchestration.md in the faraday skill.
   await fs.mkdir(path.join(targetDir, ".faraday", "plan"), { recursive: true });
   await fs.writeFile(path.join(targetDir, ".faraday", "plan", "index.md"), PLAN_INDEX_STUB);
-
-  // 6. default packs — skill-only knowledge (pedagogy, audience) every lesson gets
-  //    so the agent has it in .faraday/packs/ and it travels with the lesson.
-  //    Opt out with --no-defaults.
-  if (!opts.noDefaults) {
-    for (const dn of await defaultPackNames(opts.templateRoot)) {
-      await installPack(dn, { fromDir: targetDir, templateRoot: opts.templateRoot });
-    }
-  }
 
   return { targetDir, packageName, title };
 }

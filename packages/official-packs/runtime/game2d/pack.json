@@ -2,7 +2,6 @@
   "name": "game2d",
   "displayName": "2D game stage (PixiJS)",
   "description": "Educational 2D game stage on PixiJS v8 + @pixi/react — Application host, Matter.js physics, tilemaps, and a Howler audio manager. Author-editable glue copies into src/lesson/game2d. Audience-specific shells (e.g. storybook-game2d) require this pack.",
-  "default": true,
   "runtime": {
     "dependencies": {
       "@pixi/react": "^8.0.5",
@@ -16,11 +15,26 @@
       "@types/matter-js": "^0.19.8"
     },
     "copy": [
-      { "from": "runtime/game2d", "to": "src/lesson/game2d" },
-      { "from": "examples", "to": "docs/examples" },
-      { "from": "assets/README.md", "to": "public/assets/game2d/README.md" },
-      { "from": "assets/recommended.json", "to": "public/assets/game2d/recommended.json" },
-      { "from": "scripts/game2d-assets.mjs", "to": "scripts/game2d-assets.mjs" }
+      {
+        "from": "runtime/game2d",
+        "to": "src/lesson/game2d"
+      },
+      {
+        "from": "examples",
+        "to": "docs/examples"
+      },
+      {
+        "from": "assets/README.md",
+        "to": "public/assets/game2d/README.md"
+      },
+      {
+        "from": "assets/recommended.json",
+        "to": "public/assets/game2d/recommended.json"
+      },
+      {
+        "from": "scripts/game2d-assets.mjs",
+        "to": "scripts/game2d-assets.mjs"
+      }
     ]
   },
   "skill": {

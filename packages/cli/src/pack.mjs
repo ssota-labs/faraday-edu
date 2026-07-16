@@ -158,6 +158,14 @@ function mergeSortedDeps(pkg, group, deps) {
   pkg[group] = Object.fromEntries(Object.entries(pkg[group]).sort(([a], [b]) => a.localeCompare(b)));
 }
 
+async function lessonCssPath(lessonRoot) {
+  for (const rel of ["app/globals.css", "src/app.css", "src/index.css"]) {
+    const candidate = path.join(lessonRoot, rel);
+    if (await pathExists(candidate)) return candidate;
+  }
+  return null;
+}
+
 /** Copy a file or a directory from `from` to `to`. No-op if `from` is absent. */
 async function copyEntry(from, to) {
   if (!(await pathExists(from))) return false;
@@ -263,9 +271,9 @@ export async function installPack(packName, opts) {
     await fs.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
   }
 
-  // 2. css imports -> src/app.css (idempotent)
-  const appCss = path.join(lessonRoot, "src", "app.css");
-  if (rt.cssImports?.length && (await pathExists(appCss))) {
+  // 2. css imports -> the host's global stylesheet (idempotent)
+  const appCss = await lessonCssPath(lessonRoot);
+  if (rt.cssImports?.length && appCss) {
     let css = await fs.readFile(appCss, "utf8");
     let changed = false;
     for (const imp of rt.cssImports) {
@@ -371,8 +379,6 @@ export function validateManifest(manifest) {
   for (const k of ["description", "quality", "category"]) {
     if (manifest[k] != null && !isStr(manifest[k])) errs.push(`${k} must be a string`);
   }
-  if (manifest.default != null && typeof manifest.default !== "boolean")
-    errs.push("default must be a boolean");
   if (manifest.requires != null && !(Array.isArray(manifest.requires) && manifest.requires.every(isStr)))
     errs.push("requires must be a string[]");
 
@@ -715,17 +721,19 @@ export async function removePack(name, opts) {
     } catch {
       /* no package.json */
     }
-    const appCss = path.join(lessonRoot, "src", "app.css");
-    try {
-      let css = await fs.readFile(appCss, "utf8");
-      for (const imp of ourCss) {
-        if (stillCss.has(imp)) continue;
-        const line = `@import "${imp}";`;
-        if (css.includes(line)) { css = css.replace(line + "\n", "").replace(line, ""); report.removedCss.push(imp); }
+    const appCss = await lessonCssPath(lessonRoot);
+    if (appCss) {
+      try {
+        let css = await fs.readFile(appCss, "utf8");
+        for (const imp of ourCss) {
+          if (stillCss.has(imp)) continue;
+          const line = `@import "${imp}";`;
+          if (css.includes(line)) { css = css.replace(line + "\n", "").replace(line, ""); report.removedCss.push(imp); }
+        }
+        await fs.writeFile(appCss, css);
+      } catch {
+        /* no global stylesheet */
       }
-      await fs.writeFile(appCss, css);
-    } catch {
-      /* no app.css */
     }
   }
 
@@ -765,11 +773,6 @@ export async function readPackSkill(packDir, manifest) {
   return files;
 }
 
-/** Names of official packs marked `"default": true` (auto-installed by `faraday new`). */
-export async function defaultPackNames(root = PACKAGE_ROOT) {
-  return (await listPacks(root)).filter((p) => p.default === true).map((p) => p.name);
-}
-
 // ── Pack authoring: `faraday pack new` ──────────────────────────────────────
 // Stamp the uniform pack skeleton (pack.json + skill/pack.md + quality.md +
 // examples/) so an author fills in blanks instead of copying an existing pack by
@@ -785,7 +788,6 @@ function packManifestTemplate(name, kind, flat) {
     name,
     displayName: `TODO: ${name} — short human label`,
     description: "TODO: one sentence — what this pack adds to a lesson, and when to use it.",
-    default: true,
     runtime: {},
     // Folder skill by default: SKILL.md is an index that routes to sub-guides,
     // so an agent reads the entry and opens only the guide it needs. Use --flat

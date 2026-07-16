@@ -9,14 +9,18 @@ import fs from "node:fs/promises";
 export const KIT_SCOPE = "@faraday-academy/";
 
 export const REQUIRED_FILES = [
-  "index.html",
+  "package.json",
+  ".faraday/provenance.json",
+];
+
+const VINEXT_FILES = [
   "vite.config.ts",
   "tsconfig.json",
   "components.json",
-  "src/main.tsx",
-  "src/app.css",
+  "app/layout.tsx",
+  "app/page.tsx",
+  "app/globals.css",
   "src/lesson/lesson.tsx",
-  "package.json",
 ];
 
 export async function exists(p) {
@@ -75,6 +79,19 @@ export async function collectFindings(root, { deep = false } = {}) {
     if (!(await exists(path.join(root, rel)))) problems.push(`missing required file: ${rel}`);
   }
 
+  try {
+    const provenance = JSON.parse(
+      await fs.readFile(path.join(root, ".faraday/provenance.json"), "utf8"),
+    );
+    if (String(provenance.template ?? "").startsWith("vinext-starter")) {
+      for (const rel of VINEXT_FILES) {
+        if (!(await exists(path.join(root, rel)))) problems.push(`missing required file: ${rel}`);
+      }
+    }
+  } catch {
+    // The required-file finding above reports missing/unreadable provenance.
+  }
+
   let pkg;
   try {
     pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
@@ -87,6 +104,9 @@ export async function collectFindings(root, { deep = false } = {}) {
   const runtime = managed.find((d) => d.name === "@faraday-academy/kit");
   if (!runtime) {
     problems.push("@faraday-academy/kit is not a dependency");
+  }
+  if (!managed.some((d) => d.name === "@faraday-academy/ui")) {
+    problems.push("@faraday-academy/ui is not a dependency");
   }
   for (const d of managed) {
     if (!isExactPin(d.spec)) {

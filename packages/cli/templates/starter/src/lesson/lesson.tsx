@@ -1,3 +1,5 @@
+"use client";
+
 // Demo lesson: an interactive walk-through of bubble sort, in a workbench layout
 // (center canvas + right control dock, like mirror-dimension) plus a shadcn chart.
 // AUTHOR AREA — rewrite this file. The -academy/runtime package is a pinned dependency.

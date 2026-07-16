@@ -2,14 +2,19 @@
   "name": "sim2d",
   "displayName": "2D simulation stage (SVG + GSAP)",
   "description": "Educational 2D simulations in a Workbench — SVG diagrams driven by formulas, GSAP timelines, and sim clocks. Replaces the old runtime motion hooks (useRafLoop/useSvgDrag). Author-editable glue copies into src/lesson/sim2d.",
-  "default": true,
   "runtime": {
     "dependencies": {
       "gsap": "^3.15.0"
     },
     "copy": [
-      { "from": "runtime/sim2d", "to": "src/lesson/sim2d" },
-      { "from": "examples", "to": "docs/examples" }
+      {
+        "from": "runtime/sim2d",
+        "to": "src/lesson/sim2d"
+      },
+      {
+        "from": "examples",
+        "to": "docs/examples"
+      }
     ]
   },
   "skill": {

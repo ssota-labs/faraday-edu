@@ -11,6 +11,7 @@
     "src",
     "templates",
     "packs",
+    "catalog.json",
     "LICENSE.md"
   ],
   "scripts": {

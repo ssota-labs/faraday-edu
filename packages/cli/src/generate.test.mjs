@@ -23,12 +23,12 @@ test("generateLesson produces the expected tree + injections", async () => {
   assert.equal(result.title, "My Cool Lesson");
 
   for (const rel of [
-    "index.html",
     "package.json",
     "components.json",
     ".gitignore",
-    "src/main.tsx",
-    "src/app.css",
+    "app/layout.tsx",
+    "app/page.tsx",
+    "app/globals.css",
     "src/lesson/lesson.tsx",
     ".faraday/provenance.json",
   ]) {
@@ -44,9 +44,10 @@ test("generateLesson produces the expected tree + injections", async () => {
   assert.equal(pkg.private, true);
   const pin = pkg.dependencies["@faraday-academy/kit"];
   assert.ok(pin && /^\d+\.\d+\.\d+/.test(pin), `runtime must be pinned exactly, got ${pin}`);
-  assert.match(await read(target, "index.html"), /<title>My Cool Lesson<\/title>/);
+  assert.equal(pkg.dependencies["@faraday-academy/ui"], "0.2.0");
+  assert.match(await read(target, "app/layout.tsx"), /<title>My Cool Lesson<\/title>/);
 
-  const css = await read(target, "src/app.css");
+  const css = await read(target, "app/globals.css");
   assert.match(css, /@import "@faraday-academy\/kit\/styles\.css"/);
   assert.match(css, /@source "\.\/lesson/);
 
@@ -62,37 +63,40 @@ test("generateLesson produces the expected tree + injections", async () => {
 test("generateLesson scaffolds the .faraday/plan/ folder", async () => {
   const base = await tmp();
   const target = path.join(base, "out");
-  await generateLesson({ targetDir: target, name: "Plan Lesson", uuid: () => "fixed-id", noDefaults: true });
+  await generateLesson({ targetDir: target, name: "Plan Lesson", uuid: () => "fixed-id" });
   assert.ok(await exists(path.join(target, ".faraday/plan/index.md")), "plan/index.md must exist");
   const idx = await read(target, ".faraday/plan/index.md");
   assert.match(idx, /one folder per plan/i);
   await fs.rm(base, { recursive: true, force: true });
 });
 
-test("faraday init bootstraps a repo with a root AGENTS.md + first app under apps/", async () => {
+test("faraday init attaches Faraday to an existing project", async () => {
   const base = await tmp();
+  await fs.writeFile(
+    path.join(base, "package.json"),
+    JSON.stringify({ name: "existing-app", dependencies: { react: "^19.2.0" } }),
+  );
   let out = "";
   await runFaradayCli(
-    ["init", "general-physics", "--skip-install", "--json"],
+    ["init", "--skip-install", "--json"],
     { cwd: base, stdout: (s) => (out += s), stderr: () => {}, throwOnError: true },
   );
   const parsed = JSON.parse(out);
   assert.equal(parsed.ok, true);
   assert.equal(parsed.command, "init");
-  assert.equal(parsed.packageName, "general-physics");
-  assert.ok(await exists(path.join(base, "AGENTS.md")), "root AGENTS.md must exist");
-  assert.match(await read(base, "AGENTS.md"), /Faraday courseware repo/);
-  assert.ok(await exists(path.join(base, "apps/general-physics/src/lesson/lesson.tsx")));
-  assert.ok(await exists(path.join(base, "apps/general-physics/.faraday/plan/index.md")));
+  assert.equal(parsed.packageName, "existing-app");
+  assert.ok(await exists(path.join(base, "AGENTS.md")));
+  assert.match(await read(base, "AGENTS.md"), /## Faraday/);
+  assert.ok(await exists(path.join(base, ".faraday/provenance.json")));
+  const pkg = JSON.parse(await read(base, "package.json"));
+  assert.equal(pkg.dependencies["@faraday-academy/kit"], "0.2.0");
+  assert.equal(pkg.dependencies["@faraday-academy/ui"], "0.2.0");
   await fs.rm(base, { recursive: true, force: true });
 });
 
 test("faraday new inside a repo (apps/ present) lands under apps/", async () => {
   const base = await tmp();
-  await runFaradayCli(
-    ["init", "first-app", "--skip-install"],
-    { cwd: base, stdout: () => {}, stderr: () => {}, throwOnError: true },
-  );
+  await fs.mkdir(path.join(base, "apps"));
   let out = "";
   await runFaradayCli(
     ["new", "second-app", "--skip-install", "--json"],

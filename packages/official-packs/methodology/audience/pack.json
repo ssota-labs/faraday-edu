@@ -2,7 +2,6 @@
   "name": "audience",
   "displayName": "Audience → delivery methodology",
   "description": "Who the learner is (children / secondary / undergrad / general public / professional) and the one evidence-based methodology to hand them the concept — CRA, 5E, Peer Instruction, Mayer, Merrill — plus layout defaults. Skill-only. A default pack: auto-installed at `faraday new`.",
-  "default": true,
   "runtime": {},
   "skill": {
     "reference": "skill/audience.md",

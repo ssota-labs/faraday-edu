@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Stage 1 cold-path smoke (local CLI stand-in for Claude/Codex agent E2E).
-// Covers: marketplace URL · CLI scaffold 2D + `pack add three` · example check/typecheck/build.
+// Covers: marketplace URL · minimal vinext scaffold · attach-style init · examples.
 // Exit 0 on pass. Real marketplace install in Claude/Codex remains a human gate.
 
 import { spawnSync } from "node:child_process";
@@ -25,7 +25,7 @@ function run(cmd, args, cwd = root) {
 function linkAcademy(lessonDir) {
   const nm = path.join(lessonDir, "node_modules", "@faraday-academy");
   mkdirSync(nm, { recursive: true });
-  for (const pkg of ["ui", "kit", "three", "tutor"]) {
+  for (const pkg of ["ui", "kit", "lms"]) {
     const link = path.join(nm, pkg);
     try {
       rmSync(link, { recursive: true, force: true });
@@ -58,7 +58,7 @@ function assertMarketplace() {
   console.log("marketplace URL smoke OK");
 }
 
-function main() {
+async function main() {
   assertMarketplace();
 
   console.log("\n── Skill sets in sync (claude-code == codex) ──");
@@ -67,27 +67,34 @@ function main() {
   console.log("\n── CLI unit tests ──");
   run("node", ["--test", "packages/cli/src/*.test.mjs"]);
 
-  console.log("\n── Scaffold 2D + pack add three (skip-install) ──");
+  console.log("\n── Scaffold minimal vinext lesson (skip-install) ──");
   const work = mkdtempSync(path.join(tmpdir(), "faraday-cold-"));
   const s1 = path.join(work, "s1");
-  const s2 = path.join(work, "s2");
   run("node", [cli, "new", "s1", "--at", s1, "--skip-install", "--overwrite"]);
-  run("node", [cli, "new", "s2", "--at", s2, "--skip-install", "--overwrite"]);
-  run("node", [cli, "pack", "add", "three", "--dir", s2]);
-
-  for (const dir of [s1, s2]) {
-    const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8"));
-    if (pkg.dependencies?.["@faraday-academy/kit"] !== "0.2.0") {
-      throw new Error(`${dir}: runtime pin missing`);
-    }
-    linkAcademy(dir);
-    run("node", ["scripts/check-structure.mjs"], dir);
+  const pkg = JSON.parse(readFileSync(path.join(s1, "package.json"), "utf8"));
+  if (
+    pkg.dependencies?.["@faraday-academy/kit"] !== "0.2.0" ||
+    pkg.dependencies?.["@faraday-academy/ui"] !== "0.2.0"
+  ) {
+    throw new Error(`${s1}: kit/ui pins missing`);
   }
-  console.log("scaffold + structure check OK");
+  linkAcademy(s1);
+  run("node", ["scripts/check-structure.mjs"], s1);
+
+  const attached = path.join(work, "attached");
+  mkdirSync(attached, { recursive: true });
+  await import("node:fs/promises").then(({ writeFile }) =>
+    writeFile(
+      path.join(attached, "package.json"),
+      JSON.stringify({ name: "attached", dependencies: { react: "^19.2.0" } }, null, 2),
+    ),
+  );
+  run("node", [cli, "init", "--dir", attached, "--skip-install"]);
+  console.log("scaffold + attach checks OK");
 
   console.log("\n── Example demos (workspace) ──");
   run("pnpm", ["install"]);
-  for (const name of ["compound-interest", "voyage-log", "general-physics"]) {
+  for (const name of ["compound-interest", "exam-hall-physics", "game2d-collect", "stem-methods"]) {
     const dir = path.join(root, "examples", name);
     if (!existsSync(dir)) throw new Error(`missing ${name}`);
     run("pnpm", ["check"], dir);
@@ -100,7 +107,7 @@ function main() {
 }
 
 try {
-  main();
+  await main();
 } catch (err) {
   console.error(err);
   process.exit(1);

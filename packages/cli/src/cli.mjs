@@ -3,21 +3,23 @@
 // codes, side effects injectable via `context` so tests run without spawning.
 import path from "node:path";
 import fs from "node:fs/promises";
+import crypto from "node:crypto";
 import spawn from "node:child_process";
 import { generateLesson } from "./generate.mjs";
 import { sanitizePackageName } from "./pkg.mjs";
 import { findLessonRoot, collectFindings, managedDeps, exists } from "./doctor.mjs";
 import { listPacks, installPack, removePack, resolvePack, readManifestAt, validatePackDir, readPackSkill, scaffoldPack } from "./pack.mjs";
+import { listBlocks, readBlock } from "./block.mjs";
 
 const HELP = `faraday — scaffold AI-authored interactive lessons (shadcn-based)
 
 Usage:
-  faraday init <first-app> [--at <repo-dir>] [--no-defaults] [--overwrite] [--skip-install] [--json]
-                                        start a courseware repo: drop a root AGENTS.md
-                                        and scaffold the first app at apps/<first-app>/.
-                                        Run once; then \`faraday new\` to add more apps.
-  faraday new <name> [--no-defaults] [--at <dir>] [--overwrite] [--skip-install] [--json]
-                                        add one app (an independent vite project). Inside
+  faraday init [--dir <project>] [--skip-install] [--json]
+                                        attach Faraday to an existing React project:
+                                        pin kit/ui, create .faraday metadata, and add
+                                        the local agent pointer without replacing routes.
+  faraday new <name> [--at <dir>] [--overwrite] [--skip-install] [--json]
+                                        add one app (a minimal vinext project). Inside
                                         a repo (a dir with apps/), it lands at apps/<name>/;
                                         elsewhere it scaffolds <name>/ standalone.
   faraday check [--dir <lesson>]        verify the lesson layout + runtime pin
@@ -27,7 +29,7 @@ Usage:
                                         supported way): pin-bump → install →
                                         doctor, and roll back if doctor fails
   faraday pack list [--json]            list available (official) module packs
-  faraday pack add <name|source> [--physics] [--dir <lesson>] [--json]
+  faraday pack add <name|source> [--variant <name>] [--dir <lesson>] [--json]
                                         install a pack into an existing lesson —
                                         runtime deps + skill guide, both at once.
                                         <source> = official name · ./path ·
@@ -47,16 +49,15 @@ Usage:
                                         pack.json + a folder skill (SKILL.md index +
                                         sub-guides) + quality.md + examples/. --flat
                                         makes a single-file skill for tiny packs.
+  faraday block list [--json]           list portable lesson blocks
+  faraday block show <name> [--json]    show one block's import and source metadata
   faraday help
 
 The generated lesson depends on the versioned @faraday-academy/kit package
 (pinned exactly) instead of vendoring it. Author your lesson in src/lesson/.
 
-Capabilities (3D, physics, the AI tutor, flashcards, exams, …) are **module packs**,
-not flags. \`faraday new\` is batteries-included — it installs all default packs, so every
-capability is on hand; \`--no-defaults\` scaffolds a minimal lesson and \`pack remove\`
-trims what a lesson doesn't need. \`pack add\` installs a third-party pack or re-adds a
-removed one; \`pack new\` scaffolds a pack of your own.
+Capabilities are explicit module packs, not flags or defaults. Discover them
+with \`pack list/show\`, then install only what the project needs with \`pack add\`.
 
 Exit codes: 0 ok · 1 check failed · 2 usage error · 3 doctor/structure failed · 4 environment error`;
 
@@ -97,6 +98,7 @@ export async function runFaradayCli(argv, rawContext = {}) {
     if (command === "doctor") return await runDoctor(rest, context);
     if (command === "upgrade") return await runUpgrade(rest, context);
     if (command === "pack") return await runPack(rest, context);
+    if (command === "block") return await runBlock(rest, context);
     const err = new Error(`Unknown command: ${command}`);
     err.exitCode = 2;
     throw err;
@@ -109,14 +111,13 @@ export async function runFaradayCli(argv, rawContext = {}) {
 }
 
 function parseNewArgs(argv) {
-  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, noDefaults: false };
+  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--at") opts.at = argv[++i];
     else if (arg === "--overwrite") opts.overwrite = true;
     else if (arg === "--skip-install") opts.skipInstall = true;
     else if (arg === "--json") opts.json = true;
-    else if (arg === "--no-defaults") opts.noDefaults = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
     else if (opts.name === undefined) opts.name = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
@@ -134,89 +135,93 @@ async function workspaceAppsDir(cwd) {
   return (await exists(appsDir)) ? appsDir : null;
 }
 
-const WORKSPACE_AGENTS_MD = `# AGENTS.md — Faraday courseware repo
-
-This repository holds **one or more independent Faraday apps** under \`apps/\`. Each
-app is a self-contained Vite + React project — its own \`package.json\`, dev server,
-and build — that presents **one curriculum** (a domain/audience: e.g. \`general-physics\`
-for undergrads vs \`elementary-physics\` for kids). Apps do **not** import or iframe
-each other; if they link, they link by URL.
-
-    apps/<app>/
-      .faraday/
-        packs/            # this app's packs (audience, pedagogy, + runtime packs)
-        plan/             # curriculum build plans — one folder per plan
-      src/lesson/
-        lesson.tsx        # fixed entry: the module-scope \`curriculum\` assembly
-        nodes/<id>.tsx    # one file per lesson node (file-isolated)
-
-## Working here
-
-- **Add an app:** \`faraday new <name>\` → scaffolds \`apps/<name>/\`.
-- **Design & build a course** inside an app: read the app's \`AGENTS.md\`, pin the
-  audience, then plan in \`apps/<app>/.faraday/plan/<plan>/\` before authoring lessons.
-  See \`references/orchestration.md\` in the faraday skill for the plan→build loop.
-- **One idea per lesson node**, one file per node under \`src/lesson/nodes/\`. Keep the
-  \`curriculum\` object at module scope in \`lesson.tsx\` (progress is keyed on its identity).
-- **Verify per app:** \`cd apps/<app> && pnpm check && pnpm dev\`.
-`;
-
 function parseInitArgs(argv) {
-  const opts = { name: undefined, at: undefined, overwrite: false, skipInstall: false, json: false, noDefaults: false };
+  const opts = { dir: undefined, skipInstall: false, json: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
-    if (arg === "--at") opts.at = argv[++i];
-    else if (arg === "--overwrite") opts.overwrite = true;
+    if (arg === "--dir" || arg === "--at") opts.dir = argv[++i];
     else if (arg === "--skip-install") opts.skipInstall = true;
     else if (arg === "--json") opts.json = true;
-    else if (arg === "--no-defaults") opts.noDefaults = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
-    else if (opts.name === undefined) opts.name = arg;
     else { const e = new Error(`Unexpected argument: ${arg}`); e.exitCode = 2; throw e; }
   }
-  if (!opts.name) { const e = new Error("init requires a <first-app> name"); e.exitCode = 2; throw e; }
-  if (opts.at !== undefined && !opts.at) { const e = new Error("--at requires a value"); e.exitCode = 2; throw e; }
+  if (opts.dir !== undefined && !opts.dir) { const e = new Error("--dir requires a value"); e.exitCode = 2; throw e; }
   return opts;
 }
 
 async function runInit(argv, context) {
   const opts = parseInitArgs(argv);
-  const repoRoot = opts.at ? path.resolve(context.cwd, opts.at) : context.cwd;
-  await fs.mkdir(repoRoot, { recursive: true });
+  const targetDir = opts.dir ? path.resolve(context.cwd, opts.dir) : context.cwd;
+  const pkgPath = path.join(targetDir, "package.json");
+  if (!(await exists(pkgPath))) {
+    const error = new Error(`No package.json in ${targetDir}; run init inside an existing React project`);
+    error.exitCode = 2;
+    throw error;
+  }
+  const pkg = JSON.parse(await fs.readFile(pkgPath, "utf8"));
+  pkg.dependencies = Object.fromEntries(
+    Object.entries({
+      ...(pkg.dependencies ?? {}),
+      "@faraday-academy/kit": "0.2.0",
+      "@faraday-academy/ui": "0.2.0",
+    }).sort(([a], [b]) => a.localeCompare(b)),
+  );
+  await fs.writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
-  // Root contract for the repo. Don't clobber an existing one unless --overwrite.
-  const agentsPath = path.join(repoRoot, "AGENTS.md");
-  if (opts.overwrite || !(await exists(agentsPath))) {
-    await fs.writeFile(agentsPath, WORKSPACE_AGENTS_MD);
+  const faradayDir = path.join(targetDir, ".faraday");
+  await fs.mkdir(path.join(faradayDir, "packs"), { recursive: true });
+  const provenancePath = path.join(faradayDir, "provenance.json");
+  if (!(await exists(provenancePath))) {
+    await fs.writeFile(
+      provenancePath,
+      `${JSON.stringify({
+        lessonId: context.uuid?.() ?? crypto.randomUUID(),
+        createdWith: "faraday@0.2.0",
+        template: "attached",
+        runtime: "@faraday-academy/kit@0.2.0",
+        packages: {
+          "@faraday-academy/kit": "0.2.0",
+          "@faraday-academy/ui": "0.2.0",
+        },
+        packs: [],
+        name: pkg.name ?? path.basename(targetDir),
+      }, null, 2)}\n`,
+    );
+  }
+  await fs.writeFile(
+    path.join(faradayDir, "README.md"),
+    "# Faraday attachment\n\n" +
+      "Import `@faraday-academy/kit/styles.css` once in the host's global stylesheet.\n" +
+      "Use blocks from `@faraday-academy/kit/blocks` and UI primitives from `@faraday-academy/ui/components/ui/*`.\n" +
+      "Install optional project knowledge with `faraday pack add <name>`.\n",
+  );
+  const agentsPath = path.join(targetDir, "AGENTS.md");
+  const marker = "## Faraday";
+  const currentAgents = (await exists(agentsPath)) ? await fs.readFile(agentsPath, "utf8") : "";
+  if (!currentAgents.includes(marker)) {
+    await fs.writeFile(
+      agentsPath,
+      `${currentAgents.trimEnd()}${currentAgents ? "\n\n" : ""}${marker}\n\n` +
+        "Read `.faraday/README.md`. Use `faraday pack list/show/add` for optional capabilities and `faraday check` before handoff.\n",
+    );
   }
 
-  const dirName = sanitizePackageName(opts.name).split("/").pop();
-  const targetDir = path.join(repoRoot, "apps", dirName);
-
-  const result = await generateLesson({
-    targetDir,
-    name: opts.name,
-    force: opts.overwrite,
-    noDefaults: opts.noDefaults,
-    uuid: context.uuid,
-  });
-
   const installed = await installLessonDeps(targetDir, opts, context);
-
-  const relRepo = path.relative(context.cwd, repoRoot) || ".";
-  const relApp = path.relative(context.cwd, targetDir) || ".";
+  const rel = path.relative(context.cwd, targetDir) || ".";
   if (opts.json) {
     context.stdout(JSON.stringify({
-      ok: true, command: "init", repo: repoRoot, title: result.title,
-      packageName: result.packageName, app: targetDir, installed,
-      nextSteps: [`cd ${relApp}`, ...(installed ? [] : ["pnpm install"]), "pnpm dev", `# add more apps: faraday new <name> (from ${relRepo}/)`],
+      ok: true,
+      command: "init",
+      dir: targetDir,
+      packageName: pkg.name ?? path.basename(targetDir),
+      installed,
+      nextSteps: [...(installed ? [] : ["pnpm install"]), "faraday check"],
     }, null, 2) + "\n");
   } else {
     context.stdout(
-      `\n  Initialized a Faraday courseware repo in ${relRepo}/\n` +
-      `  Root AGENTS.md written · first app ${result.title} at ${relApp}/\n\n` +
-      `  Next:\n    cd ${relApp}\n${installed ? "" : "    pnpm install\n"}    pnpm dev\n\n` +
-      `  Add more apps from the repo root:\n    faraday new <name>   # → apps/<name>/\n`,
+      `\n  Attached Faraday to ${rel}/\n` +
+      `  Added pinned kit/ui dependencies, .faraday metadata, and AGENTS.md guidance.\n\n` +
+      `  Next:\n${installed ? "" : "    pnpm install\n"}    faraday check\n`,
     );
   }
 }
@@ -251,7 +256,6 @@ async function runNew(argv, context) {
     targetDir,
     name: opts.name,
     force: opts.overwrite,
-    noDefaults: opts.noDefaults,
     uuid: context.uuid,
   });
 
@@ -367,7 +371,6 @@ async function runPackList(argv, context) {
       const variants = Object.keys(p.runtime?.variants ?? {});
       const bits = [];
       if (variants.length) bits.push(`variants: ${variants.join(", ")}`);
-      if (p.default === false) bits.push("opt-in");
       const suffix = bits.length ? ` (${bits.join("; ")})` : "";
       context.stdout(`    ${p.name} — ${p.displayName ?? ""}${suffix}\n`);
     }
@@ -379,7 +382,7 @@ function parsePackAddArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--dir") opts.dir = argv[++i];
-    else if (arg === "--physics") opts.variant = "physics";
+    else if (arg === "--variant") opts.variant = argv[++i];
     else if (arg === "--json") opts.json = true;
     else if (arg.startsWith("-")) { const e = new Error(`Unknown flag: ${arg}`); e.exitCode = 2; throw e; }
     else if (opts.source === undefined) opts.source = arg;
@@ -387,6 +390,7 @@ function parsePackAddArgs(argv) {
   }
   if (!opts.source) { const e = new Error("pack add requires a <name|source>"); e.exitCode = 2; throw e; }
   if (opts.dir !== undefined && !opts.dir) { const e = new Error("--dir requires a value"); e.exitCode = 2; throw e; }
+  if (opts.variant !== null && !opts.variant) { const e = new Error("--variant requires a value"); e.exitCode = 2; throw e; }
   return opts;
 }
 
@@ -606,6 +610,54 @@ async function runPackNew(argv, context) {
     `  3. Try it in a lesson: faraday pack add ${rel} --dir <lesson>\n` +
     `  See references/authoring-packs.md in the faraday skill for the full guide.\n`,
   );
+}
+
+async function runBlock(argv, context) {
+  const [subcommand, ...rest] = argv;
+  const json = rest.includes("--json");
+  const args = rest.filter((arg) => arg !== "--json");
+  if (subcommand === "list") {
+    if (args.length) {
+      const error = new Error(`Unexpected argument: ${args[0]}`);
+      error.exitCode = 2;
+      throw error;
+    }
+    const blocks = await listBlocks();
+    if (json) {
+      context.stdout(`${JSON.stringify(blocks, null, 2)}\n`);
+      return;
+    }
+    for (const block of blocks) {
+      context.stdout(`${block.name.padEnd(24)} ${block.group.padEnd(14)} ${block.summary}\n`);
+    }
+    return;
+  }
+  if (subcommand === "show") {
+    const [name, ...extra] = args;
+    if (!name) {
+      const error = new Error("block show requires a <name>");
+      error.exitCode = 2;
+      throw error;
+    }
+    if (extra.length) {
+      const error = new Error(`Unexpected argument: ${extra[0]}`);
+      error.exitCode = 2;
+      throw error;
+    }
+    const block = await readBlock(name);
+    if (json) {
+      context.stdout(`${JSON.stringify(block, null, 2)}\n`);
+      return;
+    }
+    context.stdout(
+      `${block.name}\n${block.summary}\n\nImport:\n  import { ${block.name} } from "${block.importPath}";\n` +
+        (block.sourcePath ? `\nSource: ${block.sourcePath}\n` : ""),
+    );
+    return;
+  }
+  const error = new Error(`Unknown block command: ${subcommand ?? ""}`);
+  error.exitCode = 2;
+  throw error;
 }
 
 async function runDoctor(argv, context) {

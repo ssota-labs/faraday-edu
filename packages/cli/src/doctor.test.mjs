@@ -66,7 +66,7 @@ test("doctor fails (exit 3) when a required file is missing", async () => {
   const base = await tmp();
   const dir = await scaffold(base, "broken");
   await fs.writeFile(path.join(dir, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
-  await fs.rm(path.join(dir, "src", "app.css"));
+  await fs.rm(path.join(dir, "app", "globals.css"));
   let code = 0;
   await runFaradayCli(["doctor", "--dir", dir], { cwd: base, stdout: () => {}, stderr: () => {}, setExitCode: (c) => (code = c) });
   assert.equal(code, 3);

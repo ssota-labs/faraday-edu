@@ -2,11 +2,16 @@
   "name": "textbook-view",
   "displayName": "Textbook view",
   "description": "Deliver a lecture as a textbook-view presentation — A4-style reading column with scroll, plus free mode (scaled page overview + margin notes). Ships an author-editable <TextbookView> into src/lesson/textbook-view — no new npm dependencies.",
-  "default": true,
   "runtime": {
     "copy": [
-      { "from": "runtime/textbook-view", "to": "src/lesson/textbook-view" },
-      { "from": "examples", "to": "docs/examples" }
+      {
+        "from": "runtime/textbook-view",
+        "to": "src/lesson/textbook-view"
+      },
+      {
+        "from": "examples",
+        "to": "docs/examples"
+      }
     ]
   },
   "skill": {

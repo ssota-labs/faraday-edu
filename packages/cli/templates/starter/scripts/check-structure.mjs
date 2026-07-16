@@ -9,13 +9,14 @@ import path from "node:path";
 const root = process.cwd();
 
 const required = [
-  "index.html",
   "vite.config.ts",
   "tsconfig.json",
   "components.json",
-  "src/main.tsx",
-  "src/app.css",
+  "app/layout.tsx",
+  "app/page.tsx",
+  "app/globals.css",
   "src/lesson/lesson.tsx",
+  ".faraday/provenance.json",
   "package.json",
 ];
 

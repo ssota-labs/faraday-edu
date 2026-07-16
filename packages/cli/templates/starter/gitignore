@@ -1,5 +1,6 @@
 node_modules
 dist
+.vinext
 *.local
 .DS_Store
 .primer/session.json
