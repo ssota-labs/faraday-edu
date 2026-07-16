@@ -16,6 +16,24 @@ test.describe("Faraday catalog", () => {
   test("smoke: home renders Faraday brand", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByText("Faraday", { exact: true }).first()).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Find the right teaching primitive." }),
+    ).toBeVisible();
+  });
+
+  test("catalog: blocks are searchable and previewable", async ({ page }) => {
+    await page.goto("/blocks");
+    await page.getByPlaceholder("Search blocks").fill("ParamSlider");
+    await page.getByRole("link", { name: /ParamSlider/ }).click();
+    await expect(page.getByText("Live preview")).toBeVisible();
+    await expect(page.getByLabel("Model strength")).toBeVisible();
+  });
+
+  test("catalog: pack detail exposes an install command", async ({ page }) => {
+    await page.goto("/packs");
+    const firstPack = page.locator('a[href^="/packs/"]').first();
+    await firstPack.click();
+    await expect(page.getByText(/faraday pack add/)).toBeVisible();
   });
 
   test("smoke: login returns to catalog", async ({ page }) => {

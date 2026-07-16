@@ -93,6 +93,9 @@ importers:
       '@faraday-academy/kit':
         specifier: workspace:*
         version: link:../../packages/kit
+      '@faraday-academy/registry':
+        specifier: workspace:*
+        version: link:../../packages/registry
       '@faraday-academy/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -518,6 +521,8 @@ importers:
       vite:
         specifier: ^7.0.0
         version: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.1)
+
+  packages/registry: {}
 
   packages/three:
     dependencies:

@@ -1,0 +1,17 @@
+{
+  "name": "@faraday-academy/registry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./catalog": "./generated/catalog.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "generated"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "check": "node scripts/generate.mjs --check"
+  }
+}

@@ -1,0 +1,549 @@
+{
+  "schemaVersion": 1,
+  "packs": [
+    {
+      "name": "audience",
+      "displayName": "Audience → delivery methodology",
+      "description": "Who the learner is (children / secondary / undergrad / general public / professional) and the one evidence-based methodology to hand them the concept — CRA, 5E, Peer Instruction, Mayer, Merrill — plus layout defaults. Skill-only. A default pack: auto-installed at `faraday new`.",
+      "category": "methodology",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `audience` — quality bar\n\n- **Audience pinned.** The lesson states who the learner is (or the flagged\n  assumption). Building for \"everyone\" is building for no one.\n- **One methodology.** A single audience-appropriate method leads (CRA / 5E / Peer\n  Instruction / Mayer / Merrill) — not a blend of all five on every node.\n- **Register + density match.** Prose register, symbol density, and which\n  interaction carries the load fit the population — not a one-size delivery.\n- **Layout fits.** The reading surface (scroll / paged / course / world) follows\n  the audience default unless the content or creator overrides it.\n- **Not learning-styles.** Method adapts to prior knowledge + motivation, never to\n  a claimed visual/auditory \"style\".",
+      "installCommand": "faraday pack add audience"
+    },
+    {
+      "name": "exam",
+      "displayName": "Exam / mock test",
+      "description": "Turn a topic into a practice test or mock exam — a blueprint-driven set of checks (MCQ, numeric, mission) with honest scoring and review. Skill-only: composes the existing assessment blocks, no new deps. Folder skill with an index that routes to sub-guides.",
+      "category": "lecture",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `exam` — quality bar\n\n- **Blueprint-traceable.** Every item maps to a stated outcome with a weight; no\n  orphan items, and the mix matches the table of specifications (not all recall).\n- **Honest distractors.** Each MCQ wrong option is a nameable misconception, not\n  filler; numeric items state units + tolerance.\n- **Review that teaches.** The exam ends in a per-outcome result + item review that\n  names the misconception and points back into the lesson — not a bare score.\n- **Mastery, not curve.** Pass is a criterion (threshold + no outcome floored),\n  and the learner can retry missed outcomes.\n- **Fair.** No answer/hint leaks during the exam; option/item randomization keeps\n  every attempt blueprint-equivalent; timing (if any) is stated and accessible.",
+      "installCommand": "faraday pack add exam"
+    },
+    {
+      "name": "game2d",
+      "displayName": "2D game stage (PixiJS)",
+      "description": "Educational 2D game stage on PixiJS v8 + @pixi/react — Application host, Matter.js physics, tilemaps, and a Howler audio manager. Author-editable glue copies into src/lesson/game2d. Audience-specific shells (e.g. storybook-game2d) require this pack.",
+      "category": "runtime",
+      "requires": [],
+      "variants": [],
+      "dependencies": [
+        {
+          "packageName": "@pixi/react",
+          "version": "^8.0.5"
+        },
+        {
+          "packageName": "howler",
+          "version": "^2.2.4"
+        },
+        {
+          "packageName": "matter-js",
+          "version": "^0.20.0"
+        },
+        {
+          "packageName": "pixi.js",
+          "version": "^8.19.0"
+        }
+      ],
+      "quality": "# Pack `game2d` — quality bar\n\n- **Learning first.** Every interaction teaches or checks an idea. A polished\n  arcade loop with no learning outcome fails this pack.\n- **React owns structure; Pixi owns frames.** Spawn/despawn with React state;\n  continuous motion via `useTick` + refs — never `setState` every frame.\n- **Touch + keyboard.** Hit targets are finger-sized when the audience is on a\n  tablet; keyboard shortcuts never the only path.\n- **Assets are licensed.** Install via **AssetVault** (`node scripts/game2d-assets.mjs starter`).\n  Prefer CC0 packs; commit `assetvault.lock.json` when shipping art with the lesson.\n- **Cleanup.** Unmount destroys the Pixi app, Matter engine, and Howler sounds —\n  no leaked WebGL contexts between slides.\n- **Composable.** The stage sits inside a normal Faraday lesson (`Workbench`,\n  controls, assessment) — not a full-screen commercial game shell unless a\n  specialized pack (e.g. `storybook-game2d`) opts into that frame.",
+      "installCommand": "faraday pack add game2d"
+    },
+    {
+      "name": "lecture-design",
+      "displayName": "Teaching methods & pedagogy",
+      "description": "A folder-ized pedagogy library for lecture/curriculum design — the evidence-based default (backward design, prerequisite graphs, generative learning, spaced retrieval, feed-forward) plus named methodologies (5E, CRA, Peer Instruction, Mayer, Merrill). Skill-only. A default pack: auto-installed at `faraday new`.",
+      "category": "methodology",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `lecture-design` — quality bar\n\nDesign-quality rules for lessons/curricula built with this pack. These grade the\n*teaching*, not the code.\n\n- **Aligned.** Every lesson and every check maps to an outcome verb; orphan\n  content (maps to no outcome) is cut. (backward-design)\n- **Gated on mastery.** Progression is gated on demonstrated mastery, not\n  exposure; prerequisites are real. (prerequisite-graph)\n- **Generative.** The core interaction has the learner predict/construct/explain,\n  not just watch or scrub; novices get worked-examples-and-fade. (generative-learning)\n- **Retrieval built in.** Units end in a recall check that needs the interaction\n  to answer; later nodes re-quiz earlier ideas. (spaced-retrieval)\n- **Feed-forward.** Hints say where-to-next, not just right/wrong. (feedback)\n- **One methodology.** A single audience-appropriate method leads the lesson; no\n  mechanical stacking of all five moves on every node, no learning-styles variants.",
+      "installCommand": "faraday pack add lecture-design"
+    },
+    {
+      "name": "map2d",
+      "displayName": "2D map course shell",
+      "description": "Navigate a course as a full-bleed 2D lecture map (a tactical game screen with unlock paths). A course shell — pass it to <CurriculumHost pack={map2dPack} />. Copies an author-editable map component into src/lesson/map2d — no new npm dependencies.",
+      "category": "course",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# map2d quality bar\n\nAn immersive presentation is only correct if it reads as a **game screen**, not a\ndocument with a widget in it:\n\n- **Full-bleed.** The map fills the viewport — no page header, no reading column\n  around it. The host mounts it immersive; don't wrap it in a `<Lesson>`.\n- **Every node frames.** All nodes — especially the current objective (the pulsing\n  active node) — are on screen at laptop AND narrow/portrait aspect ratios. A node\n  clipped off-canvas is a defect.\n- **HUD reads.** Give each node a `summary` + `reward.xp` so the briefing panel isn't\n  empty. Status is legible: locked/available/active/complete visibly differ.\n- **Theme tokens only.** Colors come from `var(--primary)`, `var(--chart-3)`, etc.\n  — never hardcoded hex, so light/dark both work.\n\nGrade by screenshotting a real, non-zero viewport — an HTTP 200 can't see any of this.",
+      "installCommand": "faraday pack add map2d"
+    },
+    {
+      "name": "notes",
+      "displayName": "Pen notebook (GoodNotes-style)",
+      "description": "Add a full-page, pressure-sensitive ink canvas for handwriting / sketching lessons on a stylus device. Ships an author-editable <Notebook> component (Canvas + PointerEvents, localStorage-persisted) into src/lesson/notes — no new npm dependencies.",
+      "category": "lecture",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `notes` — quality bar\n\n- **Marks are the learning.** Pen input is used because *producing* handwriting /\n  sketches / annotations is the point — not as a novelty over a click.\n- **Stylus-friendly.** Width follows pressure; the canvas sets `touch-action:\n  none` and lives where the page won't scroll-jack under the pen.\n- **Stable `notebookId`.** Every `<Notebook>` has a stable id so the learner's ink\n  persists across reloads; no volatile or missing ids.\n- **Right tool.** `<Notebook>` for an open persistent surface; `<SketchPad>` for a\n  graded predict-by-drawing check — not swapped.\n- **Checked where it matters.** If an outcome must be assessed, a `<Quiz>` /\n  `<Challenge>` gates it — the notebook itself isn't auto-graded.",
+      "installCommand": "faraday pack add notes"
+    },
+    {
+      "name": "sim2d",
+      "displayName": "2D simulation stage (SVG + GSAP)",
+      "description": "Educational 2D simulations in a Workbench — SVG diagrams driven by formulas, GSAP timelines, and sim clocks. Replaces the old runtime motion hooks (useRafLoop/useSvgDrag). Author-editable glue copies into src/lesson/sim2d.",
+      "category": "runtime",
+      "requires": [],
+      "variants": [],
+      "dependencies": [
+        {
+          "packageName": "gsap",
+          "version": "^3.15.0"
+        }
+      ],
+      "quality": "# Pack `sim2d` — quality bar\n\n- **Model first.** Position/velocity come from the lesson's equations — not a physics\n  engine fighting the math.\n- **SVG + GSAP, not React every frame.** Drive sim time with `useSimTime` /\n  `useSimLoop`; update SVG via refs/`gsap.set`. Throttle HUD readouts.\n- **Workbench-native.** The stage is a block inside `<Workbench>`, with controls\n  in the panel and Play/readouts in `hud`.\n- **sim2d vs game2d.** Spatial *explanation* → sim2d. Collisions, sprites,\n  tilemaps → `game2d`.\n- **Accessible.** SVG `role=\"img\"` + `aria-label` on `<SvgStage>`.",
+      "installCommand": "faraday pack add sim2d"
+    },
+    {
+      "name": "slide-view",
+      "displayName": "Slide view",
+      "description": "Deliver a lecture as a slide-view presentation — one idea per screen, prev/next, motion. Skill-only: composes the runtime's <SlideDeck> + motion, no new deps. Folder skill with an index that routes to sub-guides.",
+      "category": "lecture",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `slide-view` — quality bar\n\n- **One beat per slide.** Each screen carries a single claim/reveal/question/\n  interaction; no slide is a paragraph or two ideas fighting for space.\n- **Motion reveals.** Every animation builds, transitions, or focuses — nothing\n  spins/bounces for flair; `prefers-reduced-motion` degrades cleanly.\n- **Still interactive.** Slide view isn't read-only — the learner manipulates and\n  predicts across the slides, not just clicks \"next\".\n- **Right format.** Slide view is chosen because the content wants deliberate,\n  one-idea-per-screen pacing — not to dress up dense reference material.\n- **Self-contained slides.** Because per-slide state resets, each slide makes sense\n  on its own when revisited.",
+      "installCommand": "faraday pack add slide-view"
+    },
+    {
+      "name": "srs",
+      "displayName": "Spaced-repetition flashcards",
+      "description": "Add a spaced-repetition flashcard deck (SM-2-lite scheduling, localStorage-persisted) for memorization lessons. Ships an author-editable <Flashcards> component into src/lesson/srs — no new npm dependencies.",
+      "category": "lecture",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `srs` — quality bar\n\nAdditional acceptance rules for lessons that use the `srs` pack.\n\n- **Atomic recall items.** Each card tests one discrete fact (a word, a symbol, a\n  date). A card whose answer is a paragraph or a concept is a fail — that content\n  wants an interactive, not a flashcard.\n- **Retrieval, not recognition.** The reveal-then-grade loop is intact: the\n  learner attempts recall before the answer shows. No auto-revealing decks.\n- **Stable `deckId`.** Every `<Flashcards>` has a stable `deckId` (the schedule\n  persists to it). A missing or volatile id loses the learner's progress.\n- **Honest grading path.** All four grades (`Again`/`Hard`/`Good`/`Easy`) are\n  reachable; the scheduler is not bypassed or hard-set.\n- **Right tool.** Spaced repetition is chosen because the outcome is *memorize/\n  recall* — not to drill conceptual understanding that belongs in a sim.",
+      "installCommand": "faraday pack add srs"
+    },
+    {
+      "name": "stem-methods",
+      "displayName": "STEM discipline methods",
+      "description": "Fifteen evidence-based teaching methods for math, science, engineering, computing, and statistics — mapped to Faraday block families (not 1:1 blocks). Complements lecture-design (universal moves) and audience (learner population). Skill-only; opt-in via `faraday pack add stem-methods`.",
+      "category": "methodology",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `stem-methods` — quality bar\n\nDesign-quality rules for STEM lessons built with this pack. These grade the\n*discipline fit* of the teaching, not the code.\n\n- **Discipline-fit.** The chosen method matches the content type (procedural,\n  conceptual, modeling, design, data, or code) per [selection.md](skill/selection.md).\n- **One arc.** A single stem method leads the unit structure; audience chooses\n  delivery register; lecture-design moves run underneath — no mechanical stacking\n  of every method on every node.\n- **Family mapping, not checkbox blocks.** Each phase uses the right *block\n  family* (manipulative, formalism, check, etc.) per [block-families.md](skill/block-families.md);\n  empty ornament blocks don't count.\n- **Misconception-aware (science/math).** Concept checks use documented\n  field misconceptions as distractors, not filler wrong answers.\n- **Representation match.** Spatial content uses spatial families; processes use\n  executable or manipulative families; relationships use data families — matched\n  to the *content*, not to a claimed learning style.",
+      "installCommand": "faraday pack add stem-methods"
+    },
+    {
+      "name": "storybook-game2d",
+      "displayName": "Storybook 2D game",
+      "description": "Page-turn story shell on top of game2d — fairy-tale pacing, one idea per page, big touch targets, CRA sequencing, visible celebration. Absorbs the former kids tablet preset. Requires game2d (Pixi stage, physics, audio).",
+      "category": "lecture",
+      "requires": [
+        "game2d"
+      ],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `storybook-game2d` — quality bar\n\nInherits `game2d` quality, plus:\n\n- **CRA order.** Concrete (tap/drag in the Pixi page) → picture → symbol last and\n  small. Never open a storybook page on bare notation.\n- **One idea per page.** `StorybookGame` pages, not a scroll wall; under ~50 words\n  of narration per page when aimed at early readers.\n- **Finger-sized targets.** Large hit areas inside the stage; drag/tap over typing.\n- **Missions, not definitions.** Checks are \"do it\" moments on a page (or a\n  Faraday `<Quiz>` with picture options after the page).\n- **Celebrated.** Page-clear and story-end use audio/XP/burst — success is felt.\n- **Story serves learning.** Plot dressing is fine; every page still advances an\n  idea or checks one.",
+      "installCommand": "faraday pack add storybook-game2d"
+    },
+    {
+      "name": "textbook-view",
+      "displayName": "Textbook view",
+      "description": "Deliver a lecture as a textbook-view presentation — A4-style reading column with scroll, plus free mode (scaled page overview + margin notes). Ships an author-editable <TextbookView> into src/lesson/textbook-view — no new npm dependencies.",
+      "category": "lecture",
+      "requires": [],
+      "variants": [],
+      "dependencies": [],
+      "quality": "# Pack `textbook-view` — quality bar\n\n- **Denser than slide view.** Pages carry paragraphs and worked steps — not\n  one-line captions.\n- **Still interactive.** Charts, quizzes, and manipulables belong inside pages;\n  textbook view is not a static PDF.\n- **Paired intent.** When slide view exists for the same lecture, textbook pages\n  expand the same beats — don't fork into a different topic.\n- **Free mode notes.** `notesKey` is stable; margin notes persist per page id.",
+      "installCommand": "faraday pack add textbook-view"
+    },
+    {
+      "name": "three",
+      "displayName": "3D scenes (React Three Fiber)",
+      "description": "Add @faraday-academy/three — R3F 3D blocks, procedural helpers (Body/Planet/OrbitPath/Label3D), a glTF <Model> loader, and a mood-per-scene system — to an existing lesson. Pass --physics for Rapier gravity/collision.",
+      "category": "runtime",
+      "requires": [],
+      "variants": [
+        "physics"
+      ],
+      "dependencies": [
+        {
+          "packageName": "@faraday-academy/three",
+          "version": "0.2.0"
+        },
+        {
+          "packageName": "@react-three/drei",
+          "version": "^10.0.0"
+        },
+        {
+          "packageName": "@react-three/fiber",
+          "version": "^9.0.0"
+        },
+        {
+          "packageName": "three",
+          "version": "^0.171.0"
+        }
+      ],
+      "quality": "# Pack `three` — quality bar\n\nAdditional acceptance rules for lessons that use the `three` pack. These layer on\ntop of the base `docs/quality-bar.md`.\n\n- **Spatial justification.** 3D is used because the idea is spatial (orbit, field,\n  molecule, force, geometry-in-space). A scene that would read as well or better\n  as a 2D diagram is a fail.\n- **Mood set.** Every `<Scene3D>` carries an explicit `mood`\n  (`space`/`cell`/`lab`/`physics`/`abstract`). No default/omitted mood.\n- **Manipulable.** The learner can change the scene — at least one live control\n  (`<ParamSlider>`/`<Segmented>`/`<Scrubber>`) drives a visible change in the 3D\n  view. A watch-only render fails.\n- **Procedural-first.** Procedural helpers (`<Body>`/`<Planet>`/`<OrbitPath>`)\n  are used unless the shape genuinely needs a `.glb`. A `<Model>` with no\n  justification is a smell.\n- **Physics honesty** (if `--physics`): the physics reveals something a\n  closed-form curve wouldn't. No physics-as-decoration.",
+      "installCommand": "faraday pack add three"
+    },
+    {
+      "name": "tutor",
+      "displayName": "Grounded AI tutor (durable)",
+      "description": "Embed <Tutor> from @faraday-academy/tutor and a durable Vite + Nitro + Workflow server (author-editable api/ + workflows/). Grounded, Socratic, survives refreshes/timeouts. Needs AI_GATEWAY_API_KEY in .env.local locally; OIDC on Vercel.",
+      "category": "runtime",
+      "requires": [],
+      "variants": [],
+      "dependencies": [
+        {
+          "packageName": "@ai-sdk/workflow",
+          "version": "^1.0.11"
+        },
+        {
+          "packageName": "@faraday-academy/tutor",
+          "version": "0.2.0"
+        },
+        {
+          "packageName": "ai",
+          "version": "^7.0.11"
+        },
+        {
+          "packageName": "nitro",
+          "version": "3.0.260610-beta"
+        },
+        {
+          "packageName": "workflow",
+          "version": "^4.5.0"
+        },
+        {
+          "packageName": "zod",
+          "version": "^4.0.0"
+        }
+      ],
+      "quality": "# Pack `tutor` — quality bar\n\nAdditional acceptance rules for lessons that use the `tutor` pack.\n\n- **Real grounding.** `<Tutor context={…} />` is passed the lesson's actual text,\n  not an empty string or a placeholder. An ungrounded tutor fails.\n- **No answer leaks.** The tutor never reveals quiz/exercise solutions outright;\n  the persona in `workflows/tutor-agent.ts` enforces Socratic hinting.\n- **Earned, not reflexive.** The tutor is added because the lesson benefits from\n  learner Q&A — not bolted onto every lesson by default.\n- **Boots without a key.** The app compiles and runs without `AI_GATEWAY_API_KEY`\n  (live responses need it, but the build must not depend on it).\n- **Key stays out of git.** No real key is committed; `.env.local` is git-ignored\n  and `env.example` documents the name only.",
+      "installCommand": "faraday pack add tutor"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Callout",
+      "slug": "callout",
+      "group": "Explanation",
+      "summary": "<Callout> — a highlighted note (built on Alert).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Callout.tsx"
+    },
+    {
+      "name": "celebrate",
+      "slug": "celebrate",
+      "group": "More",
+      "summary": "celebrate(anchor) — a small confetti burst for the moment a check passes. Dep-free canvas overlay: ~90 particles fountain up from the anchor element, colored from the theme's chart tokens, gone in ~1.4s. Respects prefers-reduced-motion (no-op). Blocks call this automatically on success (Quiz/NumericAnswer correct, Challenge clear, SketchPad matched) — authors can also fire it from custom gameplay moments.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/celebrate.ts"
+    },
+    {
+      "name": "Challenge",
+      "slug": "challenge",
+      "group": "Assessment",
+      "summary": "<Challenge> — a mission-style PERFORMANCE check: the learner clears it by DOING something in the interactive (hit the target, balance the system, reach the state), not by answering about it. You own the win condition: compute `done` from your sim state and the mission banner + clear state are handled here. The strongest assessment when the outcome verb is \"do/tune/ build/achieve\" (see assessment.md) — and the most game-like. <Challenge",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Challenge.tsx"
+    },
+    {
+      "name": "Chart",
+      "slug": "chart",
+      "group": "Data",
+      "summary": "<Chart> — a data chart built on shadcn's ChartContainer (Recharts). Cartesian types (line / bar / area) and radar take rows + an x/angle key + one or more series. Slice types (pie / donut / radial) treat each ROW as a slice: `x` is the slice-name key and the first series' `key` is the value. Series/slice colours default to the theme's --chart-1..5 tokens (light/dark both work). A hover tooltip is on by default; add `legend` for a legend. Rendering is deferred until the container has a real width. Recharts'",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Chart.tsx"
+    },
+    {
+      "name": "CodeCell",
+      "slug": "codecell",
+      "group": "Explanation",
+      "summary": "<CodeCell> — an editable, RUNNABLE JavaScript cell (notebook-style). The learner edits the code and presses Run; it executes in a sandboxed iframe (no same-origin access) with console.log/info/warn/error captured into an output panel. Use it when the audience codes or the concept is algorithmic — seeing the numbers come out of your own edit is the interaction. The editor is syntax-highlighted (dep-free tokenizer) via a transparent textarea over a colored layer; the code area shares the card background and",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/CodeCell.tsx"
+    },
+    {
+      "name": "Compare",
+      "slug": "compare",
+      "group": "Explanation",
+      "summary": "<Compare> — tabbed panels for comparing cases side by side (built on Tabs).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Compare.tsx"
+    },
+    {
+      "name": "ControlGroup",
+      "slug": "controlgroup",
+      "group": "Layout",
+      "summary": "<ControlGroup> — a collapsible, labeled section inside a control panel dock. Group related controls semantically (like the sections in a design-tool panel): header shows the label, an optional per-group reset, and a collapse chevron.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/ControlGroup.tsx"
+    },
+    {
+      "name": "Derivation",
+      "slug": "derivation",
+      "group": "Explanation",
+      "summary": "<Derivation> — a formula DERIVED live, not decreed. Steps reveal one line at a time (like a teacher at the board): each line is a TeX equation plus the justification for the move (\"substitute T\", \"divide by m\", \"sin doubles\"). The learner paces it with Next step; the newest line slides in highlighted. quality-bar rule: a lesson's central formula must arrive as the LAST line of one of these (or an equivalent stepped walk) — a bare boxed result fails. <Derivation",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Derivation.tsx"
+    },
+    {
+      "name": "InkToolbar",
+      "slug": "inktoolbar",
+      "group": "More",
+      "summary": "Bottom ink tool strip — icon buttons for pan/draw tools (overview + slide annotate).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/InkToolbar.tsx"
+    },
+    {
+      "name": "Lecture",
+      "slug": "lecture",
+      "group": "More",
+      "summary": "<Lecture> — lecture shell: each presentation view owns its full layout. Title and lead flow into slide/textbook content — not a shared header chrome.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Lecture.tsx"
+    },
+    {
+      "name": "Lesson",
+      "slug": "lesson",
+      "group": "Layout",
+      "summary": "<Lesson> — titled header + vertical flow the sections sit in.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Lesson.tsx"
+    },
+    {
+      "name": "NumericAnswer",
+      "slug": "numericanswer",
+      "group": "Assessment",
+      "summary": "<NumericAnswer> — a free-response check: the learner COMPUTES and types the answer instead of recognizing it in a list. Use when the outcome verb is \"calculate/derive/estimate\" (see assessment.md); tolerance makes rounding and estimation fair. Enter or Check grades; the hint is feed-forward. <NumericAnswer question=\"At 24 m/s and 30°, how far does the ball land?\" answer={50.9} unit=\"m\" tolerance={1}",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/NumericAnswer.tsx"
+    },
+    {
+      "name": "Paged",
+      "slug": "paged",
+      "group": "More",
+      "summary": "@deprecated Use <SlideDeck> from ./SlideDeck — kept for backward compatibility.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Paged.tsx"
+    },
+    {
+      "name": "ParamSlider",
+      "slug": "paramslider",
+      "group": "Controls",
+      "summary": "<ParamSlider> — a labeled slider with a live value read-out. Exposes a plain number (the underlying Base UI slider is array-capable; we unwrap it).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/ParamSlider.tsx"
+    },
+    {
+      "name": "ParamSwitch",
+      "slug": "paramswitch",
+      "group": "Controls",
+      "summary": "<ParamSwitch> — a labeled on/off control.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/ParamSwitch.tsx"
+    },
+    {
+      "name": "PresentationCanvas",
+      "slug": "presentationcanvas",
+      "group": "More",
+      "summary": "Free-mode canvas: custom pan/zoom workspace (not React Flow) with positioned content cards and ink drawn on the canvas.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/PresentationCanvas.tsx"
+    },
+    {
+      "name": "PresentationToolbar",
+      "slug": "presentationtoolbar",
+      "group": "More",
+      "summary": "Hover-reveal toolbar for fullscreen presentation views (slides, textbook). On touch devices the bar stays visible — no hover on tablets.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/PresentationToolbar.tsx"
+    },
+    {
+      "name": "PresentationTopBar",
+      "slug": "presentationtopbar",
+      "group": "More",
+      "summary": "Fixed top bar — Map + presentation view tabs (Slides / Textbook) + mode actions.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/PresentationTopBar.tsx"
+    },
+    {
+      "name": "Prose",
+      "slug": "prose",
+      "group": "Layout",
+      "summary": "<Prose> — a readable text section, optionally titled.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Prose.tsx"
+    },
+    {
+      "name": "Quiz",
+      "slug": "quiz",
+      "group": "Assessment",
+      "summary": "<Quiz> — a self-check multiple-choice question. Reveals correctness + hint after the learner picks an option and presses Check. Optional callbacks let a lesson react to a pass — e.g. inside a <CourseHost>, wire `onCorrect` to `useNode().complete()` so answering correctly unlocks the next node.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Quiz.tsx"
+    },
+    {
+      "name": "Readout",
+      "slug": "readout",
+      "group": "Data",
+      "summary": "<Readout> — a compact label:value chip for LIVE numbers. Use it in a Workbench `hud` overlay (or a control panel) instead of stacking <Stat> cards under a figure — readouts belong ON the instrument, not after it.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Readout.tsx"
+    },
+    {
+      "name": "Reveal",
+      "slug": "reveal",
+      "group": "Explanation",
+      "summary": "<Reveal> — a collapsible hint / spoiler (built on Accordion).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Reveal.tsx"
+    },
+    {
+      "name": "Scrubber",
+      "slug": "scrubber",
+      "group": "Controls",
+      "summary": "<Scrubber> — transport controls for a stepped visualization. Wire to useStepper.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Scrubber.tsx"
+    },
+    {
+      "name": "Segmented",
+      "slug": "segmented",
+      "group": "Controls",
+      "summary": "<Segmented> — a single-select segmented control (built on Tabs).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Segmented.tsx"
+    },
+    {
+      "name": "SketchPad",
+      "slug": "sketchpad",
+      "group": "Assessment",
+      "summary": "<SketchPad> — a pen/touch drawing check for tablets (Apple Pencil pressure supported): the learner SKETCHES a prediction (a curve, a construction, a region), then reveals the true answer as an overlay and self-assesses. This is the \"predict-then-compare\" assessment (see assessment.md) — sketches aren't machine-graded; the comparison against the revealed overlay IS the feedback, and the self-assess buttons close the loop. <SketchPad",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/SketchPad.tsx"
+    },
+    {
+      "name": "SlideDeck",
+      "slug": "slidedeck",
+      "group": "Layout",
+      "summary": "<SlideDeck> — fullscreen slide view: one slide fills the viewport, hover toolbar for navigation, optional overview canvas with ink. The author supplies every slide — including the opening title card (see slide-view skill).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/SlideDeck.tsx"
+    },
+    {
+      "name": "SlideInkLayer",
+      "slug": "slideinklayer",
+      "group": "More",
+      "summary": "Per-slide ink overlay — annotate directly on the active slide (present mode).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/SlideInkLayer.tsx"
+    },
+    {
+      "name": "Stage",
+      "slug": "stage",
+      "group": "Layout",
+      "summary": "<Stage> — a Card-framed host for a visualization (SVG, canvas, DOM) + caption.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Stage.tsx"
+    },
+    {
+      "name": "Stat",
+      "slug": "stat",
+      "group": "Data",
+      "summary": "<Stat> — a compact metric read-out (built on Card + Badge).",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Stat.tsx"
+    },
+    {
+      "name": "TeX",
+      "slug": "tex",
+      "group": "Explanation",
+      "summary": "<TeX> — KaTeX-rendered math. EVERY symbolic expression in a lesson goes through this block (inline in prose, or `block` for display equations); ASCII/`<code>` math is a quality-bar fail. Pass the TeX source as the child string — String.raw`…` keeps backslashes readable. The area swept obeys <TeX>{String.raw`\\frac{dA}{dt} = \\frac{L}{2m}`}</TeX>. <TeX block>{String.raw`T^2 = \\frac{4\\pi^2}{GM}a^3`}</TeX> <TeX block stream>…</TeX> // writes itself out left→right, professor-style",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/TeX.tsx"
+    },
+    {
+      "name": "useLecture",
+      "slug": "uselecture",
+      "group": "More",
+      "summary": "Shared context for <Lecture> — title/lead and view switching flow into each presentation view instead of a shared header chrome.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/lecture-context.tsx"
+    },
+    {
+      "name": "Workbench",
+      "slug": "workbench",
+      "group": "Layout",
+      "summary": "<Workbench> — mirror-dimension's workbench layout: a live canvas (center) with a floating control panel (right). Put the visualization in `children` and the controls in `controls` — ideally as <ControlGroup> sections so the panel reads as labeled, collapsible groups. The panel floats (elevated card), sticks while scrolling, and stacks under the canvas on narrow screens. Drop the whole block into the middle of a lesson.",
+      "importPath": "@faraday-academy/kit/blocks",
+      "sourcePath": "packages/kit/blocks/Workbench.tsx"
+    }
+  ],
+  "examples": [
+    {
+      "slug": "compound-interest",
+      "title": "compound-interest",
+      "description": "Interactive Faraday lesson example.",
+      "packs": []
+    },
+    {
+      "slug": "exam-hall-physics",
+      "title": "exam-hall-physics",
+      "description": "Interactive Faraday lesson example.",
+      "packs": [
+        "audience",
+        "exam",
+        "lecture-design",
+        "sim2d"
+      ]
+    },
+    {
+      "slug": "game2d-collect",
+      "title": "game2d-collect",
+      "description": "Interactive Faraday lesson example.",
+      "packs": [
+        "game2d"
+      ]
+    },
+    {
+      "slug": "general-physics",
+      "title": "general-physics",
+      "description": "Interactive Faraday lesson example.",
+      "packs": [
+        "audience",
+        "lecture-design",
+        "map2d",
+        "slide-view",
+        "textbook-view"
+      ]
+    },
+    {
+      "slug": "star-chart",
+      "title": "star-chart",
+      "description": "Interactive Faraday lesson example.",
+      "packs": [
+        "audience",
+        "lecture-design",
+        "three",
+        "sim2d"
+      ]
+    },
+    {
+      "slug": "stem-methods",
+      "title": "stem-methods",
+      "description": "Interactive Faraday lesson example.",
+      "packs": [
+        "stem-methods"
+      ]
+    },
+    {
+      "slug": "voyage-log",
+      "title": "voyage-log",
+      "description": "Interactive Faraday lesson example.",
+      "packs": []
+    }
+  ]
+}

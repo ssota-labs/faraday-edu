@@ -1,4 +1,5 @@
 @import "@faraday-academy/ui/platform.css";
+@import "@faraday-academy/kit/styles.css";
 @source "../**/*.{ts,tsx}";
 @source "../../../packages/ui/src/**/*.{ts,tsx}";
 @source "../../../packages/kit/**/*.{ts,tsx}";

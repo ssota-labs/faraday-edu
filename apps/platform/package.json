@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@faraday-academy/kit": "workspace:*",
+    "@faraday-academy/registry": "workspace:*",
     "@faraday-academy/ui": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@supabase/ssr": "^0.6.1",
