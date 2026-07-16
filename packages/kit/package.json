@@ -34,11 +34,11 @@
   },
   "homepage": "https://github.com/ssota-labs/faraday-academy#readme",
   "peerDependencies": {
+    "@faraday-academy/ui": "0.3.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "dependencies": {
-    "@faraday-academy/ui": "0.3.0",
     "@phosphor-icons/react": "^2.1.10",
     "katex": "^0.16.11",
     "recharts": "^3.8.0"
