@@ -174,7 +174,7 @@ test("pack new scaffolds and round-trips each archetype", async () => {
 test("CLI pack add and validate use the same contract", async () => {
   const target = await scaffold("CLI");
   const add = await cli(["pack", "add", "srs", "--dir", target, "--json"]);
-  assert.equal(JSON.parse(add.out).name, "srs");
+  assert.equal(JSON.parse(add.out).pack, "srs");
   const validate = await cli(["pack", "validate", "srs", "--json"]);
   assert.equal(JSON.parse(validate.out).ok, true);
 });

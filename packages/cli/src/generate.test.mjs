@@ -49,7 +49,7 @@ test("generateLesson produces the expected tree + injections", async () => {
 
   const css = await read(target, "app/globals.css");
   assert.match(css, /@import "@faraday-academy\/kit\/styles\.css"/);
-  assert.match(css, /@source "\.\/lesson/);
+  assert.match(css, /@source "\.\.\/src/);
 
   assert.equal(await exists(path.join(target, "gitignore")), false);
 
