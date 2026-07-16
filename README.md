@@ -63,7 +63,8 @@ npx @faraday-academy/cli@latest new my-lesson
 cd my-lesson && pnpm dev
 ```
 
-대부분 경우엔 위 채팅 경로가 더 쉽습니다 — 스킬이 블록·팩·품질 게이트까지 함께 잡습니다.
+대부분 경우엔 위 채팅 경로가 더 쉽습니다 — 플러그인/스킬이 CLI 사용법을 알려주고,
+CLI가 필요한 블록·팩을 프로젝트의 `.faraday/`에 설치한 뒤 품질 게이트까지 실행합니다.
 
 </details>
 
@@ -82,9 +83,39 @@ cd my-lesson && pnpm dev
 
 코딩 에이전트 덕분에 교육 자료를 *코드로 만드는 일*이 싸졌습니다. 그런데도 대부분은 슬라이드·PDF 같은 **정적 텍스트**에 머물러 있습니다. 같은 개념도 슬라이더·시뮬레이션·퀴즈·3D·옆자리 AI 튜터로 *직접 해보면* 더 잘 남습니다.
 
-문제는 퀄리티입니다. 날것의 에이전트도 “뭔가”는 만들지만, **잘 가르치는** 결과물까지는 시행착오가 깁니다. Faraday는 검증된 **블록·모듈 팩**과, 그걸 잘 조합하도록 가르치는 **스킬**을 미리 넣어 두어 — 의도를 말하면 시행착오를 크게 줄입니다.
+문제는 퀄리티입니다. 날것의 에이전트도 “뭔가”는 만들지만, **잘 가르치는** 결과물까지는 시행착오가 깁니다. Faraday 플러그인은 에이전트에게 CLI 중심 제작 절차를 알려주고, CLI는 검증된 **블록·모듈 팩**과 그 사용 지식을 프로젝트의 `.faraday/packs/`에 설치합니다. 에이전트는 필요한 지식만 점진적으로 읽어 시행착오를 줄입니다.
 
 노하우도 팩으로 나눌 수 있습니다. 좋은 수업 포맷·교수법이 `faraday pack add` 한 번 거리에 있는 커뮤니티가 목표입니다.
+
+---
+
+## UI는 자유롭게, 학습 정본은 Faraday에
+
+Codex와 Claude Code가 화면·시뮬레이션·게임을 더 잘 만들수록, Faraday가 별도의
+범용 UI 빌더로 경쟁할 이유는 줄어듭니다. Faraday가 장기적으로 소유할 가치는
+**어떻게 보이는가**보다 **무엇을 배웠고, 무엇을 통과했으며, AI 튜터가 어떤
+근거와 정책으로 도왔는가**입니다.
+
+```mermaid
+flowchart LR
+    A["Codex · Claude Code<br/>UI와 인터랙션 생성"] --> L["Lesson UI<br/>Sites · Vite · Self-host"]
+    L --> SDK["Faraday SDK"]
+    SDK --> LMS["LMS<br/>학습 System of Record"]
+    SDK --> T["AI Tutor Runtime<br/>근거 · 정책 · 비용"]
+    LMS --> W["Faraday Web<br/>진도 · 평가 · 운영"]
+    T --> W
+```
+
+| 에이전트와 호스트에 맡길 것 | Faraday가 소유할 것 |
+|---|---|
+| 디자인, 레이아웃, 시각화, 게임 | 코스·노드·평가의 안정적인 ID와 버전 |
+| Practice UI와 로컬 상태 | 여러 Site와 기기를 잇는 학습자 진도 |
+| 튜터 채팅 표면 | 공식 평가·서버 채점·정답 보호 |
+| Sites·Vercel·self-host 배포 | 튜터 grounding·학습 정책·비용·품질 측정 |
+
+현재 Stage 1은 학습 UI, 로컬 진도 기록과 BYOK 튜터를 제공합니다. 이후에는 공통
+LMS schema와 SDK를 먼저 관리형 서비스로 제공하고, 그 위에 AI Tutor runtime을
+올립니다. 웹 제작 Agent와 자체 artifact hosting은 마지막 단계입니다.
 
 ---
 
@@ -125,20 +156,20 @@ flowchart LR
 
 ---
 
-## 두 개의 영역 (수업 구성 방식)
+## 세 개의 영역 (수업 구성 방식)
 
-스캐폴드된 모든 수업에는 두 개의 영역이 있습니다. 어느 쪽이 어느 쪽인지 알아두면
-여러분과 에이전트가 헷갈리지 않을 뿐입니다 — 전부 여러분의 코드이고, 여러분(또는
-에이전트)이 무엇이든 바꿀 수 있습니다.
+스캐폴드된 모든 수업에는 세 개의 영역이 있습니다. 어느 쪽이 어느 쪽인지 알아두면
+여러분과 에이전트가 저작할 코드, pin된 런타임, 필요한 지식을 구분할 수 있습니다.
 
 | 영역 | 경로 | 설명 |
 |---|---|---|
 | **저작 영역** | `src/lesson/**` | 여러분의 수업. `src/lesson/lesson.tsx`가 고정 진입점이며 반드시 React 컴포넌트를 `export default` 해야 합니다. 형제 파일은 자유롭게 추가하세요 — 작업이 일어나는 곳입니다. |
-| **런타임 영역** | `src/faraday/**` | 생성된 런타임: shadcn UI, 수업 블록, 런타임, 스타일, 월드/튜터 런타임. 에이전트는 보통 이 안을 *고치기*보다 이걸 *가져다 쓰는* 식으로 저작하므로 업그레이드가 깔끔합니다. SHA-256 매니페스트 덕분에 `pnpm check`가 변경 여부를 *알려주는데* — 잠금이 아니라 알림입니다. 이유가 있으면 고쳐도 됩니다. |
+| **런타임 영역** | `@faraday-academy/*` 의존성 | shadcn UI, 수업 블록, 런타임, 스타일, 월드/튜터 기능. 프로젝트에 소스를 복사하지 않고 정확한 버전으로 pin하며 `pnpm check`가 pin을 검증합니다. |
+| **에이전트 지식** | `.faraday/packs/**` | CLI가 설치한 팩별 `SKILL.md`, references, 품질 기준과 provenance. `AGENTS.md`가 진입점을 가리키고 에이전트가 필요한 파일만 점진적으로 읽습니다. |
 
 `src/main.tsx`, `index.html`, 설정 파일은 앱 셸(shell)이며 거의 건드릴 일이
-없습니다. 템플릿은 이미 `@/faraday/*` 별칭(alias)으로 임포트하므로, 스캐폴드
-시점에 임포트 경로를 다시 쓸 일이 없습니다.
+없습니다. 레슨 코드는 `@faraday-academy/kit/*`와 설치한 팩의 pin된 패키지를
+직접 임포트합니다.
 
 스캐폴드된 프로젝트는 `AGENTS.md`와 `docs/authoring.md`에 자체 저작 가이드를
 담고 있습니다 — 에이전트가 이 파일들을 읽고 블록 API를 익힙니다.
@@ -155,7 +186,7 @@ flowchart LR
 | ![커리큘럼 월드](docs/images/component-curriculum.png) | **📚 커리큘럼 / 월드** | 수업을 선형 교과서로, 또는 잠금 해제 진행이 있는 게임 같은 지도로 엮어 탐험합니다. | `<Course>` · `<CourseHost>` + 월드 팩 |
 | ![슬라이드 뷰](docs/images/component-lecture.png) | **🎬 슬라이드 뷰** | 슬라이드 뷰 프레젠테이션 — 화면당 한 아이디어, 이전/다음, 애니메이션. | `<SlideDeck>` · `sim2d` 팩 · `slide-view` 팩 |
 | ![퀴즈/과제](docs/images/component-quiz.png) | **✅ 퀴즈 / 과제** | *가르치는* 확인 — 객관식, 숫자 입력, 스케치 예측, 시뮬레이션에서 클리어하는 미션. | `<Quiz>` · `<NumericAnswer>` · `<Challenge>` · `<SketchPad>` |
-| ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 수업 또는 커리큘럼 전체의 진도를 기록하고 대시보드로 보여줍니다 (LMS). | `runtime/lms` (기록기 + 대시보드) |
+| ![LMS 대시보드](docs/images/component-lms.png) | **📊 학생 관리** | 현재는 수업 안에서 진도를 기록하고 보여줍니다. 이후 공통 schema와 SDK가 여러 Site·기기의 진도를 중앙 LMS에 연결합니다. | `@faraday-academy/kit/lms` → 관리형 LMS 로드맵 |
 | ![AI 튜터](docs/images/component-tutor.png) | **🤖 AI 튜터** | 오직 수업 내용에서만 답하는, 근거 기반 소크라테스식 채팅. | `tutor` 팩 |
 
 <!-- 📸 component-*.png 썸네일 — docs/images/README.md 참고. 위 깨진 아이콘은 파일을 넣기 전까지의 placeholder 입니다. -->
@@ -164,10 +195,10 @@ flowchart LR
 
 ## 무엇을 만들 수 있나 (레이어 스택)
 
-Faraday는 Stage 1에서 기능 셋을 **수평적으로** 닫습니다 — 모든 레이어가
-오늘 BYOK / 셀프 배포 환경에서 동작합니다. 이후 단계는 마찰을 제거할 뿐(관리형
-AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](docs/VISION.md)
-§2 참고.)
+Faraday는 Stage 1에서 저작 기능 셋을 **수평적으로** 닫습니다 — 블록·팩·로컬
+LMS·BYOK Tutor가 셀프 배포 환경에서 동작합니다. 이후 단계는 UI 기능을 다시
+만들기보다 여러 Site가 공유할 LMS 정본과 관리형 Tutor 운영을 추가합니다.
+([VISION.md](docs/VISION.md) §2 참고.)
 
 각 레이어는 하나의 **모듈**입니다 — 에이전트가 조합하는, pin된
 `@faraday-academy/*` 패키지(또는 `runtime` 안의 서브모듈). 런타임은 수업 블록
@@ -192,7 +223,9 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
   해제 진행(unlock progression)**과 교체 가능한 **팩**을 가진 `<CourseHost>`
   — `linearPack`(상태 목록), `map2dPack`(2D 노드 맵), `world3dPack`(3D 오픈월드 /
   RPG). 팩이 곧 세계 전체를 갈아끼우는 이음새입니다.
-- **LMS** (`runtime/lms`) — 수업이나 커리큘럼 전체에 붙는 진도 기록기 + 대시보드.
+- **LMS** (`@faraday-academy/kit/lms`) — 현재는 수업이나 커리큘럼에 붙는 로컬
+  진도 기록기 + 대시보드. 다음 단계에서는 Sites와 self-host가 같은 학습 정본을
+  쓰도록 공통 schema, MCP, browser SDK와 중앙 서비스를 제공합니다.
 - **Tutor AI** (`@faraday-academy/tutor`, `pack add tutor`) — 콘텐츠 옆에 임베드되는
   **견고하고 근거 기반의** 채팅 에이전트. 아래에서 더 설명합니다.
 
@@ -246,8 +279,8 @@ AI, 멀티테넌시, 결제), 기능을 추가하지 않습니다. ([VISION.md](
  공 개수를 바꿀 수 있게 하고, 정규분포가 쌓이는 걸 보여줘."  → pack add three --physics
 ```
 
-플러그인이 설치돼 있으면, 에이전트가 알아서 올바른 플래그로 스캐폴드하고,
-블록을 조합하고, 게이트를 통과시킵니다.
+플러그인이 설치돼 있으면, 에이전트가 CLI로 프로젝트를 스캐폴드하고 필요한 팩을
+`.faraday/packs/`에 설치한 뒤 블록을 조합하고 게이트를 통과시킵니다.
 
 ---
 
@@ -416,7 +449,7 @@ flowchart LR
 채점할 수 있게 합니다. 지향점은 평가 루프입니다: 에이전트가 프롬프트로 수업을
 생성하고, 다른 에이전트들이 루브릭으로 채점하고, 팩은 그 통과율로 게이팅됩니다.
 
-**써보세요.** 네 개 팩이 이미 제공됩니다 — `faraday pack list` 후
+**써보세요.** 공식 팩들이 이미 제공됩니다 — `faraday pack list` 후
 `faraday pack add <name> [--physics] [--dir <lesson>]`. 한 명령이 런타임 절반
 (deps / 소스 / CSS) **과** 스킬 절반(에이전트가 로드하는 저작 가이드, `AGENTS.md`
 에서 가리킴)을 기존 레슨에 한 번에 설치합니다. `faraday new`의
@@ -427,12 +460,25 @@ flowchart LR
 
 ## 앞으로의 방향
 
-Faraday는 두 개의 AI 시스템 중 **빌드 타임** 절반입니다: *창작 AI*가 지금
-교육 콘텐츠를 저작하고(플러그인이 구동하는 부분), *튜터 AI*가 런타임에 학생을
-가르칩니다(tutor 팩이 임베드하는 부분). 플랫폼 단계에서는 관리형 AI(Vercel AI
-Gateway), 멀티테넌시(Vercel Platforms), 그리고 제작자↔학생 결제가 추가되어 —
-오픈코어 CLI를 3면 마켓플레이스로 바꿉니다. 전체 흐름은
-[VISION.md](docs/VISION.md)와 [GTM.md](docs/GTM.md)를 읽어보세요.
+Faraday는 UI 생성기를 대체하지 않습니다. Codex·Claude Code가 수업의 표면을
+만들고 Sites·Vercel·self-host가 이를 배포하더라도, Faraday는 학습 정본과
+AI Tutor runtime을 공통으로 제공합니다.
+
+1. **Plugin + CLI + Web Catalog** — 플러그인은 CLI 핵심 사용법만 제공하고,
+   CLI가 팩을 `.faraday/`에 설치합니다. 웹은 팩·블록·예제를 탐색하는
+   카탈로그부터 시작합니다.
+2. **공통 LMS** — 중앙 schema와 system of record, LMS 중심 MCP, Sites용 browser
+   SDK, 진도·평가 대시보드를 제공합니다.
+3. **관리형 AI Tutor** — LMS의 course version과 학습 상태를 바탕으로 grounding,
+   정책, 모델, 비용과 품질을 중앙에서 운영하고 SDK로 여러 UI에 연결합니다.
+4. **Web Agent** — 위 기반이 검증된 뒤, Codex를 직접 쓰지 않는 제작자를 위한
+   웹 제작 환경을 같은 CLI·`.faraday` contract 위에 추가합니다.
+5. **Managed Delivery (조건부)** — Sites와 self-host로 해결되지 않는 반복 수요가
+   확인될 때만 자체 preview·artifact·rollback 인프라를 만듭니다.
+
+핵심 포지셔닝은 **“어떤 에이전트로 레슨을 만들어도, 진도·평가·AI 튜터는
+Faraday로 연결한다”**입니다. 전체 흐름은 [VISION.md](docs/VISION.md)와
+[GTM.md](docs/GTM.md)를 읽어보세요.
 
 ---
 
