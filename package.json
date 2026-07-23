@@ -26,7 +26,10 @@
     "sync:skills": "node scripts/sync-skills.mjs",
     "sync:skills:check": "node scripts/sync-skills.mjs --check",
     "setup:env": "node scripts/setup-env-local.mjs",
-    "stage1:cold-e2e": "node scripts/stage1-cold-e2e.mjs"
+    "stage1:cold-e2e": "node scripts/stage1-cold-e2e.mjs",
+    "check:planning": "node .agents/skills/oh-my-doc/scripts/omd.mjs check",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build"
   },
   "devDependencies": {
     "supabase": "^2.105.0"

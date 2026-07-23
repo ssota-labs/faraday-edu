@@ -1,0 +1,36 @@
+---
+title: Product vision
+description: Faraday turns courses teachers already run into interactive textbooks with grounded AI tutors.
+type: conceptual
+summary: Scaffold interactive textbooks from agent sessions, then grow into a platform with quality gates at every layer.
+related:
+  - /docs/planning/prds
+  - /docs/workflow/planning
+  - /docs/starting
+---
+
+## Vision
+
+Faraday helps teachers turn existing course materials into interactive textbooks
+with grounded AI tutors. Authors work with a coding agent: drop in lesson
+content, and the Faraday CLI scaffolds a vinext + React lesson pinned to the
+`@faraday-academy/*` runtime.
+
+Deeper product and architecture notes live in the project-owned
+[`docs/VISION.md`](../../../VISION.md) (Korean). That file is the historical
+source of truth for Stage 1/2 direction; planning artifacts under this handbook
+should stay aligned with it.
+
+## Principles
+
+1. Intent precedes implementation — PRD → story → spec/ADR → plan → code.
+2. Seed + gate: maximum authoring freedom, locked runtime contracts and checks.
+3. Stable IDs connect planning artifacts without coupling them to filenames.
+4. Human review decides product quality; automation checks structural integrity.
+5. Documentation and agent-readable Markdown are two views of the same source.
+
+## Not yet in this handbook
+
+Existing Faraday markdown under `docs/*.md` (VISION, GTM, launch notes, images)
+remains project-owned. Prefer linking or importing into catalog pages rather
+than duplicating it by hand.
