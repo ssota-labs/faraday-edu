@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "faraday-edu",
+  "homepage": "https://github.com/ssota-labs/faraday-academy",
+  "items": [
+    {
+      "name": "param-control",
+      "type": "registry:ui",
+      "title": "Param Control",
+      "description": "Sparse HUD slider + readout for a single manipulable STEM parameter over a fullscreen 3D canvas.",
+      "dependencies": [
+        "react"
+      ],
+      "files": [
+        {
+          "path": "components/param-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
+}

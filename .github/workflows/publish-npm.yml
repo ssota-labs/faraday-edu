@@ -1,30 +1,16 @@
-# Publish @faraday-academy packages to npm (manual or on version tags).
+# Disabled: npm suite publish is not the 3d-stem product path (PLAN-001).
+# Kept as a no-op workflow so old tags do not publish legacy packages accidentally.
 name: publish-npm
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
-
-permissions:
-  contents: read
 
 jobs:
-  publish:
+  refused:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          registry-url: https://registry.npmjs.org
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.5.2
-      - run: pnpm install
-      - name: Publish suite (ui → kit → lms → cli)
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: node scripts/publish-packages.mjs
+      - name: Refuse npm product publish
+        run: |
+          echo "npm @faraday-academy/* publish is retired."
+          echo "Ship the 3d-stem skill via git tags / marketplace, not npm suite publish."
+          exit 1

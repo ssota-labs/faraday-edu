@@ -5,7 +5,7 @@ type: guide
 summary: Docs-aligned rewrite of skill/templates, absorb CLI into the skill, drop npm product publish and LMS, add registry app + showcase.
 id: PLAN-pivot-faraday-academy-to-3d-stem
 ticker: PLAN-001
-stage: ready
+stage: done
 changeType: product
 prd: PRD-3d-stem-interactive-textbook-skill
 specs:
@@ -61,55 +61,55 @@ perfecting every STEM domain rubric, or any hosted platform.
 
 - [x] PRD, stories, spec, ADR, this plan
 - [x] Rewrite handbook [vision](/docs/vision) + [GTM](/docs/planning/gtm); remove root `docs/VISION.md` / `docs/GTM.md`
-- [ ] Mark Stage 1 launch / platform docs historical or delete obsolete CTAs
-- [ ] Align root README with skill-first install (`3d-stem`)
+- [x] Mark Stage 1 launch / platform docs historical or delete obsolete CTAs
+- [x] Align root README with skill-first install (`3d-stem`)
 
 ### Phase B — Skill skeleton (img2threejs-shaped)
 
-- Create `skills/3d-stem/` with:
+- [x] Create `skills/3d-stem/` with:
   - `SKILL.md` — one job, when to use, staged loop, hard rules
   - `scripts/` — `scaffold`, `check`, pass orchestration (Node; JSON out)
   - `references/` — 3D craft + **ported pedagogy** (learning design, interactive
     design, quality bar, assessment-as-feedback — not LMS ops)
   - `templates/` — greenfield fullscreen 3D lesson seed (Vite/R3F or chosen stack)
-- Mirror skill into `plugins/*/skills/3d-stem` via sync script; update marketplace
+- [x] Mirror skill into `plugins/*/skills/3d-stem` via sync script; update marketplace
   manifests to advertise `3d-stem`.
-- Retire or redirect old `faraday` skill name.
+- [x] Retire or redirect old `faraday` skill name.
 
 ### Phase C — Absorb CLI, drop npm product path
 
-- Inventory `packages/cli` commands; port only what the new loop needs into
+- [x] Inventory `packages/cli` commands; port only what the new loop needs into
   skill scripts.
-- Stop documenting / CI-publishing `@faraday-academy/cli|kit|ui|lms` as product.
-- Decide per package: delete, private dogfood, or migrate sources into
+- [x] Stop documenting / CI-publishing `@faraday-academy/cli|kit|ui|lms` as product.
+- [x] Decide per package: delete, private dogfood, or migrate sources into
   template/registry (prefer delete or registry for UI; template for runtime glue).
-- Update root `package.json` scripts accordingly; release = skill version tag
+- [x] Update root `package.json` scripts accordingly; release = skill version tag
   (Oh My Docs style), not npm suite publish.
 
 ### Phase D — Education UI registry app
 
-- Add/repurpose `apps/` site as education component library + shadcn registry
+- [x] Add/repurpose `apps/` site as education component library + shadcn registry
   endpoint.
-- Select a **minimal** v1 component set that supports fullscreen 3D lessons
+- [x] Select a **minimal** v1 component set that supports fullscreen 3D lessons
   (e.g. param controls, numeric readout, overlay chrome) — no dashboard chrome.
-- Wire skill references to “when to `shadcn add` from Faraday registry”.
-- Deprecate npm `@faraday-academy/ui` as install path.
+- [x] Wire skill references to “when to `shadcn add` from Faraday registry”.
+- [x] Deprecate npm `@faraday-academy/ui` as install path.
 
 ### Phase E — Strip non-wedge surfaces
 
-- Remove or archive: LMS package product claims, official-packs marketplace
+- [x] Remove or archive: LMS package product claims, official-packs marketplace
   narrative, platform catalog as product core, tutor/platform Stage 2–4 GTM.
-- Keep `apps/labs` only if it becomes the 3D lesson dogfood/showcase; otherwise
+- [x] Keep `apps/labs` only if it becomes the 3D lesson dogfood/showcase; otherwise
   replace with `apps/showcase`.
-- Clean `specs/` — keep terminology only if still true; supersede module-packs /
+- [x] Clean `specs/` — keep terminology only if still true; supersede module-packs /
   LMS / tutor-ai product specs.
 
 ### Phase F — Verification loop
 
-- Cold path: install skill → scaffold → author tiny demo (e.g. orbital period or
+- [x] Cold path: install skill → scaffold → author tiny demo (e.g. orbital period or
   BST rotate) → check → preview.
-- `pnpm check:planning` / typecheck on remaining apps.
-- Update AGENTS.md project instructions outside oh-my-docs markers for the new
+- [x] `pnpm check:planning` / typecheck on remaining apps.
+- [x] Update AGENTS.md project instructions outside oh-my-docs markers for the new
   wedge (or sync after adopt if needed).
 
 ## Verification

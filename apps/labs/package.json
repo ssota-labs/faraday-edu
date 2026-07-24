@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Faraday Labs — a Vite lab that renders the @faraday-academy/kit blocks live (via demo stories) and catalogs the skills/packs the CLI + plugins ship. Mirrors a generated lesson's environment so previews match production.",
+  "description": "LEGACY quarantine — kit block lab; not the 3d-stem product path.",
   "scripts": {
     "dev": "vite --port 4200 --host",
     "build": "vite build",

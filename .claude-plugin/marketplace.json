@@ -1,20 +1,20 @@
 {
-  "name": "faraday",
+  "name": "faraday-academy",
   "owner": {
-    "name": "Faraday",
+    "name": "Faraday Academy",
     "url": "https://github.com/ssota-labs/faraday-academy"
   },
-  "description": "Faraday — scaffold high-quality interactive textbooks + grounded AI tutors from a coding-agent session.",
-  "version": "0.1.0",
+  "description": "Faraday Academy — 3d-stem skill for fullscreen 3D interactive STEM textbooks, plus education UI via shadcn registry.",
+  "version": "0.2.0",
   "plugins": [
     {
-      "name": "faraday",
-      "displayName": "Faraday",
+      "name": "3d-stem",
+      "displayName": "3d-stem",
       "source": "./plugins/claude-code",
-      "description": "Drive the Faraday CLI: scaffold interactive lessons, author against the locked-tree + blocks contract, pass the quality gates, embed a durable grounded AI tutor, and deploy.",
-      "version": "0.1.0",
-      "author": { "name": "Faraday" },
-      "keywords": ["education", "interactive-textbook", "scaffolder", "ai-tutor", "vite", "react"],
+      "description": "Author fullscreen 3D STEM lessons with a gated skill loop (scaffold → build passes → check). Education UI via shadcn registry.",
+      "version": "0.2.0",
+      "author": { "name": "Faraday Academy" },
+      "keywords": ["education", "3d", "stem", "three.js", "r3f", "interactive-textbook"],
       "category": "development"
     }
   ]

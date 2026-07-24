@@ -1,16 +1,16 @@
 {
-  "name": "faraday",
-  "version": "0.1.0",
-  "description": "Scaffold and author high-quality interactive textbooks with grounded AI tutors, driven from your Codex session. Wraps the Faraday CLI as a Codex skill.",
-  "author": { "name": "Faraday", "url": "https://github.com/ssota-labs/faraday-academy" },
+  "name": "3d-stem",
+  "version": "0.2.0",
+  "description": "Author fullscreen 3D interactive STEM textbooks from your Codex session. Skill-first — no public npm CLI.",
+  "author": { "name": "Faraday Academy", "url": "https://github.com/ssota-labs/faraday-academy" },
   "homepage": "https://github.com/ssota-labs/faraday-academy",
   "repository": "https://github.com/ssota-labs/faraday-academy",
   "license": "SEE LICENSE IN LICENSE.md",
-  "keywords": ["education", "interactive-textbook", "scaffolder", "ai-tutor", "vite", "react"],
+  "keywords": ["education", "3d", "stem", "three.js", "r3f", "interactive-textbook"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Faraday",
-    "shortDescription": "Scaffold interactive textbooks + grounded AI tutors.",
+    "displayName": "3d-stem",
+    "shortDescription": "Fullscreen 3D STEM interactive textbooks.",
     "category": "Development"
   }
 }

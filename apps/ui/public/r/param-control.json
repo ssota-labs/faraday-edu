@@ -1,0 +1,16 @@
+{
+  "name": "param-control",
+  "type": "registry:ui",
+  "title": "Param Control",
+  "description": "Sparse HUD slider + readout for a single manipulable STEM parameter over a fullscreen 3D canvas.",
+  "dependencies": [
+    "react"
+  ],
+  "files": [
+    {
+      "path": "components/param-control.tsx",
+      "type": "registry:ui",
+      "content": "import { useId } from \"react\";\n\nexport type ParamControlProps = {\n  label: string;\n  value: number;\n  min?: number;\n  max?: number;\n  step?: number;\n  unit?: string;\n  onChange: (value: number) => void;\n};\n\n/**\n * Minimal education HUD control for fullscreen 3D lessons.\n * Designed to overlay a canvas — not dashboard chrome.\n */\nexport function ParamControl({\n  label,\n  value,\n  min = 0,\n  max = 100,\n  step = 1,\n  unit,\n  onChange,\n}: ParamControlProps) {\n  const id = useId();\n  return (\n    <div\n      style={{\n        display: \"flex\",\n        flexDirection: \"column\",\n        gap: 8,\n        minWidth: 200,\n        padding: \"12px 14px\",\n        background: \"rgba(8, 12, 24, 0.72)\",\n        border: \"1px solid rgba(232, 238, 252, 0.12)\",\n        backdropFilter: \"blur(8px)\",\n        color: \"#e8eefc\",\n        fontFamily: '\"Source Sans 3\", \"Segoe UI\", sans-serif',\n      }}\n    >\n      <label htmlFor={id} style={{ fontSize: 13, opacity: 0.9 }}>\n        {label}:{\" \"}\n        <strong>\n          {value}\n          {unit ? ` ${unit}` : \"\"}\n        </strong>\n      </label>\n      <input\n        id={id}\n        type=\"range\"\n        min={min}\n        max={max}\n        step={step}\n        value={value}\n        onChange={(e) => onChange(Number(e.target.value))}\n        aria-label={label}\n        style={{ width: \"100%\" }}\n      />\n    </div>\n  );\n}\n"
+    }
+  ]
+}

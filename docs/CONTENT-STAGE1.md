@@ -1,25 +1,23 @@
 # Stage 1 Soft Launch — Content drafts (#1–#3)
 
-> Soft-launch copy. Publish after Go/No-Go. Every post ends with the same CTA block.
+> **Historical (npm CLI era).** Active GTM/CTA: [gtm.mdx](content/docs/planning/gtm.mdx)
+> and the root README (`3d-stem` skill). Kept for audit trail only.
 
-## Fixed CTA (paste into every post)
+## Fixed CTA (paste into every post) — superseded
 
 ```text
-Install (Claude Code):
-  /plugin marketplace add ssota-labs/faraday-academy
-  /plugin install faraday@faraday
+Install:
+  npx skills add ssota-labs/faraday-academy
+  (skill name: 3d-stem)
 
 Then say:
-  “Turn this topic into an interactive Faraday lesson: <topic>.
-   Scaffold, author, run pnpm check and pnpm dev, then give me the URL.”
-
-Live demos:
-  S1 Compound interest — <DEMO_S1_URL>
-  C★ Voyage log — <DEMO_VOYAGE_URL>
-  Index — <DEMO_INDEX_URL>
+  “Make a fullscreen 3D STEM lesson on <topic>. Use 3d-stem —
+   scaffold, author, run check and pnpm dev, then give me the URL.”
 
 Repo: https://github.com/ssota-labs/faraday-academy
 ```
+
+~~Legacy CTA (`/plugin install faraday@faraday`, `npx @faraday-academy/cli`) is retired.~~
 
 Replace `<DEMO_*>` from [STAGE1-STATUS.md](STAGE1-STATUS.md) after Pages/Vercel deploy.
 

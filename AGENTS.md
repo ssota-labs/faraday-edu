@@ -2,24 +2,23 @@
 
 ## Cursor Cloud specific instructions
 
-This repo is the **Faraday Academy** monorepo (`@faraday-academy/*`): the `@faraday-academy/cli`
-scaffolder that stamps out minimal vinext + React interactive lessons, plus the runtime packages
-those lessons pin. It is a **pnpm workspace** (`apps/*`, `packages/*`; see
-`pnpm-workspace.yaml`). The workspace ships `apps/platform` (Next.js pack/block catalog) and
-`apps/labs` (internal Vite block dev surface). See `README.md` for the command reference.
+This repo is **Faraday Academy** — product surface is the **`3d-stem`** coding-agent
+skill that authors fullscreen 3D STEM interactive textbooks, plus an education UI
+**shadcn registry** at `apps/ui`. It is a **pnpm workspace** (`apps/*`, `packages/*`,
+`docs`; see `pnpm-workspace.yaml`). Legacy CLI/kit/LMS/pack packages are quarantined
+— see [`legacy/QUARANTINE.md`](legacy/QUARANTINE.md). Canonical intent lives under
+`docs/content/docs` (vision, GTM, PRD/SPEC/PLAN).
 
 ### Toolchain / dependencies
-- Node **v22** and **pnpm** (`pnpm@11.5.2`, pinned via `packageManager`) are pre-installed on the
-  base image. A committed root `pnpm-lock.yaml` + `pnpm-workspace.yaml` drive a single
-  `pnpm install` at the repo root that links all workspace projects. The `@faraday-academy/*`
-  packages are published on npm (currently `0.3.0` for the simplified surface).
+- Node **v22** and **pnpm** (`pnpm@11.5.2`, pinned via `packageManager`) are pre-installed.
+  A committed root `pnpm-lock.yaml` + `pnpm-workspace.yaml` drive `pnpm install` at the repo root.
 - **No committed `.cursor/environment.json`** — if that file is in git, Cursor disables **Runtime
   Secrets** on the environment dashboard (*"managed by environment.json"*). Configure the **update
   script** and secrets in [Cloud Agents → your environment](https://cursor.com/dashboard?tab=cloud-agents)
   instead; see [`.cursor/README.md`](.cursor/README.md).
-- There is **no ESLint/Prettier**; the lint-equivalent gate is `typecheck` (tsc). Run per package,
-  e.g. `pnpm --filter @faraday-academy/kit typecheck` (also `lms`, `ui`, `platform`, and
-  `@faraday-academy/labs`). The CLI is plain `.mjs` — no typecheck, covered by its unit tests.
+- There is **no ESLint/Prettier**; the lint-equivalent gate is `typecheck` (tsc) on remaining apps.
+  Prefer `pnpm --filter @faraday-academy/edu-ui typecheck`. Skill scripts are plain `.mjs` covered by
+  `node --test skills/3d-stem/scripts/*.test.mjs`.
 
 ### Secrets → `.env.local` on startup
 **Do not commit `.cursor/environment.json`** if you need dashboard Runtime Secrets — Cursor
@@ -38,52 +37,38 @@ locks secret editing when install/start are code-managed (see `.cursor/README.md
    (git-ignored, names-only logs). Re-run: `pnpm setup:env`. After adding/changing secrets,
    run **Start Setup Agent → Update Existing Env** so the VM picks them up.
 
-### Running / testing the CLI (from repo root)
-- Tests: `node --test packages/cli/src/*.test.mjs` (Node's built-in runner; no ports, no services).
-- Scaffold a lesson: `node packages/cli/bin/faraday.mjs new <name>` — this shells out to `pnpm install`
-  inside the generated lesson (needs npm-registry access). Skip installing with
-  `--skip-install` or `FARADAY_SKIP_INSTALL=1` (handy in CI / offline).
-- Verify a lesson: `node packages/cli/bin/faraday.mjs check --dir <lesson>` (layout + exact pins).
-- Module packs: `pack list [--json]` · `block list [--json]` · `pack add <name|source> [--dir]`
-  (source = official name · `./path` · `owner/repo` · `npm:<spec>`) · `pack remove <name>` ·
-  `pack show <name|source>` · `pack validate <name|source>` ·
-  `pack new <name> [--kind skill|copy|runtime]`. `faraday new` scaffolds a minimal vinext lesson
-  with **no packs pre-installed** — install explicitly with `faraday pack add`.
-- Exit codes: `0` ok · `1` check failed · `2` usage error · `4` environment error.
+### Product path — `3d-stem` skill
+- Canonical skill: `skills/3d-stem/` (`SKILL.md`, `scripts/`, `references/`, `templates/`).
+- Mirror into plugins: `pnpm sync:skills` / `pnpm sync:skills:check`.
+- Scaffold: `node skills/3d-stem/scripts/stem.mjs scaffold <name> [--json] [--skip-install]`
+- Check: `node skills/3d-stem/scripts/stem.mjs check --dir <lesson> [--json]`
+- Tests: `node --test skills/3d-stem/scripts/*.test.mjs`
+- Exit codes: `0` ok · `1` check failed · `2` usage · `4` environment.
+- Lessons must **not** depend on published `@faraday-academy/*` runtime packages.
+- Optional HUD UI: `pnpm --filter @faraday-academy/edu-ui dev` (port **4300**) + shadcn registry
+  under `/r/*.json`.
 
-### Labs dev app (`apps/labs`)
-- The one long-running service in this repo. Run `pnpm --filter @faraday-academy/labs dev`
-  (Vite, fixed port **4200**, `--host`) to preview every runtime block live, then open
-  `http://localhost:4200/`. `build`/`preview`/`typecheck` scripts exist too. It previews the
-  `packages/kit` source directly via the `@/faraday` alias, so runtime edits hot-reload here.
+### Education UI registry (`apps/ui`)
+- Long-running browse surface for education components + registry JSON.
+- `pnpm --filter @faraday-academy/edu-ui registry:build` regenerates `public/r/`.
 
-### Working inside a generated lesson
-- `pnpm check` (structure + pin gates), `pnpm typecheck`, `pnpm build`, `pnpm dev`.
-- Author in `src/lesson/**`. The runtime is pinned `@faraday-academy/kit` + `@faraday-academy/ui`,
-  not vendored — `faraday check` verifies the layout + exact pins.
+### Legacy (not product)
+- `packages/cli`, `kit`, `lms`, `official-packs`, `registry`, `apps/platform`, `apps/labs` —
+  quarantined. Do not document `npx @faraday-academy/cli` or `faraday pack add` as supported.
+- `pnpm publish:packages` refuses (skill-first release, not npm suite).
 
-## Architecture — two-layer module map
+## Architecture — skill-first
 
-Faraday is modular on **two layers at once**; extending it means adding a **module pack** that
-touches both. Keep the two in sync — new runtime code without matching skill knowledge is
-invisible to the agent, and vice versa.
+```
+skills/3d-stem/          product body
+plugins/*/skills/3d-stem marketplace mirrors
+apps/ui/                 education UI + shadcn registry
+docs/content/docs/       Oh My Docs handbook
+```
 
-**Runtime layer** — `packages/*`, pinned as `@faraday-academy/*` by generated lessons:
-- `kit/blocks/` — lesson blocks (layout, controls, assessment, explanation).
-- `kit/runtime/` — `course`, `stepper`, `theme-provider`.
-- `ui/` — shadcn/Base UI primitives and theme CSS.
-- `lms/` — optional recorder + dashboard (separate package).
-- `registry/` — generated pack/block catalog for CLI and `apps/platform`.
+Dependency direction for changes:
 
-**Skill layer** — `plugins/claude-code/skills/faraday/` (mirrored under `plugins/codex/`):
-- `SKILL.md` front door pulls in `references/*.md` per phase: `discovery` `curriculum`
-  `learning-design` `interactive-design` `assessment` `design` `quality-bar` `blocks` `packs`.
-
-**Module packs** live in `packages/official-packs/<category>/<name>/` (contract:
-`packages/official-packs/pack.schema.json`) and bind the two layers via `pack.json`.
-`faraday pack add <name|source>` installs both halves into a lesson. Official packs are
-bundled into the CLI at `prepack` and catalogued in `@faraday-academy/registry`. Install
-explicitly — `faraday new` ships none by default. See [`specs/module-packs.md`](specs/module-packs.md).
+`product vision → PRD → story → specification/ADR → implementation plan → code`
 
 <!-- oh-my-docs:start -->
 # Oh My Docs

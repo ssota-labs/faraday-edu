@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Faraday catalog — explore blocks, packs, examples, and compatibility.",
+  "description": "LEGACY quarantine — pack/block catalog; not the 3d-stem product path.",
   "engines": {
     "node": ">=22"
   },

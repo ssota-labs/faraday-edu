@@ -1,15 +1,17 @@
 {
   "name": "faraday",
   "private": true,
-  "description": "Faraday monorepo — the @faraday-academy/cli scaffolder, the runtime + addon packages lessons pin, and the platform catalog.",
+  "description": "Faraday Academy — 3d-stem skill for fullscreen 3D STEM textbooks + education UI shadcn registry.",
   "scripts": {
-    "test": "pnpm --filter @faraday-academy/cli test && node --test scripts/setup-env-local.test.mjs",
-    "test:cli": "pnpm --filter @faraday-academy/cli test",
-    "typecheck": "pnpm --filter @faraday-academy/ui typecheck && pnpm --filter @faraday-academy/kit typecheck && pnpm --filter @faraday-academy/lms typecheck && pnpm --filter @faraday-academy/labs typecheck && pnpm --filter @faraday-academy/platform typecheck",
+    "test": "node --test skills/3d-stem/scripts/*.test.mjs && node --test scripts/setup-env-local.test.mjs",
+    "test:stem": "node --test skills/3d-stem/scripts/*.test.mjs",
+    "test:legacy:cli": "pnpm --filter @faraday-academy/cli test",
+    "typecheck": "pnpm --filter @faraday-academy/edu-ui typecheck",
+    "typecheck:legacy": "pnpm --filter @faraday-academy/ui typecheck && pnpm --filter @faraday-academy/kit typecheck && pnpm --filter @faraday-academy/lms typecheck && pnpm --filter @faraday-academy/labs typecheck && pnpm --filter @faraday-academy/platform typecheck",
     "harness:docs": "node scripts/harness/check-docs.mjs",
     "harness:boundaries": "node scripts/harness/check-boundaries.mjs",
-    "verify:quick": "pnpm harness:docs && pnpm harness:boundaries && pnpm typecheck && pnpm test",
-    "verify:final": "pnpm verify:quick && pnpm e2e:ci",
+    "verify:quick": "pnpm sync:skills:check && pnpm check:planning && pnpm typecheck && pnpm test",
+    "verify:final": "pnpm verify:quick",
     "e2e": "bash scripts/e2e-report.sh",
     "e2e:ci": "bash scripts/e2e-report.sh --no-report",
     "e2e:prepare": "pnpm exec supabase start && pnpm db:migrate && pnpm db:seed",
@@ -29,7 +31,10 @@
     "stage1:cold-e2e": "node scripts/stage1-cold-e2e.mjs",
     "check:planning": "node .agents/skills/oh-my-doc/scripts/omd.mjs check",
     "docs:dev": "pnpm --filter docs dev",
-    "docs:build": "pnpm --filter docs build"
+    "docs:build": "pnpm --filter docs build",
+    "ui:dev": "pnpm --filter @faraday-academy/edu-ui dev",
+    "stem:scaffold": "node skills/3d-stem/scripts/stem.mjs scaffold",
+    "stem:check": "node skills/3d-stem/scripts/stem.mjs check"
   },
   "devDependencies": {
     "supabase": "^2.105.0"

@@ -1,12 +1,12 @@
 {
-  "name": "faraday",
+  "name": "faraday-academy",
   "interface": {
-    "displayName": "Faraday",
-    "shortDescription": "Scaffold interactive textbooks + grounded AI tutors from a Codex session."
+    "displayName": "Faraday Academy",
+    "shortDescription": "3d-stem — fullscreen 3D interactive STEM textbooks from a Codex session."
   },
   "plugins": [
     {
-      "name": "faraday",
+      "name": "3d-stem",
       "source": { "source": "local", "path": "./plugins/codex" },
       "category": "Development"
     }
