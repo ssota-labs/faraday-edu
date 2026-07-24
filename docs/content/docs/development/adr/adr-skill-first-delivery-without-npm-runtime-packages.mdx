@@ -1,0 +1,51 @@
+---
+title: Skill-first delivery without npm runtime packages
+description: Deliver Faraday Academy as the 3d-stem skill plus shadcn registry UI; do not ship a public npm CLI/runtime product.
+type: decision
+summary: Product distribution is skill-bundled scripts and a shadcn registry — not @faraday-academy npm packages.
+id: ADR-skill-first-delivery-without-npm-runtime-packages
+ticker: ADR-001
+stage: accepted
+related:
+  - /docs/spec/spec-3d-stem-skill-and-distribution-contract
+  - /docs/planning/prds/prd-3d-stem-interactive-textbook-skill
+---
+
+## Context
+
+Faraday Academy previously published `@faraday-academy/{cli,kit,ui,lms}` and
+asked generated lessons to pin those packages. That created cold-start friction,
+version coupling, and a wide product surface. Meanwhile img2threejs and Oh My
+Docs showed a sharper pattern: **the skill is the product**, scripts live inside
+the skill, and users do not need a public CLI.
+
+We are also narrowing the wedge to fullscreen 3D STEM textbooks and want
+education UI to follow the **shadcn registry** model.
+
+## Decision
+
+1. **Skill-first:** Canonical delivery is `skills/3d-stem` with bundled scripts.
+   Agents invoke those scripts; there is no required human-facing public CLI.
+2. **No npm runtime product path:** Do not publish `@faraday-academy/*` CLI/kit/ui/lms
+   as the supported way to build lessons.
+3. **UI via shadcn registry:** Education components are browsed in `apps/` and
+   installed by registry copy, not `npm install` of a Faraday UI package.
+4. **Repo name stays** `faraday-academy`; **skill name is** `3d-stem`.
+
+## Consequences
+
+- Templates vendor or generate local code; they do not pin Faraday npm runtimes.
+- Release process versions the skill (and registry app), not an npm suite.
+- Existing 0.3.0 consumers are legacy; migration is best-effort / out of v1.
+- Pedagogy content must be rewritten into the skill `references/`, not left only
+  in old plugin trees.
+
+## Rejected alternatives
+
+- **Keep npm CLI + kit pins, only rename skill** — rejected: preserves the main
+  friction and wide surface the pivot is meant to cut.
+- **Oh My Docs-style UI template copy only (no registry)** — rejected for Faraday
+  UI: we explicitly want a browsable education component library / registry site.
+- **Rename repo to 3d-stem** — rejected: keep org/repo continuity; rename skill only.
+- **Retain LMS as optional package** — rejected for v1 sharpness; reintroduce only
+  under a future PRD.

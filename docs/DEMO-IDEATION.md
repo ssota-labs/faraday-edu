@@ -1,6 +1,6 @@
 # Faraday — 데모 아이디에이션
 
-> 짝: [LAUNCH-STAGE1.md](LAUNCH-STAGE1.md) · [GTM.md](GTM.md)
+> 짝: [LAUNCH-STAGE1.md](LAUNCH-STAGE1.md) · [gtm.mdx](content/docs/planning/gtm.mdx)
 >
 > 목적: 런칭용 **라이브 데모** 후보를 고른다. 단편(레슨 1개)으로 Wow를 찍고,
 > 커리큘럼(맵/월드)으로 “딸깍으로 코스까지”를 증명한다.

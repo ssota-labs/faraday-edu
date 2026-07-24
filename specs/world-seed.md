@@ -1,6 +1,7 @@
 # 커리큘럼 / 월드 씨앗 — 설계 (spec, draft)
 
-> 짝 문서: [../VISION.md](../docs/VISION.md)(아키텍처) · [../GTM.md](../docs/GTM.md)(고객).
+> 짝 문서: [vision](../docs/content/docs/vision.mdx)(아키텍처) ·
+> [gtm](../docs/content/docs/planning/gtm.mdx)(고객). Historical STEM stack note.
 > 목적: 낱개 레슨을 **탐험 가능한 커리큘럼**으로 묶되, 선형 코스부터 자유도 높은 게임
 > 월드까지를 **갈아끼우는 스킬팩(헥사고날)**으로 지원한다. 코어는 고정, 월드는 어댑터.
 

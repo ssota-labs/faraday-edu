@@ -1,4 +1,7 @@
 {
   "title": "ADRs",
-  "pages": ["index"]
+  "pages": [
+    "index",
+    "adr-skill-first-delivery-without-npm-runtime-packages"
+  ]
 }

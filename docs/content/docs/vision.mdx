@@ -1,36 +1,108 @@
 ---
 title: Product vision
-description: Faraday turns courses teachers already run into interactive textbooks with grounded AI tutors.
+description: Faraday Academy builds fullscreen 3D interactive STEM textbooks through the 3d-stem coding-agent skill.
 type: conceptual
-summary: Scaffold interactive textbooks from agent sessions, then grow into a platform with quality gates at every layer.
+summary: One skill, one job — visual STEM understanding in fullscreen 3D — with education UI via shadcn registry.
 related:
-  - /docs/planning/prds
+  - /docs/planning/gtm
+  - /docs/planning/prds/prd-3d-stem-interactive-textbook-skill
   - /docs/workflow/planning
   - /docs/starting
 ---
 
-## Vision
+> Status: **active draft** · Replaces the prior CLI → LMS → platform stack narrative.
+> Planning graph: [PRD-001](/docs/planning/prds/prd-3d-stem-interactive-textbook-skill) ·
+> [SPEC-001](/docs/spec/spec-3d-stem-skill-and-distribution-contract) ·
+> [PLAN-001](/docs/development/plans/plan-pivot-faraday-academy-to-3d-stem)
+>
+> Inspiration: [img2threejs](https://github.com/hoainho/img2threejs) (skill = product + gated loop) ·
+> [oh-my-docs](https://github.com/ssota-labs/oh-my-docs) (no public CLI; bundled skill runtime).
+>
+> Go-to-market: [GTM](/docs/planning/gtm).
 
-Faraday helps teachers turn existing course materials into interactive textbooks
-with grounded AI tutors. Authors work with a coding agent: drop in lesson
-content, and the Faraday CLI scaffolds a vinext + React lesson pinned to the
-`@faraday-academy/*` runtime.
+## One-liner
 
-Deeper product and architecture notes live in the project-owned
-[`docs/VISION.md`](../../../VISION.md) (Korean). That file is the historical
-source of truth for Stage 1/2 direction; planning artifacts under this handbook
-should stay aligned with it.
+**Already teaching a STEM idea? Ask your coding agent. Get a fullscreen 3D
+interactive textbook you can manipulate.**
+
+Repo stays `faraday-academy`. Skill name is **`3d-stem`**.
+
+## What we are (and are not)
+
+| We are | We are not (v1) |
+|---|---|
+| A coding-agent **skill** that authors fullscreen 3D STEM lessons | An LMS (roster, grades, cohorts) |
+| A quality-gated authoring **loop** (scripts + agent judgment) | A hosted platform / payments / marketplace |
+| An **education UI** library via **shadcn registry** | An npm `@faraday-academy/*` runtime pin model |
+| Visual understanding for science · engineering · math · CS | Slide decks, multi-view course shells, tutor SaaS |
+
+## Why this shape
+
+img2threejs showed that putting scripts + knowledge **inside one skill** works
+when the job is sharp. Oh My Docs applied the same idea to docs-first tooling
+and dropped the public npm CLI.
+
+Faraday’s previous surface (CLI publish, kit pins, packs, LMS, platform roadmap)
+was the opposite of sharp. The pivot keeps the valuable parts — agent workflow,
+pedagogy references, 3D craft — and cuts everything else.
+
+### Division of labor (from img2threejs)
+
+| Layer | Owns |
+|---|---|
+| Deterministic skill scripts | Scaffold, schema/structure gates, pass unlock, check |
+| Agent | Topic framing, pedagogy choices, 3D clarity judgment, code authorship |
+| shadcn registry | Optional education UI pieces copied into the lesson |
+| Showcase app (later) | Live demos / gallery — marketing = product |
+
+## Target architecture
+
+```
+ssota-labs/faraday-academy
+├─ skills/3d-stem/          ← product body (SKILL + scripts + references + templates)
+├─ plugins/*/skills/3d-stem ← marketplace mirrors
+├─ apps/
+│  ├─ ui/ (or registry)     ← education component library + shadcn registry
+│  └─ showcase/             ← fullscreen 3D lesson gallery
+└─ docs/content/docs/       ← Oh My Docs handbook (vision, GTM, planning)
+```
+
+Legacy packages (`cli`, `kit`, `lms`, `official-packs`, npm publish scripts) are
+removed or quarantined under PLAN-001 — not part of the product path.
+
+## Authoring loop (skill)
+
+1. **Intake** — topic, level, “what should click?”
+2. **Learning design** — outcomes, misconceptions, interaction thesis
+3. **Scene spec** — 3D model of the idea, controls, feedback
+4. **Scaffold** — template → local lesson project
+5. **Build passes** — blockout → structure → interaction → readability → polish
+6. **Verify** — scripted `check` + preview review
+7. **Share** — local preview / static host (no Faraday platform required)
+
+Pedagogy materials from the old Faraday skill are **rewritten into**
+`skills/3d-stem/references/` and loaded progressively — they must not drag LMS
+scope back in.
+
+## UI strategy
+
+- Education-oriented components (controls, readouts, light HUD) live in the
+  monorepo and are documented like a component library.
+- Install path: **shadcn registry** (copy), not `npm install @faraday-academy/ui`.
+- Fullscreen immersion wins: registry components must not force dashboard chrome.
 
 ## Principles
 
-1. Intent precedes implementation — PRD → story → spec/ADR → plan → code.
-2. Seed + gate: maximum authoring freedom, locked runtime contracts and checks.
-3. Stable IDs connect planning artifacts without coupling them to filenames.
-4. Human review decides product quality; automation checks structural integrity.
-5. Documentation and agent-readable Markdown are two views of the same source.
+1. **One job** — fullscreen 3D STEM lessons; not an LMS or course marketplace.
+2. **Skill-first** — scripts enforce gates; the agent judges clarity and pedagogy.
+3. **Pedagogy on demand** — learning-design references load when relevant.
+4. **Registry UI, not npm UI** — copy components into the lesson when needed.
+5. **Intent precedes implementation** — PRD → story → spec/ADR → plan → code.
 
-## Not yet in this handbook
+## Historical note
 
-Existing Faraday markdown under `docs/*.md` (VISION, GTM, launch notes, images)
-remains project-owned. Prefer linking or importing into catalog pages rather
-than duplicating it by hand.
+Earlier docs described Phase 0 CLI kit completion and GTM Stages 1–4 toward a
+mirror-dimension-style education platform (LMS, managed tutor AI, Connect
+payments). That roadmap is **superseded** by this pivot. Soft-launch notes under
+`docs/LAUNCH-STAGE1.md` / `docs/STAGE1-STATUS.md` refer to the npm `0.3.0` era
+and should be treated as historical until rewritten or archived.

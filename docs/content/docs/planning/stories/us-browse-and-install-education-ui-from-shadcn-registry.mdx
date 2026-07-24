@@ -1,0 +1,36 @@
+---
+title: Browse and install education UI from shadcn registry
+description: Authors discover education-oriented UI in an in-repo library site and install pieces via shadcn registry.
+type: conceptual
+summary: Education components ship as a shadcn registry backed by an apps/ library site, not as npm runtime packages.
+id: US-browse-and-install-education-ui-from-shadcn-registry
+ticker: US-002
+related:
+  - /docs/planning/prds/prd-3d-stem-interactive-textbook-skill
+---
+
+As a lesson author or agent, I want to browse education UI components and add
+only what a lesson needs so that 3D STEM lessons share consistent controls and
+readouts without depending on a published npm component library.
+
+## Context
+
+UI distribution follows the shadcn model: source components live in the monorepo,
+are documented in an `apps/` site, and are copied into consumer projects via
+registry install. This replaces `@faraday-academy/ui` npm publish as the product
+path.
+
+## Acceptance criteria
+
+- An `apps/` surface presents education components (catalog / docs style).
+- Components relevant to 3D STEM lessons (controls, readouts, overlays that do
+  not break fullscreen immersion) are registry-installable.
+- Install path does not require `npm install @faraday-academy/ui`.
+- The `3d-stem` skill documents when and how to pull registry components during
+  authoring.
+
+## Out of scope
+
+- Building a general-purpose design system unrelated to STEM lessons
+- Hosting a commercial component marketplace
+- Requiring every lesson to install the full component set

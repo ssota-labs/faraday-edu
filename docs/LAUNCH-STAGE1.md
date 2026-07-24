@@ -1,6 +1,10 @@
 # Faraday — GTM Stage 1 런칭 계획
 
-> 기준일: **2026-07-12** (갱신) · 짝 문서: [GTM.md](GTM.md) · [VISION.md](VISION.md) · [DEMO-IDEATION.md](DEMO-IDEATION.md)
+> **Historical (npm CLI soft-launch).** Active GTM is the
+> [3d-stem pivot](content/docs/planning/gtm.mdx).
+>
+> 기준일: **2026-07-12** (갱신) · 짝 문서: [gtm.mdx](content/docs/planning/gtm.mdx) ·
+> [vision.mdx](content/docs/vision.mdx) · [DEMO-IDEATION.md](DEMO-IDEATION.md)
 >
 > **한 줄:** Stage 1 “배포” = **스킬(플러그인) + npm 패키지 스위트**를 얼리어답터 제작자 손에 넣는 것.
 > 유저는 콘텐츠로 유입되고, Claude Code / Codex에서 스킬을 설치·테스팅하며,
@@ -28,7 +32,7 @@
 ### 성공 정의 (Launch Done)
 외부 제작자 1명이 **콘텐츠를 보고** → **Claude Code 또는 Codex에 Faraday 스킬을 설치**하고 → **자기 주제 레슨 1개를 scaffold→author→check→dev**까지 돌리고 → **배포된 데모 URL**을 열어볼 수 있다.
 
-### North Star (GTM.md 정렬, soft launch)
+### North Star (historical GTM alignment, soft launch)
 - **L0:** 스킬 설치 성공 + 첫 레슨 생성 성공 (dogfood ≥3)
 - **L1 (런칭 후 1주):** 외부 제작자 ≥5명이 레슨 1개 완성
 - **L2 (검증 게이트):** 풀 코스 1개 실제 배포 + 학생 인게이지 + 재제작(retention)

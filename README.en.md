@@ -88,7 +88,7 @@ The chat path is usually easier — the skill also picks blocks, packs, and qual
 A **scaffolder** that turns a plain-language ask into a self-contained Vite + React lesson the reader *manipulates* — optionally with a grounded **AI tutor**, 3D, quizzes, and curriculum worlds.  
 For tutors, TAs, teachers, and course authors who already run a coding agent.
 
-Architecture / strategy: [VISION.md](docs/VISION.md) · [GTM.md](docs/GTM.md)
+Architecture / strategy: [vision](docs/content/docs/vision.mdx) · [GTM](docs/content/docs/planning/gtm.mdx)
 
 ---
 
@@ -202,7 +202,7 @@ Underneath, each of these is a **module** you can mix. Here's the detail.
 
 Faraday closes the feature set **horizontally** at Stage 1 — every layer works
 today under BYOK / self-deploy. Later stages remove friction (managed AI,
-multi-tenancy, payments), they don't add features. (See [VISION.md](docs/VISION.md) §2.)
+multi-tenancy, payments), they don't add features. (See [vision](docs/content/docs/vision.mdx).)
 
 Each layer is a **module** — a pinned `@faraday-academy/*` package (or a
 sub-module inside `runtime`) that your agent composes. The runtime ships ~24
@@ -466,8 +466,8 @@ Faraday is the **build-time** half of a two-AI system: a *creation AI* authors
 courseware now (what the plugins drive); a *tutor AI* teaches students at runtime
 (what the tutor pack embeds). The platform phase adds managed AI (Vercel AI Gateway),
 multi-tenancy (Vercel Platforms), and creator↔student payments — turning the
-open-core CLI into a three-sided marketplace. Read [VISION.md](docs/VISION.md) and
-[GTM.md](docs/GTM.md) for the full arc.
+open-core CLI into a three-sided marketplace. Read [vision](docs/content/docs/vision.mdx) and
+[GTM](docs/content/docs/planning/gtm.mdx) for the full arc.
 
 ---
 

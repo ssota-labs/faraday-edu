@@ -1,4 +1,12 @@
 {
   "title": "Handbook",
-  "pages": ["index", "vision", "starting", "workflow", "planning", "development", "spec"]
+  "pages": [
+    "index",
+    "vision",
+    "starting",
+    "workflow",
+    "planning",
+    "development",
+    "spec"
+  ]
 }

@@ -1,6 +1,6 @@
 # 튜터 AI — 설계 (spec, draft)
 
-> 짝: [../VISION.md](../docs/VISION.md) · [world-seed.md](world-seed.md).
+> 짝: [vision](../docs/content/docs/vision.mdx) · [world-seed.md](world-seed.md).
 > 참조 아키텍처: `../mirror-dimension` (교육판이 따라야 할 정본 스택).
 > **제약(사용자 확정)**: 챗봇은 **무조건 mirror-dimension의 Vercel AI SDK 설계 + 챗 UI 컴포넌트**를
 > 따른다(추후 우리 Vercel 배포에 연결). 로컬에서도 동작해야 하고, **workflow agent loop로 durable**하게.

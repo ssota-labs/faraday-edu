@@ -1,0 +1,42 @@
+---
+title: Author a fullscreen 3D STEM lesson via 3d-stem skill
+description: An author asks a coding agent for a 3D STEM lesson and gets a gated, previewable fullscreen interactive textbook.
+type: conceptual
+summary: Install 3d-stem, describe a STEM concept, and leave with a quality-gated fullscreen 3D lesson.
+id: US-author-a-fullscreen-3d-stem-lesson-via-3d-stem-skill
+ticker: US-001
+related:
+  - /docs/planning/prds/prd-3d-stem-interactive-textbook-skill
+---
+
+As a STEM tutor or content author who already uses a coding agent, I want to
+describe a concept in plain language and get a fullscreen 3D interactive
+textbook so that learners can see and manipulate the idea instead of reading
+static slides.
+
+## Context
+
+Delivery is skill-first (`3d-stem`), following the img2threejs loop: scripts
+enforce structure and gates; the agent judges visual clarity and pedagogy.
+Templates and skill body are greenfield — not a rename of the old Faraday skill.
+
+## Acceptance criteria
+
+- Agent can install the skill from `ssota-labs/faraday-academy` under the name
+  `3d-stem`.
+- Given a topic (e.g. orbital mechanics, binary search tree, Maxwell’s equations
+  visualization), the skill scaffolds a lesson project from the new template.
+- The authored surface is a **fullscreen 3D** interactive experience (R3F/Three
+  or equivalent), not a multi-panel LMS shell.
+- A deterministic skill script gate fails closed on missing structure / broken
+  contracts before preview is declared done.
+- Pedagogy references (learning goals, misconception handling, interaction
+  affordances) are consulted during authoring when relevant.
+- Author can run a local preview without installing any `@faraday-academy/*`
+  npm package as a product dependency.
+
+## Out of scope
+
+- Student roster, grades, tutor chat runtime product
+- Course maps / open-world curriculum shells
+- Public npm CLI entrypoint for humans

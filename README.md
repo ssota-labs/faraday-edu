@@ -75,7 +75,7 @@ CLI가 필요한 블록·팩을 프로젝트의 `.faraday/`에 설치한 뒤 품
 말하는 대로 **조작 가능한 수업 앱**(Vite + React)을 만들고, 원하면 **AI 튜터**·3D·퀴즈·커리큘럼까지 붙입니다.
 대상: 이미 코딩 에이전트를 쓰는 튜터·조교·교사·강의 저자.
 
-비전·로드맵: [VISION.md](docs/VISION.md) · [GTM.md](docs/GTM.md)
+비전·로드맵: [vision](docs/content/docs/vision.mdx) · [GTM](docs/content/docs/planning/gtm.mdx)
 
 ---
 
@@ -198,7 +198,7 @@ flowchart LR
 Faraday는 Stage 1에서 저작 기능 셋을 **수평적으로** 닫습니다 — 블록·팩·로컬
 LMS·BYOK Tutor가 셀프 배포 환경에서 동작합니다. 이후 단계는 UI 기능을 다시
 만들기보다 여러 Site가 공유할 LMS 정본과 관리형 Tutor 운영을 추가합니다.
-([VISION.md](docs/VISION.md) §2 참고.)
+([vision](docs/content/docs/vision.mdx) 참고.)
 
 각 레이어는 하나의 **모듈**입니다 — 에이전트가 조합하는, pin된
 `@faraday-academy/*` 패키지(또는 `runtime` 안의 서브모듈). 런타임은 수업 블록
@@ -475,8 +475,8 @@ AI Tutor runtime을 공통으로 제공합니다.
    확인될 때만 자체 preview·artifact·rollback 인프라를 만듭니다.
 
 핵심 포지셔닝은 **“어떤 에이전트로 레슨을 만들어도, 진도·평가·AI 튜터는
-Faraday로 연결한다”**입니다. 전체 흐름은 [VISION.md](docs/VISION.md)와
-[GTM.md](docs/GTM.md)를 읽어보세요.
+Faraday로 연결한다”**입니다. 전체 흐름은 [vision](docs/content/docs/vision.mdx)과
+[GTM](docs/content/docs/planning/gtm.mdx)를 읽어보세요.
 
 ---
 

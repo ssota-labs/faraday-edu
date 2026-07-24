@@ -302,11 +302,9 @@
     "projectOwned": [
       "docs/CONTENT-STAGE1.md",
       "docs/DEMO-IDEATION.md",
-      "docs/GTM.md",
       "docs/LAUNCH-STAGE1.md",
       "docs/STAGE1-STATUS.md",
       "docs/VERCEL-DEMOS.md",
-      "docs/VISION.md",
       "docs/images",
       "packages/ui"
     ]

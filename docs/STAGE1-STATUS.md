@@ -1,5 +1,10 @@
 # Stage 1 Soft Launch — execution status
 
+> **Historical (npm `0.3.0` era).** Superseded by the
+> [3d-stem pivot vision](content/docs/vision.mdx)
+> ([PRD-001](content/docs/planning/prds/prd-3d-stem-interactive-textbook-skill.mdx)).
+> Kept for audit trail only.
+>
 > Updated after Phase 1 registry reset (`0.3.0`). Pair with [LAUNCH-STAGE1.md](LAUNCH-STAGE1.md).
 
 ## Gates
