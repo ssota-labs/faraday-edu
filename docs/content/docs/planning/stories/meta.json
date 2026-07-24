@@ -1,4 +1,8 @@
 {
   "title": "User stories",
-  "pages": ["index"]
+  "pages": [
+    "index",
+    "us-author-a-fullscreen-3d-stem-lesson-via-3d-stem-skill",
+    "us-browse-and-install-education-ui-from-shadcn-registry"
+  ]
 }

@@ -1,4 +1,7 @@
 {
   "title": "PRDs",
-  "pages": ["index"]
+  "pages": [
+    "index",
+    "prd-3d-stem-interactive-textbook-skill"
+  ]
 }

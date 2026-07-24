@@ -1,174 +1,102 @@
-# Faraday — 비전 & 아키텍처
+# Faraday Academy — Vision (3d-stem pivot)
 
-> 상태: draft · 이 문서는 지금까지의 개발 정리 + 플랫폼 방향 설계다.
-> 뿌리: [ssota](https://github.com/ssota-labs/ssota)의 "외부 Studio Seed → 플랫폼" 명제를
-> **교육(인터랙티브 텍스트북)** 도메인으로 realize한 것.
-> 호스티드 Studio UX는 [mirror-dimension](https://github.com/ssota-labs/mirror-dimension) Stage 2+의
-> 교육판(코스 = dimension). 인프라·harness·WDK 패턴은 ssota `studio-*` 패키지를 따른다.
-> 플랫폼 구현 정본: [STAGE2-PLATFORM.md](STAGE2-PLATFORM.md) (§4 SSOTA 정렬 · §4.9 채팅 표면)
-
----
-
-## 0. 지금까지 (CLI 페이즈 — 완료)
-
-`faraday` CLI = toolcraft식 **외부 Studio Seed**. 클로드 코드(제작 AI)가 깨끗한 세션에서
-CLI로 각 Vite 레슨을 만든다. 자기완결 벤더링 + SHA-256 무결성 매니페스트 + 퀄리티 게이트.
-
-- **2D 텍스트북**: shadcn 기반 블록 15종(Workbench/ControlGroup/Chart/Quiz/Scrubber/Stat…),
-  디자인/테마 토큰 분리, 도메인 무드
-- **워크벤치**: 좌 캔버스 + 우 플로팅 그룹 컨트롤 패널 (mirror-dimension의 canvas+controlDock)
-- **3D (opt-in `--3d`)**: R3F Scene3D + procedural 헬퍼 + `useGLTF` 에셋 로더 + 도메인 무드
-  (우주=별필드, 세포=발광안개) — **procedural-first, asset-fallback**
-- **물리 (opt-in `--physics`)**: Rapier 중력/충돌
-- **커리큘럼 씨앗**: `<Course>` (챕터 네비 + prev/next + #hash)
-- 클린 세션 서브에이전트로 전 플로우 재검증 완료
-
-**핵심 성취**: "엄청난 자유도를 열어두되(Seed) 핵심 연동과 게이트는 빡세게 잠근다"는
-패턴이 실제로 동작함이 검증됨. 나머지 레이어는 전부 이 패턴의 반복이다.
+> Status: **active draft** · Replaces the prior CLI → LMS → platform stack narrative.
+> Planning graph: [PRD-001](content/docs/planning/prds/prd-3d-stem-interactive-textbook-skill.mdx) ·
+> [SPEC-001](content/docs/spec/spec-3d-stem-skill-and-distribution-contract.mdx) ·
+> [PLAN-001](content/docs/development/plans/plan-pivot-faraday-academy-to-3d-stem.mdx)
+>
+> Inspiration: [img2threejs](https://github.com/hoainho/img2threejs) (skill = product + gated loop) ·
+> [oh-my-docs](https://github.com/ssota-labs/oh-my-docs) (no public CLI; bundled skill runtime).
 
 ---
 
-## 1. 관통 원리 — 재귀적 Studio Seed + Quality Gate
+## 0. One-liner
 
-모든 레이어가 같은 4요소로 구성된다:
+**Already teaching a STEM idea? Ask your coding agent. Get a fullscreen 3D
+interactive textbook you can manipulate.**
 
-| 요소 | 의미 |
+Repo stays `faraday-academy`. Skill name is **`3d-stem`**.
+
+---
+
+## 1. What we are (and are not)
+
+| We are | We are not (v1) |
 |---|---|
-| **벤더링된 잠긴 런타임** | 핵심 기능·계약. 에이전트가 못 건드림 (무결성 게이트로 봉인) |
-| **자유 저작 영역** | 제작자/제작AI가 마음껏 만드는 곳 |
-| **핵심 연동 계약** | 자유 영역이 반드시 지켜야 할 인터페이스 (임베딩/상태/이벤트) |
-| **퀄리티 게이트** | 배포 전 통과해야 하는 검증 (티어별) |
-
-> 레슨 씨앗(완료) → 커리큘럼/월드 씨앗 → 튜터-스킬 씨앗 → LMS 씨앗.
-> 전부 "toolcraft식 씨앗"이다. 자유도는 최대, 코어와 게이트는 최소·강제.
+| A coding-agent **skill** that authors fullscreen 3D STEM lessons | An LMS (roster, grades, cohorts) |
+| A quality-gated authoring **loop** (scripts + agent judgment) | A hosted platform / payments / marketplace |
+| An **education UI** library via **shadcn registry** | An npm `@faraday-academy/*` runtime pin model |
+| Visual understanding for science · engineering · math · CS | Slide decks, multi-view course shells, tutor SaaS |
 
 ---
 
-## 2. 레이어 스택
+## 2. Why this shape
+
+img2threejs showed that putting scripts + knowledge **inside one skill** works
+when the job is sharp. Oh My Docs applied the same idea to docs-first tooling
+and dropped the public npm CLI.
+
+Faraday’s previous surface (CLI publish, kit pins, packs, LMS, platform roadmap)
+was the opposite of sharp. The pivot keeps the valuable parts — agent workflow,
+pedagogy references, 3D craft — and cuts everything else.
+
+### Division of labor (from img2threejs)
+
+| Layer | Owns |
+|---|---|
+| Deterministic skill scripts | Scaffold, schema/structure gates, pass unlock, check |
+| Agent | Topic framing, pedagogy choices, 3D clarity judgment, code authorship |
+| shadcn registry | Optional education UI pieces copied into the lesson |
+| Showcase app (later) | Live demos / gallery — marketing = product |
+
+---
+
+## 3. Target architecture
 
 ```
-┌─ 플랫폼 (Artifact Router, 관리형 AI, 결제) ← mirror-dimension tier
-├─ LMS 학생관리 (공통 컴포넌트 + 게이트)
-├─ 튜터 AI (배포된 텍스트북에 임베드)
-├─ 커리큘럼 / 오픈월드 게임 (레슨을 묶음)
-└─ 낱개 레슨 (CLI, 완료) ───────────────  ← 지금 여기
+ssota-labs/faraday-academy
+├─ skills/3d-stem/          ← product body (SKILL + scripts + references + templates)
+├─ plugins/*/skills/3d-stem ← marketplace mirrors
+├─ apps/
+│  ├─ ui/ (or registry)     ← education component library + shadcn registry
+│  └─ showcase/             ← fullscreen 3D lesson gallery
+└─ docs/                    ← vision, GTM, Oh My Docs handbook
 ```
 
-### 2a. 커리큘럼 = 게임 / 오픈월드 (단순 LMS를 넘어서)
-
-선형 `<Course>`는 최소형. 그 위에 **월드 씨앗**: 레슨을 "장소"로, 진행을 "퀘스트"로 배치한
-그래프/공간형 커리큘럼. 우리가 이미 가진 R3F 캔버스 + Course 프리미티브를 재사용.
-
-- **자유 영역**: 맵 디자인, 장소 배치, 서사, 언락 규칙, 비주얼
-- **잠긴 코어**: 레슨 임베딩 계약, 진행/세이브 상태 모델, 언락 엔진, 완료 판정
-- **게이트**: 도달성(고아 레슨/막다른 길 없음), 진행 건전성, 완료 기준, 성능
-
-### 2b. LMS = 모놀리스가 아니라 공통 컴포넌트 + 게이트
-
-로스터·진행·성적·코호트를 조립 가능한 블록 + 잠긴 데이터 모델/진행 API로. 낱개 텍스트북과
-커리큘럼 둘 다 같은 컴포넌트를 붙인다. 게이트: 데이터 프라이버시(FERPA/GDPR/미성년 COPPA),
-성적 무결성.
+Legacy packages (`cli`, `kit`, `lms`, `official-packs`, npm publish scripts) are
+removed or quarantined under PLAN-001 — not part of the product path.
 
 ---
 
-## 3. 두 개의 AI (역할 분리가 핵심)
+## 4. Authoring loop (skill)
 
-| | **제작 AI** | **튜터 AI** |
-|---|---|---|
-| 시점 | build-time | run-time |
-| 위치 | 제작자 유저의 저작 세션 (지금 서브에이전트가 하던 것) | 배포된 인터랙티브 텍스트북에 임베드 |
-| 권한 | 씨앗 자유 영역 write | 콘텐츠 read-only + 학생 상호작용 |
-| 스킬 | 우리가 제공하는 오픈소스 스킬 | 제작자가 만든 도메인 스킬 |
-| 게이트 | 구조/무결성/렌더 | **그라운딩**/평가무결성/교수법/안전 |
+1. **Intake** — topic, level, “what should click?”
+2. **Learning design** — outcomes, misconceptions, interaction thesis
+3. **Scene spec** — 3D model of the idea, controls, feedback
+4. **Scaffold** — template → local lesson project
+5. **Build passes** — blockout → structure → interaction → readability → polish
+6. **Verify** — scripted `check` + preview review
+7. **Share** — local preview / static host (no Faraday platform required)
 
-### 3a. 메타-스킬 — "스킬을 만드는 스킬"
-
-- **Level 0 (우리)**: 스킬-저작 스킬을 오픈소스로 배포
-- **Level 1 (제작 AI)**: 그걸 써서 제작자의 **도메인 지식·자료 → 튜터 스킬**로 컴파일
-- **Level 2 (튜터 AI)**: 런타임에 그 스킬로 학생을 가르침
-
-Faraday 자신과 같은 구조: 우리가 킷 배포 → 제작자가 스캐폴드 → 런타임이 서빙. 여기선
-"런타임"이 배포된 튜터 AI다.
-
-### 3b. 핸드오프 = 봉인된 번들
-
-제작 AI가 레슨 + 튜터 스킬 + 평가 정답키를 배포 번들로 컴파일. 튜터 AI는 **sealed** 버전을
-소비 — 정답키는 학생에게 숨기고 채점 시에만 노출. (평가 무결성 게이트의 근거)
+Pedagogy materials from the old Faraday skill are **rewritten into**
+`skills/3d-stem/references/` and loaded progressively — they must not drag LMS
+scope back in.
 
 ---
 
-## 4. 웹 플랫폼 & 수익화 (CLI → 플랫폼 전환)
+## 5. UI strategy
 
-| | CLI 페이즈 (지금) | 플랫폼 페이즈 |
-|---|---|---|
-| 배포 | 자체 호스팅 / static | 단일 Vercel **Artifact Router** + immutable artifact (코스별 서브도메인) |
-| 튜터 AI 키 | BYOK (제작자가 자기 키) | **우리 키** via Vercel **AI Gateway** — 사용량 미터링 |
-| AI 비용 | 제작자 부담 | Gateway 관측/과금, 최종 부담 주체는 상업 정책에서 확정 |
-| 학생 | — | 우리 플랫폼에 로그인 |
-| 결제 | — | 학생 → 튜터 (**Vercel/Stripe Connect**), 플랫폼 수수료 차감 |
-
-**3면 마켓플레이스**: 우리(플랫폼+AI+게이트) / 튜터(제작자, 학생에게 수익) /
-학생(학습·튜터에게 결제).
-
-**해자(moat)**:
-- 관리형 AI = 비기술 튜터의 #1 마찰(자기 API 계정) 제거 → 채택. 마진은 Gateway 미터링으로.
-- 퀄리티 게이트 + **그라운딩 인프라** = 복제 어려운 신뢰 계층 (학생엔 품질 보증, 튜터엔 환각 방지)
-- 코스 버전·LMS 데이터 + 결제 레일 = 락인
+- Education-oriented components (controls, readouts, light HUD) live in the
+  monorepo and are documented like a component library.
+- Install path: **shadcn registry** (copy), not `npm install @faraday-academy/ui`.
+- Fullscreen immersion wins: registry components must not force dashboard chrome.
 
 ---
 
-## 5. Quality Gate 확장 (레이어별 — mirror-dimension spec 01의 티어 개념)
+## 6. Historical note
 
-- **레슨** (보유): 구조, 무결성, 렌더, a11y
-- **커리큘럼/월드**: 도달성, 진행 건전성, 고아 레슨 없음
-- **튜터 AI** (신규·가장 어려움):
-  - **그라운딩/충실성**: 제작자 자료 RAG, 출처 인용, 불확실하면 거부, 측정 가능한 회귀 게이트
-  - **평가 무결성**: 정답 누출 금지, 평가 모드 잠금
-  - **교수법**: 소크라테스식(답을 바로 주지 않음)
-  - **안전/가드레일**
-- **LMS**: 데이터 프라이버시, 성적 무결성
-- **플랫폼**: 사용자·코스 접근 격리, **제작자/학생별 비용 상한**(런어웨이 AI 지출 방지), 레이트리밋
-
----
-
-## 6. 페이즈 로드맵
-
-> 재정의: 콘텐츠·학습 UX 표면은 GTM Stage 1에서 수평으로 검증한다(BYOK/자체배포). 이후에는
-> 마찰 제거·수익화와 함께 인증·서버 정본·결제 등 플랫폼 신뢰 기능을 구현한다.
-> (근거: [GTM.md](GTM.md) §3)
-
-- **Phase 0 — 완료**: 레슨 CLI 킷 (외부 Studio Seed)
-- **Phase 1 = GTM Stage 1 (수평 feature-complete, CLI/MCP + BYOK)**:
-  - 커리큘럼/월드 씨앗 (헥사고날 스킬팩 — [specs/world-seed.md](../specs/world-seed.md))
-  - LMS 학생관리 (공통 컴포넌트 + 게이트)
-  - 튜터 AI 런타임 + 메타-스킬(도메인 자료 → 튜터 스킬) + 그라운딩 게이트
-  - `faraday deploy` 자동배포
-- **Phase 2+ = GTM Stage 2~4 (마찰 제거·수익화)**: 웹 플랫폼 — Artifact Router,
-  관리형 AI(Gateway), 결제(Connect), 학생 인증, 팩·강의 마켓. 상세 구현 순서는
-  [STAGE2-PLATFORM.md](STAGE2-PLATFORM.md). = **"교육판 mirror-dimension"**
-
----
-
-## 7. 리스크 / 오픈 퀘스천
-
-1. **그라운딩이 제일 어렵다** — 튜터의 환각은 위험. RAG + 인용 + 거부를 게이트로 강제해야.
-2. **관리형 AI 비용 폭주** — 한 학생이 비용을 태울 수 있음 → 제작자·학생별 캡, 레이트리밋.
-3. **평가 무결성 vs 상시 튜터** — 학생이 튜터에게서 정답을 추출 → 평가 모드 잠금 / 소크라테스.
-4. **미성년 데이터** — COPPA/FERPA. 학생 인증·데이터 최소화 설계 필요.
-5. **월드/게임 씨앗 스코프 스프롤** — 표면이 가장 큼. 코어 계약을 빡세게 잠그지 않으면 발산.
-   → Studio Seed 원칙(핵심 연동+게이트 강제)을 여기서 가장 엄격히.
-
----
-
-## 8. 추가 아이디어 (제안)
-
-- **평가 = 퀘스트**: 오픈월드에서 assessment를 "관문/보스"로. 완료 게이트가 곧 언락 조건.
-- **튜터 스킬 마켓플레이스**: 제작자가 만든 도메인 스킬을 재사용/판매 (개념은 레슨과 동일한 씨앗).
-- **그라운딩 번들 계약**: 배포 번들에 "튜터가 참조 가능한 소스 세트"를 봉인 → 튜터 AI는 그
-  바깥을 말하면 게이트 실패. 검증 가능한 신뢰의 핵심.
-- **제작 AI ↔ 튜터 AI 리허설 게이트**: 배포 전 제작 AI가 가상의 학생 질문 N개로 튜터를
-  시뮬레이션해 그라운딩/누출/교수법을 자동 채점(우리가 서브에이전트로 검증하던 방식의 산업화).
-- **비용 정렬 후보**: 학생 결제(Connect), 제작자 예산, 튜터 AI 사용량을 연결. 최종 부담·마진 정책은
-  사용량 데이터로 확정한다. BYOK 옵션도 병행해 파워유저 이탈 방지.
-- **오프라인/자체호스팅 트랙 유지**: 오픈소스 스킬 + CLI는 계속 무료 → 신뢰·유입. 플랫폼은
-  "마찰 제거(웹 제작 에이전트·관리형 AI·결제)"로 과금. 오픈코어 전략.
+Earlier docs described Phase 0 CLI kit completion and GTM Stages 1–4 toward a
+mirror-dimension-style education platform (LMS, managed tutor AI, Connect
+payments). That roadmap is **superseded** by this pivot. Soft-launch notes under
+`LAUNCH-STAGE1.md` / `STAGE1-STATUS.md` refer to the npm `0.3.0` era and should
+be treated as historical until rewritten or archived.

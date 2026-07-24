@@ -1,0 +1,149 @@
+---
+title: Pivot Faraday Academy to 3d-stem
+description: Reshape the monorepo around the 3d-stem skill, shadcn education UI, and a single fullscreen 3D STEM lesson wedge.
+type: guide
+summary: Docs-aligned rewrite of skill/templates, absorb CLI into the skill, drop npm product publish and LMS, add registry app + showcase.
+id: PLAN-pivot-faraday-academy-to-3d-stem
+ticker: PLAN-001
+stage: ready
+changeType: product
+prd: PRD-3d-stem-interactive-textbook-skill
+specs:
+  - SPEC-3d-stem-skill-and-distribution-contract
+stories:
+  - US-author-a-fullscreen-3d-stem-lesson-via-3d-stem-skill
+  - US-browse-and-install-education-ui-from-shadcn-registry
+codeAreas:
+  - skills/
+  - plugins/
+  - packages/cli/
+  - packages/kit/
+  - packages/ui/
+  - packages/lms/
+  - packages/registry/
+  - packages/official-packs/
+  - apps/
+  - docs/
+  - specs/
+  - scripts/
+  - README.md
+  - README.en.md
+  - README.ko.md
+  - package.json
+  - pnpm-workspace.yaml
+  - AGENTS.md
+  - .claude-plugin/
+  - .cursor-plugin/
+  - .agents/
+related:
+  - /docs/planning/prds/prd-3d-stem-interactive-textbook-skill
+  - /docs/spec/spec-3d-stem-skill-and-distribution-contract
+  - /docs/development/adr/adr-skill-first-delivery-without-npm-runtime-packages
+---
+
+## Scope
+
+Implement the product pivot defined by PRD-001 / SPEC-001:
+
+1. Introduce canonical **`skills/3d-stem`** (greenfield SKILL + templates + scripts).
+2. Absorb useful CLI behavior into skill scripts; remove public npm CLI product path.
+3. Stand up education UI as **shadcn registry + `apps/` library site**.
+4. Remove or quarantine LMS / pack-ecosystem / npm publish product surfaces.
+5. Rewrite root README + project vision/GTM to the new wedge.
+6. Keep pedagogy value by porting selected references into the new skill.
+
+Out of this plan’s first implementation slice: building many showcase lessons,
+perfecting every STEM domain rubric, or any hosted platform.
+
+## Implementation sequence
+
+### Phase A — Product narrative (docs already started)
+
+- [x] PRD, stories, spec, ADR, this plan
+- [ ] Rewrite `docs/content/docs/vision.mdx`, `docs/VISION.md`, `docs/GTM.md`
+- [ ] Mark Stage 1 launch / platform docs historical or delete obsolete CTAs
+- [ ] Align root README with skill-first install (`3d-stem`)
+
+### Phase B — Skill skeleton (img2threejs-shaped)
+
+- Create `skills/3d-stem/` with:
+  - `SKILL.md` — one job, when to use, staged loop, hard rules
+  - `scripts/` — `scaffold`, `check`, pass orchestration (Node; JSON out)
+  - `references/` — 3D craft + **ported pedagogy** (learning design, interactive
+    design, quality bar, assessment-as-feedback — not LMS ops)
+  - `templates/` — greenfield fullscreen 3D lesson seed (Vite/R3F or chosen stack)
+- Mirror skill into `plugins/*/skills/3d-stem` via sync script; update marketplace
+  manifests to advertise `3d-stem`.
+- Retire or redirect old `faraday` skill name.
+
+### Phase C — Absorb CLI, drop npm product path
+
+- Inventory `packages/cli` commands; port only what the new loop needs into
+  skill scripts.
+- Stop documenting / CI-publishing `@faraday-academy/cli|kit|ui|lms` as product.
+- Decide per package: delete, private dogfood, or migrate sources into
+  template/registry (prefer delete or registry for UI; template for runtime glue).
+- Update root `package.json` scripts accordingly; release = skill version tag
+  (Oh My Docs style), not npm suite publish.
+
+### Phase D — Education UI registry app
+
+- Add/repurpose `apps/` site as education component library + shadcn registry
+  endpoint.
+- Select a **minimal** v1 component set that supports fullscreen 3D lessons
+  (e.g. param controls, numeric readout, overlay chrome) — no dashboard chrome.
+- Wire skill references to “when to `shadcn add` from Faraday registry”.
+- Deprecate npm `@faraday-academy/ui` as install path.
+
+### Phase E — Strip non-wedge surfaces
+
+- Remove or archive: LMS package product claims, official-packs marketplace
+  narrative, platform catalog as product core, tutor/platform Stage 2–4 GTM.
+- Keep `apps/labs` only if it becomes the 3D lesson dogfood/showcase; otherwise
+  replace with `apps/showcase`.
+- Clean `specs/` — keep terminology only if still true; supersede module-packs /
+  LMS / tutor-ai product specs.
+
+### Phase F — Verification loop
+
+- Cold path: install skill → scaffold → author tiny demo (e.g. orbital period or
+  BST rotate) → check → preview.
+- `pnpm check:planning` / typecheck on remaining apps.
+- Update AGENTS.md project instructions outside oh-my-docs markers for the new
+  wedge (or sync after adopt if needed).
+
+## Verification
+
+- Skill install name is `3d-stem` in marketplace JSON + SKILL frontmatter.
+- `node skills/3d-stem/scripts/… check` fails closed on a broken scaffold.
+- Lesson template boots fullscreen 3D without `@faraday-academy/*` dependencies.
+- Registry app lists ≥1 education component installable via shadcn workflow.
+- README contains no “npx @faraday-academy/cli” primary CTA.
+- LMS / pack-add / platform payment language absent from primary docs.
+
+## Migration and compatibility
+
+- Treat Faraday `0.3.0` npm workflow as **legacy**. No guaranteed upgrade for
+  existing pinned lessons in v1.
+- Optional: short DEPRECATION note in old CLI README if the package tree remains
+  briefly for history.
+- Pedagogy markdown from `plugins/.../faraday/references` is source material to
+  rewrite into `skills/3d-stem/references`, not a verbatim copy obligation.
+
+## Risks and rollback
+
+| Risk | Mitigation |
+|---|---|
+| Skill becomes a junk drawer again | Hard non-goals in SKILL.md; one job only |
+| Pedagogy port reintroduces LMS | Explicit “no roster/grades” filter when porting |
+| Registry + skill drift | Skill references pin registry names; CI checks registry build |
+| Deleting packages breaks dogfood mid-pivot | Sequence: skill+template first, then delete publish path |
+
+Rollback: revert the implementation PR(s); planning docs on `main` remain the
+intent record.
+
+## Completion criteria
+
+- SPEC-001 observable contracts are true in the repo.
+- US-001 and US-002 acceptance criteria demonstrable in a cold session.
+- Plan stage can move to `done` when Phase B–F checks above pass.

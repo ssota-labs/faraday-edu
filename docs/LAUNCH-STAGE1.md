@@ -1,5 +1,7 @@
 # Faraday — GTM Stage 1 런칭 계획
 
+> **Historical (npm CLI soft-launch).** Active GTM is the [3d-stem pivot](GTM.md).
+>
 > 기준일: **2026-07-12** (갱신) · 짝 문서: [GTM.md](GTM.md) · [VISION.md](VISION.md) · [DEMO-IDEATION.md](DEMO-IDEATION.md)
 >
 > **한 줄:** Stage 1 “배포” = **스킬(플러그인) + npm 패키지 스위트**를 얼리어답터 제작자 손에 넣는 것.

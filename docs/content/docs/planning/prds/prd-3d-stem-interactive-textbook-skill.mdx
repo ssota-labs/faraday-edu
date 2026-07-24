@@ -1,0 +1,80 @@
+---
+title: 3D STEM interactive textbook skill
+description: Faraday Academy ships one sharp skill — 3d-stem — that authors fullscreen 3D interactive STEM textbooks.
+type: conceptual
+summary: Pivot from a broad LMS/platform toolkit to a skill-first product that builds fullscreen 3D lessons for science, engineering, math, and CS concepts.
+id: PRD-3d-stem-interactive-textbook-skill
+ticker: PRD-001
+period: pivot-v1
+status: active
+changeType: product
+stories:
+  - US-author-a-fullscreen-3d-stem-lesson-via-3d-stem-skill
+  - US-browse-and-install-education-ui-from-shadcn-registry
+related:
+  - /docs/vision
+  - /docs/spec/spec-3d-stem-skill-and-distribution-contract
+  - /docs/development/plans/plan-pivot-faraday-academy-to-3d-stem
+---
+
+## Problem
+
+Faraday Academy grew into a broad surface — CLI npm packages, LMS, module packs,
+tutor/platform roadmap — while the wedge users actually want is narrower: **see
+and manipulate a STEM concept in 3D**. A wide toolkit dilutes quality, raises
+distribution friction (npm pins, pack install), and fights the pattern proven by
+img2threejs / Oh My Docs: **one skill, bundled scripts, one job**.
+
+## Outcome
+
+The `faraday-academy` repository remains the home, but the product is:
+
+1. A coding-agent skill named **`3d-stem`** that scaffolds, authors, and quality-gates
+   **fullscreen 3D interactive textbooks** for STEM concepts.
+2. An **education UI component library** browsed in-repo and installed via
+   **shadcn registry** (not npm runtime packages).
+3. No public `@faraday-academy/*` npm CLI/runtime publish path; no LMS/platform
+   product surface in v1.
+
+Authors speak a topic in plain language; the agent runs the skill loop and
+produces a local, previewable, deployable 3D lesson.
+
+## Goals
+
+- Rename and replace the Faraday skill surface with **`3d-stem`** (templates and
+  skill body rewritten; pedagogy knowledge retained and reused).
+- Model the skill after **img2threejs**: `SKILL.md` front door, staged pipeline,
+  deterministic scripts for gates/state, agent judgment for visual/pedagogical
+  quality, progressive `references/` disclosure.
+- Move former CLI behavior **into the skill** (`scripts/` / `runtime/`); users do
+  not need a public CLI.
+- Ship education UI as **shadcn registry + `apps/` library site**.
+- Delete or freeze LMS, pack marketplace expansion, and npm runtime pin models
+  for this pivot.
+- Keep the repo name / org path `ssota-labs/faraday-academy`.
+
+## Non-goals
+
+- Hosted LMS, student auth, grades, cohorts
+- Managed AI tutor platform, payments, marketplace
+- Publishing `@faraday-academy/cli|kit|ui|lms` as the product delivery path
+- Multi-view lesson shells (slide/textbook/game course shells) as first-class v1
+- Preserving every existing module pack / official-pack category
+
+## Included stories
+
+- [Author a fullscreen 3D STEM lesson via 3d-stem skill](/docs/planning/stories/us-author-a-fullscreen-3d-stem-lesson-via-3d-stem-skill)
+- [Browse and install education UI from shadcn registry](/docs/planning/stories/us-browse-and-install-education-ui-from-shadcn-registry)
+
+## Success measures
+
+- Cold agent session: install `3d-stem` → produce one fullscreen 3D STEM lesson →
+  `check` gate passes → local preview runs.
+- No product path requires `npx @faraday-academy/cli` or npm-pinned
+  `@faraday-academy/*` runtime packages.
+- Education UI is discoverable from the in-repo registry app and installable via
+  shadcn registry commands.
+- Pedagogy references (learning design / assessment / quality bar) are loadable
+  from the skill without reintroducing LMS scope.
+- README / vision / GTM describe only this wedge; legacy Stage 2–4 platform
+  narrative is retired or marked historical.

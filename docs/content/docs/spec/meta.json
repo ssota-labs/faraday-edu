@@ -1,4 +1,7 @@
 {
   "title": "Specifications",
-  "pages": ["index"]
+  "pages": [
+    "index",
+    "spec-3d-stem-skill-and-distribution-contract"
+  ]
 }

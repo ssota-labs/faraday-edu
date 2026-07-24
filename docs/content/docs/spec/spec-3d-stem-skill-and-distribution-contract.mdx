@@ -1,0 +1,142 @@
+---
+title: 3d-stem skill and distribution contract
+description: Observable contracts for the 3d-stem skill layout, pipeline, and non-npm distribution.
+type: reference
+summary: Faraday Academy delivers 3d-stem as a skill-bundled runtime with shadcn registry UI; npm CLI/runtime packages are not the product path.
+id: SPEC-3d-stem-skill-and-distribution-contract
+ticker: SPEC-001
+stage: accepted
+related:
+  - /docs/planning/prds/prd-3d-stem-interactive-textbook-skill
+  - /docs/development/adr/adr-skill-first-delivery-without-npm-runtime-packages
+  - /docs/development/plans/plan-pivot-faraday-academy-to-3d-stem
+---
+
+## Scope
+
+Defines the v1 product contract after the pivot:
+
+- Skill identity and layout (`3d-stem`)
+- Authoring pipeline shape (img2threejs-style)
+- Lesson artifact expectations (fullscreen 3D STEM textbook)
+- UI distribution (shadcn registry + apps library site)
+- Explicit non-surfaces (LMS, npm runtime publish)
+
+Does not freeze final Three.js scene APIs or every pedagogy rubric line — those
+land as skill `references/` during implementation under the linked plan.
+
+## Interface
+
+### Skill identity
+
+| Item | Contract |
+|---|---|
+| Skill name | `3d-stem` |
+| Repository | `ssota-labs/faraday-academy` (unchanged) |
+| Install | Agent skill install from the repo (Claude / Cursor / Codex marketplace wrappers may mirror the same skill) |
+| Human public CLI | None required |
+
+### Skill tree (target shape)
+
+```
+skills/3d-stem/
+  SKILL.md                 # front door — when to use, core promise, loop
+  scripts/                 # deterministic gates / scaffold / check (former CLI)
+  runtime/                 # optional shared modules for scripts
+  references/              # progressive disclosure (3D craft + pedagogy)
+  templates/               # lesson seed (greenfield)
+```
+
+Inspired by img2threejs (`SKILL.md` + `forge/` + `grimoire/`) and Oh My Docs
+(`scripts/*.mjs` + `references/` + templates). Exact folder names may use
+`scripts/` instead of `forge/` as long as the division of labor holds.
+
+### Agent entry
+
+Agents drive bundled scripts, for example:
+
+```bash
+node <skill>/scripts/<entry>.mjs scaffold … --json
+node <skill>/scripts/<entry>.mjs check … --json
+```
+
+JSON machine output is preferred for gated steps.
+
+### UI distribution
+
+| Item | Contract |
+|---|---|
+| Browse | `apps/` education component library site |
+| Install | shadcn registry (copy into lesson / host project) |
+| Not allowed as product path | `npm install @faraday-academy/ui` as the supported delivery |
+
+## Behavior
+
+### Core promise
+
+Given a STEM topic and optional source materials, `3d-stem` produces a **local
+lesson project** whose primary learner surface is a **fullscreen 3D interactive
+textbook** for visual concept understanding (science, engineering, math, CS).
+
+### Pipeline (img2threejs pattern)
+
+1. **Intake** — clarify topic, learner level, success concept, constraints.
+2. **Learning design** — outcomes, misconceptions, interaction thesis (pedagogy
+   references).
+3. **Scene / interaction spec** — what is modeled in 3D, controls, camera,
+   feedback — before large code dumps.
+4. **Scaffold** — template → lesson project (scripted).
+5. **Build passes** — staged implementation (blockout → structure → interaction →
+   materials/readability → polish); unlock next pass only after gate + review.
+6. **Verify** — deterministic `check` + agent visual/pedagogy judgment via
+   preview screenshots when available.
+7. **Preview / export** — local dev server; static or host deploy left to the
+   lesson toolchain (Vite/vinext), not a Faraday platform.
+
+**Division of labor:** scripts enforce structure, schemas, and unlock state;
+they do not score pedagogy or visual clarity. The agent does.
+
+### Pedagogy reuse
+
+Existing Faraday pedagogy material (learning design, assessment intent, quality
+bar, interactive design) may be **ported into `references/`** and loaded on
+demand. It must not reintroduce LMS, roster, or platform requirements.
+
+### Lesson artifact invariants
+
+- Primary viewport is fullscreen 3D (HUD/controls may overlay; no LMS chrome).
+- Concept is manipulable (parameters, camera, or equivalent), not a canned video.
+- `check` fails closed on missing required files / broken skill contracts.
+- No dependency on published `@faraday-academy/*` runtime packages for v1.
+
+## Data and invariants
+
+- Repo may keep historical `docs/VISION.md` / GTM notes marked **historical** or
+  rewritten; handbook `vision.mdx` is the active product vision pointer.
+- Plugin marketplaces advertise **`3d-stem`**, not `faraday` as the skill name.
+- Release tagging may version the skill; npm publish of CLI/runtime is not part
+  of the release surface.
+
+## Errors
+
+| Condition | Expected behavior |
+|---|---|
+| Topic not suitable for 3D visual explanation | Skill asks to reframe or refuse with reason |
+| Scaffold/check script fails | Non-zero exit + structured reasons; agent fixes before claiming done |
+| Spec too shallow before codegen | Gate blocks build pass (strict quality) |
+| Registry component missing | Skill documents fallback (inline minimal control) rather than npm pin |
+
+## Compatibility
+
+- **Breaking** relative to Faraday `0.3.0` npm CLI / kit / LMS / pack workflow.
+- Old `faraday` skill name and `@faraday-academy/cli` are retired or redirected
+  with explicit deprecation messaging during migration.
+- Brownfield lessons pinned to npm packages are out of migration scope for v1
+  unless a separate plan says otherwise.
+
+## Acceptance criteria
+
+- Spec matches ADR: skill-first, no npm runtime product path.
+- Plan `codeAreas` can implement this contract without LMS/platform packages as
+  deliverables.
+- Stories US-001 and US-002 are satisfiable under this contract.
